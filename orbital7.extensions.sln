@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions", "Orbital7.Extensions\Orbital7.Extensions.csproj", "{A0AAC096-F757-491C-8BD3-41EE9168E5CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Windows", "Orbital7.Extensions.Windows\Orbital7.Extensions.Windows.csproj", "{67C870C3-3B7D-44B5-94D5-5721618C5009}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Windows.Desktop", "Orbital7.Extensions.Windows.Desktop\Orbital7.Extensions.Windows.Desktop.csproj", "{683E49AE-57E8-42EE-AECF-BFE03B186C15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.MVC", "Orbital7.Extensions.MVC\Orbital7.Extensions.MVC.csproj", "{370C96A0-5AD9-4FC0-BD7F-6DC43D44B105}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Attributes", "Orbital7.Extensions.Attributes\Orbital7.Extensions.Attributes.csproj", "{C9448C30-3BCF-47C5-A17C-928B391D81F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.WebAPI", "Orbital7.Extensions.WebAPI\Orbital7.Extensions.WebAPI.csproj", "{912FF54A-DAF5-4C86-8304-56EF39755419}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0AAC096-F757-491C-8BD3-41EE9168E5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0AAC096-F757-491C-8BD3-41EE9168E5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0AAC096-F757-491C-8BD3-41EE9168E5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0AAC096-F757-491C-8BD3-41EE9168E5CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67C870C3-3B7D-44B5-94D5-5721618C5009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67C870C3-3B7D-44B5-94D5-5721618C5009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67C870C3-3B7D-44B5-94D5-5721618C5009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67C870C3-3B7D-44B5-94D5-5721618C5009}.Release|Any CPU.Build.0 = Release|Any CPU
+		{683E49AE-57E8-42EE-AECF-BFE03B186C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{683E49AE-57E8-42EE-AECF-BFE03B186C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{683E49AE-57E8-42EE-AECF-BFE03B186C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{683E49AE-57E8-42EE-AECF-BFE03B186C15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{370C96A0-5AD9-4FC0-BD7F-6DC43D44B105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{370C96A0-5AD9-4FC0-BD7F-6DC43D44B105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{370C96A0-5AD9-4FC0-BD7F-6DC43D44B105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{370C96A0-5AD9-4FC0-BD7F-6DC43D44B105}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9448C30-3BCF-47C5-A17C-928B391D81F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9448C30-3BCF-47C5-A17C-928B391D81F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9448C30-3BCF-47C5-A17C-928B391D81F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9448C30-3BCF-47C5-A17C-928B391D81F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{912FF54A-DAF5-4C86-8304-56EF39755419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{912FF54A-DAF5-4C86-8304-56EF39755419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{912FF54A-DAF5-4C86-8304-56EF39755419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{912FF54A-DAF5-4C86-8304-56EF39755419}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
