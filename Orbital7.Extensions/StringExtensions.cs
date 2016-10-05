@@ -204,7 +204,7 @@ namespace System
 
             if (includeDelimitersInResults)
             {
-                var delimiters = chars.StringToStringArray();
+                var delimiters = chars.ToStringArray();
                 if (delimiters.Length > 0)
                 {
                     string pattern = "(" + String.Join("|", delimiters.Select(d => Regex.Escape(d)).ToArray()) + ")";
@@ -332,7 +332,7 @@ namespace System
             return output;
         }
 
-        public static string[] StringToStringArray(this string input)
+        public static string[] ToStringArray(this string input)
         {
             string[] chars = new string[input.Length];
 
