@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace Orbital8.Utility.WPF
+namespace Orbital7.Extensions.Windows.Desktop.WPF
 {
     public static class CommonDialogsHelper
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Orbital8.Utility
+namespace Orbital7.Extensions.Windows.Desktop
 {
     public static class ConsoleHelper
     {

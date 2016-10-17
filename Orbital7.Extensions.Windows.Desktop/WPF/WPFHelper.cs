@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Orbital8.Utility.WPF
+namespace Orbital7.Extensions.Windows.Desktop.WPF
 {
     public static class WPFHelper
     {

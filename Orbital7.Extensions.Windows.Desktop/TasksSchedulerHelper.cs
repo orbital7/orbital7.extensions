@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Orbital8.Utility.TaskScheduling
+namespace Orbital7.Extensions.Windows.Desktop
 {
     public static class TasksSchedulerHelper
     {

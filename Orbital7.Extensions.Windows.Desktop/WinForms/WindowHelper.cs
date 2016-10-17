@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Orbital8.Utility.WinForms
+namespace Orbital7.Extensions.Windows.Desktop.WinForms
 {
     public static class WindowHelper
     {

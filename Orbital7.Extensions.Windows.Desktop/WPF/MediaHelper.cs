@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Orbital8.Utility.WPF
+namespace Orbital7.Extensions.Windows.Desktop.WPF
 {
     public static class MediaHelper
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Orbital8.Utility.WPF
+namespace Orbital7.Extensions.Windows.Desktop.WPF
 {
     public static class ContextMenuLoader
     {
