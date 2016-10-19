@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>Josh van Eikeren</authors>
+    <owners>jvaneikeren</owners>
+    <licenseUrl>https://github.com/orbital7/orbital7.extensions/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/orbital7/orbital7.extensions</projectUrl>
+    <iconUrl>https://avatars1.githubusercontent.com/u/15078943</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.NET Extensions/Utility Libraries - Windows Library</description>
+    <releaseNotes></releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags></tags>
+    <dependencies>
+		<dependency id="Orbital7.Extensions" version="1.0.0" />
+		<dependency id="iTextSharp" version="5.5.8" />
+	</dependencies>
+  </metadata>
+  <files/>
+</package>

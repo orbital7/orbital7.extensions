@@ -1,0 +1,1 @@
+..\nuget\nuget.exe pack Orbital7.Extensions.Windows.csproj -outputdirectory ..\nuget

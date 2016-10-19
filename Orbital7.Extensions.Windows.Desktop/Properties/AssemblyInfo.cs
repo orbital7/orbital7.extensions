@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Orbital7.Extensions.Windows.Desktop")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright (c) 2012-2016 Orbital7")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>Josh van Eikeren</authors>
+    <owners>jvaneikeren</owners>
+    <licenseUrl>https://github.com/orbital7/orbital7.extensions/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/orbital7/orbital7.extensions</projectUrl>
+    <iconUrl>https://avatars1.githubusercontent.com/u/15078943</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.NET Extensions/Utility Libraries - Web API Client Library</description>
+    <releaseNotes></releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags></tags>
+    <dependencies>
+		<dependency id="Orbital7.Extensions" version="1.0.0" />
+		<dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
+	    <dependency id="Microsoft.Bcl" version="1.1.9" />
+	    <dependency id="Microsoft.Bcl.Build" version="1.0.14" />
+	    <dependency id="Microsoft.Net.Http" version="2.2.22" />
+	    <dependency id="Newtonsoft.Json" version="7.0.1" />
+	</dependencies>
+  </metadata>
+  <files/>
+</package>
