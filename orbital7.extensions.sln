@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.MVC", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Attributes", "Orbital7.Extensions.Attributes\Orbital7.Extensions.Attributes.csproj", "{C9448C30-3BCF-47C5-A17C-928B391D81F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.WebAPI", "Orbital7.Extensions.WebAPI\Orbital7.Extensions.WebAPI.csproj", "{912FF54A-DAF5-4C86-8304-56EF39755419}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.WebAPIClient", "Orbital7.Extensions.WebAPIClient\Orbital7.Extensions.WebAPIClient.csproj", "{912FF54A-DAF5-4C86-8304-56EF39755419}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

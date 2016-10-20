@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Orbital7.Extensions.WebAPI
+namespace Orbital7.Extensions.WebAPIClient
 {
     public abstract class AuthenticatedAPIBase
     {

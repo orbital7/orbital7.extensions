@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
-namespace Orbital7.Extensions.WebAPI
+namespace Orbital7.Extensions.WebAPIClient
 {
     [DataContract]
     public class TokenResponse

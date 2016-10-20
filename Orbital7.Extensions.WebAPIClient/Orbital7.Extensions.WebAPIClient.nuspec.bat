@@ -1,0 +1,1 @@
+..\nuget\nuget.exe pack Orbital7.Extensions.WebAPIClient.csproj -outputdirectory ..\nuget -properties Configuration=Release

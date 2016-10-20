@@ -1,1 +1,0 @@
-..\nuget\nuget.exe pack Orbital7.Extensions.WebAPI.csproj -outputdirectory ..\nuget
