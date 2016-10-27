@@ -9,6 +9,11 @@ namespace Orbital7.Extensions.Windows
 {
     public static class FileSystemHelper
     {
+        public static string ToWindowsPath(string path)
+        {
+            return path.Replace("./", "").Replace("/", "\\");
+        }
+
         public static T LoadFromSerializedXMLFile<T>(string filePath)
         {
             return (T)XMLSerializationHelper.LoadFromTextReader(typeof(T), new StreamReader(filePath, Encoding.UTF8));
