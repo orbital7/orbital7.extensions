@@ -61,6 +61,7 @@
     <Compile Include="EmailHelper.cs" />
     <Compile Include="EncryptionHelper.cs" />
     <Compile Include="Encryption\TripleDESEncryptionEngine.cs" />
+    <Compile Include="EnumDisplayTypeConverter.cs" />
     <Compile Include="HighPerformanceTimer.cs" />
     <Compile Include="IEncryptionEngine.cs" />
     <Compile Include="ImpersonationHelper.cs" />
