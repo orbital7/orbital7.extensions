@@ -69,6 +69,7 @@
     <Compile Include="WPF\ContextMenuLoader.cs" />
     <Compile Include="WPF\DrawingExtensions.cs" />
     <Compile Include="WPF\EnumBindingSourceExtension.cs" />
+    <Compile Include="WPF\MediaExtensions.cs" />
     <Compile Include="WPF\MediaHelper.cs" />
     <Compile Include="WPF\MessageBoxHelper.cs" />
     <Compile Include="WPF\WPFHelper.cs" />

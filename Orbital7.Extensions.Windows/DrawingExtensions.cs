@@ -28,7 +28,15 @@ namespace System.Drawing
             MemoryStream ms = new MemoryStream(imageContents);
             return System.Drawing.Image.FromStream(ms) as System.Drawing.Bitmap;
         }
-        
+
+
+        public static Bitmap ToBitmap(this Bitmap bitmap, ImageFormat imageFormat)
+        {
+            MemoryStream ms = new MemoryStream();
+            bitmap.Save(ms, imageFormat);
+            return new Bitmap(ms);
+        }
+
         public static Bitmap Resize(this Bitmap bitmap, int width, int height) 
         { 
             Bitmap result = new Bitmap(width, height); 
