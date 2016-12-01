@@ -236,15 +236,18 @@ namespace System
                 return new string[] { };
         }
 
-        public static List<Guid> ParseGuids(this string value, string delimiter)
+        public static List<Guid> ParseGuids(this string value, string delimiter, bool allowDuplicates, bool allowEmptyGuid)
         {
             var items = new List<Guid>();
 
             if (value != null)
             {
-                var list = value.Split(new string[] { delimiter }, GetStringSplitOptions(true));
-                foreach (string item in list)
-                    items.Add(Guid.Parse(item));
+                items = (from x in value.Parse(delimiter)
+                         let a = Guid.Parse(x)
+                         where allowEmptyGuid || a != Guid.Empty
+                         select a).ToList();
+                if (!allowDuplicates)
+                    items = items.Distinct().ToList();
             }
 
             return items;

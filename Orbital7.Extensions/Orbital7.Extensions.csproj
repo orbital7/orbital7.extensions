@@ -54,6 +54,7 @@
     <Compile Include="EnumHelper.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="Grouping.cs" />
+    <Compile Include="GuidExtensions.cs" />
     <Compile Include="IOExtensions.cs" />
     <Compile Include="LetteredNames.cs" />
     <Compile Include="ListEnumeratorController.cs" />
