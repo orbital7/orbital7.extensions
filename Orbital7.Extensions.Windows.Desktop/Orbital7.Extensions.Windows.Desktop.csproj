@@ -64,6 +64,7 @@
     <Compile Include="TasksSchedulerHelper.cs" />
     <Compile Include="WinForms\CommonDialogsHelper.cs" />
     <Compile Include="WinForms\MessageBoxHelper.cs" />
+    <Compile Include="WinForms\TextBoxStreamWriter.cs" />
     <Compile Include="WinForms\WindowHelper.cs" />
     <Compile Include="WPF\CommonDialogsHelper.cs" />
     <Compile Include="WPF\ContextMenuLoader.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="WPF\MediaExtensions.cs" />
     <Compile Include="WPF\MediaHelper.cs" />
     <Compile Include="WPF\MessageBoxHelper.cs" />
+    <Compile Include="WPF\TextBoxStreamWriter.cs" />
     <Compile Include="WPF\WPFHelper.cs" />
   </ItemGroup>
   <ItemGroup>
