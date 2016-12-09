@@ -1,6 +1,9 @@
 ﻿{
   "supports": {},
-  "dependencies": {},
+  "dependencies": {
+    "Microsoft.AspNet.WebApi.Client": "5.2.3",
+    "Newtonsoft.Json": "7.0.1"
+  },
   "frameworks": {
     ".NETPortable,Version=v4.5,Profile=Profile7": {}
   },
