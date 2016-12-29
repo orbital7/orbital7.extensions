@@ -7,7 +7,7 @@ using System.Xml.XPath;
 
 namespace Orbital7.Extensions.Windows
 {
-    public static partial class XMLHelper
+    public static class XMLHelper
     {
         public static XmlAttribute AddAttribute(XmlNode nodeRoot, string attributeName, string attributeValue)
         {

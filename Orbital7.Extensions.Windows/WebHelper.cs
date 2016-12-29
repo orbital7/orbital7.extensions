@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Orbital7.Extensions.Windows
 {
+    // TODO: Remove after move to .NET Standard 2.0 (replaced by Orbital7.Extensions.HttpHelper).
     public static class WebHelper
     {
         public static void UploadFileViaFTP(string ftpServer, string filename, ICredentials credentials)

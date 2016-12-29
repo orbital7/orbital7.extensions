@@ -19,7 +19,7 @@ namespace System
         public const string AlphanumericChars = NumberChars + LetterChars;
         public const string WhitespaceChars = " \r\n\t\v\f";
 
-
+        // TODO: Enable after move to .NET Standard 2.0.
         //public static string UrlEncode(this string value)
         //{
         //    return UrlEncoder.Default.Encode(value);
@@ -40,14 +40,12 @@ namespace System
 
         public static string ToTextString(this byte[] bytes)
         {
-            //ASCIIEncoding encoding = new ASCIIEncoding();
             UTF8Encoding encoding = new UTF8Encoding();
             return encoding.GetString(bytes, 0, bytes.Length);
         }
 
         public static byte[] ToByteArray(this string value)
         {
-            //ASCIIEncoding encoding = new ASCIIEncoding();
             UTF8Encoding encoding = new UTF8Encoding();
             return encoding.GetBytes(value);
         }

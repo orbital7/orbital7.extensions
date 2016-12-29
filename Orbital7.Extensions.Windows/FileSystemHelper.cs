@@ -170,14 +170,6 @@ namespace Orbital7.Extensions.Windows
             }
         }
         
-        public static string GetExecutingAssemblyFolder()
-        {
-            string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            return Path.GetDirectoryName(path);        
-        }
-
         public static string GetUniqueFilePath(string folder, string filename)
         {
             string filePath = Path.Combine(folder, filename);
