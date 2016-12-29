@@ -9,9 +9,15 @@ namespace Orbital7.Extensions.Windows
 {
     public static class FileSystemHelper
     {
-        public static string ToWindowsPath(string path)
+        public static string NormalizePathSeparator(string path, string separator, string separatorsList = "/\\")
         {
-            return path.Replace("./", "").Replace("/", "\\");
+            string normalizedPath = path;
+
+            var chars = separatorsList.ToList();
+            foreach (var c in chars)
+                normalizedPath = normalizedPath.Replace(c.ToString(), separator);
+
+            return normalizedPath;
         }
 
         public static T LoadFromSerializedXMLFile<T>(string filePath)
