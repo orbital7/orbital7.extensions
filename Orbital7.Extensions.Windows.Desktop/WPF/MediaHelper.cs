@@ -13,9 +13,16 @@ namespace Orbital7.Extensions.Windows.Desktop.WPF
 {
     public static class MediaHelper
     {
-        public static ImageSource GetBitmapImageSource(string projectPath)
+        public static BitmapImage GetBitmapImageSource(string filePath)
         {
-            return new BitmapImage(new Uri(projectPath, UriKind.Relative));
+            var imgTemp = new BitmapImage();
+            imgTemp.BeginInit();
+            imgTemp.CacheOption = BitmapCacheOption.OnLoad;
+            imgTemp.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            imgTemp.UriSource = new Uri(filePath, UriKind.Absolute);
+            imgTemp.EndInit();
+
+            return imgTemp;
         }
 
         public static LinearGradientBrush GetVerticalGradientBrush(string colorTop, string colorBottom)
