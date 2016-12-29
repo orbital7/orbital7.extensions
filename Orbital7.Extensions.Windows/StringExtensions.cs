@@ -8,6 +8,12 @@ namespace System
 {
     public static class StringExtensions
     {
+        public static string UrlEncode(this string value)
+        {
+            //return UrlEncoder.Default.Encode(value);
+            return System.Web.HttpUtility.UrlEncode(value);
+        }
+
         public static string ToTitleCase(this string value)
         {
             System.Globalization.TextInfo textInfo = new System.Globalization.CultureInfo("en-US", false).TextInfo;

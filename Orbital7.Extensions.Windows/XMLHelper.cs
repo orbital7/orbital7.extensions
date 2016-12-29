@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace Orbital7.Extensions.Windows
 {
@@ -67,6 +68,50 @@ namespace Orbital7.Extensions.Windows
         public static int GetNodeIntValue(XmlNode nodeRoot, string xpath)
         {
             string value = GetNodeValue(nodeRoot, xpath);
+            if (!String.IsNullOrEmpty(value))
+                return Convert.ToInt32(value);
+            else
+                return 0;
+        }
+
+        public static string GetAttributeValue(XPathNavigator navigator, string xpath, string attributeName)
+        {
+            var target = navigator.SelectSingleNode(xpath);
+            return GetAttributeValue(target, attributeName);
+        }
+
+        public static string GetAttributeValue(XPathNavigator navigator, string attributeName)
+        {
+            if (navigator != null)
+                return navigator.GetAttribute(attributeName, "");
+            else
+                return String.Empty;
+        }
+
+        public static string GetNodeValue(XPathNavigator navigator, string xpath)
+        {
+            if (navigator != null)
+            {
+                var target = navigator.SelectSingleNode(xpath);
+                if (target != null)
+                    return target.Value;
+            }
+
+            return String.Empty;
+        }
+
+        public static double GetNodeDoubleValue(XPathNavigator navigator, string xpath)
+        {
+            string value = GetNodeValue(navigator, xpath);
+            if (!String.IsNullOrEmpty(value))
+                return Convert.ToDouble(value);
+            else
+                return 0;
+        }
+
+        public static int GetNodeIntValue(XPathNavigator navigator, string xpath)
+        {
+            string value = GetNodeValue(navigator, xpath);
             if (!String.IsNullOrEmpty(value))
                 return Convert.ToInt32(value);
             else

@@ -19,6 +19,12 @@ namespace System
         public const string AlphanumericChars = NumberChars + LetterChars;
         public const string WhitespaceChars = " \r\n\t\v\f";
 
+
+        //public static string UrlEncode(this string value)
+        //{
+        //    return UrlEncoder.Default.Encode(value);
+        //}
+
         public static MemoryStream ToStream(this string value)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
