@@ -15,7 +15,7 @@ namespace System.Drawing
         [DllImport("gdi32")]
         static extern int DeleteObject(IntPtr o);
 
-        public static ImageSource ToImageSource(this Bitmap bitmap)
+        public static BitmapSource ToBitmapSource(this Bitmap bitmap)
         {
             BitmapSource bitmapSource = null;
 

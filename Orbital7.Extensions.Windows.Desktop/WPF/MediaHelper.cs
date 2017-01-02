@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,7 +14,32 @@ namespace Orbital7.Extensions.Windows.Desktop.WPF
 {
     public static class MediaHelper
     {
-        public static BitmapImage GetBitmapImageSource(string filePath)
+        public static BitmapEncoder GetBitmapEncoder(string fileExtension)
+        {
+            switch (fileExtension.ToLower())
+            {
+                case ".gif":
+                    return new GifBitmapEncoder();
+
+                case ".jpg":
+                case ".jpeg":
+                    return new JpegBitmapEncoder();
+
+                case ".png":
+                    return new PngBitmapEncoder();
+
+                case ".bmp":
+                    return new BmpBitmapEncoder();
+
+                case ".tif":
+                case ".tiff":
+                    return new TiffBitmapEncoder();
+            }
+
+            throw new Exception("The specified file extension is not supported");
+        }
+
+        public static BitmapImage LoadBitmapImage(string filePath)
         {
             var imgTemp = new BitmapImage();
             imgTemp.BeginInit();
@@ -23,6 +49,21 @@ namespace Orbital7.Extensions.Windows.Desktop.WPF
             imgTemp.EndInit();
 
             return imgTemp;
+        }
+
+        public static BitmapImage LoadBitmapImage(byte[] bitmapContents)
+        {
+            using (var stream = new MemoryStream(bitmapContents))
+            {
+                var imgTemp = new BitmapImage();
+                imgTemp.BeginInit();
+                imgTemp.CacheOption = BitmapCacheOption.OnLoad;
+                imgTemp.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                imgTemp.StreamSource = stream;
+                imgTemp.EndInit();
+
+                return imgTemp;
+            }
         }
 
         public static LinearGradientBrush GetVerticalGradientBrush(string colorTop, string colorBottom)

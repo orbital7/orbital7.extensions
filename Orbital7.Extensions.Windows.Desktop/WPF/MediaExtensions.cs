@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Orbital7.Extensions.Windows.Desktop.WPF;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +31,21 @@ namespace System.Windows.Media.Imaging
             bmp.UnlockBits(data);
 
             return bmp;
+        }
+        
+        public static byte[] ToByteArray(this BitmapSource source, BitmapEncoder encoder)
+        {
+            encoder.Frames.Add(BitmapFrame.Create(source));
+            using (var ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                return ms.ToArray();
+            }
+        }
+
+        public static byte[] ToByteArray(this BitmapSource source, string fileExtension)
+        {
+            return source.ToByteArray(MediaHelper.GetBitmapEncoder(fileExtension));
         }
     }
 }

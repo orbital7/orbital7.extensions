@@ -95,37 +95,27 @@ namespace Orbital7.Extensions.Windows
 
         public static ImageFormat GetImageFormat(string fileExtension)
         {
-            ImageFormat imageFormat = ImageFormat.Bmp;
-
             switch (fileExtension.ToLower())
             {
                 case ".gif":
-                    imageFormat = ImageFormat.Gif;
-                    break;
+                    return ImageFormat.Gif;
 
                 case ".jpg":
                 case ".jpeg":
-                    imageFormat = ImageFormat.Jpeg;
-                    break;
+                    return ImageFormat.Jpeg;
 
                 case ".png":
-                    imageFormat = ImageFormat.Png;
-                    break;
+                    return ImageFormat.Png;
 
                 case ".bmp":
-                    imageFormat = ImageFormat.Bmp;
-                    break;
+                    return ImageFormat.Bmp;
 
                 case ".tif":
                 case ".tiff":
-                    imageFormat = ImageFormat.Tiff;
-                    break;
-
-                default:
-                    throw new Exception("The specified file extension is not supported");
+                    return ImageFormat.Tiff;                    
             }
 
-            return imageFormat;
+            throw new Exception("The specified file extension is not supported");
         }
     }
 }
