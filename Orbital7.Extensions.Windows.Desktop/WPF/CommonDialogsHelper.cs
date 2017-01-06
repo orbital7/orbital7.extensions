@@ -13,6 +13,21 @@ namespace Orbital7.Extensions.Windows.Desktop.WPF
 
         public static string DefaultSaveAsCaption = "Save As";
 
+        public static string ShowFolderBrowseDialog(string description)
+        {
+            return ShowFolderBrowseDialog(description, String.Empty);
+        }
+
+        public static string ShowFolderBrowseDialog(string description, string selectedPath)
+        {
+            return ShowFolderBrowseDialog(description, selectedPath, true);
+        }
+
+        public static string ShowFolderBrowseDialog(string description, string selectedPath, bool showNewFolderButton)
+        {
+            return WinForms.CommonDialogsHelper.ShowFolderBrowseDialog(description, selectedPath, showNewFolderButton);
+        }
+
         public static string BuildFilter(string description, List<string> extensions)
         {
             string filter = description + "|";
