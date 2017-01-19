@@ -6,7 +6,7 @@ namespace Orbital7.Extensions
 {
     public static partial class EnumHelper
     {
-        public static IEnumerable<T> EnumToList<T>()
+        public static List<T> EnumToList<T>()
         {
             Type enumType = typeof(T);
 

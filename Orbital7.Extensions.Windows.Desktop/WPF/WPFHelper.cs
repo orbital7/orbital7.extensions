@@ -19,30 +19,32 @@ namespace Orbital7.Extensions.Windows.Desktop.WPF
                 element.Visibility = Visibility.Collapsed;
         }
 
-        public static void FillComboBox(ComboBox combobox, IList list, object selectedItem)
+        public static void FillComboBox(ComboBox combobox, IList items, 
+            object selectedItem = null, bool selectFirstIfSelectedItemIsNull = false)
         {
             combobox.Items.Clear();
 
-            foreach (object item in list)
+            foreach (object item in items)
                 combobox.Items.Add(item);
 
-            combobox.SelectedItem = selectedItem;
+            if (selectedItem == null && selectFirstIfSelectedItemIsNull && combobox.Items.Count > 0)
+                combobox.SelectedItem = combobox.Items[0];
+            else if (selectedItem != null)
+                combobox.SelectedItem = selectedItem;
         }
 
-        public static void FillListBox(ListBox listbox, IList list)
-        {
-            FillListBox(listbox, list, true);
-        }
-
-        public static void FillListBox(ListBox listbox, IList list, bool selectFirst)
+        public static void FillListBox(ListBox listbox, IList items,
+            object selectedItem = null, bool selectFirstIfSelectedItemIsNull = false)
         {
             listbox.Items.Clear();
 
-            foreach (object item in list)
+            foreach (object item in items)
                 listbox.Items.Add(item);
 
-            if (selectFirst)
-                SelectFirstListBoxItem(listbox);
+            if (selectedItem == null && selectFirstIfSelectedItemIsNull && listbox.Items.Count > 0)
+                listbox.SelectedItem = listbox.Items[0];
+            else if (selectedItem != null)
+                listbox.SelectedItem = selectedItem;
         }
 
         public static void SelectFirstListBoxItem(ListBox listbox)

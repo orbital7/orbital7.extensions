@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -144,5 +145,56 @@ namespace Orbital7.Extensions.Windows.Desktop.WPF
 
             return filePath;
         }
+
+        public static string ShowInputTextBoxDialog(DependencyObject owner, string description, string title = "Input Box", 
+            string initialValue = null)
+        {
+            Window owningWindow = null;
+            if (owner != null)
+                owningWindow = Window.GetWindow(owner);
+
+            var dialog = new InputTextBoxDialog(title, description, initialValue);
+            dialog.Owner = owningWindow;
+
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value)
+                return dialog.Value;
+            else
+                return String.Empty;
+        }
+
+        public static object ShowInputComboBoxDialog(DependencyObject owner, string description, IList items, string title = "Input Box",
+            object selectedItem = null, bool selectFirstIfSelectedItemIsNull = false)
+        {
+            Window owningWindow = null;
+            if (owner != null)
+                owningWindow = Window.GetWindow(owner);
+
+            var dialog = new InputComboBoxDialog(title, description, items, selectedItem, selectFirstIfSelectedItemIsNull);
+            dialog.Owner = owningWindow;
+
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value)
+                return dialog.Value;
+            else
+                return null;
+        }
+
+        //public static T ShowInputComboBoxDialog<T>(DependencyObject owner, string description, IList<T> items, string title = "Input Box",
+        //    object selectedItem = null, bool selectFirstIfSelectedItemIsNull = false)
+        //{
+        //    Window owningWindow = null;
+        //    if (owner != null)
+        //        owningWindow = Window.GetWindow(owner);
+
+        //    var dialog = new InputComboBoxDialog(title, description, (IList)items, selectedItem, selectFirstIfSelectedItemIsNull);
+        //    dialog.Owner = owningWindow;
+
+        //    var result = dialog.ShowDialog();
+        //    if (result.HasValue && result.Value)
+        //        return (T)dialog.Value;
+        //    else
+        //        return default(T);
+        //}
     }
 }

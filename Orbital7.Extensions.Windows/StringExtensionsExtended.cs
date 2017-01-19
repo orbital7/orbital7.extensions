@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace System
 {
-    public static class StringExtensions
+    public static class StringExtensionsExtended
     {
         public static string UrlEncode(this string value)
         {

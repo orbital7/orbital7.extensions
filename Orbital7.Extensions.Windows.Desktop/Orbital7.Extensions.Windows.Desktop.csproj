@@ -70,6 +70,9 @@
     <Compile Include="WPF\ContextMenuLoader.cs" />
     <Compile Include="WPF\DrawingExtensions.cs" />
     <Compile Include="WPF\EnumBindingSourceExtension.cs" />
+    <Compile Include="WPF\EnumToBooleanConverter.cs" />
+    <Compile Include="WPF\InputComboBoxDialog.xaml.cs" />
+    <Compile Include="WPF\InputTextBoxDialog.xaml.cs" />
     <Compile Include="WPF\MediaExtensions.cs" />
     <Compile Include="WPF\MediaHelper.cs" />
     <Compile Include="WPF\MessageBoxHelper.cs" />
@@ -84,6 +87,16 @@
       <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
       <Name>Orbital7.Extensions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="WPF\InputComboBoxDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\InputTextBoxDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

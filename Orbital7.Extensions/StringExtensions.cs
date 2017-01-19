@@ -9,7 +9,7 @@ namespace System
 {
     public static class StringExtensions
     {
-        public const string IllegalFileSystemChars = "|/\\\"*?:<>";
+        public const string IllegalWindowsFileSystemChars = "|/\\\"*?:<>";
         public const string PunctuationDash = "-";
         public const string PunctuationUnderscore = "_";
         public const string PunctuationCharsBase = ".,()[]{}|\\';:!@#$&%?/<>–^+=*\"";
@@ -24,6 +24,28 @@ namespace System
         //{
         //    return UrlEncoder.Default.Encode(value);
         //}
+
+        public static bool IsWindowsFileSystemSafe(this string value)
+        {
+            var chars = IllegalWindowsFileSystemChars.ToCharArray();
+
+            foreach (var c in chars)
+                if (value.Contains(c.ToString()))
+                    return false;
+
+            return true;
+        }
+
+        public static string ToWindowsFileSystemSafeString(this string value, string replaceChar = "")
+        {
+            var windowsSafeValue = value;
+            var chars = IllegalWindowsFileSystemChars.ToCharArray();
+
+            foreach (var c in chars)
+                windowsSafeValue = windowsSafeValue.Replace(c.ToString(), replaceChar);
+
+            return windowsSafeValue;
+        }
 
         public static MemoryStream ToStream(this string value)
         {

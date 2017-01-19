@@ -78,7 +78,7 @@
     </Compile>
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="RegistryHelper.cs" />
-    <Compile Include="StringExtensions.cs" />
+    <Compile Include="StringExtensionsExtended.cs" />
     <Compile Include="SystemIconsManager.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="XMLHelper.cs" />
