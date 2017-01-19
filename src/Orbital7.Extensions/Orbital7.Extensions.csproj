@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <CopyNuGetImplementations>true</CopyNuGetImplementations>
-	<MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C9448C30-3BCF-47C5-A17C-928B391D81F1}</ProjectGuid>
+    <ProjectGuid>{A0AAC096-F757-491C-8BD3-41EE9168E5CE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orbital7.Extensions.Attributes</RootNamespace>
-    <AssemblyName>Orbital7.Extensions.Attributes</AssemblyName>
+    <RootNamespace>Orbital7.Extensions</RootNamespace>
+    <AssemblyName>Orbital7.Extensions</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -29,7 +29,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,40 +37,40 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
-      <Name>Orbital7.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AjaxAttribute.cs" />
-    <Compile Include="ConditionalValidationAttribute.cs" />
-    <Compile Include="EnsureMinimumElementsAttribute.cs" />
-    <Compile Include="GenericCompareAttribute.cs" />
-    <Compile Include="ValueCompareAttribute.cs" />
-    <Compile Include="ValueGreaterThanAttribute.cs" />
-    <Compile Include="ValueLessThanAttribute.cs" />
-    <Compile Include="MultilineTextRangeAttribute.cs" />
-    <Compile Include="NotEqualAttribute.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RangeIfAttribute.cs" />
-    <Compile Include="ReadOnlyAttribute.cs" />
-    <Compile Include="RegularExpressionIfAttribute.cs" />
-    <Compile Include="RequiredGuidAttribute.cs" />
-    <Compile Include="RequiredIfAttribute.cs" />
-    <Compile Include="RequiredIfNotAttribute.cs" />
-    <Compile Include="TypeSpecificRequiredAttribute.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AsyncHelper.cs" />
+    <Compile Include="AttributesHelper.cs" />
+    <Compile Include="BooleanExtensions.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
+    <Compile Include="DateTimeSpan.cs" />
+    <Compile Include="EnumExtensions.cs" />
+    <Compile Include="EnumHelper.cs" />
+    <Compile Include="FileSizeFormatProvider.cs" />
+    <Compile Include="Grouping.cs" />
+    <Compile Include="GuidExtensions.cs" />
+    <Compile Include="HttpHelper.cs" />
+    <Compile Include="IOExtensions.cs" />
+    <Compile Include="LetteredNames.cs" />
+    <Compile Include="ListEnumeratorController.cs" />
+    <Compile Include="ListExtensions.cs" />
+    <Compile Include="NumberExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="StringHelper.cs" />
+    <Compile Include="StringListHelper.cs" />
+    <Compile Include="StringWriterWithEncoding.cs" />
+    <Compile Include="XMLSerializationHelper.cs" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

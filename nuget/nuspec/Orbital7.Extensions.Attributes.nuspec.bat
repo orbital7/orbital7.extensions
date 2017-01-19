@@ -1,0 +1,1 @@
+..\nuget.exe pack ..\..\src\Orbital7.Extensions.Attributes\Orbital7.Extensions.Attributes.csproj -outputdirectory ..\packages -properties Configuration=Release
