@@ -147,14 +147,13 @@ namespace System
 
         public static string EnsureMaxStringLength(this string input, int maxLength, string truncationSuffix = null)
         {
-            if (!String.IsNullOrEmpty(input))
+            if (!String.IsNullOrEmpty(input) && input.Length > maxLength)
             {
                 int actualMaxLength = maxLength;
                 if (!String.IsNullOrEmpty(truncationSuffix))
                     actualMaxLength -= truncationSuffix.Length;
 
-                if (input.Length > actualMaxLength)
-                    return input.Substring(0, actualMaxLength) + truncationSuffix;
+                return input.Substring(0, actualMaxLength) + truncationSuffix;
             }
 
             return input;
