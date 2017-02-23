@@ -145,12 +145,19 @@ namespace System
             return maskedNumber + endingNumber;
         }
 
-        public static string EnsureMaxStringLength(this string input, int maxLength)
+        public static string EnsureMaxStringLength(this string input, int maxLength, string truncationSuffix = null)
         {
-            if (!String.IsNullOrEmpty(input) && (input.Length > maxLength))
-                return input.Substring(0, maxLength);
-            else
-                return input;
+            if (!String.IsNullOrEmpty(input))
+            {
+                int actualMaxLength = maxLength;
+                if (!String.IsNullOrEmpty(truncationSuffix))
+                    actualMaxLength -= truncationSuffix.Length;
+
+                if (input.Length > actualMaxLength)
+                    return input.Substring(0, actualMaxLength) + truncationSuffix;
+            }
+
+            return input;
         }
 
         public static bool ContainsChars(this string value, string chars)
