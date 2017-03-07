@@ -127,7 +127,9 @@ namespace Orbital7.Extensions.WebAPIClient
             else
             {
                 string content = await response.Content.ReadAsStringAsync();
-                string description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\",");
+                string description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\\r\\n\",");
+                if (String.IsNullOrEmpty(description))
+                    description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\",");
                 if (String.IsNullOrEmpty(description))
                     description = content.FindFirstBetween("\"error_description\":\"", "\"");
 
