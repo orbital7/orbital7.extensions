@@ -50,6 +50,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalInformationAttribute.cs" />
     <Compile Include="AjaxAttribute.cs" />
     <Compile Include="ConditionalValidationAttribute.cs" />
     <Compile Include="EnsureMinimumElementsAttribute.cs" />

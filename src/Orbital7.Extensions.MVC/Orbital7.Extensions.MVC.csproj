@@ -82,6 +82,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Orbital7.Extensions.Attributes\AdditionalInformationAttribute.cs">
+      <Link>Attributes\AdditionalInformationAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\Orbital7.Extensions.Attributes\AjaxAttribute.cs">
       <Link>Attributes\AjaxAttribute.cs</Link>
     </Compile>
