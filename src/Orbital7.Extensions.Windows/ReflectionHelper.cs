@@ -59,7 +59,7 @@ namespace Orbital7.Extensions.Windows
 
         public static T CreateInstance<T>(string assemblyName, string typeName, object[] parameters)
         {
-            return (T)(Activator.CreateInstance(assemblyName, typeName, parameters).Unwrap());
+            return CreateInstance<T>(Assembly.Load(assemblyName).GetType(typeName), parameters);
         }
 
         public static T CreateInstance<T>(Type type)
