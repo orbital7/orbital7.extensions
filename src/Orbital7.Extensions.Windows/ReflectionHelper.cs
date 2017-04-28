@@ -57,9 +57,19 @@ namespace Orbital7.Extensions.Windows
             return (T)(Activator.CreateInstance(assemblyName, typeName).Unwrap());
         }
 
+        public static T CreateInstance<T>(string assemblyName, string typeName, object[] parameters)
+        {
+            return (T)(Activator.CreateInstance(assemblyName, typeName, parameters).Unwrap());
+        }
+
         public static T CreateInstance<T>(Type type)
         {
             return (T)Activator.CreateInstance(type);
+        }
+
+        public static T CreateInstance<T>(Type type, object[] parameters)
+        {
+            return (T)Activator.CreateInstance(type, parameters);
         }
 
         public static List<T> GetTypeInstances<T>(Type type, string folderPath)
