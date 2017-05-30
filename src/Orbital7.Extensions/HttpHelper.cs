@@ -26,11 +26,10 @@ namespace Orbital7.Extensions
             return await (await SendRequestAsync(url, credentials)).ReadAsByteArrayAsync();
         }
 
-        // TODO: Enable after move to .NET Standard 2.0.
-        //public static async Task DownloadFileAsync(string url, string filePath, ICredentials credentials = null)
-        //{
-        //    File.WriteAllBytes(filePath, await DownloadFileContentsAsync(url, credentials));
-        //}
+        public static async Task DownloadFileAsync(string url, string filePath, ICredentials credentials = null)
+        {
+            File.WriteAllBytes(filePath, await DownloadFileContentsAsync(url, credentials));
+        }
 
         public static bool IsOnlineFile(string filePath)
         {
