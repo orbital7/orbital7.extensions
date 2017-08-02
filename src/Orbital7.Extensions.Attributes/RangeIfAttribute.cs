@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Orbital7.Extensions.Attributes
 {
-    public partial class RangeIfAttribute : ConditionalValidationAttribute
+    public partial class RangeIfAttribute : ConditionalValidationAttribute//, IClientModelValidator
     {
         private readonly int minimum;
         private readonly int maximum;
@@ -14,5 +14,20 @@ namespace Orbital7.Extensions.Attributes
             this.minimum = minimum;
             this.maximum = maximum;
         }
+
+        //protected override string ValidationName
+        //{
+        //    get { return "rangeif"; }
+        //}
+
+        //protected override IDictionary<string, object> GetExtraValidationParameters()
+        //{
+        //    // Set the rule Range and the rule param [minumum,maximum]
+        //    return new Dictionary<string, object>
+        //    {
+        //        {"rule", "range"},
+        //        { "ruleparam", string.Format("[{0},{1}]", this.minimum, this.maximum) }
+        //    };
+        //}
     }
 }

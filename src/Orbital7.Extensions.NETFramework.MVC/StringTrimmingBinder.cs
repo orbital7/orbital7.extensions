@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Orbital7.Extensions.MVC
+namespace Orbital7.Extensions.NetFramework.MVC
 {
     public class StringTrimmingBinder : DefaultModelBinder
     {

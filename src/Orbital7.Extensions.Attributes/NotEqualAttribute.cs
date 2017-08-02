@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -6,7 +7,7 @@ using System.Reflection;
 
 namespace Orbital7.Extensions.Attributes
 {
-    public partial class NotEqualAttribute : ValidationAttribute
+    public partial class NotEqualAttribute : ValidationAttribute//, IClientModelValidator
     {
         public string OtherProperty { get; private set; }
 
@@ -35,5 +36,21 @@ namespace Orbital7.Extensions.Attributes
             }
             return null;
         }
+
+        //public void AddValidation(ClientModelValidationContext context)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        //{
+        //    var rule = new ModelClientValidationRule
+        //    {
+        //        ErrorMessage = ErrorMessage,
+        //        ValidationType = "notequalto",
+        //    };
+        //    rule.ValidationParameters["other"] = OtherProperty;
+        //    yield return rule;
+        //}
     }
 }

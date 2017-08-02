@@ -5,18 +5,19 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNetCore.Http
+namespace System.Web
 {
     public static class WebExtensions
     {
-        public static void SetFailureState(this HttpResponse response)
+        public static void SetFailureState(this HttpResponseBase response)
         {
+            response.TrySkipIisCustomErrors = true;
             response.StatusCode = (int)HttpStatusCode.BadRequest;
         }
 
-        public static string GetURL(this HttpRequest request)
+        public static string GetURL(this HttpRequestBase request)
         {
-            return "https://" + request.PathBase + "/";
+            return "https://" + request.Url.Authority + "/";
         }
     }
 }

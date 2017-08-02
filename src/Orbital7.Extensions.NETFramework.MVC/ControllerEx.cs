@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNet.Identity;
 
 namespace System.Web.Mvc
 {
@@ -46,11 +45,6 @@ namespace System.Web.Mvc
                 return postedFile.InputStream.ReadAll();
             else
                 return null;
-        }
-
-        public Guid GetUserID()
-        {
-            return Guid.Parse(this.User.Identity.GetUserId());
         }
     }
 }

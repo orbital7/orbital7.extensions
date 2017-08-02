@@ -1,175 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{370C96A0-5AD9-4FC0-BD7F-6DC43D44B105}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orbital7.Extensions.MVC</RootNamespace>
-    <AssemblyName>Orbital7.Extensions.MVC</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>C:\@Projects\orbital7\orbital7.extensions\bin\release\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>C:\@Projects\orbital7\orbital7.extensions\bin\debug\</OutputPath>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-preview2-final" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Orbital7.Extensions.Attributes\AdditionalInformationAttribute.cs">
-      <Link>Attributes\AdditionalInformationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\AjaxAttribute.cs">
-      <Link>Attributes\AjaxAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\ConditionalValidationAttribute.cs">
-      <Link>Attributes\ConditionalValidationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\EnsureMinimumElementsAttribute.cs">
-      <Link>Attributes\EnsureMinimumElementsAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\GenericCompareAttribute.cs">
-      <Link>Attributes\GenericCompareAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\MultilineTextRangeAttribute.cs">
-      <Link>Attributes\MultilineTextRangeAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\NotEqualAttribute.cs">
-      <Link>Attributes\NotEqualAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\RangeIfAttribute.cs">
-      <Link>Attributes\RangeIfAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\ReadOnlyAttribute.cs">
-      <Link>Attributes\ReadOnlyAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\RegularExpressionIfAttribute.cs">
-      <Link>Attributes\RegularExpressionIfAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\RequiredGuidAttribute.cs">
-      <Link>Attributes\RequiredGuidAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\RequiredIfAttribute.cs">
-      <Link>Attributes\RequiredIfAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\RequiredIfNotAttribute.cs">
-      <Link>Attributes\RequiredIfNotAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\TypeSpecificRequiredAttribute.cs">
-      <Link>Attributes\TypeSpecificRequiredAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\ValueCompareAttribute.cs">
-      <Link>Attributes\ValueCompareAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\ValueGreaterThanAttribute.cs">
-      <Link>Attributes\ValueGreaterThanAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Orbital7.Extensions.Attributes\ValueLessThanAttribute.cs">
-      <Link>Attributes\ValueLessThanAttribute.cs</Link>
-    </Compile>
-    <Compile Include="Attributes\ConditionalValidationAttribute_MVC.cs" />
-    <Compile Include="Attributes\DefaultAuthorizeAttribute.cs" />
-    <Compile Include="Attributes\GenericCompareAttribute_MVC.cs" />
-    <Compile Include="Attributes\NotEqualAttribute_MVC.cs" />
-    <Compile Include="Attributes\OverrideAuthorizeAttribute.cs" />
-    <Compile Include="Attributes\RangeIfAttribute_MVC.cs" />
-    <Compile Include="Attributes\RegularExpressionIfAttribute_MVC.cs" />
-    <Compile Include="Attributes\RequiredIfAttribute_MVC.cs" />
-    <Compile Include="Attributes\RequiredIfNotAttribute_MVC.cs" />
-    <Compile Include="ControllerEx.cs" />
-    <Compile Include="HTMLHelperExtensions.cs" />
-    <Compile Include="HTMLHelperJQueryMobileExtensions.cs" />
-    <Compile Include="MVCExtensions.cs" />
-    <Compile Include="WebExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringTrimmingBinder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
-      <Name>Orbital7.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Orbital7.Extensions.Attributes.Validation.js" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

@@ -12,7 +12,7 @@ namespace Orbital7.Extensions.Attributes
         LessThanOrEqual
     }
 
-    public sealed partial class GenericCompareAttribute : ValidationAttribute
+    public sealed partial class GenericCompareAttribute : ValidationAttribute//, IClientModelValidator
     {
         private GenericCompareOperator operatorname = GenericCompareOperator.GreaterThanOrEqual;
 
@@ -42,5 +42,16 @@ namespace Orbital7.Extensions.Attributes
                 return new ValidationResult(base.ErrorMessage);
             return null;
         }
+
+        //public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        //{
+        //    string errorMessage = this.FormatErrorMessage(metadata.DisplayName);
+        //    ModelClientValidationRule compareRule = new ModelClientValidationRule();
+        //    compareRule.ErrorMessage = errorMessage;
+        //    compareRule.ValidationType = "genericcompare";
+        //    compareRule.ValidationParameters.Add("comparetopropertyname", CompareToPropertyName);
+        //    compareRule.ValidationParameters.Add("operatorname", OperatorName.ToString());
+        //    yield return compareRule;
+        //}
     }
 }
