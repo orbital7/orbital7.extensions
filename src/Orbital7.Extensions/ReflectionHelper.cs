@@ -9,7 +9,7 @@ namespace Orbital7.Extensions
 {
     public static class ReflectionHelper
     {
-        public static string GetExecutingAssemblyFolder()
+        public static string GetExecutingAssemblyFolderPath()
         {
             string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);

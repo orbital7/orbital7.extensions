@@ -7,6 +7,7 @@ using System.Reflection;
 
 namespace Orbital7.Extensions.Attributes
 {
+    // TODO: See https://stackoverflow.com/questions/36566836/asp-net-core-mvc-client-side-validation-for-custom-attribute for IClientModelValidator
     public partial class NotEqualAttribute : ValidationAttribute//, IClientModelValidator
     {
         public string OtherProperty { get; private set; }

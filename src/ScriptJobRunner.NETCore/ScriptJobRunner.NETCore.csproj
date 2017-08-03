@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>ScriptJobRunner</AssemblyName>
+    <StartupObject>ScriptJobRunner.NETCore.Program</StartupObject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\release\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orbital7.Extensions.ScriptJobs\Orbital7.Extensions.ScriptJobs.csproj" />
+    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>
