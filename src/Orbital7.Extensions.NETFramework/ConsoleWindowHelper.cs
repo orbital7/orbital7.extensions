@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace Orbital7.Extensions.NETFramework
 {
-    public static class ConsoleHelper
+    public static class ConsoleWindowHelper
     {
         [DllImport("user32.dll")]
         static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
@@ -28,14 +28,6 @@ namespace Orbital7.Extensions.NETFramework
             IntPtr hSystemMenu = GetSystemMenu(hMenu, false);
             EnableMenuItem(hSystemMenu, SC_CLOSE, MF_GRAYED);
             RemoveMenu(hSystemMenu, SC_CLOSE, MF_BYCOMMAND); 
-        }
-
-        public static bool GetBooleanArg(string value)
-        {
-            if (value.ToUpper().Equals("TRUE"))
-                return true;
-            else
-                return false;
         }
     }
 }

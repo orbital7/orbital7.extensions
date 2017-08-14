@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace Orbital7.Extensions
                 }
                 catch (Exception e)
                 {
-                    synch.InnerException = e;
+                    synch.RunException = ExceptionDispatchInfo.Capture(e);
                     throw;
                 }
                 finally
@@ -57,7 +58,7 @@ namespace Orbital7.Extensions
                 }
                 catch (Exception e)
                 {
-                    synch.InnerException = e;
+                    synch.RunException = ExceptionDispatchInfo.Capture(e);
                     throw;
                 }
                 finally
@@ -73,7 +74,7 @@ namespace Orbital7.Extensions
         private class ExclusiveSynchronizationContext : SynchronizationContext
         {
             private bool done;
-            public Exception InnerException { get; set; }
+            public ExceptionDispatchInfo RunException { get; set; }
             readonly AutoResetEvent workItemsWaiting = new AutoResetEvent(false);
             readonly Queue<Tuple<SendOrPostCallback, object>> items =
                 new Queue<Tuple<SendOrPostCallback, object>>();
@@ -112,9 +113,9 @@ namespace Orbital7.Extensions
                     if (task != null)
                     {
                         task.Item1(task.Item2);
-                        if (InnerException != null) // the method threw an exeption
+                        if (RunException != null) // the method threw an exeption
                         {
-                            throw new AggregateException("AsyncHelpers.Run method threw an exception.", InnerException);
+                            RunException.Throw();
                         }
                     }
                     else

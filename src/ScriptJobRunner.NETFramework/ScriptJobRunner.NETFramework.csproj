@@ -52,6 +52,10 @@
       <Project>{b98b400f-e0bc-427a-a9c5-4c25e8c98c68}</Project>
       <Name>Orbital7.Extensions.ScriptJobs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
+      <Project>{050ee6aa-0231-4c3e-a265-1b56b6d380a6}</Project>
+      <Name>Orbital7.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

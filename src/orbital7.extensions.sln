@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.ScriptJ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptJobRunner.NETFramework", "ScriptJobRunner.NETFramework\ScriptJobRunner.NETFramework.csproj", "{34490C20-EFB5-48EA-9657-175B2597BDAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptJobRunner.NETCore", "ScriptJobRunner.NETCore\ScriptJobRunner.NETCore.csproj", "{7016AF93-F543-4A72-BD0B-A360B950E7FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptJobRunner.NETCore", "ScriptJobRunner.NETCore\ScriptJobRunner.NETCore.csproj", "{7016AF93-F543-4A72-BD0B-A360B950E7FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.EntityFrameworkCore", "Orbital7.Extensions.EntityFrameworkCore\Orbital7.Extensions.EntityFrameworkCore.csproj", "{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{7016AF93-F543-4A72-BD0B-A360B950E7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7016AF93-F543-4A72-BD0B-A360B950E7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7016AF93-F543-4A72-BD0B-A360B950E7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

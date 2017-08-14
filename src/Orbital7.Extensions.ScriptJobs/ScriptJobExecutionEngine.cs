@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Orbital7.Extensions.ScriptJobs
             // Validate and load.
             if (args.Length >= 1 && File.Exists(args[0]))
                 Load(XMLSerializationHelper.LoadFromXML<ScriptJobExecutionSettings>(File.ReadAllText(args[0])));
-            else if (args.Length <= 2)
+            else if (args.Length < 2)
                 throw new Exception("Insufficient arguments provided: [AssemblyName] [TypeName]");
             else
                 Load(args[0], args[1], args.Length >= 3 ? args[2] : String.Empty);
@@ -70,32 +71,35 @@ namespace Orbital7.Extensions.ScriptJobs
             if (this.ScriptJob != null)
             {
                 Console.WriteLine("LOADED SCRIPT: " + this.ScriptJob.Name);
-                Console.WriteLine();
 
                 // Confirm if requested.
-                if (!this.Settings.UnattendedExecution)
+                if (!this.Settings.UnattendedExecution && ConsoleHelper.PressEnterOrEscKey(enterVerb: "begin execution") == ConsoleEnterOrEscKeyResult.Escape)
                 {
-                    Console.WriteLine("Press ENTER to begin execution or ESC to exit");
-                    var key = Console.ReadKey();
-                    while (key.Key != ConsoleKey.Enter && key.Key != ConsoleKey.Escape)
-                    {
-                        key = Console.ReadKey();
-                    }
-                    if (key.Key == ConsoleKey.Escape)
-                    {
-                        return;
-                    }
+                    this.Settings.UnattendedExecution = true;
+                    return;
                 }
+
+                // Prepare the stopwatch.
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
 
                 // Execute.
                 try
                 {
+                    Console.WriteLine("RUNNING SCRIPT...");
+                    Console.WriteLine();
+
                     await this.ScriptJob.ExecuteAsync();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("UNHANDLED EXECUTION ERROR: " + ex.Message + ex.StackTrace);
+                    ConsoleHelper.WriteExceptionLine(ex, "UNHANDLED EXECUTION ERROR: ");
                 }
+
+                // Display elapsed time.
+                stopwatch.Stop();
+                Console.WriteLine();
+                Console.WriteLine("RUN TIME: " + stopwatch.Elapsed.ToString());
             }
             else
             {
@@ -107,9 +111,7 @@ namespace Orbital7.Extensions.ScriptJobs
         {
             if (!this.Settings.UnattendedExecution)
             {
-                Console.WriteLine();
-                Console.WriteLine("Press a key to exit");
-                Console.ReadKey();
+                ConsoleHelper.PressKeyToContinue("exit");
             }
         }
 

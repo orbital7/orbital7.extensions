@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace System
 {
@@ -77,6 +79,14 @@ namespace System
                 if (!compareList.Contains(item)) difference.Add(item);
 
             return difference;
+        }
+
+        public static bool ContainsCaseInvariant(this IList<string> list, string value)
+        {
+            var lowercaseList = (from string x in list
+                                 select x.ToLower()).ToList();
+
+            return lowercaseList.Contains(value.ToLower());
         }
     }
 }

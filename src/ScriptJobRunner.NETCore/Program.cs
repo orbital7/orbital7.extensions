@@ -1,4 +1,5 @@
-﻿using Orbital7.Extensions.ScriptJobs;
+﻿using Orbital7.Extensions;
+using Orbital7.Extensions.ScriptJobs;
 using System;
 
 namespace ScriptJobRunner.NETCore
@@ -16,7 +17,7 @@ namespace ScriptJobRunner.NETCore
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR LOADING SCRIPT JOB: " + ex.Message + ex.StackTrace);
+                ConsoleHelper.WriteExceptionLine(ex, "ERROR LOADING SCRIPT JOB: ");
             }
             finally
             {

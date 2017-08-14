@@ -88,7 +88,7 @@ namespace Orbital7.Extensions
             DeleteFolderRecur(folderPath);
             return !Directory.Exists(folderPath);
         }
-
+        
         public static void DeleteFile(string filePath)
         {
             if (!String.IsNullOrEmpty(filePath) && File.Exists(filePath))
@@ -99,6 +99,11 @@ namespace Orbital7.Extensions
                 }
                 catch { }
             }
+        }
+
+        public static void DeleteFile(params string[] paths)
+        {
+            DeleteFile(Path.Combine(paths));
         }
 
         public static string DeleteFolderFiles(string folderPath)
