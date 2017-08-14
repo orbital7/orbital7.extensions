@@ -6,8 +6,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-// TODO: This library needs Microsoft.AspNet.WebApi.Client, which isn't yet available in .NET Standard 2.0 Preview 2, 
-// but is planned for inclusion in Preview 3. See:
+// TODO: This library needs Microsoft.AspNet.WebApi.Client, which isn't yet available in .NET Standard 2.0. See:
 //
 // https://github.com/aspnet/Mvc/issues/5822
 // https://github.com/aspnet/Home/issues/1558
