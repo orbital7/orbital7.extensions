@@ -21,5 +21,10 @@ namespace Orbital7.Extensions
 
             return enumValList;
         }
+
+        public static T Parse<T>(string value)
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
     }
 }

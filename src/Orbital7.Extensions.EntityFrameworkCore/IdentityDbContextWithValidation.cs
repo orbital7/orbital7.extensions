@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,26 +21,6 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             : base(options)
         {
 
-        }
-
-        // NB: This method relies on the convention that the table names are class names + "s" or "ies" for class names ending in "y".
-        public async Task<List<T>> GatherAsync<T>(List<Guid> ids, bool asNoTracking, string idColumnName = "Id") where T : class
-        {
-            var className = typeof(T).Name;
-            var tableName = className.EndsWith("y") ? className.PruneEnd(1) + "ies" : className + "s";
-            
-            var values = new StringBuilder();
-            values.AppendFormat("'{0}'", ids[0]);
-            for (int i = 1; i < ids.Count; i++)
-                values.AppendFormat(", '{0}'", ids[i]);
-
-            var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})", tableName, idColumnName, values);
-
-            // TODO: See https://github.com/aspnet/EntityFramework/issues/1862
-            if (asNoTracking)
-                return await Set<T>().FromSql(sql).AsNoTracking().ToListAsync();
-            else
-                return await Set<T>().FromSql(sql).ToListAsync();
         }
 
         public int ValidateAndSaveChanges(bool acceptAllChangesOnSuccess = true)

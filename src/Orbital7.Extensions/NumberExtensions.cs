@@ -23,6 +23,11 @@ namespace System
             return value;
         }
 
+        public static string ToCurrency(this decimal number, bool addSymbol = false, bool addCommas = true)
+        {
+            return ToCurrency(Convert.ToDouble(number), addSymbol, addCommas);
+        }
+
         public static string ToFileSize(this long fileSizeInBytes)
         {
             return String.Format(new FileSizeFormatProvider(), "{0:fs}", fileSizeInBytes);
@@ -44,6 +49,30 @@ namespace System
         public static string ToHour(this int value)
         {
             return new DateTime(2000, 1, 1, value, 0, 0).ToString("hh:mm tt");
+        }
+
+        public static string ToString(this int? value, string nullValue)
+        {
+            if (value.HasValue)
+                return value.ToString();
+            else
+                return nullValue;
+        }
+
+        public static string ToString(this decimal? value, string nullValue)
+        {
+            if (value.HasValue)
+                return value.ToString();
+            else
+                return nullValue;
+        }
+
+        public static string ToString(this double? value, string nullValue)
+        {
+            if (value.HasValue)
+                return value.ToString();
+            else
+                return nullValue;
         }
     }
 }

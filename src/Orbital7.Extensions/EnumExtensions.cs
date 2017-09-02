@@ -9,9 +9,9 @@ namespace System
 {
     public static class EnumExtensions
     {
-        public static string ToDisplayString(this Enum value, string nullValue = "")
+        public static string ToDisplayString(this Enum target, string nullValue = "")
         {
-            return AttributesHelper.GetEnumDisplayName(value, nullValue);
+            return AttributesHelper.GetEnumDisplayName(target, nullValue);
         }
     }
 }

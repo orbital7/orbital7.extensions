@@ -86,6 +86,7 @@ namespace Orbital7.Extensions.ScriptJobs
                 // Execute.
                 try
                 {
+                    Console.WriteLine();
                     Console.WriteLine("RUNNING SCRIPT...");
                     Console.WriteLine();
 
