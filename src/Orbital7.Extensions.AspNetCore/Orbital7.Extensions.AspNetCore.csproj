@@ -17,4 +17,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

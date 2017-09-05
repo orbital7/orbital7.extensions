@@ -11,7 +11,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-	<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -54,7 +54,7 @@
       <Name>Orbital7.Extensions.ScriptJobs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{050ee6aa-0231-4c3e-a265-1b56b6d380a6}</Project>
+      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
       <Name>Orbital7.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
