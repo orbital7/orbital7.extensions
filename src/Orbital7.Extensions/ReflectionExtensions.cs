@@ -26,5 +26,22 @@ namespace System
 
             return (T)attribute;
         }
+
+        public static List<Type> GetTypes(this Assembly assembly, Type type)
+        {
+            var types = new List<Type>();
+            string targetInterface = type.ToString();
+
+            foreach (var assemblyType in assembly.GetTypes())
+            {
+                if ((assemblyType.IsPublic) && (!assemblyType.IsAbstract))
+                {
+                    if (assemblyType.IsSubclassOf(type) || assemblyType.Equals(type) || (assemblyType.GetInterface(targetInterface) != null))
+                        types.Add(assemblyType);
+                }
+            }
+
+            return types;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Orbital7.Extensions
     {
         public static string GetExecutingAssemblyFolderPath()
         {
-            string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             return Path.GetDirectoryName(path);
@@ -20,7 +20,6 @@ namespace Orbital7.Extensions
         public static List<Type> GetTypes(Type type, string folderPath)
         {
             List<Type> types = new List<Type>();
-            string targetInterface = type.ToString();
 
             foreach (string filePath in Directory.GetFiles(folderPath, "*.dll"))
             {
@@ -36,15 +35,7 @@ namespace Orbital7.Extensions
                         continue;
 
                     var assembly = Assembly.LoadFrom(filePath);
-
-                    foreach (var assemblyType in assembly.GetTypes())
-                    {
-                        if ((assemblyType.IsPublic) && (!assemblyType.IsAbstract))
-                        {
-                            if (assemblyType.IsSubclassOf(type) || assemblyType.Equals(type) || (assemblyType.GetInterface(targetInterface) != null))
-                                types.Add(assemblyType);
-                        }
-                    }
+                    types.AddRange(assembly.GetTypes(type));
                 }
                 catch { }
             }
