@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
@@ -9,11 +9,14 @@
     <projectUrl>https://github.com/orbital7/orbital7.extensions</projectUrl>
     <iconUrl>https://avatars1.githubusercontent.com/u/15078943</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>.NET Extensions/Utility Libraries - Base Library</description>
+    <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>$copyright$</copyright>
     <tags></tags>
-    <dependencies/>
+    <dependencies>
+		<dependency id="GemBox.Spreadsheet" version="41.3.30" />
+		<dependency id="Orbital7.Extensions" version="2.0.1" />
+	</dependencies>
   </metadata>
   <files/>
 </package>

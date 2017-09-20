@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,7 +41,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateRangeReportBase.cs" />
+    <Compile Include="DateReportBase.cs" />
+    <Compile Include="GemBoxSpreadsheetReportBuilderBase.cs" />
+    <Compile Include="IReport.cs" />
+    <Compile Include="IReportBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportBase.cs" />
+    <Compile Include="ReportGenerationEngine.cs" />
+    <Compile Include="ReportOutput.cs" />
+    <Compile Include="GemBoxDocumentReportBuilderBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GemBox.Spreadsheet">
+      <Version>41.3.30.1111</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
+      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
+      <Name>Orbital7.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
