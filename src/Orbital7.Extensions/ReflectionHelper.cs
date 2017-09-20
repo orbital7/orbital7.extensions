@@ -56,6 +56,11 @@ namespace Orbital7.Extensions
             return (T)Activator.CreateInstance(type);
         }
 
+        public static T CreateInstance<T>()
+        {
+            return CreateInstance<T>(typeof(T));
+        }
+
         public static T CreateInstance<T>(Type type, object[] parameters)
         {
             return (T)Activator.CreateInstance(type, parameters);
