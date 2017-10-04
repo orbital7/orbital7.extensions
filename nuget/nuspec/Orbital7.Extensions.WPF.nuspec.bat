@@ -1,1 +1,1 @@
-..\nuget.exe pack ..\..\src\Orbital7.Extensions.NETFramework.WPF\Orbital7.Extensions.NETFramework.WPF.csproj -outputdirectory ..\packages -properties Configuration=Release
+..\nuget.exe pack ..\..\src\Orbital7.Extensions.WPF\Orbital7.Extensions.WPF.csproj -outputdirectory ..\packages -properties Configuration=Release

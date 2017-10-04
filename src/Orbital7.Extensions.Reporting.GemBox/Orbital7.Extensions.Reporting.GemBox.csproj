@@ -55,5 +55,8 @@
       <Name>Orbital7.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Orbital7.Extensions.Reporting.GemBox.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

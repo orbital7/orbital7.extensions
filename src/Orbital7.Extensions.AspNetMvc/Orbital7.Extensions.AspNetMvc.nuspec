@@ -9,15 +9,14 @@
     <projectUrl>https://github.com/orbital7/orbital7.extensions</projectUrl>
     <iconUrl>https://avatars1.githubusercontent.com/u/15078943</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>.NET Extensions/Utility Libraries - .NET Framework Library</description>
+    <description>.NET Extensions/Utility Libraries - Asp.Net Mvc Library</description>
     <releaseNotes></releaseNotes>
     <copyright>$copyright$</copyright>
     <tags></tags>
     <dependencies>
-		<dependency id="Orbital7.Extensions" version="2.0.7" />
-		<dependency id="iTextSharp" version="5.5.11" />
-    <dependency id="TaskScheduler" version="2.6.1" />
-	</dependencies>
+		  <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
+      <dependency id="Orbital7.Extensions" version="2.0.7" />
+	  </dependencies>
   </metadata>
   <files/>
 </package>

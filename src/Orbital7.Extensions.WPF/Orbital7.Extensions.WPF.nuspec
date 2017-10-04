@@ -9,13 +9,13 @@
     <projectUrl>https://github.com/orbital7/orbital7.extensions</projectUrl>
     <iconUrl>https://avatars1.githubusercontent.com/u/15078943</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>.NET Extensions/Utility Libraries - NETFramework WPF Library</description>
+    <description>.NET Extensions/Utility Libraries - WPF Library</description>
     <releaseNotes></releaseNotes>
     <copyright>$copyright$</copyright>
     <tags></tags>
     <dependencies>
-		<dependency id="Orbital7.Extensions" version="2.0.1" />
-		<dependency id="Orbital7.Extensions.NETFramework.WinForms" version="2.0.1" />
+		<dependency id="Orbital7.Extensions" version="2.0.7" />
+		<dependency id="Orbital7.Extensions.WinForms" version="2.0.0" />
 	</dependencies>
   </metadata>
   <files/>
