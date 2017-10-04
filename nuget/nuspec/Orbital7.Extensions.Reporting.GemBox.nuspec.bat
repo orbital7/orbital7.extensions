@@ -1,0 +1,1 @@
+..\nuget.exe pack ..\..\src\Orbital7.Extensions.Reporting.GemBox\Orbital7.Extensions.Reporting.GemBox.csproj -outputdirectory ..\packages -properties Configuration=Release

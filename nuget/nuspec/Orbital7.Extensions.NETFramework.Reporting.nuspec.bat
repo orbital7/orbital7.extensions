@@ -1,1 +1,0 @@
-..\nuget.exe pack ..\..\src\Orbital7.Extensions.NETFramework.Reporting\Orbital7.Extensions.NETFramework.Reporting.csproj -outputdirectory ..\packages -properties Configuration=Release

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace Microsoft.EntityFrameworkCore
 {
     public static class DbSetExtensions
     {
-        public static async Task<List<T>> GatherAsync<T>(this DbSet<T> dbSet, IList ids, bool asNoTracking, string whereAndClause = "",
+        public static IQueryable<T> CreateContainsIdsQuery<T>(this DbSet<T> dbSet, IList ids, string whereAndClause = "",
             string queryIdColumnName = "Id", string tableNameOverride = null) where T : class
         {
             if (ids.Count > 0)
@@ -34,12 +35,19 @@ namespace Microsoft.EntityFrameworkCore
                 var sql = String.Format("SELECT * FROM {0} WHERE {1}", tableName, whereAndClause).Trim();
                 sql += String.Format(" {0} IN ({1})", queryIdColumnName, values);
 
-                return await dbSet.FromSql(sql).ToListAsync(asNoTracking);
+                return dbSet.FromSql(sql);
             }
             else
             {
-                return new List<T>();
+                return Enumerable.Empty<T>().AsQueryable();
             }
+        }
+
+        public static async Task<List<T>> GatherAsync<T>(this DbSet<T> dbSet, IList ids, bool asNoTracking, 
+            string whereAndClause = "", string queryIdColumnName = "Id", string tableNameOverride = null) where T : class
+        {
+            return await CreateContainsIdsQuery(dbSet, ids, whereAndClause, queryIdColumnName, 
+                tableNameOverride).ToListAsync(asNoTracking);
         }
     }
 }

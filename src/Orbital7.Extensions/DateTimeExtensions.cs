@@ -63,7 +63,7 @@ namespace System
         
         public static string ToShortDateString(this DateTime date)
         {
-            return date.ToString("M/d/yyyy");
+            return date.ToString("MM/dd/yyyy");
         }
 
         public static string ToShortDateString(this DateTime? date, string nullValue = "")

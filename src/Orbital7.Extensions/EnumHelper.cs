@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Orbital7.Extensions
 {
-    public static partial class EnumHelper
+    public static class EnumHelper
     {
         public static List<T> EnumToList<T>()
         {

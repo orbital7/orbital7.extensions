@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>Josh van Eikeren</authors>
+    <owners>jvaneikeren</owners>
+    <licenseUrl>https://github.com/orbital7/orbital7.extensions/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/orbital7/orbital7.extensions</projectUrl>
+    <iconUrl>https://avatars1.githubusercontent.com/u/15078943</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags></tags>
+    <dependencies>
+		<dependency id="GemBox.Spreadsheet" version="41.3.30" />
+		<dependency id="Orbital7.Extensions" version="2.0.5" />
+	</dependencies>
+  </metadata>
+  <files/>
+</package>
