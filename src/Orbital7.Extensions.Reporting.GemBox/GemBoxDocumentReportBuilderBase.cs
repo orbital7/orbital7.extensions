@@ -4,24 +4,14 @@ using System.Text;
 
 namespace Orbital7.Extensions.Reporting.GemBox
 {
-    public abstract class GemBoxDocumentReportBuilderBase : IReportBuilder
+    public abstract class GemBoxDocumentReportBuilderBase : ReportBuilderBase
     {
         public GemBoxDocumentReportBuilderBase(string licenseKey)
         {
             // TODO.
         }
 
-        public virtual string GetFilename(IReport report, ReportFormat reportFormat)
-        {
-            return report.GetFilename(((IReportBuilder)this).GetFileExtension(reportFormat));
-        }
-
-        byte[] IReportBuilder.CreatePngPreview()
-        {
-            throw new NotImplementedException();
-        }
-
-        string IReportBuilder.GetContentType(ReportFormat reportFormat)
+        protected override string GetContentType(ReportFormat reportFormat)
         {
             if (reportFormat == ReportFormat.Pdf)
                 return "application/pdf";
@@ -29,7 +19,7 @@ namespace Orbital7.Extensions.Reporting.GemBox
                 return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         }
 
-        string IReportBuilder.GetFileExtension(ReportFormat reportFormat)
+        protected override string GetFileExtension(ReportFormat reportFormat)
         {
             if (reportFormat == ReportFormat.Pdf)
                 return ".pdf";
@@ -37,12 +27,17 @@ namespace Orbital7.Extensions.Reporting.GemBox
                 return ".docx";
         }
 
-        byte[] IReportBuilder.Save(ReportFormat reportFormat)
+        protected override byte[] Save(ReportFormat reportFormat)
         {
             throw new NotImplementedException();
         }
 
-        void IReportBuilder.WriteError(Exception ex)
+        protected override byte[] CreatePngPreview()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void WriteError(Exception ex)
         {
             throw new NotImplementedException();
         }

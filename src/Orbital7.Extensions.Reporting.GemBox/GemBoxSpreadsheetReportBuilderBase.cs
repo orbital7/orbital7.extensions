@@ -6,13 +6,11 @@ using System.IO;
 
 namespace Orbital7.Extensions.Reporting.GemBox
 {
-    public abstract class GemBoxSpreadsheetReportBuilderBase : IReportBuilder
+    public abstract class GemBoxSpreadsheetReportBuilderBase : ReportBuilderBase
     {
         private const string SHEET1 = "Sheet1";
 
         protected ExcelFile ExcelFile { get; set; }
-
-        protected ExcelWorksheet ActiveWorksheet { get; set; }
 
         public GemBoxSpreadsheetReportBuilderBase(string licenseKey)
         {
@@ -20,20 +18,12 @@ namespace Orbital7.Extensions.Reporting.GemBox
             this.ExcelFile = new ExcelFile();
         }
 
-        public virtual string GetFilename(IReport report, ReportFormat reportFormat)
+        protected override byte[] CreatePngPreview()
         {
-            return report.GetFilename(((IReportBuilder)this).GetFileExtension(reportFormat));
+            throw new NotImplementedException();
         }
 
-        string IReportBuilder.GetFileExtension(ReportFormat reportFormat)
-        {
-            if (reportFormat == ReportFormat.Pdf)
-                return ".pdf";
-            else
-                return ".xlsx";
-        }
-
-        string IReportBuilder.GetContentType(ReportFormat reportFormat)
+        protected override string GetContentType(ReportFormat reportFormat)
         {
             if (reportFormat == ReportFormat.Pdf)
                 return "application/pdf";
@@ -41,7 +31,15 @@ namespace Orbital7.Extensions.Reporting.GemBox
                 return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         }
 
-        byte[] IReportBuilder.Save(ReportFormat reportFormat)
+        protected override string GetFileExtension(ReportFormat reportFormat)
+        {
+            if (reportFormat == ReportFormat.Pdf)
+                return ".pdf";
+            else
+                return ".xlsx";
+        }
+
+        protected override byte[] Save(ReportFormat reportFormat)
         {
             SaveOptions saveOptions = null;
             if (reportFormat == ReportFormat.Pdf)
@@ -56,27 +54,22 @@ namespace Orbital7.Extensions.Reporting.GemBox
             }
         }
 
-        byte[] IReportBuilder.CreatePngPreview()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IReportBuilder.WriteError(Exception ex)
+        protected override void WriteError(Exception ex)
         {
             for (int index = this.ExcelFile.Worksheets.Count - 1; index >= 0; index--)
                 this.ExcelFile.Worksheets.Remove(index);
 
             CreateTextWorksheet("ERROR: " + ex.Message + ex.StackTrace, "ERROR");
         }
-
+        
         public virtual ExcelWorksheet CreateTextWorksheet(string text, string worksheetName = SHEET1, bool portrait = false, 
             double margins = 0.5)
         {
-            CreateWorksheet(worksheetName, portrait, true, margins);
-            this.ActiveWorksheet.Cells[0, 0].Value = text;
-            this.ActiveWorksheet.Columns[0].AutoFit(1, this.ActiveWorksheet.Rows[0], this.ActiveWorksheet.Rows[0]);
+            var ws = CreateWorksheet(worksheetName, portrait, true, margins);
+            ws.Cells[0, 0].Value = text;
+            ws.Columns[0].AutoFit(1, ws.Rows[0], ws.Rows[0]);
 
-            return this.ActiveWorksheet;
+            return ws;
         }
 
         public virtual ExcelWorksheet CreateWorksheet(string worksheetName = SHEET1, bool portrait = false, 
@@ -88,20 +81,20 @@ namespace Orbital7.Extensions.Reporting.GemBox
                 worksheetName = worksheetName.Replace(":", "").Replace("\\", "").Replace("/", "").Replace("?", "")
                                              .Replace("*", "").Replace("[", "").Replace("]", "").PruneEnd("'");
 
-            this.ActiveWorksheet = this.ExcelFile.Worksheets.Add(worksheetName);
+            var ws = this.ExcelFile.Worksheets.Add(worksheetName);
             if (fitToSinglePage)
             {
-                this.ActiveWorksheet.PrintOptions.FitToPage = true;
-                this.ActiveWorksheet.PrintOptions.FitWorksheetWidthToPages = 1;
+                ws.PrintOptions.FitToPage = true;
+                ws.PrintOptions.FitWorksheetWidthToPages = 1;
             }
-            this.ActiveWorksheet.PrintOptions.Portrait = portrait;
+            ws.PrintOptions.Portrait = portrait;
 
-            this.ActiveWorksheet.PrintOptions.BottomMargin = margins;
-            this.ActiveWorksheet.PrintOptions.LeftMargin = margins;
-            this.ActiveWorksheet.PrintOptions.RightMargin = margins;
-            this.ActiveWorksheet.PrintOptions.TopMargin = margins;
+            ws.PrintOptions.BottomMargin = margins;
+            ws.PrintOptions.LeftMargin = margins;
+            ws.PrintOptions.RightMargin = margins;
+            ws.PrintOptions.TopMargin = margins;
 
-            return this.ActiveWorksheet;
+            return ws;
         }
     }
 }

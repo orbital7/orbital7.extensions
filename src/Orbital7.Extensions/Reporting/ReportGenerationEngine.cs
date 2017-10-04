@@ -10,7 +10,7 @@ namespace Orbital7.Extensions.Reporting
     {
         public async Task<ReportOutput> CreateReportAsync<T>(ReportBase<T> report,
             T reportBuilder, ReportFormat reportFormat, bool includePreview, bool writeBuildErrorToReport)
-            where T : IReportBuilder
+            where T : ReportBuilderBase
         {
             try
             {
@@ -19,7 +19,7 @@ namespace Orbital7.Extensions.Reporting
             catch (Exception ex)
             {
                 if (writeBuildErrorToReport)
-                    reportBuilder.WriteError(ex);
+                    ((IReportBuilder)reportBuilder).WriteError(ex);
                 else
                     throw ex;
             }
