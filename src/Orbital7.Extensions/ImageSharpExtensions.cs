@@ -1,38 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 
-namespace ImageSharp
+namespace SixLabors.ImageSharp
 {
     public static class ImageSharpExtensions
     {
-        public static Image<Color> EnsureMaximumSize(this Image<Color> image, int maxWidth, int maxHeight,
-        bool maintainAspectRatio = true)
+        public static IImageProcessingContext<TPixel> EnsureMaximumSize<TPixel>(this IImageProcessingContext<TPixel> source, int maxWidth, int maxHeight,
+            bool maintainAspectRatio = true) where TPixel : struct, IPixel<TPixel>
         {
-            if ((image.Width > maxWidth) || (image.Height > maxHeight))
+            return source.Apply(image =>
             {
-                if (maintainAspectRatio)
+                if ((image.Width > maxWidth) || (image.Height > maxHeight))
                 {
-                    Image<Color> sizedBitmap = image;
-
-                    // Handle if width is larger.
-                    if (image.Width > image.Height)
-                        sizedBitmap = image.Resize(maxWidth, Convert.ToInt32(image.Height * maxWidth / image.Width));
-                    // Else height is larger.
+                    if (maintainAspectRatio)
+                    {
+                        // Handle if width is larger.
+                        if (image.Width > image.Height)
+                            image.Mutate(x => x.Resize(maxWidth, Convert.ToInt32(image.Height * maxWidth / image.Width)));
+                        // Else height is larger.
+                        else
+                            image.Mutate(x => x.Resize(Convert.ToInt32(image.Width * maxHeight / image.Height), maxHeight));
+                    }
                     else
-                        sizedBitmap = image.Resize(Convert.ToInt32(image.Width * maxHeight / image.Height), maxHeight);
-
-                    return sizedBitmap;
+                    {
+                        image.Mutate(x => x.Resize(maxWidth, maxHeight));
+                    }
                 }
-                else
-                {
-                    return image.Resize(maxWidth, maxHeight);
-                }
-            }
-            else
-            {
-                return image;
-            }
+            });
         }
     }
 }

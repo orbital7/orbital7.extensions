@@ -1,4 +1,5 @@
-﻿using ImageSharp.Formats;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,17 +13,17 @@ namespace Orbital7.Extensions
             switch (fileExtension.ToLower())
             {
                 case ".gif":
-                    return new GifFormat();
+                    return ImageFormats.Gif;
 
                 case ".jpg":
                 case ".jpeg":
-                    return new JpegFormat();
+                    return ImageFormats.Jpeg;
 
                 case ".png":
-                    return new PngFormat();
+                    return ImageFormats.Png;
 
                 case ".bmp":
-                    return new BmpFormat();
+                    return ImageFormats.Bmp;
 
                     //case ".tif":
                     //case ".tiff":
