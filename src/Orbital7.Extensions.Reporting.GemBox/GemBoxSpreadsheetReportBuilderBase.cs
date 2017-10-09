@@ -20,7 +20,21 @@ namespace Orbital7.Extensions.Reporting.GemBox
 
         protected override byte[] CreatePngPreview()
         {
-            throw new NotImplementedException();
+            this.ExcelFile.Worksheets.ActiveWorksheet = this.ExcelFile.Worksheets[0];
+
+            var saveOptions = new ImageSaveOptions()
+            {
+                SelectionType = SelectionType.ActiveSheet,
+                Format = ImageSaveFormat.Png,
+                PageNumber = 0,
+                PageCount = 1,
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                this.ExcelFile.Save(ms, saveOptions);
+                return ms.ToArray();
+            }
         }
 
         protected override string GetContentType(ReportFormat reportFormat)
@@ -88,7 +102,6 @@ namespace Orbital7.Extensions.Reporting.GemBox
                 ws.PrintOptions.FitWorksheetWidthToPages = 1;
             }
             ws.PrintOptions.Portrait = portrait;
-
             ws.PrintOptions.BottomMargin = margins;
             ws.PrintOptions.LeftMargin = margins;
             ws.PrintOptions.RightMargin = margins;

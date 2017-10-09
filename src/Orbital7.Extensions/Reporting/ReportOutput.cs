@@ -21,7 +21,7 @@ namespace Orbital7.Extensions.Reporting
 
         public ReportOutput(IReport report, IReportBuilder reportBuilder, ReportFormat reportFormat, bool includePreview)
         {
-            this.Filename = report.GetFilename(reportBuilder.GetFileExtension(reportFormat));
+            this.Filename = reportBuilder.GetFilename(report, reportFormat);
             this.FileContentType = reportBuilder.GetContentType(reportFormat);
             this.FileContents = reportBuilder.Save(reportFormat);
             if (includePreview)
