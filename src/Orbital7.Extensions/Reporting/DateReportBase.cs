@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Orbital7.Extensions.Reporting
 {
-    public abstract class DateReportBase<T> : ReportBase<T>
+    public abstract class DateReportBase<T> : ReportBase<T>, IDateReport
         where T : IReportBuilder
     {
         public DateTime Date { get; set; }

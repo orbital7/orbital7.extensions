@@ -19,6 +19,17 @@ namespace System
         public const string AlphanumericChars = NumberChars + LetterChars;
         public const string WhitespaceChars = " \r\n\t\v\f";
 
+        public static string Replace(this string text, IDictionary<string, string> textReplacementKeys)
+        {
+            string value = text;
+
+            if (textReplacementKeys != null)
+                foreach (var item in textReplacementKeys)
+                    value = value.Replace(item.Key, item.Value);
+
+            return value;
+        }
+
         public static string UrlEncode(this string value)
         {
             return System.Web.HttpUtility.UrlEncode(value);

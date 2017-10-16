@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Orbital7.Extensions.Reporting
 {
-    public abstract class DateRangeReportBase<T> : ReportBase<T>
+    public abstract class DateRangeReportBase<T> : ReportBase<T>, IDateRangeReport
         where T : IReportBuilder
     {
         [Display(Name = "Start Date")]
