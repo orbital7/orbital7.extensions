@@ -32,7 +32,7 @@ namespace Orbital7.Extensions.ScriptJobs
             if (args.Length >= 1 && args[0].ToUpper() == ARG_FILE)
             {
                 if (args.Length >= 2 && File.Exists(args[1]))
-                    Load(XMLSerializationHelper.LoadFromXML<ScriptJobExecutionSettings>(File.ReadAllText(args[1])));
+                    Load(SerializationHelper.LoadFromXml<ScriptJobExecutionSettings>(File.ReadAllText(args[1])));
                 else
                     throw new Exception("FILE USAGE: -FILE [FilePath]");
             }
@@ -61,10 +61,9 @@ namespace Orbital7.Extensions.ScriptJobs
 
         private IScriptJobsRunnerStartUp GetStartUp()
         {
-            var types = ReflectionHelper.GetTypes(typeof(IScriptJobsRunnerStartUp), 
-                ReflectionHelper.GetExecutingAssemblyFolderPath());
+            var types = Assembly.GetExecutingAssembly().GetTypes<IScriptJobsRunnerStartUp>();
             if (types.Count > 0)
-                return ReflectionHelper.CreateInstance<IScriptJobsRunnerStartUp>(types[0]);
+                return types[0].CreateInstance<IScriptJobsRunnerStartUp>();
             else
                 return null;
         }

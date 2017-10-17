@@ -15,7 +15,7 @@
     <tags></tags>
     <dependencies>
 		  <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
-      <dependency id="Orbital7.Extensions" version="2.0.7" />
+      <dependency id="Orbital7.Extensions" version="2.0.10" />
 	  </dependencies>
   </metadata>
   <files/>

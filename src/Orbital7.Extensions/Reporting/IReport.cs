@@ -6,24 +6,6 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.Reporting
 {
-    public enum ReportScopeType
-    {
-        All,
-
-        Specific,
-    }
-
-    public enum ReportNativeType
-    {
-        Pdf,
-
-        [Display(Name = "Excel Spreadsheet")]
-        ExcelSpreadsheet,
-
-        [Display(Name = "Word Document")]
-        WordDocument,
-    }
-
     public interface IReport
     {
         string Name { get; }

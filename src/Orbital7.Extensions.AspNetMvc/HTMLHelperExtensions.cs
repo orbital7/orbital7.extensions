@@ -32,7 +32,7 @@ namespace System.Web.Mvc.Html
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
 
             IDictionary<string, object> attributes = ToAttributesDictionary(htmlAttributes);
-            RangeAttribute rangeAttribute = AttributesHelper.GetAttribute<RangeAttribute>(metadata.ContainerType, metadata.PropertyName);
+            RangeAttribute rangeAttribute = metadata.ContainerType.GetPropertyAttribute<RangeAttribute>(metadata.PropertyName);
             if (rangeAttribute != null)
             {
                 attributes.Add("type", "number");

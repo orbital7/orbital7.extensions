@@ -37,7 +37,7 @@ namespace Orbital7.Extensions.Attributes
                 return ValidationResult.Success;
 
             return new ValidationResult(string.Format(this.ErrorMessage, validationContext.DisplayName,
-                AttributesHelper.GetPropertyDisplayName(validationContext.ObjectType, this.PropertyName)));
+                validationContext.ObjectType.GetPropertyDisplayName(this.PropertyName)));
         }
     }
 }

@@ -8,19 +8,29 @@ using System.Xml;
 
 namespace Orbital7.Extensions
 {
-    public static partial class XMLSerializationHelper
+    public static partial class SerializationHelper
     {
         public static T CloneObject<T>(T objectToClone)
         {
-            return LoadFromXML<T>(SerializeToXML(objectToClone));
+            return LoadFromXml<T>(SerializeToXml(objectToClone));
         }
 
-        public static T LoadFromXML<T>(string xml)
+        public static T LoadFromXmlFile<T>(string filePath)
         {
-            return (T)LoadFromXML(typeof(T), xml);
+            return (T)LoadFromXmlFile(typeof(T), filePath);
         }
 
-        public static object LoadFromXML(Type type, string xml)
+        public static T LoadFromXml<T>(string xml)
+        {
+            return (T)LoadFromXml(typeof(T), xml);
+        }
+
+        public static object LoadFromXmlFile(Type type, string filePath)
+        {
+            return LoadFromXml(type, File.ReadAllText(filePath));
+        }
+
+        public static object LoadFromXml(Type type, string xml)
         {
             object deserializedObject = null;
 
@@ -32,7 +42,12 @@ namespace Orbital7.Extensions
             return deserializedObject;
         }
 
-        public static string SerializeToXML(object objectToSerialize)
+        public static void SerializeToXmlFile(object objectToSerialize, string filePath)
+        {
+            File.WriteAllText(filePath, SerializeToXml(objectToSerialize));
+        }
+
+        public static string SerializeToXml(object objectToSerialize)
         {
             return SerializeToStringWriter(objectToSerialize);
         }
@@ -50,13 +65,13 @@ namespace Orbital7.Extensions
             return value;
         }
 
-        public static object LoadFromTextReader(Type type, TextReader textReader)
+        private static object LoadFromTextReader(Type type, TextReader textReader)
         {
             XmlSerializer xserDocumentSerializer = new XmlSerializer(type);
             return xserDocumentSerializer.Deserialize(XmlReader.Create(textReader, new XmlReaderSettings() { CheckCharacters = false }));
         }
 
-        public static void SerializeToTextWriter(object objectToSerialize, TextWriter textWriter)
+        private static void SerializeToTextWriter(object objectToSerialize, TextWriter textWriter)
         {
             Type type = objectToSerialize.GetType();
             XmlSerializer xmlSerializer = new XmlSerializer(type);

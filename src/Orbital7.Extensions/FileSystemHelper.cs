@@ -20,16 +20,6 @@ namespace Orbital7.Extensions
             return normalizedPath;
         }
 
-        public static T LoadFromSerializedXMLFile<T>(string filePath)
-        {
-            return (T)XMLSerializationHelper.LoadFromTextReader(typeof(T), new StreamReader(filePath, Encoding.UTF8));
-        }
-
-        public static void SerializeToXMLFile(object objectToSerialize, string filePath)
-        {
-            XMLSerializationHelper.SerializeToTextWriter(objectToSerialize, new StreamWriter(filePath, false, Encoding.UTF8));
-        }
-
         public static string GetFolderSize(string folderPath)
         {
             long size = 0;
