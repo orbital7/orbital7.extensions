@@ -8,18 +8,11 @@ namespace System
 {
     public static class SerializableTupleExtensions
     {
-        public static List<SerializableTuple<Guid, string>> InsertEmptyTextItem(this List<SerializableTuple<Guid, string>> list, string emptyText = null)
+        public static List<SerializableTuple<T, string>> InsertEmptyTextItem<T>(this List<SerializableTuple<T, string>> list, 
+            string emptyText = null)
         {
             if (!String.IsNullOrEmpty(emptyText))
-                list.Insert(0, new SerializableTuple<Guid, string>(Guid.Empty, emptyText));
-
-            return list;
-        }
-
-        public static List<SerializableTuple<string, string>> InsertEmptyTextItem(this List<SerializableTuple<string, string>> list, string emptyText = null)
-        {
-            if (!String.IsNullOrEmpty(emptyText))
-                list.Insert(0, new SerializableTuple<string, string>(String.Empty, emptyText));
+                list.Insert(0, new SerializableTuple<T, string>(default(T), emptyText));
 
             return list;
         }
@@ -34,6 +27,34 @@ namespace System
                 tupleList = tupleList.OrderBy(x => x.Item2).ToList();
 
             return tupleList.InsertEmptyTextItem(emptyText);
+        }
+
+        public static T2 GetItem2<T1, T2>(this List<SerializableTuple<T1, T2>> list, T1 item1)
+        {
+            return (from x in list
+                    where (x.Item1 == null && item1 == null) || (x.Item1 != null && x.Item1.Equals(item1))
+                    select x.Item2).FirstOrDefault();
+        }
+
+        public static List<T2> GatherItem2s<T1, T2>(this List<SerializableTuple<T1, T2>> list, T1 item1)
+        {
+            return (from x in list
+                    where (x.Item1 == null && item1 == null) || (x.Item1 != null && x.Item1.Equals(item1))
+                    select x.Item2).ToList();
+        }
+
+        public static T1 GetItem1<T1, T2>(this List<SerializableTuple<T1, T2>> list, T2 item2)
+        {
+            return (from x in list
+                    where (x.Item2 == null && item2 == null) || (x.Item2 != null && x.Item2.Equals(item2))
+                    select x.Item1).FirstOrDefault();
+        }
+
+        public static List<T1> GatherItem1s<T1, T2>(this List<SerializableTuple<T1, T2>> list, T2 item2)
+        {
+            return (from x in list
+                    where (x.Item2 == null && item2 == null) || (x.Item2 != null && x.Item2.Equals(item2))
+                    select x.Item1).ToList();
         }
     }
 }

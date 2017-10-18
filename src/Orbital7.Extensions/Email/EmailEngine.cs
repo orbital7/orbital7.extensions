@@ -20,11 +20,11 @@ namespace Orbital7.Extensions.Email
 
         public void SendHtmlEmail(string fromAddress, string fromName, string toAddresses, string subject,
             string htmlBody, bool sendAsync, IDictionary<string, string> textReplacementKeys = null, 
-            IDictionary<string, byte[]> imageContentReplacementKeys = null, IList<string> attachmentFilePaths = null, 
-            IDictionary<string, byte[]> attachmentFileContents = null)
+            IDictionary<string, byte[]> imageContentReplacementKeys = null, string imageContentType = "image/png", 
+            IList<string> attachmentFilePaths = null, IDictionary<string, byte[]> attachmentFileContents = null)
         {
             Send(CreateMessage(fromAddress, fromName, toAddresses, subject)
-                 .SetHtmlBody(htmlBody, textReplacementKeys, imageContentReplacementKeys)
+                 .SetHtmlBody(htmlBody, textReplacementKeys, imageContentReplacementKeys, imageContentType)
                  .AttachFiles(attachmentFilePaths)
                  .AttachFiles(attachmentFileContents),
             sendAsync);
@@ -32,11 +32,11 @@ namespace Orbital7.Extensions.Email
 
         public void SendHtmlEmail(string fromAddress, string fromName, string toAddresses, string subject,
             string htmlBody, bool sendAsync, IDictionary<string, string> textReplacementKeys = null, 
-            IDictionary<string, string> imageFilePathReplacementKeys = null, IList<string> attachmentFilePaths = null,
-            IDictionary<string, byte[]> attachmentFileContents = null)
+            IDictionary<string, string> imageFilePathReplacementKeys = null, string imageContentType = "image/png", 
+            IList<string> attachmentFilePaths = null, IDictionary<string, byte[]> attachmentFileContents = null)
         {
             Send(CreateMessage(fromAddress, fromName, toAddresses, subject)
-                 .SetHtmlBody(htmlBody, textReplacementKeys, imageFilePathReplacementKeys)
+                 .SetHtmlBody(htmlBody, textReplacementKeys, imageFilePathReplacementKeys, imageContentType)
                  .AttachFiles(attachmentFilePaths)
                  .AttachFiles(attachmentFileContents),
             sendAsync);

@@ -80,15 +80,27 @@ namespace Orbital7.Extensions
             return (T)attribute;
         }
 
-        public static List<Tuple<Type, Attribute>> GetTypeAttributePairs(this Assembly assembly, Type objectType, Type attributeType,
-            bool includeNullAttributes = false)
+        public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(this Assembly assembly, Type objectType,
+            bool includeNullAttributes = false) where TAttribute : Attribute
+        {
+            var types = assembly.GetTypes(objectType);
+            var attributeType = typeof(TAttribute);
+
+            return (from x in types
+                    let a = x.GetCustomAttribute(attributeType) as TAttribute
+                    where includeNullAttributes || a != null
+                    select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
+        }
+
+        public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(this Assembly assembly, Type objectType, Type attributeType,
+            bool includeNullAttributes = false) where TAttribute : Attribute
         {
             var types = assembly.GetTypes(objectType);
 
             return (from x in types
-                    let a = x.GetCustomAttribute(attributeType)
+                    let a = x.GetCustomAttribute(attributeType) as TAttribute
                     where includeNullAttributes || a != null
-                    select new Tuple<Type, Attribute>(x, a)).ToList();
+                    select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
         }
 
         public static object GetPropertyAttributeValue(this Type objectType, string propertyName, Type attributeType, string attributePropertyName)

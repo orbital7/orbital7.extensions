@@ -37,15 +37,8 @@ namespace System.Net.Mail
         public static MailMessage AttachFiles(this MailMessage mailMessage, IDictionary<string, byte[]> fileContents)
         {
             if (fileContents != null)
-            {
                 foreach (var fileContent in fileContents)
-                {
-                    using (var ms = new MemoryStream(fileContent.Value))
-                    {
-                        mailMessage.Attachments.Add(new Attachment(ms, fileContent.Key));
-                    }
-                }
-            }
+                    mailMessage.Attachments.Add(new Attachment(new MemoryStream(fileContent.Value), fileContent.Key));
 
             return mailMessage;
         }
@@ -63,14 +56,15 @@ namespace System.Net.Mail
         }
 
         public static MailMessage SetHtmlBody(this MailMessage mailMessage, string htmlBody, IDictionary<string, string> textReplacementKeys, 
-            IDictionary<string, string> imageFilePathReplacementKeys)
+            IDictionary<string, string> imageFilePathReplacementKeys, string imageContentType = "image/png")
         {
             var resourceReplacements = new Dictionary<string, LinkedResource>();
             if (imageFilePathReplacementKeys != null)
             {
                 foreach (var imageReplacement in imageFilePathReplacementKeys)
                 {
-                    resourceReplacements.Add(imageReplacement.Key, new LinkedResource(imageReplacement.Value)
+                    resourceReplacements.Add(imageReplacement.Key, new LinkedResource(imageReplacement.Value, 
+                        new ContentType(imageContentType))
                     {
                         ContentId = Guid.NewGuid().ToString()
                     });
@@ -80,17 +74,19 @@ namespace System.Net.Mail
             return mailMessage.SetHtmlBody(htmlBody, textReplacementKeys, resourceReplacements);
         }
 
-        public static MailMessage SetHtmlBody(this MailMessage mailMessage, string htmlBody, IDictionary<string, string> textReplacementKeys, 
-            IDictionary<string, byte[]> imageContentReplacementKeys)
+        public static MailMessage SetHtmlBody(this MailMessage mailMessage, string htmlBody, IDictionary<string, string> textReplacementKeys,
+            IDictionary<string, byte[]> imageContentReplacementKeys, string imageContentType = "image/png")
         {
             var resourceReplacements = new Dictionary<string, LinkedResource>();
             if (imageContentReplacementKeys != null)
             {
                 foreach (var imageReplacement in imageContentReplacementKeys)
                 {
-                    resourceReplacements.Add(imageReplacement.Key, new LinkedResource(new MemoryStream(imageReplacement.Value))
+                    resourceReplacements.Add(imageReplacement.Key, new LinkedResource(new MemoryStream(imageReplacement.Value),
+                        new ContentType(imageContentType))
                     {
-                        ContentId = Guid.NewGuid().ToString()
+                        ContentId = Guid.NewGuid().ToString(),
+                        TransferEncoding = TransferEncoding.Base64,
                     });
                 }
             }

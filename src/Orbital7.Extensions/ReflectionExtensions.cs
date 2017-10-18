@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orbital7.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -36,16 +37,16 @@ namespace System
             return assembly.GetTypes(typeof(T));
         }
 
-        public static List<Type> GetTypes(this Assembly assembly, Type objectType)
+        public static List<Type> GetTypes(this Assembly assembly, Type baseType)
         {
             var types = new List<Type>();
-            string targetInterface = objectType.ToString();
+            string targetInterface = baseType.ToString();
 
             foreach (var assemblyType in assembly.GetTypes())
             {
                 if ((assemblyType.IsPublic) && (!assemblyType.IsAbstract))
                 {
-                    if (assemblyType.IsSubclassOf(objectType) || assemblyType.Equals(objectType) || (assemblyType.GetInterface(targetInterface) != null))
+                    if (assemblyType.IsSubclassOf(baseType) || assemblyType.Equals(baseType) || (assemblyType.GetInterface(targetInterface) != null))
                         types.Add(assemblyType);
                 }
             }
@@ -53,11 +54,53 @@ namespace System
             return types;
         }
 
-        public static List<Type> GetTypes(this Type type, string folderPath)
+        public static T CreateInstance<T>(this Type type)
+        {
+            return (T)Activator.CreateInstance(type);
+        }
+
+        public static T CreateInstance<T>(this Type type, object[] parameters)
+        {
+            return (T)Activator.CreateInstance(type, parameters);
+        }
+
+        public static List<T> CreateInstances<T>(this List<Type> types)
+        {
+            var instances = new List<T>();
+
+            foreach (Type typeItem in types)
+            {
+                try
+                {
+                    T instance = typeItem.CreateInstance<T>();
+                    instances.Add(instance);
+                }
+                catch { }
+            }
+
+            return instances;
+        }
+
+        public static List<T> CreateInstances<T>(this Assembly assembly)
+        {
+            return assembly.GetTypes<T>().CreateInstances<T>();
+        }
+
+        public static List<T> CreateInstances<T>(this Assembly assembly, Type baseType)
+        {
+            return assembly.GetTypes(baseType).CreateInstances<T>();
+        }
+
+        public static List<Type> GetExternalTypes(this Type baseType)
+        {
+            return baseType.GetExternalTypes(ReflectionHelper.GetExecutingAssemblyFolderPath());
+        }
+
+        public static List<Type> GetExternalTypes(this Type baseType, string assembliesFolderPath)
         {
             List<Type> types = new List<Type>();
 
-            foreach (string filePath in Directory.GetFiles(folderPath, "*.dll"))
+            foreach (string filePath in Directory.GetFiles(assembliesFolderPath, "*.dll"))
             {
                 try
                 {
@@ -71,7 +114,7 @@ namespace System
                         continue;
 
                     var assembly = Assembly.LoadFrom(filePath);
-                    types.AddRange(assembly.GetTypes(type));
+                    types.AddRange(assembly.GetTypes(baseType));
                 }
                 catch { }
             }
