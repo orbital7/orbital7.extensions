@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 
-namespace Orbital7.Extensions
+namespace System.Reflection
 {
     public static class AttributeExtensions
     {
@@ -89,6 +87,7 @@ namespace Orbital7.Extensions
             return (from x in types
                     let a = x.GetCustomAttribute(attributeType) as TAttribute
                     where includeNullAttributes || a != null
+
                     select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
         }
 
