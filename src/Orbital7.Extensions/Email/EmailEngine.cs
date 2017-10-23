@@ -51,10 +51,10 @@ namespace Orbital7.Extensions.Email
 
             // To.
             foreach (string toAddress in toAddresses.Parse(";"))
-                mailMsg.To.Add(new MailAddress(toAddress));
+                mailMsg.To.Add(new MailAddress(toAddress.Trim()));
 
             // From.
-            mailMsg.From = new MailAddress(fromAddress, fromName);
+            mailMsg.From = new MailAddress(fromAddress.Trim(), fromName.Trim());
 
             // Subject.
             mailMsg.Subject = subject;

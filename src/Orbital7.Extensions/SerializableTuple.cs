@@ -10,16 +10,19 @@ namespace System
 
         public T2 Item2 { get; set; }
 
+        public string Tag { get; set; }
+
         public SerializableTuple()
         {
 
         }
 
-        public SerializableTuple(T1 item1, T2 item2)
+        public SerializableTuple(T1 item1, T2 item2, string tag = null)
             : this()
         {
             this.Item1 = item1;
             this.Item2 = item2;
+            this.Tag = null;
         }
 
         public override string ToString()
