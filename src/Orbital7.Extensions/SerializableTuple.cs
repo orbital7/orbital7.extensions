@@ -17,12 +17,17 @@ namespace System
 
         }
 
-        public SerializableTuple(T1 item1, T2 item2, string tag = null)
+        public SerializableTuple(T1 item1, T2 item2)
             : this()
         {
             this.Item1 = item1;
             this.Item2 = item2;
-            this.Tag = null;
+        }
+
+        public SerializableTuple(T1 item1, T2 item2, string tag)
+            : this(item1, item2)
+        {
+            this.Tag = tag;
         }
 
         public override string ToString()

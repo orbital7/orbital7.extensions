@@ -35,7 +35,7 @@ namespace Orbital7.Extensions
         public static void WriteExceptionLine(Exception ex, string prefix = "ERROR: ")
         {
             Console.WriteLine();
-            Console.WriteLine((prefix + ex.Message + ex.StackTrace).Trim());
+            Console.WriteLine((prefix + ex.FlattenMessages() + ex.StackTrace).Trim());
         }
 
         public static void PressKeyToContinue(string verb = "continue")
