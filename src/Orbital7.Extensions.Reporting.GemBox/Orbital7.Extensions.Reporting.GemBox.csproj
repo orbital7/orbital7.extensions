@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GemBox.Spreadsheet">
-      <Version>41.3.30.1111</Version>
+      <Version>41.3.30.1128</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
