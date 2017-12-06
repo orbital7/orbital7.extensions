@@ -39,7 +39,7 @@ namespace Microsoft.EntityFrameworkCore
             }
             else
             {
-                return Enumerable.Empty<T>().AsQueryable();
+                return Enumerable.Empty<T>().AsAsyncQueryable();
             }
         }
 
