@@ -20,10 +20,45 @@ namespace Microsoft.AspNetCore.Mvc
             return ExpressionMetadataProvider.FromLambdaExpression(expression, htmlHelper.ViewData, htmlHelper.MetadataProvider);
         }
 
+        public static bool HasAttribute<TModel, TProperty>(this Expression<Func<TModel, TProperty>> expression, Type attributeType)
+        {
+            var property = expression.Body as MemberExpression;
+
+            if (property != null)
+            {
+                var results = property.Member.GetCustomAttributes(attributeType, false);
+                return results.Length > 0;
+            }
+
+            return false;
+        }
+
+        public static void AddOrInsertToExisting(this IDictionary<string, object> attributes, string key, object value, string append = " ")
+        {
+            if (!attributes.ContainsKey(key))
+                attributes.Add(key, value);
+            else
+                attributes[key] = value + append + attributes[key];
+        }
+
+        public static void AddOrAppendToExisting(this IDictionary<string, object> attributes, string key, object value, string append = " ")
+        {
+            if (!attributes.ContainsKey(key))
+                attributes.Add(key, value);
+            else
+                attributes[key] = attributes[key] + append + value;
+        }
+
+        public static void AddIfMissing(this IDictionary<string, object> attributes, string key, object value)
+        {
+            if (!attributes.ContainsKey(key))
+                attributes.Add(key, value);
+        }
+
         public static string GetPropertyDisplayName(this ModelExplorer modelExplorer)
         {
             string displayName = null;
-
+            
             if (modelExplorer.Metadata != null)
                 displayName = modelExplorer.Metadata.DisplayName ?? modelExplorer.Metadata.PropertyName;
             

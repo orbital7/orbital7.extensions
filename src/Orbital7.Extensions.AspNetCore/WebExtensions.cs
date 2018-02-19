@@ -14,9 +14,9 @@ namespace Microsoft.AspNetCore.Http
             response.StatusCode = (int)HttpStatusCode.BadRequest;
         }
 
-        public static string GetURL(this HttpRequest request)
+        public static string GetBaseUrl(this HttpRequest request)
         {
-            return "https://" + request.PathBase + "/";
+            return String.Format("{0}://{1}/", request.Scheme, request.Host);
         }
     }
 }

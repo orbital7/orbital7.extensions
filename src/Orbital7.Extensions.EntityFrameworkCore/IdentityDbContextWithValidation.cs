@@ -36,7 +36,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         }
 
         // Source: https://weblogs.asp.net/ricardoperes/implementing-missing-features-in-entity-framework-core-part-3
-        private void Validate()
+        public void Validate()
         {
             var serviceProvider = this.GetService<IServiceProvider>();
             var items = new Dictionary<object, object>();
