@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using GemBox.Document;
 
 namespace Orbital7.Extensions.Reporting.GemBox
 {
     public abstract class GemBoxDocumentReportBuilderBase : ReportBuilderBase
     {
+        protected DocumentModel WordDocument { get; set; }
+
         public GemBoxDocumentReportBuilderBase(string licenseKey)
         {
-            // TODO.
+            ComponentInfo.SetLicense(licenseKey);
+            this.WordDocument = new DocumentModel();
         }
 
         protected override string GetContentType(ReportFormat reportFormat)
@@ -29,17 +34,34 @@ namespace Orbital7.Extensions.Reporting.GemBox
 
         protected override byte[] Save(ReportFormat reportFormat)
         {
-            throw new NotImplementedException();
+            using (var ms = new MemoryStream())
+            {
+                this.WordDocument.Save(ms, (reportFormat == ReportFormat.Native) ?
+                    (SaveOptions)new DocxSaveOptions() : new PdfSaveOptions());
+                return ms.ToArray();
+            }
         }
 
         protected override byte[] CreatePngPreview()
         {
-            throw new NotImplementedException();
+            using (var ms = new MemoryStream())
+            {
+                this.WordDocument.Save(ms, new ImageSaveOptions()
+                {
+                    Format = ImageSaveFormat.Png,
+                    PageNumber = 0,
+                    PageCount = 1,
+
+                });
+                return ms.ToArray();
+            }
         }
 
         protected override void WriteError(Exception ex)
         {
-            throw new NotImplementedException();
+            this.WordDocument = new DocumentModel();
+            this.WordDocument.Sections.Add(new Section(this.WordDocument,
+                new Paragraph(this.WordDocument, "ERROR: " + ex.Message + ex.StackTrace)));
         }
     }
 }
