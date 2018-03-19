@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Microsoft.AspNetCore.Http
@@ -15,6 +16,16 @@ namespace Microsoft.AspNetCore.Http
         {
             return String.Format("{0}://{1}{2}{3}", request.Scheme, request.Host, request.Path, 
                 request.QueryString.ToUriComponent());
+        }
+
+        public static string GetBaseUrl(this HttpRequest request)
+        {
+            return String.Format("{0}://{1}/", request.Scheme, request.Host);
+        }
+
+        public static void SetFailureState(this HttpResponse response)
+        {
+            response.StatusCode = (int)HttpStatusCode.BadRequest;
         }
     }
 }
