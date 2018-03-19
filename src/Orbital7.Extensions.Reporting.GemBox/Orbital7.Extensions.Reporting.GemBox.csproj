@@ -47,6 +47,9 @@
     <Compile Include="GemBoxDocumentReportBuilderBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GemBox.Document">
+      <Version>27.3.30.1192</Version>
+    </PackageReference>
     <PackageReference Include="GemBox.Spreadsheet">
       <Version>41.3.30.1128</Version>
     </PackageReference>
