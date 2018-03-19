@@ -7,6 +7,15 @@ using System.Text.RegularExpressions;
 
 namespace System
 {
+    public enum PhoneNumberFormat
+    {
+        ParenthesisAndDashes,
+
+        DashesOnly,
+
+        PeriodsOnly,
+    }
+
     public static class StringExtensions
     {
         public const string IllegalWindowsFileSystemChars = "|/\\\"*?:<>";
@@ -18,6 +27,56 @@ namespace System
         public const string LetterChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         public const string AlphanumericChars = NumberChars + LetterChars;
         public const string WhitespaceChars = " \r\n\t\v\f";
+
+        public static string Pluralize(this string value)
+        {
+            var plural = value;
+
+            if (value.EndsWith("y"))
+                plural = value.PruneEnd(1) + "ies";
+            else if (value.EndsWith("is"))
+                plural = value.PruneEnd(2) + "es";
+            else
+                plural = value + "s";
+
+            return plural;
+        }
+
+        public static string Remove(this string value, string toRemove)
+        {
+            return value.Replace(toRemove, "");
+        }
+
+        public static string ToPhoneNumber(this string value, PhoneNumberFormat format = PhoneNumberFormat.ParenthesisAndDashes)
+        {
+            // TODO: Expand to include non-NorthAmerican phone numbers.
+
+            // Convert to numbers only 
+            var raw = value.NumbersOnly().PruneStart("1");
+            if (raw.Length >= 10)
+            {
+                var template = "({0}) {1}-{2}";
+                if (format == PhoneNumberFormat.DashesOnly)
+                    template = "{0}-{1}-{2}";
+                else if (format == PhoneNumberFormat.PeriodsOnly)
+                    template = "{0}.{1}.{2}";
+
+                var phoneNumber = String.Format(template,
+                    raw.Substring(0, 3),
+                    raw.Substring(3, 3),
+                    raw.Substring(6, 4));
+
+                // Treat the remainder as the extension.
+                if (raw.Length > 10)
+                    return String.Format("{0} x{1}", phoneNumber, raw.Substring(10, raw.Length - 10));
+                else
+                    return phoneNumber;
+            }
+            else
+            {
+                return raw;
+            }
+        }
 
         public static string Replace(this string text, IDictionary<string, string> textReplacementKeys)
         {

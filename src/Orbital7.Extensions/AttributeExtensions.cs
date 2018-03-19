@@ -31,13 +31,7 @@ namespace System.Reflection
                 return propertyName;
         }
 
-        public static DisplayAttribute GetPropertyDisplayAttribute<T>(this Expression<Func<T, object>> propertyExpression)
-        {
-            var memberInfo = propertyExpression.Body.GetPropertyInformation();
-            return GetPropertyDisplayAttribute(memberInfo);
-        }
-
-        private static DisplayAttribute GetPropertyDisplayAttribute(MemberInfo memberInfo)
+        public static DisplayAttribute GetPropertyDisplayAttribute(this MemberInfo memberInfo)
         {
             if (memberInfo == null)
             {
@@ -47,37 +41,6 @@ namespace System.Reflection
             }
 
             return memberInfo.GetAttribute<DisplayAttribute>(false);
-        }
-
-        public static string GetPropertyDisplayName<T>(this Expression<Func<T, object>> propertyExpression)
-        {
-            var memberInfo = propertyExpression.Body.GetPropertyInformation();
-            var attr = GetPropertyDisplayAttribute(memberInfo);
-            if (attr != null && !String.IsNullOrEmpty(attr.Name))
-                return attr.Name;
-
-            return memberInfo.Name;
-        }
-
-        public static string GetPropertyDisplayShortName<T>(this Expression<Func<T, object>> propertyExpression)
-        {
-            var memberInfo = propertyExpression.Body.GetPropertyInformation();
-            var attr = GetPropertyDisplayAttribute(memberInfo);
-            if (attr != null)
-            {
-                if (!String.IsNullOrEmpty(attr.ShortName))
-                    return attr.ShortName;
-                else if (!String.IsNullOrEmpty(attr.Name))
-                    return attr.Name;
-            }
-
-            return memberInfo.Name;
-        }
-
-        public static string GetPropertyDisplayDescription<T>(this Expression<Func<T, object>> propertyExpression)
-        {
-            var attr = GetPropertyDisplayAttribute<T>(propertyExpression);
-            return attr?.Description;
         }
 
         public static T GetPropertyAttribute<T>(this Type objectType, string propertyName) where T : Attribute
