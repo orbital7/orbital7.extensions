@@ -7,8 +7,10 @@ namespace Orbital7.Extensions.Attributes
 {
     public class OptimalStringLengthAttribute : StringLengthAttribute
     {
+        public const int LENGTH = 4000;
+
         public OptimalStringLengthAttribute()
-            : base(4000)
+            : base(LENGTH)
         {
 
         }
