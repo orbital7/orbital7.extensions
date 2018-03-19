@@ -15,6 +15,11 @@ namespace System
                 return "False";
         }
 
+        public static string Totruefalse(this bool value)
+        {
+            return value.ToString().ToLower();
+        }
+
         public static string ToYesNo(this bool value)
         {
             if (value)

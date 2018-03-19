@@ -19,20 +19,7 @@ namespace Microsoft.AspNetCore.Mvc
         {
             return ExpressionMetadataProvider.FromLambdaExpression(expression, htmlHelper.ViewData, htmlHelper.MetadataProvider);
         }
-
-        public static bool HasAttribute<TModel, TProperty>(this Expression<Func<TModel, TProperty>> expression, Type attributeType)
-        {
-            var property = expression.Body as MemberExpression;
-
-            if (property != null)
-            {
-                var results = property.Member.GetCustomAttributes(attributeType, false);
-                return results.Length > 0;
-            }
-
-            return false;
-        }
-
+        
         public static void AddOrInsertToExisting(this IDictionary<string, object> attributes, string key, object value, string append = " ")
         {
             if (!attributes.ContainsKey(key))
