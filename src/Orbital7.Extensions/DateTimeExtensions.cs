@@ -61,12 +61,12 @@ namespace System
             return date.Subtract(dateToCompare).Days / (365.25 / 12);
         }
         
-        public static string ToShortDateString(this DateTime date)
+        public static string FormatAsShortDate(this DateTime date)
         {
             return date.ToString("MM/dd/yyyy");
         }
 
-        public static string ToShortDateString(this DateTime? date, string nullValue = "")
+        public static string FormatAsShortDate(this DateTime? date, string nullValue = "")
         {
             if (date.HasValue)
                 return date.Value.ToShortDateString();
@@ -74,12 +74,12 @@ namespace System
                 return nullValue;
         }
         
-        public static string ToShortTimeString(this DateTime time)
+        public static string FormatAsShortTime(this DateTime time)
         {
             return time.ToString("h:mm:ss tt");
         }
 
-        public static string ToShortTimeString(this DateTime? time, string nullValue = "")
+        public static string FormatAsShortTime(this DateTime? time, string nullValue = "")
         {
             if (time.HasValue)
                 return time.Value.ToShortTimeString();
@@ -87,20 +87,20 @@ namespace System
                 return nullValue;
         }
 
-        public static string ToShortDateTimeString(this DateTime dateTime)
+        public static string FormatAsShortDateTime(this DateTime dateTime)
         {
             return dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
         }
 
-        public static string ToShortDateTimeString(this DateTime? dateTime, string nullValue = "")
+        public static string FormatAsShortDateTime(this DateTime? dateTime, string nullValue = "")
         {
             if (dateTime.HasValue)
-                return dateTime.Value.ToShortDateTimeString();
+                return dateTime.Value.FormatAsShortDateTime();
             else
                 return nullValue;
         }
 
-        public static string ToMonthDateString(this DateTime date)
+        public static string FormatAsMonthDate(this DateTime date)
         {
             return date.ToString("MMMM yyyy");
         }
@@ -212,12 +212,12 @@ namespace System
             return new DateTime(date.Year, 12, 31).RoundToEndOfDay();
         }
 
-        public static string ToFileSystemSafeDateString(this DateTime dateTime)
+        public static string FormatAsFileSystemSafeDate(this DateTime dateTime)
         {
             return dateTime.ToString("yyyy-MM-dd");
         }
 
-        public static string ToFileSystemSafeDateTimeString(this DateTime dateTime)
+        public static string FormatAsFileSystemSafeDateTime(this DateTime dateTime)
         {
             return dateTime.ToString("yyyy-MM-dd_HH-mm-ss");
         }

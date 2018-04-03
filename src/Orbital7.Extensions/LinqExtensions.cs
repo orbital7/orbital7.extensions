@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,7 +8,7 @@ using System.Collections;
 
 namespace System.Linq
 {
-    public static class EnumerableExtensions
+    public static class LinqExtensions
     {
         public static IQueryable<T> AsAsyncQueryable<T>(this IEnumerable<T> source)
         {
@@ -22,7 +21,7 @@ namespace System.Linq
         }
     }
 
-    internal class AsyncQueryProvider<TEntity> : IAsyncQueryProvider
+    internal class AsyncQueryProvider<TEntity> : IQueryProvider
     {
         private readonly IQueryProvider _inner;
 

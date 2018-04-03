@@ -47,7 +47,16 @@ namespace System
             return value.Replace(toRemove, "");
         }
 
-        public static string ToPhoneNumber(this string value, PhoneNumberFormat format = PhoneNumberFormat.ParenthesisAndDashes)
+        public static string ToPhoneNumber(this string value)
+        {
+            string phoneNumber = value.NumbersOnly();
+            if (!phoneNumber.StartsWith("+1"))
+                phoneNumber = "+1" + phoneNumber;
+
+            return phoneNumber;
+        }
+
+        public static string FormatAsPhoneNumber(this string value, PhoneNumberFormat format = PhoneNumberFormat.ParenthesisAndDashes)
         {
             // TODO: Expand to include non-NorthAmerican phone numbers.
 

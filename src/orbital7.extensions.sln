@@ -21,9 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.AspNetM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.EntityFrameworkCore", "Orbital7.Extensions.EntityFrameworkCore\Orbital7.Extensions.EntityFrameworkCore.csproj", "{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Reporting.GemBox", "Orbital7.Extensions.Reporting.GemBox\Orbital7.Extensions.Reporting.GemBox.csproj", "{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.AspNetCore.RapidApp", "Orbital7.Extensions.AspNetCore.RapidApp\Orbital7.Extensions.AspNetCore.RapidApp.csproj", "{30262B07-BDE6-4069-AF96-B7CE073B902A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Reporting.GemBox", "Orbital7.Extensions.Reporting.GemBox\Orbital7.Extensions.Reporting.GemBox.csproj", "{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,14 +67,14 @@ Global
 		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CF9A034-7C8B-4859-BDB6-7D5CB8245C84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30262B07-BDE6-4069-AF96-B7CE073B902A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30262B07-BDE6-4069-AF96-B7CE073B902A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30262B07-BDE6-4069-AF96-B7CE073B902A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30262B07-BDE6-4069-AF96-B7CE073B902A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3F903D-5DC9-4E7F-A1F0-5312DDE919C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

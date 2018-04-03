@@ -15,7 +15,7 @@
     <tags></tags>
     <dependencies>
 		<dependency id="GemBox.Spreadsheet" version="41.3.30" />
-		<dependency id="Orbital7.Extensions" version="2.0.8" />
+		<dependency id="Orbital7.Extensions" version="2.0.25" />
 	</dependencies>
   </metadata>
   <files/>

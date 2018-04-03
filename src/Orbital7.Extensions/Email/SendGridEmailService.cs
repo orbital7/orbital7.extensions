@@ -6,10 +6,9 @@ using System.Text;
 
 namespace Orbital7.Extensions.Email
 {
-    // TODO: Move to Orbital7.Extensions.
-    public class SendGridEmailEngine : SmtpEmailEngine
+    public class SendGridEmailService : SmtpEmailService
     {
-        public SendGridEmailEngine(string sendGridUsername, string sendGridPassword)
+        public SendGridEmailService(string sendGridUsername, string sendGridPassword)
             : base(null)
         {
             this.SmtpClient = new SmtpClient("smtp.sendgrid.net", Convert.ToInt32(587))

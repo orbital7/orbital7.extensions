@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Orbital7.Extensions.EntityFrameworkCore
+namespace Orbital7.Extensions
 {
     public class PropertyException : Exception
     {
