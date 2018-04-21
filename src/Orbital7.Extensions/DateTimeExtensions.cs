@@ -69,7 +69,7 @@ namespace System
         public static string FormatAsShortDate(this DateTime? date, string nullValue = "")
         {
             if (date.HasValue)
-                return date.Value.ToShortDateString();
+                return date.Value.FormatAsShortDate();
             else
                 return nullValue;
         }
@@ -82,14 +82,14 @@ namespace System
         public static string FormatAsShortTime(this DateTime? time, string nullValue = "")
         {
             if (time.HasValue)
-                return time.Value.ToShortTimeString();
+                return time.Value.FormatAsShortTime();
             else
                 return nullValue;
         }
 
         public static string FormatAsShortDateTime(this DateTime dateTime)
         {
-            return dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+            return dateTime.FormatAsShortDate() + " " + dateTime.FormatAsShortTime();
         }
 
         public static string FormatAsShortDateTime(this DateTime? dateTime, string nullValue = "")

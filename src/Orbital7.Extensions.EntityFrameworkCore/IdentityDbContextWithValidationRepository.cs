@@ -4,6 +4,7 @@ using Orbital7.Extensions.Models;
 using Orbital7.Extensions.RepositoryPattern;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -11,58 +12,90 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public class IdentityDbContextWithValidationRepository<TObject, TUser, TRole, TKey> : IValidatableRepository<TObject>
-        where TObject : class, IIdObject
+    public class IdentityDbContextWithValidationRepository<TEntity, TUser, TRole, TKey> : IValidatableRepository<TEntity>
+        where TEntity : class, IIdObject
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>
     {
         protected IdentityDbContextWithValidation<TUser, TRole, TKey> DbContext { get; private set; }
-        protected DbSet<TObject> DbSet { get; private set; }
+        protected DbSet<TEntity> DbSet { get; private set; }
 
-        public IdentityDbContextWithValidationRepository(IdentityDbContextWithValidation<TUser, TRole, TKey> dbContext)
+        public IdentityDbContextWithValidationRepository(
+            IdentityDbContextWithValidation<TUser, TRole, TKey> dbContext)
         {
             this.DbContext = dbContext;
-            this.DbSet = dbContext.Set<TObject>();
+            this.DbSet = dbContext.Set<TEntity>();
         }
 
-        public async virtual Task<TObject> AddAsync(TObject entity, RepositorySaveAction save = RepositorySaveAction.No)
+        public async virtual Task<TEntity> AddAsync(
+            TEntity entity, 
+            RepositorySaveAction save = RepositorySaveAction.No)
         {
             this.DbSet.Add(entity);
             await HandleSaveAsync(save);
             return entity;
         }
 
-        public async virtual Task<TObject> UpdateAsync(TObject entity, RepositorySaveAction save = RepositorySaveAction.No)
+        public async virtual Task<TEntity> UpdateAsync(
+            TEntity entity, 
+            RepositorySaveAction save = RepositorySaveAction.No)
         {
             this.DbSet.Update(entity);
             await HandleSaveAsync(save);
             return entity;
         }
 
-        public async virtual Task<TObject> DeleteAsync(TObject entity, RepositorySaveAction save = RepositorySaveAction.No)
+        public async virtual Task<TEntity> DeleteAsync(
+            TEntity entity, 
+            RepositorySaveAction save = RepositorySaveAction.No)
         {
             this.DbSet.Remove(entity);
             await HandleSaveAsync(save);
             return entity;
         }
 
-        public virtual IQueryable<TObject> Query(Expression<Func<TObject, bool>> query)
+        public virtual IQueryable<TEntity> Query(
+            Expression<Func<TEntity, bool>> query, 
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths)
         {
-            return this.DbSet.Where(query);
+            return Complete(this.DbSet.Where(query), asReadOnly, includeNavigationPropertyPaths);
         }
 
-        public virtual IQueryable<TObject> AsQueryable()
+        private IQueryable<TEntity> Complete(
+            IQueryable<TEntity> query,
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths)
         {
-            return this.DbSet;
+            if (includeNavigationPropertyPaths != null)
+                foreach (var navigationPropertyPath in includeNavigationPropertyPaths)
+                    query = query.Include(navigationPropertyPath);
+
+            if (asReadOnly)
+                return query.AsNoTracking();
+            else
+                return query;
+        }
+
+        public virtual IQueryable<TEntity> AsQueryable(
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths)
+        {
+            return Complete(this.DbSet, asReadOnly, includeNavigationPropertyPaths);
         }
 
         protected virtual string GetTableName()
         {
-            return typeof(TObject).Name.Pluralize();
+            return typeof(TEntity).Name.Pluralize();
         }
 
-        public virtual IQueryable<TObject> QueryForContainsIds(IList ids, string whereAndClause = "", string queryIdFieldName = "Id")
+        public virtual IQueryable<TEntity> QueryForContainsIds(
+            IList ids, 
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths, 
+            string whereAndClause = "", 
+            string queryIdFieldName = "Id")
         {
             if (ids.Count > 0)
             {
@@ -74,25 +107,29 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 var sql = String.Format("SELECT * FROM {0} WHERE {1}", GetTableName(), whereAndClause).Trim();
                 sql += String.Format(" {0} IN ({1})", queryIdFieldName, values);
 
-                return this.DbSet.FromSql(sql);
+                return Complete(this.DbSet.FromSql(sql), asReadOnly, includeNavigationPropertyPaths);
             }
             else
             {
-                return Enumerable.Empty<TObject>().AsAsyncQueryable();
+                return Enumerable.Empty<TEntity>().AsAsyncQueryable();
             }
         }
 
-        public virtual IQueryable<TObject> QueryForId(Guid? id)
+        public virtual IQueryable<TEntity> QueryForId(
+            Guid? id, 
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths)
         {
             if (id.HasValue && id != Guid.Empty)
             {
-                return (from x in this.DbSet
-                        where x.Id == id.Value
-                        select x);
+                var result = (from x in this.DbSet
+                              where x.Id == id.Value
+                              select x);
+                return Complete(result, asReadOnly, includeNavigationPropertyPaths);
             }
             else
             {
-                return Enumerable.Empty<TObject>().AsAsyncQueryable();
+                return Enumerable.Empty<TEntity>().AsAsyncQueryable();
             }
         }
 
@@ -106,12 +143,14 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             await this.DbContext.ValidateAndSaveChangesAsync();
         }
 
-        public virtual async Task<TObject> FindAsync(Guid id)
+        public virtual async Task<TEntity> FindAsync(
+            Guid id)
         {
             return await this.DbSet.FindAsync(id);
         }
 
-        protected virtual async Task HandleSaveAsync(RepositorySaveAction save)
+        protected virtual async Task HandleSaveAsync(
+            RepositorySaveAction save)
         {
             if (save == RepositorySaveAction.Yes)
                 await SaveAsync();

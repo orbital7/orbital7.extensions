@@ -17,17 +17,46 @@ namespace Orbital7.Extensions.RepositoryPattern
         YesWithValidation,
     }
 
-    public interface IValidatableRepository<T>
+    public interface IValidatableRepository<TEntity>
     {
-        Task<T> AddAsync(T entity, RepositorySaveAction save = RepositorySaveAction.No);
-        Task<T> UpdateAsync(T entity, RepositorySaveAction save = RepositorySaveAction.No);
-        Task<T> DeleteAsync(T entity, RepositorySaveAction save = RepositorySaveAction.No);
-        IQueryable<T> Query(Expression<Func<T, bool>> query);
-        IQueryable<T> AsQueryable();
-        IQueryable<T> QueryForContainsIds(IList ids, string whereAndClause = "", string queryIdFieldName = "Id");
-        IQueryable<T> QueryForId(Guid? id);
+        Task<TEntity> AddAsync(
+            TEntity entity, 
+            RepositorySaveAction save = RepositorySaveAction.No);
+
+        Task<TEntity> UpdateAsync(
+            TEntity entity, 
+            RepositorySaveAction save = RepositorySaveAction.No);
+
+        Task<TEntity> DeleteAsync(
+            TEntity entity, 
+            RepositorySaveAction save = RepositorySaveAction.No);
+
+        IQueryable<TEntity> Query(
+            Expression<Func<TEntity, bool>> query, 
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths);
+
+        IQueryable<TEntity> AsQueryable(
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths);
+
+        IQueryable<TEntity> QueryForContainsIds(
+            IList ids, 
+            bool asReadOnly, 
+            List<string> includeNavigationPropertyPaths, 
+            string whereAndClause = "", 
+            string queryIdFieldName = "Id");
+
+        IQueryable<TEntity> QueryForId(
+            Guid? id, 
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths);
+
         Task SaveAsync();
+
         Task ValidateAndSaveAsync();
-        Task<T> FindAsync(Guid id);
+
+        Task<TEntity> FindAsync(
+            Guid id);
     }
 }
