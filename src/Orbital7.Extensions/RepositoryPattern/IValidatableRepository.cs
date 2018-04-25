@@ -31,26 +31,38 @@ namespace Orbital7.Extensions.RepositoryPattern
             TEntity entity, 
             RepositorySaveAction save = RepositorySaveAction.No);
 
-        IQueryable<TEntity> Query(
-            Expression<Func<TEntity, bool>> query, 
+        IQueryable<TEntity> AsQueryable();
+
+        Task<TEntity> GetAsync(
+            Guid? id,
             bool asReadOnly,
             List<string> includeNavigationPropertyPaths);
 
-        IQueryable<TEntity> AsQueryable(
+        Task<TEntity> GetAsync(
+            IQueryable<TEntity> query,
             bool asReadOnly,
             List<string> includeNavigationPropertyPaths);
 
-        IQueryable<TEntity> QueryForContainsIds(
-            IList ids, 
-            bool asReadOnly, 
-            List<string> includeNavigationPropertyPaths, 
-            string whereAndClause = "", 
+        Task<TDynamic> GetAsync<TDynamic>(
+            IQueryable<TDynamic> query);
+
+        Task<List<TEntity>> GatherAsync(
+            IList ids,
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths,
+            string whereAndClause = "",
             string queryIdFieldName = "Id");
 
-        IQueryable<TEntity> QueryForId(
-            Guid? id, 
+        Task<List<TEntity>> GatherAsync(
+            IQueryable<TEntity> query,
             bool asReadOnly,
             List<string> includeNavigationPropertyPaths);
+
+        Task<List<TDynamic>> GatherAsync<TDynamic>(
+            IQueryable<TDynamic> query);
+
+        Task<int> CountAsync<TDynamic>(
+            IQueryable<TDynamic> query);
 
         Task SaveAsync();
 

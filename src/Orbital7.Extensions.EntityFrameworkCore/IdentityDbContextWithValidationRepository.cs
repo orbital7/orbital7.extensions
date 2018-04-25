@@ -55,46 +55,73 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             return entity;
         }
 
-        public virtual IQueryable<TEntity> Query(
-            Expression<Func<TEntity, bool>> query, 
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths)
+        public virtual IQueryable<TEntity> AsQueryable()
         {
-            return Complete(this.DbSet.Where(query), asReadOnly, includeNavigationPropertyPaths);
+            return this.DbSet;
         }
 
-        private IQueryable<TEntity> Complete(
+        public virtual async Task<TEntity> GetAsync(
             IQueryable<TEntity> query,
             bool asReadOnly,
             List<string> includeNavigationPropertyPaths)
         {
-            if (includeNavigationPropertyPaths != null)
-                foreach (var navigationPropertyPath in includeNavigationPropertyPaths)
-                    query = query.Include(navigationPropertyPath);
-
-            if (asReadOnly)
-                return query.AsNoTracking();
+            if (query != null)
+            {
+                return await query
+                    .SetIncludes(includeNavigationPropertyPaths)
+                    .FirstOrDefaultAsync(asReadOnly);
+            }
             else
-                return query;
+            {
+                return null;
+            }
         }
 
-        public virtual IQueryable<TEntity> AsQueryable(
+        public virtual async Task<TEntity> GetAsync(
+            Guid? id,
             bool asReadOnly,
             List<string> includeNavigationPropertyPaths)
         {
-            return Complete(this.DbSet, asReadOnly, includeNavigationPropertyPaths);
+            if (id.HasValue && id != Guid.Empty)
+            {
+                return await GetAsync((from x in this.DbSet
+                                       where x.Id == id.Value
+                                       select x), asReadOnly, includeNavigationPropertyPaths);
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        protected virtual string GetTableName()
+        public async Task<TDynamic> GetAsync<TDynamic>(
+            IQueryable<TDynamic> query)
         {
-            return typeof(TEntity).Name.Pluralize();
+            return await query.FirstOrDefaultAsync();
         }
 
-        public virtual IQueryable<TEntity> QueryForContainsIds(
-            IList ids, 
+        public virtual async Task<List<TEntity>> GatherAsync(
+            IQueryable<TEntity> query,
             bool asReadOnly,
-            List<string> includeNavigationPropertyPaths, 
-            string whereAndClause = "", 
+            List<string> includeNavigationPropertyPaths)
+        {
+            if (query != null)
+            {
+                return await query
+                    .SetIncludes(includeNavigationPropertyPaths)
+                    .ToListAsync(asReadOnly);
+            }
+            else
+            {
+                return new List<TEntity>();
+            }
+        }
+
+        public virtual async Task<List<TEntity>> GatherAsync(
+            IList ids,
+            bool asReadOnly,
+            List<string> includeNavigationPropertyPaths,
+            string whereAndClause = "",
             string queryIdFieldName = "Id")
         {
             if (ids.Count > 0)
@@ -107,30 +134,30 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 var sql = String.Format("SELECT * FROM {0} WHERE {1}", GetTableName(), whereAndClause).Trim();
                 sql += String.Format(" {0} IN ({1})", queryIdFieldName, values);
 
-                return Complete(this.DbSet.FromSql(sql), asReadOnly, includeNavigationPropertyPaths);
+                return await GatherAsync(this.DbSet.FromSql(sql), asReadOnly, includeNavigationPropertyPaths);
             }
             else
             {
-                return Enumerable.Empty<TEntity>().AsAsyncQueryable();
+                return new List<TEntity>();
             }
         }
 
-        public virtual IQueryable<TEntity> QueryForId(
-            Guid? id, 
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths)
+        protected virtual string GetTableName()
         {
-            if (id.HasValue && id != Guid.Empty)
-            {
-                var result = (from x in this.DbSet
-                              where x.Id == id.Value
-                              select x);
-                return Complete(result, asReadOnly, includeNavigationPropertyPaths);
-            }
-            else
-            {
-                return Enumerable.Empty<TEntity>().AsAsyncQueryable();
-            }
+            return typeof(TEntity).Name.Pluralize();
+        }
+
+        
+
+        public async Task<List<TDynamic>> GatherAsync<TDynamic>(
+            IQueryable<TDynamic> query)
+        {
+            return await query.ToListAsync();
+        }
+
+        public async Task<int> CountAsync<TDynamic>(IQueryable<TDynamic> query)
+        {
+            return await query.CountAsync();
         }
 
         public virtual async Task SaveAsync()
