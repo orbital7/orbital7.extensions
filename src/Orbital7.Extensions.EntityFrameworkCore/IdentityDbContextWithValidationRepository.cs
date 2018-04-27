@@ -28,6 +28,13 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             this.DbSet = dbContext.Set<TEntity>();
         }
 
+        public virtual TEntity Add(
+            TEntity entity)
+        {
+            this.DbSet.Add(entity);
+            return entity;
+        }
+
         public async virtual Task<TEntity> AddAsync(
             TEntity entity, 
             RepositorySaveAction save = RepositorySaveAction.No)

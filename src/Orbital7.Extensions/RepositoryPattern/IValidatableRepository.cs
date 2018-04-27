@@ -19,6 +19,9 @@ namespace Orbital7.Extensions.RepositoryPattern
 
     public interface IValidatableRepository<TEntity>
     {
+        TEntity Add(
+            TEntity entity);
+
         Task<TEntity> AddAsync(
             TEntity entity, 
             RepositorySaveAction save = RepositorySaveAction.No);
