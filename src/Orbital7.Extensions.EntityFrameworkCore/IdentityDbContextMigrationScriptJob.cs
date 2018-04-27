@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Orbital7.Extensions.RepositoryPattern;
 using Orbital7.Extensions.ScriptJobs;
 using System;
 using System.Collections.Generic;
@@ -18,30 +20,35 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         public const string ARG_INITIALIZE = "-Initialize";
 
         private string[] Args { get; set; }
+        
+        protected IServiceProvider ServiceProvider { get; private set; }
 
-        public IdentityDbContextMigrationScriptJob()
+        public IdentityDbContextMigrationScriptJob(IServiceProvider serviceProvider)
         {
-
+            this.ServiceProvider = serviceProvider;
         }
 
-        public IdentityDbContextMigrationScriptJob(string[] args)
-            : this()
+        public IdentityDbContextMigrationScriptJob(IServiceProvider serviceProvider, string[] args)
+            : this(serviceProvider)
         {
             this.Args = args;
         }
 
         protected bool Initialize { get; set; } = false;
 
-        protected abstract T Create();
+        protected virtual T Create(IServiceProvider serviceProvider)
+        {
+            return serviceProvider.GetService<T>();
+        }
 
-        protected abstract IIdentityDbContextInitializer<T, TUser, TRole, TKey> CreateInitializer();
+        protected abstract IRepositoriesInitializer CreateInitializer();
 
-        protected abstract void DeleteOnInitialize();
+        protected abstract bool ValidateDeleteOnInitialize();
 
         protected virtual void DeleteDatabase()
         {
             Console.Write("Deleting Database...");
-            using (var context = Create())
+            using (var context = Create(this.ServiceProvider))
             {
                 context.Database.EnsureDeleted();
                 Console.WriteLine("Success");
@@ -50,17 +57,22 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public async override Task ExecuteAsync()
         {
-            IIdentityDbContextInitializer<T, TUser, TRole, TKey> initializer = null;
+            IRepositoriesInitializer initializer = null;
             if (this.Initialize)
                initializer = CreateInitializer();
 
             // Delete on initialize.
             if (this.Initialize)
-                DeleteOnInitialize();
+            {
+                if (ValidateDeleteOnInitialize())
+                    DeleteDatabase();
+                else
+                    throw new Exception("Delete-on-Initialize command was not validated");
+            }
 
             // Migrate and initialize.
             Console.Write("Migrating...");
-            using (var context = Create())
+            using (var context = Create(this.ServiceProvider))
             {
                 // Migrate.
                 context.Database.Migrate();
@@ -70,7 +82,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 if (this.Initialize)
                 {
                     Console.Write("Initializing...");
-                    await initializer.InitializeAsync(context);
+                    await initializer.InitializeAsync(this.ServiceProvider);
                     Console.WriteLine("Success");
                 }
             }
