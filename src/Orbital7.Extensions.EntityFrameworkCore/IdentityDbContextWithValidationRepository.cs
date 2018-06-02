@@ -138,9 +138,10 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 for (int i = 1; i < ids.Count; i++)
                     values.AppendFormat(", '{0}'", ids[i]);
 
-                var sql = String.Format("SELECT * FROM {0} WHERE {1}", GetTableName(), whereAndClause).Trim();
-                sql += String.Format(" {0} IN ({1})", queryIdFieldName, values);
-
+                // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
+                // clauses can be passed in to this method.
+                var sql = String.Format("SELECT * FROM {0} WHERE {1} IN ({2})", GetTableName(),
+                    (whereAndClause + " " + queryIdFieldName).Trim(), values.ToString());
                 return await GatherAsync(this.DbSet.FromSql(sql), asReadOnly, includeNavigationPropertyPaths);
             }
             else
@@ -153,8 +154,6 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         {
             return typeof(TEntity).Name.Pluralize();
         }
-
-        
 
         public async Task<List<TDynamic>> GatherAsync<TDynamic>(
             IQueryable<TDynamic> query)

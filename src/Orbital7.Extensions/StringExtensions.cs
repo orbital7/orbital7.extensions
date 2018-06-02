@@ -198,6 +198,12 @@ namespace System
             }
         }
 
+        public static string CapitalizeFirstLetter(this string value)
+        {
+            var firstLetter = value.Substring(0, 1);
+            return firstLetter.ToUpper() + value.PruneStart(1);
+        }
+
         public static string ToSeparatedWords(this string value)
         {
             if (value != null)
@@ -217,7 +223,7 @@ namespace System
 
         public static string Mask(this string value)
         {
-            string maskChar = "*";
+            string maskChar = "•"; //"*";
 
             if (!String.IsNullOrEmpty(value))
                 return new string(maskChar.ToCharArray()[0], value.Length);

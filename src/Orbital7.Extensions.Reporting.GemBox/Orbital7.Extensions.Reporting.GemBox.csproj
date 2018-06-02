@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orbital7.Extensions.Reporting.GemBox</RootNamespace>
     <AssemblyName>Orbital7.Extensions.Reporting.GemBox</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,10 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GemBox.Document">
-      <Version>27.3.30.1192</Version>
+      <Version>29.0.0.1000</Version>
     </PackageReference>
     <PackageReference Include="GemBox.Spreadsheet">
-      <Version>41.3.30.1128</Version>
+      <Version>43.0.0.1020</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +62,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Orbital7.Extensions.Reporting.GemBox.nuspec" />
+    <None Include="Orbital7.Extensions.Reporting.GemBox.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

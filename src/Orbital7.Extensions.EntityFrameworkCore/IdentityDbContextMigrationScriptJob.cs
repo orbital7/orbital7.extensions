@@ -36,11 +36,6 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         protected bool Initialize { get; set; } = false;
 
-        protected virtual T Create(IServiceProvider serviceProvider)
-        {
-            return serviceProvider.GetService<T>();
-        }
-
         protected abstract IRepositoriesInitializer CreateInitializer();
 
         protected abstract bool ValidateDeleteOnInitialize();
@@ -48,8 +43,9 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         protected virtual void DeleteDatabase()
         {
             Console.Write("Deleting Database...");
-            using (var context = Create(this.ServiceProvider))
+            using (var scope = this.ServiceProvider.CreateScope())
             {
+                var context = scope.ServiceProvider.GetRequiredService<T>();
                 context.Database.EnsureDeleted();
                 Console.WriteLine("Success");
             }
@@ -72,9 +68,10 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
             // Migrate and initialize.
             Console.Write("Migrating...");
-            using (var context = Create(this.ServiceProvider))
+            using (var scope = this.ServiceProvider.CreateScope())
             {
                 // Migrate.
+                var context = this.ServiceProvider.GetRequiredService<T>();
                 context.Database.Migrate();
                 Console.WriteLine("Success");
 
@@ -82,7 +79,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 if (this.Initialize)
                 {
                     Console.Write("Initializing...");
-                    await initializer.InitializeAsync(this.ServiceProvider);
+                    await initializer.InitializeAsync(scope.ServiceProvider);
                     Console.WriteLine("Success");
                 }
             }

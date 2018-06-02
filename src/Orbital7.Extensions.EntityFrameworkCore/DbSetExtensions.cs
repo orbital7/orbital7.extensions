@@ -14,27 +14,16 @@ namespace Microsoft.EntityFrameworkCore
         {
             if (ids.Count > 0)
             {
-                // NB: This assumes classname convention-based table naming.
-                var tableName = tableNameOverride;
-                if (String.IsNullOrEmpty(tableName))
-                {
-                    var className = typeof(T).Name;
-                    if (className.EndsWith("y"))
-                        tableName = className.PruneEnd(1) + "ies";
-                    else if (className.EndsWith("is"))
-                        tableName = className.PruneEnd(2) + "es";
-                    else
-                        tableName = className + "s";
-                }
-
                 var values = new StringBuilder();
                 values.AppendFormat("'{0}'", ids[0]);
                 for (int i = 1; i < ids.Count; i++)
                     values.AppendFormat(", '{0}'", ids[i]);
 
-                var sql = String.Format("SELECT * FROM {0} WHERE {1}", tableName, whereAndClause).Trim();
-                sql += String.Format(" {0} IN ({1})", queryIdColumnName, values);
-
+                // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
+                // clauses can be passed in to this method.
+                var sql = String.Format("SELECT * FROM {0} WHERE {1} IN ({2})",
+                    tableNameOverride ?? typeof(T).Name.Pluralize(),
+                    (whereAndClause + " " + queryIdColumnName).Trim(), values.ToString());
                 return dbSet.FromSql(sql);
             }
             else
@@ -43,10 +32,10 @@ namespace Microsoft.EntityFrameworkCore
             }
         }
 
-        public static async Task<List<T>> GatherAsync<T>(this DbSet<T> dbSet, IList ids, bool asNoTracking, 
+        public static async Task<List<T>> GatherAsync<T>(this DbSet<T> dbSet, IList ids, bool asNoTracking,
             string whereAndClause = "", string queryIdColumnName = "Id", string tableNameOverride = null) where T : class
         {
-            return await CreateContainsIdsQuery(dbSet, ids, whereAndClause, queryIdColumnName, 
+            return await CreateContainsIdsQuery(dbSet, ids, whereAndClause, queryIdColumnName,
                 tableNameOverride).ToListAsync(asNoTracking);
         }
     }
