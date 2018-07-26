@@ -40,17 +40,21 @@ namespace Orbital7.Extensions.Reporting.GemBox
         protected override string GetContentType(ReportFormat reportFormat)
         {
             if (reportFormat == ReportFormat.Pdf)
-                return "application/pdf";
+                return MimeTypesHelper.MIME_TYPE_PDF;
+            else if (reportFormat == ReportFormat.Csv)
+                return MimeTypesHelper.MIME_TYPE_CSV;
             else
-                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                return MimeTypesHelper.MIME_TYPE_XLSX;
         }
 
         protected override string GetFileExtension(ReportFormat reportFormat)
         {
             if (reportFormat == ReportFormat.Pdf)
-                return ".pdf";
+                return MimeTypesHelper.FILE_EXT_PDF;
+            else if (reportFormat == ReportFormat.Csv)
+                return MimeTypesHelper.FILE_EXT_CSV;
             else
-                return ".xlsx";
+                return MimeTypesHelper.FILE_EXT_XLSX;
         }
 
         protected override byte[] Save(ReportFormat reportFormat)
@@ -58,6 +62,8 @@ namespace Orbital7.Extensions.Reporting.GemBox
             SaveOptions saveOptions = null;
             if (reportFormat == ReportFormat.Pdf)
                 saveOptions = new PdfSaveOptions() { SelectionType = SelectionType.EntireFile };
+            else if (reportFormat == ReportFormat.Csv)
+                saveOptions = SaveOptions.CsvDefault;
             else
                 saveOptions = SaveOptions.XlsxDefault;
 

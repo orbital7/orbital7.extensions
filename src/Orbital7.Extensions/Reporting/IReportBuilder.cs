@@ -10,6 +10,8 @@ namespace Orbital7.Extensions.Reporting
         Pdf,
 
         Native,
+
+        Csv,
     }
 
     public interface IReportBuilder

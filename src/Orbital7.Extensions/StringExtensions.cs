@@ -28,6 +28,22 @@ namespace System
         public const string AlphanumericChars = NumberChars + LetterChars;
         public const string WhitespaceChars = " \r\n\t\v\f";
 
+        public static string First(this string value, int numCharacters)
+        {
+            if (!String.IsNullOrEmpty(value) && value.Length >= numCharacters)
+                return value.Substring(0, numCharacters);
+            else
+                return null;
+        }
+
+        public static string Last(this string value, int numCharacters)
+        {
+            if (!String.IsNullOrEmpty(value) && value.Length >= numCharacters)
+                return value.Substring(value.Length - numCharacters, numCharacters);
+            else
+                return null;
+        }
+
         public static string Pluralize(this string value)
         {
             var plural = value;
@@ -92,8 +108,19 @@ namespace System
             string value = text;
 
             if (textReplacementKeys != null)
-                foreach (var item in textReplacementKeys)
-                    value = value.Replace(item.Key, item.Value);
+                foreach (var textReplacementKey in textReplacementKeys)
+                    value = value.Replace(textReplacementKey.Key, textReplacementKey.Value);
+
+            return value;
+        }
+
+        public static string Replace(this string text, List<SerializableTuple<string, string>> textReplacementKeys)
+        {
+            string value = text;
+
+            if (textReplacementKeys != null)
+                foreach (var textReplacementKey in textReplacementKeys)
+                    value = value.Replace(textReplacementKey.Item1, textReplacementKey.Item2);
 
             return value;
         }
@@ -483,6 +510,11 @@ namespace System
         public static string NormalizeLineTerminators(this string value, string lineTerm = "\n")
         {
             return value.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", lineTerm);
+        }
+
+        public static string FormatLineTerminatorsAsHtml(this string value)
+        {
+            return value.NormalizeLineTerminators().Replace("\n", "<br />");
         }
 
         public static string GetLineTerminator(this string value)

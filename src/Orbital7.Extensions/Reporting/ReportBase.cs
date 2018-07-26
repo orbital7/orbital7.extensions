@@ -25,7 +25,7 @@ namespace Orbital7.Extensions.Reporting
 
         }
         
-        public abstract Task BuildAsync(T builder);
+        public abstract Task BuildAsync(T builder, ReportFormat format);
 
         public List<string> GatherScopeSpecificSelectedIds()
         {

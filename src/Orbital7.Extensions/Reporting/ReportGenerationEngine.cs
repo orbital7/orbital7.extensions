@@ -14,7 +14,7 @@ namespace Orbital7.Extensions.Reporting
         {
             try
             {
-                await report.BuildAsync(reportBuilder);
+                await report.BuildAsync(reportBuilder, reportFormat);
             }
             catch (Exception ex)
             {
