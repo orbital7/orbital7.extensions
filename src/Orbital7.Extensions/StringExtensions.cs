@@ -318,42 +318,70 @@ namespace System
 
         public static string NumbersOnly(this string value)
         {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (char c in value.ToCharArray())
+            if (!string.IsNullOrEmpty(value))
             {
-                string s = c.ToString();
-                if (NumberChars.Contains(s)) sb.Append(s);
-            }
+                StringBuilder sb = new StringBuilder();
 
-            return sb.ToString();
+                foreach (char c in value.ToCharArray())
+                {
+                    string s = c.ToString();
+                    if (NumberChars.Contains(s)) sb.Append(s);
+                }
+
+                return sb.ToString();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static bool IsNumbers(this string value)
         {
-            foreach (char c in value.ToCharArray())
-                if (!NumberChars.Contains(c.ToString()))
-                    return false;
+            if (!string.IsNullOrEmpty(value))
+            {
+                foreach (char c in value.ToCharArray())
+                    if (!NumberChars.Contains(c.ToString()))
+                        return false;
 
-            return true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static bool IsLetters(this string value)
         {
-            foreach (char c in value.ToCharArray())
-                if (!LetterChars.Contains(c.ToString()))
-                    return false;
+            if (!string.IsNullOrEmpty(value))
+            {
+                foreach (char c in value.ToCharArray())
+                    if (!LetterChars.Contains(c.ToString()))
+                        return false;
 
-            return true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static bool IsAlphanumeric(this string value)
         {
-            foreach (char c in value.ToCharArray())
-                if (!AlphanumericChars.Contains(c.ToString()))
-                    return false;
+            if (!string.IsNullOrEmpty(value))
+            {
+                foreach (char c in value.ToCharArray())
+                    if (!AlphanumericChars.Contains(c.ToString()))
+                        return false;
 
-            return true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static string[] Parse(this string input, bool byWhitespace, bool byPunctuation, bool includeDash, bool includeUnderscore, bool includeDelimitersInResults, bool removeEmptyEntries)
@@ -576,7 +604,7 @@ namespace System
         {
             string output = value;
 
-            if (value.EndsWith(end))
+            if (!string.IsNullOrEmpty(value) && value.EndsWith(end))
                 output = value.Substring(0, value.Length - end.Length);
 
             return output;
@@ -586,7 +614,8 @@ namespace System
         {
             string output = value;
 
-            output = value.Substring(0, value.Length - length);
+            if (!string.IsNullOrEmpty(value))
+                output = value.Substring(0, value.Length - length);
 
             return output;
         }
@@ -595,7 +624,7 @@ namespace System
         {
             string output = value;
 
-            if (value.StartsWith(start, StringComparison.CurrentCultureIgnoreCase))
+            if (!string.IsNullOrEmpty(value) && value.StartsWith(start, StringComparison.CurrentCultureIgnoreCase))
                 output = value.Substring(start.Length, value.Length - start.Length);
 
             return output;
@@ -605,7 +634,8 @@ namespace System
         {
             string output = value;
 
-            output = value.Substring(length, value.Length - length);
+            if (!string.IsNullOrEmpty(value))
+                output = value.Substring(length, value.Length - length);
 
             return output;
         }

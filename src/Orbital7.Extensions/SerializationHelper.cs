@@ -12,70 +12,71 @@ namespace Orbital7.Extensions
     {
         public static T CloneObject<T>(T objectToClone)
         {
-            return LoadFromXml<T>(SerializeToXml(objectToClone));
+            return DeserializeFromXml<T>(SerializeToXml(objectToClone));
         }
 
-        public static T LoadFromXmlFile<T>(string filePath)
+        public static T DeserializeFromXml<T>(string xml)
         {
-            return (T)LoadFromXmlFile(typeof(T), filePath);
-        }
-
-        public static T LoadFromXml<T>(string xml)
-        {
-            return (T)LoadFromXml(typeof(T), xml);
-        }
-
-        public static object LoadFromXmlFile(Type type, string filePath)
-        {
-            return LoadFromXml(type, File.ReadAllText(filePath));
-        }
-
-        public static object LoadFromXml(Type type, string xml)
-        {
-            object deserializedObject = null;
-
-            using (var sr = new StringReader(xml.Trim()))
+            using (var reader = new StringReader(xml))
             {
-                deserializedObject = LoadFromTextReader(type, sr);
+                return (T)DeserializeFromTextReader(typeof(T), reader);
             }
-
-            return deserializedObject;
         }
 
+        public static T DeserializeFromXmlFile<T>(string filePath)
+        {
+            using (var reader = new StreamReader(filePath, false))
+            {
+                return (T)DeserializeFromTextReader(typeof(T), reader);
+            }
+        }
+        
+        public static object DeserializeFromXml(Type type, string xml)
+        {
+            using (var reader = new StringReader(xml))
+            {
+                return DeserializeFromTextReader(type, reader);
+            }
+        }
+
+        public static object DeserializeFromXmlFile(Type type, string filePath)
+        {
+            using (var reader = new StreamReader(filePath, false))
+            {
+                return DeserializeFromTextReader(type, reader);
+            }
+        }
+        
         public static void SerializeToXmlFile(object objectToSerialize, string filePath)
         {
-            File.WriteAllText(filePath, SerializeToXml(objectToSerialize));
+            using (TextWriter writer = new StreamWriter(filePath, false))
+            {
+                SerializeToTextWriter(objectToSerialize, writer);
+            }
         }
 
         public static string SerializeToXml(object objectToSerialize)
         {
-            return SerializeToStringWriter(objectToSerialize);
-        }
-
-        private static string SerializeToStringWriter(object objectToSerialize)
-        {
-            string value = String.Empty;
-
             using (StringWriter stringWriter = new StringWriterWithEncoding(Encoding.UTF8))
             {
                 SerializeToTextWriter(objectToSerialize, stringWriter);
-                value = stringWriter.ToString();
+                return stringWriter.ToString();
             }
-
-            return value;
         }
 
-        private static object LoadFromTextReader(Type type, TextReader textReader)
+        private static object DeserializeFromTextReader(Type type, TextReader textReader)
         {
-            XmlSerializer xserDocumentSerializer = new XmlSerializer(type);
-            return xserDocumentSerializer.Deserialize(XmlReader.Create(textReader, new XmlReaderSettings() { CheckCharacters = false }));
+            var xmlSerializer = new XmlSerializer(type);
+            return xmlSerializer.Deserialize(XmlReader.Create(textReader, new XmlReaderSettings() { CheckCharacters = false }));
         }
 
         private static void SerializeToTextWriter(object objectToSerialize, TextWriter textWriter)
         {
-            Type type = objectToSerialize.GetType();
-            XmlSerializer xmlSerializer = new XmlSerializer(type);
-            xmlSerializer.Serialize(XmlWriter.Create(textWriter, new XmlWriterSettings() { CheckCharacters = false }), objectToSerialize);
+            var xmlWriter = XmlWriter.Create(textWriter, new XmlWriterSettings() { CheckCharacters = false });
+            var xmlSerializer = new XmlSerializer(objectToSerialize.GetType());
+            xmlSerializer.Serialize(xmlWriter, objectToSerialize);
+            xmlWriter.Flush();
+            xmlWriter.Close();
         }
     }
 }
