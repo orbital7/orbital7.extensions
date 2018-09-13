@@ -63,10 +63,12 @@ namespace System
             return value.Replace(toRemove, "");
         }
 
-        public static string ToPhoneNumber(this string value)
+        public static string ToRawPhoneNumber(
+            this string value, 
+            bool includePlus1Prefix = false)
         {
-            string phoneNumber = value.NumbersOnly();
-            if (!phoneNumber.StartsWith("+1"))
+            string phoneNumber = value.NumbersOnly().PruneStart("+").PruneStart("1");
+            if (includePlus1Prefix && !phoneNumber.StartsWith("+1"))
                 phoneNumber = "+1" + phoneNumber;
 
             return phoneNumber;
@@ -77,7 +79,7 @@ namespace System
             // TODO: Expand to include non-NorthAmerican phone numbers.
 
             // Convert to numbers only 
-            var raw = value.NumbersOnly().PruneStart("1");
+            var raw = value.ToRawPhoneNumber();
             if (raw.Length >= 10)
             {
                 var template = "({0}) {1}-{2}";
