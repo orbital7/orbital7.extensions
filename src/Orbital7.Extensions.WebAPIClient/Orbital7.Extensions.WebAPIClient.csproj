@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
     <Product>Orbital7.Extensions</Product>

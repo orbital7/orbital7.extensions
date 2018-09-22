@@ -49,10 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GemBox.Document">
-      <Version>29.0.0.1000</Version>
+      <Version>29.0.0.1044</Version>
     </PackageReference>
     <PackageReference Include="GemBox.Spreadsheet">
-      <Version>43.0.0.1020</Version>
+      <Version>43.0.0.1066</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

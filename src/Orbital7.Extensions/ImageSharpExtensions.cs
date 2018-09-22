@@ -1,7 +1,6 @@
 ﻿using System;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing.Transforms;
 
 namespace SixLabors.ImageSharp
 {
