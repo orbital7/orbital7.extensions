@@ -8,24 +8,38 @@ namespace System
 {
     public static class NumericExtensions
     {
-        public static string ToCurrency(this double number, bool addSymbol = false, bool addCommas = true)
+        public static string ToCurrency(
+            this double number, 
+            bool addSymbol = false, 
+            bool addCommas = true,
+            bool addPlusForPositiveNumber = false)
         {
-            string format = "#,##0.00";
-            if (!addCommas) format = "0.00";
+            var format = addCommas ? "#,##0.00" : "0.00";
 
-            double roundedNumber = Math.Round(number, 2);
-            bool isNegative = roundedNumber < 0;
-            string value = String.Empty;
-            if (isNegative) value += "-";
-            if (addSymbol) value += "$";
+            var roundedNumber = Math.Round(number, 2);
+            var isNegative = roundedNumber < 0;
+            var value = String.Empty;
+
+            if (isNegative)
+                value += "-";
+            else if (addPlusForPositiveNumber && roundedNumber > 0)
+                value += "+";
+
+            if (addSymbol)
+                value += "$";
+
             value += Math.Abs(roundedNumber).ToString(format);
 
             return value;
         }
 
-        public static string ToCurrency(this decimal number, bool addSymbol = false, bool addCommas = true)
+        public static string ToCurrency(
+            this decimal number, 
+            bool addSymbol = false, 
+            bool addCommas = true,
+            bool addPlusForPositiveNumber = false)
         {
-            return ToCurrency(Convert.ToDouble(number), addSymbol, addCommas);
+            return ToCurrency(Convert.ToDouble(number), addSymbol, addCommas, addPlusForPositiveNumber);
         }
 
         public static string ToFileSize(this long fileSizeInBytes)

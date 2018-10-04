@@ -105,6 +105,18 @@ namespace System
             return date.ToString("MMMM yyyy");
         }
 
+        public static string FormatAsNaiveDateTime(
+            this DateTime dateTime)
+        {
+            return string.Format("{0:yyyy-MM-ddTHH:mm:ss}", dateTime);
+        }
+
+        public static string FormatUtcAsISO8601DateTime(
+            this DateTime dateTimeUtc)
+        {
+            return string.Format("{0:yyyy-MM-ddTHH:mm:ss}Z", dateTimeUtc);
+        }
+
         public static DateTime RoundToStartOfBusinessDay(this DateTime date)
         {
             if (date.DayOfWeek == DayOfWeek.Saturday)
