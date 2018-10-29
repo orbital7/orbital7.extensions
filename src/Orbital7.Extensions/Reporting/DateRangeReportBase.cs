@@ -23,9 +23,13 @@ namespace Orbital7.Extensions.Reporting
 
         public override string GetFilename(string extension)
         {
-            return this.Name + " " + 
-                this.StartDate.FormatAsFileSystemSafeDate() + " to " + 
-                this.EndDate.FormatAsFileSystemSafeDate() + extension;
+            if (this.StartDate == this.EndDate)
+                return this.Name + " " +
+                    this.StartDate.FormatAsFileSystemSafeDate() + extension;
+            else
+                return this.Name + " " + 
+                    this.StartDate.FormatAsFileSystemSafeDate() + " to " + 
+                    this.EndDate.FormatAsFileSystemSafeDate() + extension;
         }
     }
 }

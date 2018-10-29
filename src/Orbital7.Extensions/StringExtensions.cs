@@ -28,7 +28,9 @@ namespace System
         public const string AlphanumericChars = NumberChars + LetterChars;
         public const string WhitespaceChars = " \r\n\t\v\f";
 
-        public static string First(this string value, int numCharacters)
+        public static string First(
+            this string value, 
+            int numCharacters)
         {
             if (!String.IsNullOrEmpty(value) && value.Length >= numCharacters)
                 return value.Substring(0, numCharacters);
@@ -36,7 +38,9 @@ namespace System
                 return null;
         }
 
-        public static string Last(this string value, int numCharacters)
+        public static string Last(
+            this string value, 
+            int numCharacters)
         {
             if (!String.IsNullOrEmpty(value) && value.Length >= numCharacters)
                 return value.Substring(value.Length - numCharacters, numCharacters);
@@ -44,7 +48,8 @@ namespace System
                 return null;
         }
 
-        public static string Pluralize(this string value)
+        public static string Pluralize(
+            this string value)
         {
             var plural = value;
 
@@ -74,7 +79,9 @@ namespace System
             return phoneNumber;
         }
 
-        public static string FormatAsPhoneNumber(this string value, PhoneNumberFormat format = PhoneNumberFormat.ParenthesisAndDashes)
+        public static string FormatAsPhoneNumber(
+            this string value, 
+            PhoneNumberFormat format = PhoneNumberFormat.ParenthesisAndDashes)
         {
             // TODO: Expand to include non-NorthAmerican phone numbers.
 
@@ -105,7 +112,9 @@ namespace System
             }
         }
 
-        public static string Replace(this string text, IDictionary<string, string> textReplacementKeys)
+        public static string Replace(
+            this string text, 
+            IDictionary<string, string> textReplacementKeys)
         {
             string value = text;
 
@@ -116,7 +125,9 @@ namespace System
             return value;
         }
 
-        public static string Replace(this string text, List<SerializableTuple<string, string>> textReplacementKeys)
+        public static string Replace(
+            this string text, 
+            List<SerializableTuple<string, string>> textReplacementKeys)
         {
             string value = text;
 
@@ -127,12 +138,14 @@ namespace System
             return value;
         }
 
-        public static string UrlEncode(this string value)
+        public static string UrlEncode(
+            this string value)
         {
             return System.Web.HttpUtility.UrlEncode(value);
         }
 
-        public static string ToTitleCase(this string value)
+        public static string ToTitleCase(
+            this string value)
         {
             System.Globalization.TextInfo textInfo = new System.Globalization.CultureInfo("en-US", false).TextInfo;
             return textInfo.ToTitleCase(value.ToLower());
@@ -151,7 +164,8 @@ namespace System
             return ret;
         }
 
-        public static bool IsWindowsFileSystemSafe(this string value)
+        public static bool IsWindowsFileSystemSafe(
+            this string value)
         {
             var chars = IllegalWindowsFileSystemChars.ToCharArray();
 
@@ -162,7 +176,9 @@ namespace System
             return true;
         }
 
-        public static string ToWindowsFileSystemSafeString(this string value, string replaceChar = "")
+        public static string ToWindowsFileSystemSafeString(
+            this string value, 
+            string replaceChar = "")
         {
             var windowsSafeValue = value;
             var chars = IllegalWindowsFileSystemChars.ToCharArray();
@@ -173,12 +189,15 @@ namespace System
             return windowsSafeValue;
         }
 
-        public static MemoryStream ToStream(this string value)
+        public static MemoryStream ToStream(
+            this string value)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
         }
 
-        public static string EnsureContent(this string value, string emptyText)
+        public static string EnsureContent(
+            this string value, 
+            string emptyText)
         {
             if (!String.IsNullOrEmpty(value))
                 return value;
@@ -192,13 +211,15 @@ namespace System
             return encoding.GetString(bytes, 0, bytes.Length);
         }
 
-        public static byte[] ToByteArray(this string value)
+        public static byte[] ToByteArray(
+            this string value)
         {
             UTF8Encoding encoding = new UTF8Encoding();
             return encoding.GetBytes(value);
         }
 
-        public static string StripInvalidXMLCharacters(this string text)
+        public static string StripInvalidXMLCharacters(
+            this string text)
         {
             if (!String.IsNullOrEmpty(text))
             {
@@ -227,13 +248,15 @@ namespace System
             }
         }
 
-        public static string CapitalizeFirstLetter(this string value)
+        public static string CapitalizeFirstLetter(
+            this string value)
         {
             var firstLetter = value.Substring(0, 1);
             return firstLetter.ToUpper() + value.PruneStart(1);
         }
 
-        public static string ToSeparatedWords(this string value)
+        public static string ToSeparatedWords(
+            this string value)
         {
             if (value != null)
             {
@@ -242,7 +265,8 @@ namespace System
             return null;
         }
 
-        public static string EnsureNonEmptyHTMLContent(this string value)
+        public static string EnsureNonEmptyHTMLContent(
+            this string value)
         {
             if (String.IsNullOrEmpty(value) || String.IsNullOrEmpty(value.Trim()))
                 return "&nbsp;";
@@ -250,17 +274,20 @@ namespace System
                 return value;
         }
 
-        public static string Mask(this string value)
+        public static string Mask(
+            this string value,
+            string maskChar = "*")
         {
-            string maskChar = "•"; //"*";
-
             if (!String.IsNullOrEmpty(value))
                 return new string(maskChar.ToCharArray()[0], value.Length);
             else
                 return value;
         }
 
-        public static string MaskNumber(this string number, int endingCount)
+        public static string MaskNumber(
+            this string number, 
+            int endingCount,
+            string maskChar = "*")
         {
             string maskedNumber = String.Empty;
 
@@ -271,13 +298,16 @@ namespace System
                 if (c.Equals(' ') || c.Equals('-'))
                     maskedNumber += c;
                 else
-                    maskedNumber += '*';
+                    maskedNumber += maskChar;
             }
 
             return maskedNumber + endingNumber;
         }
 
-        public static string EnsureMaxStringLength(this string input, int maxLength, string truncationSuffix = null)
+        public static string EnsureMaxStringLength(
+            this string input, 
+            int maxLength, 
+            string truncationSuffix = null)
         {
             if (!String.IsNullOrEmpty(input) && input.Length > maxLength)
             {
@@ -291,12 +321,16 @@ namespace System
             return input;
         }
 
-        public static bool ContainsChars(this string value, string chars)
+        public static bool ContainsChars(
+            this string value, 
+            string chars)
         {
             return ContainsChars(value, chars.ToCharArray());
         }
 
-        public static bool ContainsChars(this string value, char[] chars)
+        public static bool ContainsChars(
+            this string value, 
+            char[] chars)
         {
             bool contains = false;
 
@@ -313,12 +347,14 @@ namespace System
             return contains;
         }
 
-        public static bool HasText(this string value)
+        public static bool HasText(
+            this string value)
         {
             return (!String.IsNullOrEmpty(value) && !String.IsNullOrEmpty(value.Trim()));
         }
 
-        public static string NumbersOnly(this string value)
+        public static string NumbersOnly(
+            this string value)
         {
             if (!string.IsNullOrEmpty(value))
             {

@@ -20,8 +20,53 @@ namespace System
             return new DateTime((long)temp);
         }
 
-        public static string ToString(this IList list, string delim, bool encloseInQuotes = false, string nullValue = "", 
-            string andValue = "", bool addDelimToEnd = false)
+        public static string FormatAsCommaAndString(
+            this IList list, 
+            string nullValue = "")
+        {
+            if (list != null || list.Count == 0)
+            {
+                if (list.Count == 1)
+                {
+                    return GetListItemValue(list[0], nullValue);
+                }
+                else if (list.Count == 2)
+                {
+                    return string.Format("{0} and {1}",
+                        GetListItemValue(list[0], nullValue),
+                        GetListItemValue(list[1], nullValue));
+                }
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    int index = 0;
+
+                    foreach (object item in list)
+                    {
+                        if (index == list.Count - 2)
+                            sb.Append(", and ");
+                        else if (index > 0)
+                            sb.Append(", ");
+
+                        sb.Append(GetListItemValue(item, nullValue));
+                        index++;
+                    }
+
+                    return sb.ToString();
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static string ToString(
+            this IList list, 
+            string delim, 
+            bool encloseInQuotes = false, 
+            string nullValue = "", 
+            bool addDelimToEnd = false)
         {
             StringBuilder sb = new StringBuilder();
             int index = 0;
@@ -31,16 +76,16 @@ namespace System
                 foreach (object item in list)
                 {
                     // Append the delimiter if not first.
-                    if (index > 0) sb.Append(delim);
-                    if ((index == list.Count - 2) && !String.IsNullOrEmpty(andValue)) sb.Append(andValue);
+                    if (index > 0)
+                        sb.Append(delim);
 
                     // Get the item text.
-                    string actualItem = nullValue;
-                    if (item != null) actualItem = item.ToString();
-                    if (encloseInQuotes) actualItem = actualItem.EncloseInQuotes();
+                    string value = GetListItemValue(item, nullValue);
+                    if (encloseInQuotes)
+                        value = value.EncloseInQuotes();
 
                     // Append the item, and not matter what we're no longer first.
-                    sb.Append(actualItem);
+                    sb.Append(value);
                     index++;
                 }
 
@@ -49,6 +94,17 @@ namespace System
             }
 
             return sb.ToString();
+        }
+
+        private static string GetListItemValue(
+            object listItem, 
+            string nullValue)
+        {
+            string value = nullValue;
+            if (listItem != null)
+                value = listItem.ToString();
+
+            return value;
         }
 
         public static List<T>[] SplitEvenly<T>(this IList<T> list, int segments)
