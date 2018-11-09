@@ -12,7 +12,7 @@ namespace Orbital7.Extensions.Models
 
         string City { get; set; }
 
-        USState State { get; set; }
+        USState? State { get; set; }
 
         string ZipCode { get; set; }
     }
