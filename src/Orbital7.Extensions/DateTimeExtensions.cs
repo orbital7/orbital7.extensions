@@ -117,6 +117,12 @@ namespace System
             return string.Format("{0:yyyy-MM-ddTHH:mm:ss}Z", dateTimeUtc);
         }
 
+        public static string FormatAsISO8601Date(
+            this DateTime dateTimeUtc)
+        {
+            return string.Format("{0:yyyy-MM-dd}", dateTimeUtc);
+        }
+
         public static DateTime RoundToStartOfBusinessDay(this DateTime date)
         {
             if (date.DayOfWeek == DayOfWeek.Saturday)

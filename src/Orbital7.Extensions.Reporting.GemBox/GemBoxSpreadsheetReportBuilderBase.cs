@@ -101,6 +101,8 @@ namespace Orbital7.Extensions.Reporting.GemBox
                 worksheetName = worksheetName.Replace(":", "").Replace("\\", "").Replace("/", "").Replace("?", "")
                                              .Replace("*", "").Replace("[", "").Replace("]", "").PruneEnd("'");
 
+            worksheetName = worksheetName.EnsureMaxStringLength(31);
+
             var ws = this.ExcelFile.Worksheets.Add(worksheetName);
             if (fitToSinglePage)
             {

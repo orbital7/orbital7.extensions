@@ -7,10 +7,12 @@ namespace Orbital7.Extensions.Attributes
 {
     public class PhoneStringLengthAttribute : StringLengthAttribute
     {
-        public PhoneStringLengthAttribute()
-            : base(20)
-        {
+        public bool AllowExtension { get; private set; }
 
+        public PhoneStringLengthAttribute(bool allowExtension = true)
+            : base(allowExtension ? 20 : 10)
+        {
+            this.AllowExtension = allowExtension;
         }
     }
 }
