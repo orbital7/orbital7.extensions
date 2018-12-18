@@ -370,7 +370,7 @@ namespace System
             }
             else
             {
-                return null;
+                return value;
             }
         }
 
