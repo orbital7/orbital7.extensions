@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orbital7.Extensions.Reporting.GemBox</RootNamespace>
     <AssemblyName>Orbital7.Extensions.Reporting.GemBox</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -49,10 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GemBox.Document">
-      <Version>29.0.0.1044</Version>
+      <Version>29.0.0.1084</Version>
     </PackageReference>
     <PackageReference Include="GemBox.Spreadsheet">
-      <Version>43.0.0.1066</Version>
+      <Version>43.0.0.1084</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
