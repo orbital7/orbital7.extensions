@@ -61,6 +61,11 @@ namespace System.IO
             return stream.ReadAll(-1);
         }
 
+        public static string ReadText(this Stream stream)
+        {
+            return stream.ReadAll().ToTextString();
+        }
+
         public static string ReadXML(this Stream stream)
         {
             string xml = stream.ReadAll().ToTextString();

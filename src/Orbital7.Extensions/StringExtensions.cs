@@ -195,6 +195,26 @@ namespace System
             return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
         }
 
+        public static string EnsureStartsWith(
+            this string value,
+            string startsWith)
+        {
+            if (!value.StartsWith(startsWith))
+                return startsWith + value;
+            else
+                return value;
+        }
+
+        public static string EnsureEndsWith(
+            this string value,
+            string endsWith)
+        {
+            if (!value.EndsWith(endsWith))
+                return value + endsWith;
+            else
+                return value;
+        }
+
         public static string EnsureContent(
             this string value, 
             string emptyText)
