@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.ScriptJobs
 {
-    public abstract class SynchronousScriptJob : ScriptJob
+    public abstract class SynchronousScriptJobBase : ScriptJobBase
     {
         protected abstract void Execute();
 

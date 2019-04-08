@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.ScriptJobs
 {
-    public abstract class ScriptJob
+    public abstract class ScriptJobBase
     {
         public virtual string Name
         {

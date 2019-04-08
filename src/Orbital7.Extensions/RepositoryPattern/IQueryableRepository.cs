@@ -2,47 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.RepositoryPattern
 {
-    public interface IValidatableActionUserRepository<TEntity, TKey>
+    public interface IQueryableRepository<TEntity>
     {
-        TEntity Add(
-            TEntity entity,
-            TKey actionUserId);
-
-        Task<TEntity> AddAsync(
-            TEntity entity,
-            TKey actionUserId,
-            RepositorySaveAction save = RepositorySaveAction.No);
-
-        Task<TEntity> UpdateAsync(
-            TEntity entity,
-            TKey actionUserId,
-            RepositorySaveAction save = RepositorySaveAction.No);
-
-        TEntity Update(
-            TEntity entity,
-            TKey actionUserId);
-
-        List<TEntity> UpdateItems(
-            List<TEntity> existingItems,
-            List<TEntity> updatedItems,
-            TKey actionUserId);
-
-        Task<TEntity> DeleteAsync(
-            TEntity entity,
-            TKey actionUserId,
-            RepositorySaveAction save = RepositorySaveAction.No);
-
-        TEntity Delete(
-            TEntity entity,
-            TKey actionUserId);
-
         IQueryable<TEntity> AsQueryable();
+
+        Task<TEntity> FindAsync(
+            Guid id);
 
         Task<TEntity> GetAsync(
             Guid? id,
@@ -74,12 +44,5 @@ namespace Orbital7.Extensions.RepositoryPattern
 
         Task<int> CountAsync<TDynamic>(
             IQueryable<TDynamic> query);
-
-        Task SaveAsync();
-
-        Task ValidateAndSaveAsync();
-
-        Task<TEntity> FindAsync(
-            Guid id);
     }
 }

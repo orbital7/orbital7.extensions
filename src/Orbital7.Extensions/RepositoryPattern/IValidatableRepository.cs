@@ -18,6 +18,7 @@ namespace Orbital7.Extensions.RepositoryPattern
     }
 
     public interface IValidatableRepository<TEntity>
+        : IQueryableRepository<TEntity>
     {
         TEntity Add(
             TEntity entity);
@@ -26,52 +27,28 @@ namespace Orbital7.Extensions.RepositoryPattern
             TEntity entity, 
             RepositorySaveAction save = RepositorySaveAction.No);
 
+        TEntity Update(
+            TEntity entity);
+
         Task<TEntity> UpdateAsync(
             TEntity entity, 
             RepositorySaveAction save = RepositorySaveAction.No);
+
+        List<TEntity> UpdateItems(
+            List<TEntity> existingItems,
+            List<TEntity> updatedItems);
+
+        TEntity Delete(
+            TEntity entity);
 
         Task<TEntity> DeleteAsync(
             TEntity entity, 
             RepositorySaveAction save = RepositorySaveAction.No);
 
-        IQueryable<TEntity> AsQueryable();
-
-        Task<TEntity> GetAsync(
-            Guid? id,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths);
-
-        Task<TEntity> GetAsync(
-            IQueryable<TEntity> query,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths);
-
-        Task<TDynamic> GetAsync<TDynamic>(
-            IQueryable<TDynamic> query);
-
-        Task<List<TEntity>> GatherAsync(
-            IList ids,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths,
-            string whereAndClause = "",
-            string queryIdFieldName = "Id");
-
-        Task<List<TEntity>> GatherAsync(
-            IQueryable<TEntity> query,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths);
-
-        Task<List<TDynamic>> GatherAsync<TDynamic>(
-            IQueryable<TDynamic> query);
-
-        Task<int> CountAsync<TDynamic>(
-            IQueryable<TDynamic> query);
-
         Task SaveAsync();
 
         Task ValidateAndSaveAsync();
 
-        Task<TEntity> FindAsync(
-            Guid id);
+        
     }
 }

@@ -1,24 +1,18 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Orbital7.Extensions.RepositoryPattern
 {
-    public class ValidatableRepositoryService
+    public class ValidatableRepositoryService<TRepository, TEntity> 
+        : DependencyInjectionServiceBase 
+            where TRepository : class, IValidatableRepository<TEntity>
+            where TEntity : class
     {
-        protected IServiceProvider ServiceProvider { get; private set; }
+        protected TRepository Repository { get; private set; }
 
-        public ValidatableRepositoryService(IServiceProvider serviceProvider)
-        {
-            this.ServiceProvider = serviceProvider;
-        }
-    }
-
-    public class ValidatableRepositoryService<T> : ValidatableRepositoryService where T : class
-    {
-        protected IValidatableRepository<T> Repository { get; private set; }
-
-        public ValidatableRepositoryService(IServiceProvider serviceProvider, IValidatableRepository<T> repository)
+        public ValidatableRepositoryService(IServiceProvider serviceProvider, TRepository repository)
             : base(serviceProvider)
         {
             this.Repository = repository;

@@ -12,24 +12,28 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public abstract class IdentityDbContextWithValidation<TUser, TRole, TKey> : IdentityDbContext<TUser, TRole, TKey>
-        where TUser : IdentityUser<TKey>
-        where TRole : IdentityRole<TKey>
-        where TKey : IEquatable<TKey>
+    public abstract class ValidatableIdentityDbContextBase<TUser, TRole, TKey> 
+        : IdentityDbContext<TUser, TRole, TKey>
+            where TUser : IdentityUser<TKey>
+            where TRole : IdentityRole<TKey>
+            where TKey : IEquatable<TKey>
     {
-        public IdentityDbContextWithValidation(DbContextOptions options)
+        public ValidatableIdentityDbContextBase(
+            DbContextOptions options)
             : base(options)
         {
 
         }
 
-        public int ValidateAndSaveChanges(bool acceptAllChangesOnSuccess = true)
+        public int ValidateAndSaveChanges(
+            bool acceptAllChangesOnSuccess = true)
         {
             Validate();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
-        public async Task<int> ValidateAndSaveChangesAsync(bool acceptAllChangesOnSuccess = true)
+        public async Task<int> ValidateAndSaveChangesAsync(
+            bool acceptAllChangesOnSuccess = true)
         {
             Validate();
             return await base.SaveChangesAsync(acceptAllChangesOnSuccess);

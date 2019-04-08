@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public abstract class IdentityDbContextMigrationScriptJob<T, TUser, TRole, TKey> : ScriptJob
+    public abstract class IdentityDbContextMigrationScriptJobBase<T, TUser, TRole, TKey> : ScriptJobBase
         where T : IdentityDbContext<TUser, TRole, TKey>
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
@@ -23,12 +23,14 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         
         protected IServiceProvider ServiceProvider { get; private set; }
 
-        public IdentityDbContextMigrationScriptJob(IServiceProvider serviceProvider)
+        public IdentityDbContextMigrationScriptJobBase(
+            IServiceProvider serviceProvider)
         {
             this.ServiceProvider = serviceProvider;
         }
 
-        public IdentityDbContextMigrationScriptJob(IServiceProvider serviceProvider, string[] args)
+        public IdentityDbContextMigrationScriptJobBase(
+            IServiceProvider serviceProvider, string[] args)
             : this(serviceProvider)
         {
             this.Args = args;

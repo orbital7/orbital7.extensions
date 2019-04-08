@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orbital7.Extensions.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,13 @@ namespace Microsoft.EntityFrameworkCore
 {
     public static class DbSetExtensions
     {
-        public static IQueryable<T> CreateContainsIdsQuery<T>(this DbSet<T> dbSet, IList ids, string whereAndClause = "",
-            string queryIdColumnName = "Id", string tableNameOverride = null) where T : class
+        public static IQueryable<T> CreateContainsIdsQuery<T>(
+            this DbSet<T> dbSet, 
+            IList ids, 
+            string whereAndClause = "",
+            string queryIdColumnName = "Id", 
+            string tableNameOverride = null) 
+            where T : class
         {
             if (ids.Count > 0)
             {
@@ -32,11 +38,50 @@ namespace Microsoft.EntityFrameworkCore
             }
         }
 
-        public static async Task<List<T>> GatherAsync<T>(this DbSet<T> dbSet, IList ids, bool asNoTracking,
-            string whereAndClause = "", string queryIdColumnName = "Id", string tableNameOverride = null) where T : class
+        public static async Task<List<T>> GatherAsync<T>(
+            this DbSet<T> dbSet, 
+            IList ids, 
+            bool asNoTracking,
+            string whereAndClause = "", 
+            string queryIdColumnName = "Id", 
+            string tableNameOverride = null) 
+            where T : class
         {
             return await CreateContainsIdsQuery(dbSet, ids, whereAndClause, queryIdColumnName,
                 tableNameOverride).ToListAsync(asNoTracking);
+        }
+
+        public static List<T> UpdateItems<T>(
+            this DbSet<T> dbSet,
+            List<T> existingItems,
+            List<T> updatedItems)
+            where T : class, IIdObject
+        {
+            var deletedItems = new List<T>();
+
+            // Update the new items.
+            foreach (var item in updatedItems)
+            {
+                var existingItem = existingItems.Get(item.Id);
+                if (existingItem != null)
+                {
+                    dbSet.Update(item);
+                    existingItems.Remove(existingItem);
+                }
+                else
+                {
+                    dbSet.Add(item);
+                }
+            }
+
+            // Remove the no-longer relevant existing items.
+            foreach (var item in existingItems)
+            {
+                deletedItems.Add(item);
+                dbSet.Remove(item);
+            }
+
+            return deletedItems;
         }
     }
 }

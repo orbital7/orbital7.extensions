@@ -6,60 +6,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public class IdentityDbContextWithValidationRepository<TEntity, TUser, TRole, TKey> : IValidatableRepository<TEntity>
-        where TEntity : class, IIdObject
-        where TUser : IdentityUser<TKey>
-        where TRole : IdentityRole<TKey>
-        where TKey : IEquatable<TKey>
+    public abstract class ValidatableIdentityDbContextQueryableRepositoryBase<TEntity, TUser, TRole, TKey> 
+        : IQueryableRepository<TEntity>
+            where TEntity : class, IIdObject
+            where TUser : IdentityUser<TKey>
+            where TRole : IdentityRole<TKey>
+            where TKey : IEquatable<TKey>
     {
-        protected IdentityDbContextWithValidation<TUser, TRole, TKey> DbContext { get; private set; }
+        protected ValidatableIdentityDbContextBase<TUser, TRole, TKey> DbContext { get; private set; }
         protected DbSet<TEntity> DbSet { get; private set; }
 
-        public IdentityDbContextWithValidationRepository(
-            IdentityDbContextWithValidation<TUser, TRole, TKey> dbContext)
+        public ValidatableIdentityDbContextQueryableRepositoryBase(
+            ValidatableIdentityDbContextBase<TUser, TRole, TKey> dbContext)
         {
             this.DbContext = dbContext;
             this.DbSet = dbContext.Set<TEntity>();
-        }
-
-        public virtual TEntity Add(
-            TEntity entity)
-        {
-            this.DbSet.Add(entity);
-            return entity;
-        }
-
-        public async virtual Task<TEntity> AddAsync(
-            TEntity entity, 
-            RepositorySaveAction save = RepositorySaveAction.No)
-        {
-            this.DbSet.Add(entity);
-            await HandleSaveAsync(save);
-            return entity;
-        }
-
-        public async virtual Task<TEntity> UpdateAsync(
-            TEntity entity, 
-            RepositorySaveAction save = RepositorySaveAction.No)
-        {
-            this.DbSet.Update(entity);
-            await HandleSaveAsync(save);
-            return entity;
-        }
-
-        public async virtual Task<TEntity> DeleteAsync(
-            TEntity entity, 
-            RepositorySaveAction save = RepositorySaveAction.No)
-        {
-            this.DbSet.Remove(entity);
-            await HandleSaveAsync(save);
-            return entity;
         }
 
         public virtual IQueryable<TEntity> AsQueryable()
@@ -166,29 +132,10 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             return await query.CountAsync();
         }
 
-        public virtual async Task SaveAsync()
-        {
-            await this.DbContext.SaveChangesAsync();
-        }
-
-        public virtual async Task ValidateAndSaveAsync()
-        {
-            await this.DbContext.ValidateAndSaveChangesAsync();
-        }
-
         public virtual async Task<TEntity> FindAsync(
             Guid id)
         {
             return await this.DbSet.FindAsync(id);
-        }
-
-        protected virtual async Task HandleSaveAsync(
-            RepositorySaveAction save)
-        {
-            if (save == RepositorySaveAction.Yes)
-                await SaveAsync();
-            else if (save == RepositorySaveAction.YesWithValidation)
-                await ValidateAndSaveAsync();
         }
     }
 }

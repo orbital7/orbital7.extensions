@@ -20,45 +20,60 @@ namespace Orbital7.Extensions.WebAPIClient
             this.AuthenticationToken = authenticationToken;
         }
 
-        protected async Task<string> RetrieveJsonGetResponseStringAsync(string requestUri, bool useAuthenticationBearer = true)
+        protected async Task<string> RetrieveJsonGetResponseStringAsync(
+            string requestUri, 
+            bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonGetResponseAsync(requestUri, useAuthenticationBearer);
             return await response.Content.ReadAsStringAsync();
         }
 
-        protected async Task<Stream> RetrieveJsonGetResponseStreamAsync(string requestUri, bool useAuthenticationBearer = true)
+        protected async Task<Stream> RetrieveJsonGetResponseStreamAsync(
+            string requestUri, 
+            bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonGetResponseAsync(requestUri, useAuthenticationBearer);
             return await response.Content.ReadAsStreamAsync();
         }
 
-        protected async Task<T> RetrieveJsonGetResponseObjectAsync<T>(string requestUri, bool useAuthenticationBearer = true)
+        protected async Task<T> RetrieveJsonGetResponseObjectAsync<T>(
+            string requestUri, 
+            bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonGetResponseAsync(requestUri, useAuthenticationBearer);
             return await response.Content.ReadAsAsync<T>();
         }
 
-        protected async Task<string> RetrieveJsonPostResponseStringAsync(string requestUri, IEnumerable<KeyValuePair<string, string>> contentItems, 
+        protected async Task<string> RetrieveJsonPostResponseStringAsync(
+            string requestUri, 
+            IEnumerable<KeyValuePair<string, string>> contentItems, 
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, contentItems, useAuthenticationBearer);
             return await response.Content.ReadAsStringAsync();
         }
 
-        protected async Task<Stream> RetrieveJsonPostResponseStreamAsync(string requestUri, IEnumerable<KeyValuePair<string, string>> contentItems,
+        protected async Task<Stream> RetrieveJsonPostResponseStreamAsync(
+            string requestUri, 
+            IEnumerable<KeyValuePair<string, string>> contentItems,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, contentItems, useAuthenticationBearer);
             return await response.Content.ReadAsStreamAsync();
         }
 
-        protected async Task<string> RetrieveJsonPostResponseObjectAsync(string requestUri, object content, bool useAuthenticationBearer = true)
+        protected async Task<string> RetrieveJsonPostResponseObjectAsync(
+            string requestUri, 
+            object content, 
+            bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, content, useAuthenticationBearer);
             return await response.Content.ReadAsStringAsync();
         }
 
-        private async Task<HttpResponseMessage> RetrieveJsonGetResponseAsync(string requestUri, bool useAuthenticationBearer = true)
+        private async Task<HttpResponseMessage> RetrieveJsonGetResponseAsync(
+            string requestUri, 
+            bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = null;
 
@@ -72,7 +87,9 @@ namespace Orbital7.Extensions.WebAPIClient
             return response;
         }
 
-        private async Task<HttpResponseMessage> RetrieveJsonPostResponseAsync(string requestUri, IEnumerable<KeyValuePair<string, string>> contentItems,
+        private async Task<HttpResponseMessage> RetrieveJsonPostResponseAsync(
+            string requestUri, 
+            IEnumerable<KeyValuePair<string, string>> contentItems,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage jsonResponse = null;
@@ -90,7 +107,9 @@ namespace Orbital7.Extensions.WebAPIClient
             return jsonResponse;
         }
 
-        private async Task<HttpResponseMessage> RetrieveJsonPostResponseAsync(string requestUri, object content,
+        private async Task<HttpResponseMessage> RetrieveJsonPostResponseAsync(
+            string requestUri, 
+            object content,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage jsonResponse = null;

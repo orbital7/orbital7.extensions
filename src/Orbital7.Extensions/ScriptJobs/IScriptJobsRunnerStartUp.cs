@@ -10,6 +10,6 @@ namespace Orbital7.Extensions.ScriptJobs
 
         string WorkingFolderPath { get; }
 
-        ScriptJob Create(string[] args);
+        ScriptJobBase Create(string[] args);
     }
 }

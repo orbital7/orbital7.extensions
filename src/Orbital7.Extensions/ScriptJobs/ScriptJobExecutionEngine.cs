@@ -14,7 +14,7 @@ namespace Orbital7.Extensions.ScriptJobs
         public const string ARG_FILE = "-FILE";
         public const string ARG_ASSEMBLY = "-ASSEMBLY";
 
-        public ScriptJob ScriptJob { get; private set; }
+        public ScriptJobBase ScriptJob { get; private set; }
 
         public ScriptJobExecutionSettings Settings { get; private set; }
 
@@ -83,10 +83,10 @@ namespace Orbital7.Extensions.ScriptJobs
 
         public ScriptJobExecutionEngine Load(string assemblyName, string typeName, string workingFolderPath = null)
         {
-            return Load(ReflectionHelper.CreateInstance<ScriptJob>(assemblyName, typeName), workingFolderPath);
+            return Load(ReflectionHelper.CreateInstance<ScriptJobBase>(assemblyName, typeName), workingFolderPath);
         }
 
-        public ScriptJobExecutionEngine Load(ScriptJob scriptJob, string workingFolderPath = null)
+        public ScriptJobExecutionEngine Load(ScriptJobBase scriptJob, string workingFolderPath = null)
         {
             // Validate/Record.
             this.ScriptJob = scriptJob ?? throw new Exception("Provided ScriptJob is NULL");
@@ -187,7 +187,7 @@ namespace Orbital7.Extensions.ScriptJobs
             new ScriptJobExecutionEngine().Load(assemblyName, typeName, workingFolderPath).Execute();
         }
 
-        public static void Execute(ScriptJob scriptJob, string workingFolderPath = null)
+        public static void Execute(ScriptJobBase scriptJob, string workingFolderPath = null)
         {
             new ScriptJobExecutionEngine().Load(scriptJob, workingFolderPath).Execute();
         }
@@ -212,7 +212,7 @@ namespace Orbital7.Extensions.ScriptJobs
             await new ScriptJobExecutionEngine().Load(assemblyName, typeName, workingFolderPath).ExecuteAsync();
         }
 
-        public static async Task ExecuteAsync(ScriptJob scriptJob, string workingFolderPath = null)
+        public static async Task ExecuteAsync(ScriptJobBase scriptJob, string workingFolderPath = null)
         {
             await new ScriptJobExecutionEngine().Load(scriptJob, workingFolderPath).ExecuteAsync();
         }
