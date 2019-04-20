@@ -16,7 +16,7 @@ namespace Orbital7.Extensions.WPF
 
         public static string ShowFolderBrowseDialog(string description)
         {
-            return ShowFolderBrowseDialog(description, String.Empty);
+            return ShowFolderBrowseDialog(description, string.Empty);
         }
 
         public static string ShowFolderBrowseDialog(string description, string selectedPath)
@@ -41,12 +41,12 @@ namespace Orbital7.Extensions.WPF
 
         public static string ShowOpenDialog(DependencyObject owner, string filter)
         {
-            return ShowOpenDialog(owner, DefaultOpenCaption, filter, String.Empty);
+            return ShowOpenDialog(owner, DefaultOpenCaption, filter, string.Empty);
         }
 
         public static string ShowOpenDialog(DependencyObject owner, string title, string filter)
         {
-            return ShowOpenDialog(owner, title, filter, String.Empty);
+            return ShowOpenDialog(owner, title, filter, string.Empty);
         }
 
         public static string ShowOpenDialog(DependencyObject owner, string title, string filter, string initFilename)
@@ -92,12 +92,12 @@ namespace Orbital7.Extensions.WPF
 
         public static string ShowSaveDialog(DependencyObject owner, string title, string filter)
         {
-            return ShowSaveDialog(owner, title, filter, String.Empty);
+            return ShowSaveDialog(owner, title, filter, string.Empty);
         }
 
         public static string ShowSaveDialog(DependencyObject owner, string title, string filter, string initFilename)
         {
-            string filePath = String.Empty;
+            string filePath = string.Empty;
 
             try
             {
@@ -160,7 +160,7 @@ namespace Orbital7.Extensions.WPF
             if (result.HasValue && result.Value)
                 return dialog.Value;
             else
-                return String.Empty;
+                return string.Empty;
         }
 
         public static object ShowInputComboBoxDialog(DependencyObject owner, string description, IList items, string title = "Input Box",

@@ -36,7 +36,7 @@ namespace System.Linq.Expressions
         {
             var memberInfo = propertyExpression.Body.GetPropertyInformation();
             var attr = memberInfo.GetPropertyDisplayAttribute();
-            if (attr != null && !String.IsNullOrEmpty(attr.Name))
+            if (attr != null && !string.IsNullOrEmpty(attr.Name))
                 return attr.Name;
 
             return memberInfo.Name;
@@ -48,9 +48,9 @@ namespace System.Linq.Expressions
             var attr = memberInfo.GetPropertyDisplayAttribute();
             if (attr != null)
             {
-                if (!String.IsNullOrEmpty(attr.ShortName))
+                if (!string.IsNullOrEmpty(attr.ShortName))
                     return attr.ShortName;
-                else if (!String.IsNullOrEmpty(attr.Name))
+                else if (!string.IsNullOrEmpty(attr.Name))
                     return attr.Name;
             }
 

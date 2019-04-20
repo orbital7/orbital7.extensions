@@ -61,7 +61,7 @@ namespace GemBox.Spreadsheet
 
         public static CellStyle ToCurrency(this CellStyle style, bool includeSymbol = true, bool includeChange = true)
         {
-            style.NumberFormat = String.Format("{0}#,##0{1}",
+            style.NumberFormat = string.Format("{0}#,##0{1}",
                 includeSymbol ? "$" : "",
                 includeChange ? ".00" : "").Trim();
             return style;
@@ -268,7 +268,7 @@ namespace GemBox.Spreadsheet
 
         public static AbstractRange SetValue(this AbstractRange range, string value, int indentLevel = 0)
         {
-            range.Value = String.Format("{0}{1}",
+            range.Value = string.Format("{0}{1}",
                 new string(Convert.ToChar(" "), 3 * indentLevel), value);
             return range;
         }

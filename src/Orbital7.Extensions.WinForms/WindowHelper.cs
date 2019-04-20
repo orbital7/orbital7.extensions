@@ -95,7 +95,7 @@ namespace Orbital7.Extensions.WinForms
 
             // Get the current window and continue only if the main window has a title (defects #594253 and #595230).
             System.Diagnostics.Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
-            if (!String.IsNullOrEmpty(currentProcess.MainWindowTitle))
+            if (!string.IsNullOrEmpty(currentProcess.MainWindowTitle))
             {
                 mainWindow = new NativeWindow();
                 mainWindow.AssignHandle(currentProcess.MainWindowHandle);

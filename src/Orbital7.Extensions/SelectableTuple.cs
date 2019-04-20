@@ -25,7 +25,7 @@ namespace System
 
         public override string ToString()
         {
-            return String.Format("{0} {1}", this.Item2.ToString(), this.IsSelected ? "[Selected]" : null).Trim();
+            return string.Format("{0} {1}", this.Item2.ToString(), this.IsSelected ? "[Selected]" : null).Trim();
         }
     }
 }

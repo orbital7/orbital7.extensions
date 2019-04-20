@@ -27,7 +27,7 @@ namespace Orbital7.Extensions
                     if (fi != null)
                     {
                         var attributes = (DisplayAttribute[])fi.GetCustomAttributes(typeof(DisplayAttribute), false);
-                        return ((attributes.Length > 0) && (!String.IsNullOrEmpty(attributes[0].Name))) ? attributes[0].Name : value.ToString();
+                        return ((attributes.Length > 0) && (!string.IsNullOrEmpty(attributes[0].Name))) ? attributes[0].Name : value.ToString();
                     }
                 }
 

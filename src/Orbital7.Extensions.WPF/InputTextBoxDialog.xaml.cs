@@ -38,7 +38,7 @@ namespace Orbital7.Extensions.WPF
 
         private void inputValue_TextChanged(object sender, TextChangedEventArgs e)
         {
-            buttonOK.IsEnabled = !String.IsNullOrEmpty(this.Value);
+            buttonOK.IsEnabled = !string.IsNullOrEmpty(this.Value);
         }
 
         //private void Window_Loaded(object sender, RoutedEventArgs e)

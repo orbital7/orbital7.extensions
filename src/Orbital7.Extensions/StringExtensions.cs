@@ -32,7 +32,7 @@ namespace System
             this string value, 
             int numCharacters)
         {
-            if (!String.IsNullOrEmpty(value) && value.Length >= numCharacters)
+            if (!string.IsNullOrEmpty(value) && value.Length >= numCharacters)
                 return value.Substring(0, numCharacters);
             else
                 return null;
@@ -42,7 +42,7 @@ namespace System
             this string value, 
             int numCharacters)
         {
-            if (!String.IsNullOrEmpty(value) && value.Length >= numCharacters)
+            if (!string.IsNullOrEmpty(value) && value.Length >= numCharacters)
                 return value.Substring(value.Length - numCharacters, numCharacters);
             else
                 return null;
@@ -95,14 +95,14 @@ namespace System
                 else if (format == PhoneNumberFormat.PeriodsOnly)
                     template = "{0}.{1}.{2}";
 
-                var phoneNumber = String.Format(template,
+                var phoneNumber = string.Format(template,
                     raw.Substring(0, 3),
                     raw.Substring(3, 3),
                     raw.Substring(6, 4));
 
                 // Treat the remainder as the extension.
                 if (raw.Length > 10)
-                    return String.Format("{0} x{1}", phoneNumber, raw.Substring(10, raw.Length - 10));
+                    return string.Format("{0} x{1}", phoneNumber, raw.Substring(10, raw.Length - 10));
                 else
                     return phoneNumber;
             }
@@ -219,7 +219,7 @@ namespace System
             this string value, 
             string emptyText)
         {
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return value;
             else
                 return emptyText;
@@ -241,7 +241,7 @@ namespace System
         public static string StripInvalidXMLCharacters(
             this string text)
         {
-            if (!String.IsNullOrEmpty(text))
+            if (!string.IsNullOrEmpty(text))
             {
                 StringBuilder textOut = new StringBuilder(); // Used to hold the output.   
                 char current; // Used to reference the current character.   
@@ -288,7 +288,7 @@ namespace System
         public static string EnsureNonEmptyHTMLContent(
             this string value)
         {
-            if (String.IsNullOrEmpty(value) || String.IsNullOrEmpty(value.Trim()))
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(value.Trim()))
                 return "&nbsp;";
             else
                 return value;
@@ -298,7 +298,7 @@ namespace System
             this string value,
             string maskChar = "*")
         {
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return new string(maskChar.ToCharArray()[0], value.Length);
             else
                 return value;
@@ -309,7 +309,7 @@ namespace System
             int endingCount,
             string maskChar = "*")
         {
-            string maskedNumber = String.Empty;
+            string maskedNumber = string.Empty;
 
             string endingNumber = number.Substring(number.Length - endingCount, endingCount);
             string leftSide = number.Substring(0, number.Length - endingCount);
@@ -329,10 +329,10 @@ namespace System
             int maxLength, 
             string truncationSuffix = null)
         {
-            if (!String.IsNullOrEmpty(input) && input.Length > maxLength)
+            if (!string.IsNullOrEmpty(input) && input.Length > maxLength)
             {
                 int actualMaxLength = maxLength;
-                if (!String.IsNullOrEmpty(truncationSuffix))
+                if (!string.IsNullOrEmpty(truncationSuffix))
                     actualMaxLength -= truncationSuffix.Length;
 
                 return input.Substring(0, actualMaxLength) + truncationSuffix;
@@ -370,7 +370,7 @@ namespace System
         public static bool HasText(
             this string value)
         {
-            return (!String.IsNullOrEmpty(value) && !String.IsNullOrEmpty(value.Trim()));
+            return (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(value.Trim()));
         }
 
         public static string NumbersOnly(
@@ -446,7 +446,7 @@ namespace System
         {
             string[] result = null;
 
-            string chars = String.Empty;
+            string chars = string.Empty;
             if (byWhitespace) chars += WhitespaceChars;
             if (byPunctuation) chars += GetPuncuationChars(includeDash, includeUnderscore);
 
@@ -455,7 +455,7 @@ namespace System
                 var delimiters = chars.ToStringArray();
                 if (delimiters.Length > 0)
                 {
-                    string pattern = "(" + String.Join("|", delimiters.Select(d => Regex.Escape(d)).ToArray()) + ")";
+                    string pattern = "(" + string.Join("|", delimiters.Select(d => Regex.Escape(d)).ToArray()) + ")";
                     result = Regex.Split(input, pattern);
                 }
             }
@@ -522,7 +522,7 @@ namespace System
                     // Add the item.
                     int itemIndex = startIndex + startLength;
                     string item = value.Substring(itemIndex, endIndex - itemIndex);
-                    if (!removeEmptyEntries || !String.IsNullOrEmpty(item))
+                    if (!removeEmptyEntries || !string.IsNullOrEmpty(item))
                         output.Add(item);
 
                     // Find the start of the next item.
@@ -558,7 +558,7 @@ namespace System
 
         public static string FindFirstBetween(this string value, string start, string end, bool autoTrim)
         {
-            string output = String.Empty;
+            string output = string.Empty;
 
             // Determine lengths.
             int startLength = start.Length;

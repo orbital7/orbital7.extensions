@@ -80,7 +80,7 @@ namespace Orbital7.Extensions
 
             // Search.
             string name = item.ToString();
-            if (!String.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))
             {
                 string firstLetter = name.Substring(0, 1).ToUpper();
                 foreach (NamesLetter namesLetter in this.NamesLetterCollection)

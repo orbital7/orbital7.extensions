@@ -131,7 +131,7 @@ namespace Orbital7.Extensions.WebAPIClient
             client.BaseAddress = new Uri(this.BaseAddress);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            if (useAuthenticationBearer && !String.IsNullOrEmpty(this.AuthenticationToken))
+            if (useAuthenticationBearer && !string.IsNullOrEmpty(this.AuthenticationToken))
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.AuthenticationToken);
 
             return client;
@@ -147,9 +147,9 @@ namespace Orbital7.Extensions.WebAPIClient
             {
                 string content = await response.Content.ReadAsStringAsync();
                 string description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\\r\\n\",");
-                if (String.IsNullOrEmpty(description))
+                if (string.IsNullOrEmpty(description))
                     description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\",");
-                if (String.IsNullOrEmpty(description))
+                if (string.IsNullOrEmpty(description))
                     description = content.FindFirstBetween("\"error_description\":\"", "\"");
 
                 throw new Exception("Error " + Convert.ToInt32(response.StatusCode) + ": " + response.ReasonPhrase + ". " + 

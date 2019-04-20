@@ -18,7 +18,7 @@ namespace System
 
             var roundedNumber = Math.Round(number, 2);
             var isNegative = roundedNumber < 0;
-            var value = String.Empty;
+            var value = string.Empty;
 
             if (isNegative)
                 value += "-";
@@ -44,7 +44,7 @@ namespace System
 
         public static string ToFileSize(this long fileSizeInBytes)
         {
-            return String.Format(new FileSizeFormatProvider(), "{0:fs}", fileSizeInBytes);
+            return string.Format(new FileSizeFormatProvider(), "{0:fs}", fileSizeInBytes);
         }
 
         public static string ToPercent(this double percent)

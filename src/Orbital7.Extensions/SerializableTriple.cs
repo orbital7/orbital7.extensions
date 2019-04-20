@@ -35,7 +35,7 @@ namespace System
 
         public override string ToString()
         {
-            return String.Format("{0}, {1}, {2}",
+            return string.Format("{0}, {1}, {2}",
                 this.Item1 != null ? this.Item1.ToString() : "null",
                 this.Item2 != null ? this.Item2.ToString() : "null",
                 this.Item3 != null ? this.Item3.ToString() : "null");

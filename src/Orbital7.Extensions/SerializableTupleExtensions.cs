@@ -11,7 +11,7 @@ namespace System
         public static List<SerializableTuple<T, string>> InsertEmptyTextItem<T>(this List<SerializableTuple<T, string>> list, 
             string emptyText = null)
         {
-            if (!String.IsNullOrEmpty(emptyText))
+            if (!string.IsNullOrEmpty(emptyText))
                 list.Insert(0, new SerializableTuple<T, string>(default(T), emptyText));
 
             return list;

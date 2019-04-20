@@ -23,7 +23,7 @@ namespace Orbital7.Extensions.Attributes
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             string validationValue = value?.ToString();
-            if (!String.IsNullOrEmpty(validationValue))
+            if (!string.IsNullOrEmpty(validationValue))
             {
                 if (validationValue.Length > _maxLength)
                 {
@@ -50,7 +50,7 @@ namespace Orbital7.Extensions.Attributes
 
         private ValidationResult GetErrorResult(ValidationContext validationContext)
         {
-            return new ValidationResult(String.Format("The {0} field has a maximum length of {1} chars total and a maximum of {2} lines total, where each line cannot exceed {3} characters",
+            return new ValidationResult(string.Format("The {0} field has a maximum length of {1} chars total and a maximum of {2} lines total, where each line cannot exceed {3} characters",
                 validationContext.MemberName, _maxLength, _maxLines, _maxLineLength));
         }
     }

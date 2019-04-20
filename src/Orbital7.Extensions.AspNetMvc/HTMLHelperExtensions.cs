@@ -22,7 +22,7 @@ namespace System.Web.Mvc.Html
             if (number.HasValue && (number.Value != 0 || !blankIfZero))
                 return new MvcHtmlString("<span style='white-space: nowrap;'>" + number.Value.ToCurrency(addSymbol) + "</span>");
             else
-                return new MvcHtmlString(String.Empty);
+                return new MvcHtmlString(string.Empty);
         }
 
         public static MvcHtmlString NumberEditorFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object htmlAttributes = null)

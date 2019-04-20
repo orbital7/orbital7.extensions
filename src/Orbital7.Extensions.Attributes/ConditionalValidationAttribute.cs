@@ -40,7 +40,7 @@ namespace Orbital7.Extensions.Attributes
                     // match => means we should try validating this field.
                     var innerAttributeValidation = this.InnerAttribute.GetValidationResult(value, validationContext);
                     if (innerAttributeValidation != null && innerAttributeValidation != ValidationResult.Success)
-                        return new ValidationResult(String.Format(this.ErrorMessage, validationContext.DisplayName), new[] { validationContext.MemberName });
+                        return new ValidationResult(string.Format(this.ErrorMessage, validationContext.DisplayName), new[] { validationContext.MemberName });
                 }
             }
             return ValidationResult.Success;

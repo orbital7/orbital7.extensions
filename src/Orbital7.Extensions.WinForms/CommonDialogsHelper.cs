@@ -13,7 +13,7 @@ namespace Orbital7.Extensions.WinForms
 
         public static string ShowFolderBrowseDialog(string description)
         {
-            return ShowFolderBrowseDialog(description, String.Empty);
+            return ShowFolderBrowseDialog(description, string.Empty);
         }
 
         public static string ShowFolderBrowseDialog(string description, string selectedPath)
@@ -23,7 +23,7 @@ namespace Orbital7.Extensions.WinForms
 
         public static string ShowFolderBrowseDialog(string description, string selectedPath, bool showNewFolderButton)
         {
-            string outputPath = String.Empty;
+            string outputPath = string.Empty;
 
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = description;
@@ -59,12 +59,12 @@ namespace Orbital7.Extensions.WinForms
 
         public static string ShowOpenDialog(string filter)
         {
-            return ShowOpenDialog(DefaultOpenCaption, filter, String.Empty);
+            return ShowOpenDialog(DefaultOpenCaption, filter, string.Empty);
         }
 
         public static string ShowOpenDialog(string title, string filter)
         {
-            return ShowOpenDialog(title, filter, String.Empty);
+            return ShowOpenDialog(title, filter, string.Empty);
         }
 
         public static string ShowOpenDialog(string title, string filter, string initFilename)
@@ -117,12 +117,12 @@ namespace Orbital7.Extensions.WinForms
 
         public static string ShowSaveDialog(string title, string filter)
         {
-            return ShowSaveDialog(title, filter, String.Empty);
+            return ShowSaveDialog(title, filter, string.Empty);
         }
 
         public static string ShowSaveDialog(string title, string filter, string initFilename)
         {
-            string filePath = String.Empty;
+            string filePath = string.Empty;
 
             try
             {

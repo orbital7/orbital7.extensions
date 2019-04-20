@@ -8,7 +8,7 @@ namespace Orbital7.Extensions
     {
         public static TimeZoneInfo GetTimeZone(string timeZoneId)
         {
-            if (!String.IsNullOrEmpty(timeZoneId))
+            if (!string.IsNullOrEmpty(timeZoneId))
                 return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
             else
                 return TimeZoneInfo.Utc;

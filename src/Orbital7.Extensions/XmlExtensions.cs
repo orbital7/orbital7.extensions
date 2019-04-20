@@ -24,7 +24,7 @@ namespace Orbital7.Extensions
 
         public static string GetAttributeValue(this XmlNode nodeRoot, string attributeName)
         {
-            string value = String.Empty;
+            string value = string.Empty;
 
             if ((nodeRoot != null) && (nodeRoot.Attributes != null))
             {
@@ -40,7 +40,7 @@ namespace Orbital7.Extensions
 
         public static string GetNodeValue(this XmlNode nodeRoot, string xpath)
         {
-            string value = String.Empty;
+            string value = string.Empty;
 
             if (nodeRoot != null)
             {
@@ -57,7 +57,7 @@ namespace Orbital7.Extensions
         public static double GetNodeDoubleValue(this XmlNode nodeRoot, string xpath)
         {
             string value = GetNodeValue(nodeRoot, xpath);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return Convert.ToDouble(value);
             else
                 return 0;
@@ -66,7 +66,7 @@ namespace Orbital7.Extensions
         public static decimal GetNodeDecimalValue(this XmlNode nodeRoot, string xpath)
         {
             string value = GetNodeValue(nodeRoot, xpath);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return Convert.ToDecimal(value);
             else
                 return 0;
@@ -75,7 +75,7 @@ namespace Orbital7.Extensions
         public static int GetNodeIntValue(this XmlNode nodeRoot, string xpath)
         {
             string value = GetNodeValue(nodeRoot, xpath);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return Convert.ToInt32(value);
             else
                 return 0;
@@ -84,7 +84,7 @@ namespace Orbital7.Extensions
         public static bool GetNodeBoolValue(this XmlNode nodeRoot, string xpath)
         {
             string value = GetNodeValue(nodeRoot, xpath);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return Convert.ToBoolean(value);
             else
                 return false;
@@ -93,7 +93,7 @@ namespace Orbital7.Extensions
         public static DateTime? GetNodeDateTimeValue(this XmlNode nodeRoot, string xpath)
         {
             string value = GetNodeValue(nodeRoot, xpath);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 return Convert.ToDateTime(value);
             else
                 return null;

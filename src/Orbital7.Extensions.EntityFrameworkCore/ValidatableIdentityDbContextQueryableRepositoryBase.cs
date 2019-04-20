@@ -106,7 +106,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
                 // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
                 // clauses can be passed in to this method.
-                var sql = String.Format("SELECT * FROM {0} WHERE {1} IN ({2})", GetTableName(),
+                var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})", GetTableName(),
                     (whereAndClause + " " + queryIdFieldName).Trim(), values.ToString());
                 return await GatherAsync(this.DbSet.FromSql(sql), asReadOnly, includeNavigationPropertyPaths);
             }

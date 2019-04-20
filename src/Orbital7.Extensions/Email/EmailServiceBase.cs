@@ -88,12 +88,12 @@ namespace Orbital7.Extensions.Email
                 mailMsg.To.Add(new MailAddress(address.Trim()));
 
             // CC.
-            if (!String.IsNullOrEmpty(ccAddresses))
+            if (!string.IsNullOrEmpty(ccAddresses))
                 foreach (string address in ccAddresses.Parse(";"))
                     mailMsg.CC.Add(new MailAddress(address.Trim()));
 
             // BCC.
-            if (!String.IsNullOrEmpty(bccAddresses))
+            if (!string.IsNullOrEmpty(bccAddresses))
                 foreach (string address in bccAddresses.Parse(";"))
                     mailMsg.Bcc.Add(new MailAddress(address.Trim()));
 

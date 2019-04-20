@@ -106,7 +106,7 @@ namespace System.Reflection
                     var attributeInstance = propertyInfo.GetCustomAttribute(attributeType);
                     if (attributeInstance != null)
                         foreach (PropertyInfo info in attributeType.GetRuntimeProperties())
-                            if (info.CanRead && String.Compare(info.Name, attributePropertyName, StringComparison.CurrentCultureIgnoreCase) == 0)
+                            if (info.CanRead && string.Compare(info.Name, attributePropertyName, StringComparison.CurrentCultureIgnoreCase) == 0)
                                 return info.GetValue(attributeInstance, null);
                 }
             }

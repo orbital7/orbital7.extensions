@@ -38,7 +38,7 @@ namespace System
 
         public static string FormatTimeSpan(this TimeSpan ts)
         {
-            return String.Format("{0:00}:{1:00}:{2:00}", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
+            return string.Format("{0:00}:{1:00}:{2:00}", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
         }
 
         public static DateTimeSpan CalulateDateTimeSpan(this DateTime date, DateTime dateToCompare)

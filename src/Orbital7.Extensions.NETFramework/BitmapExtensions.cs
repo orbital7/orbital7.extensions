@@ -148,7 +148,7 @@ namespace System.Drawing
         
         public static string GetImageExtension(this ImageFormat imageFormat)
         {
-            string fileExtension = String.Empty;
+            string fileExtension = string.Empty;
 
             if (imageFormat.Guid.Equals(ImageFormat.Jpeg.Guid))
                 fileExtension = ".jpg";

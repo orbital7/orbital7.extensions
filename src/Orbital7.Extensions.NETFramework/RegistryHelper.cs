@@ -39,7 +39,7 @@ namespace Orbital7.Extensions.NETFramework
 
         private static string GetRegistryKeyValue(RegistryKey registryKey, string name)
         {
-            string value = String.Empty;
+            string value = string.Empty;
 
             if (registryKey != null)
             {

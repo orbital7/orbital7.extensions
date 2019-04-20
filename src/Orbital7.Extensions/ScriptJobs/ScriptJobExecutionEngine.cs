@@ -39,7 +39,7 @@ namespace Orbital7.Extensions.ScriptJobs
             else if (args.Length >= 1 && args[0].ToUpper() == ARG_ASSEMBLY)
             {
                 if (args.Length >= 3)
-                    Load(args[1], args[2], args.Length >= 4 ? args[3] : String.Empty);
+                    Load(args[1], args[2], args.Length >= 4 ? args[3] : string.Empty);
                 else
                     throw new Exception("ASSEMBLY USAGE: -ASSEMBLY [AssemblyName] [TypeName] [Opt: WorkingFolderPath]");
             }
@@ -92,7 +92,7 @@ namespace Orbital7.Extensions.ScriptJobs
             this.ScriptJob = scriptJob ?? throw new Exception("Provided ScriptJob is NULL");
 
             // Set working folder.
-            if (!String.IsNullOrEmpty(workingFolderPath))
+            if (!string.IsNullOrEmpty(workingFolderPath))
                 this.ScriptJob.WorkingFolderPath = workingFolderPath;
             else
                 this.ScriptJob.WorkingFolderPath = ReflectionHelper.GetExecutingAssemblyFolderPath();

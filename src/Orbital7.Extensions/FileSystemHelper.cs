@@ -81,7 +81,7 @@ namespace Orbital7.Extensions
         
         public static void DeleteFile(string filePath)
         {
-            if (!String.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
                 try
                 {

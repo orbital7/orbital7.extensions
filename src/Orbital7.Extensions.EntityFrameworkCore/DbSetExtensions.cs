@@ -27,7 +27,7 @@ namespace Microsoft.EntityFrameworkCore
 
                 // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
                 // clauses can be passed in to this method.
-                var sql = String.Format("SELECT * FROM {0} WHERE {1} IN ({2})",
+                var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})",
                     tableNameOverride ?? typeof(T).Name.Pluralize(),
                     (whereAndClause + " " + queryIdColumnName).Trim(), values.ToString());
                 return dbSet.FromSql(sql);

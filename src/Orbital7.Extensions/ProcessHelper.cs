@@ -59,7 +59,7 @@ namespace Orbital7.Extensions
 
         public static void OpenFileViaShell(string filePath, bool waitForExit)
         {
-            OpenFileViaShell(filePath, String.Empty, waitForExit);
+            OpenFileViaShell(filePath, string.Empty, waitForExit);
         }
 
         public static void OpenFileViaShell(string filePath, string commandLineArgs, bool waitForExit)
@@ -125,12 +125,12 @@ namespace Orbital7.Extensions
 
         public static int ExecuteProcess(string fileName, string commandLineArgs)
         {
-            return ExecuteProcess(fileName, commandLineArgs, String.Empty);
+            return ExecuteProcess(fileName, commandLineArgs, string.Empty);
         }
 
         public static int ExecuteProcess(string fileName, string commandLineArgs, bool windowVisible)
         {
-            return ExecuteProcess(fileName, commandLineArgs, String.Empty, windowVisible);
+            return ExecuteProcess(fileName, commandLineArgs, string.Empty, windowVisible);
         }
 
         public static int ExecuteProcess(string fileName, string commandLineArgs, string workingFolder)

@@ -95,7 +95,7 @@ namespace Orbital7.Extensions.Reporting.GemBox
         public virtual ExcelWorksheet CreateWorksheet(string worksheetName = SHEET1, bool portrait = false, 
             bool fitToSinglePage = true, double margins = 0.5)
         {
-            if (String.IsNullOrEmpty(worksheetName))
+            if (string.IsNullOrEmpty(worksheetName))
                 worksheetName = SHEET1;
             else
                 worksheetName = worksheetName.Replace(":", "").Replace("\\", "").Replace("/", "").Replace("?", "")

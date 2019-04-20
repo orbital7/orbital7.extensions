@@ -68,7 +68,7 @@ namespace Microsoft.AspNetCore.Mvc
             if (number.HasValue && (number.Value != 0 || !blankIfZero))
                 return new HtmlString("<span style='white-space: nowrap;'>" + number.Value.ToCurrency(addSymbol) + "</span>");
             else
-                return new HtmlString(String.Empty);
+                return new HtmlString(string.Empty);
         }
     }
 }
