@@ -53,14 +53,11 @@
     <Compile Include="WebExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
-      <Name>Orbital7.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Mvc">
       <Version>5.2.6</Version>
+    </PackageReference>
+    <PackageReference Include="Orbital7.Extensions">
+      <Version>2.2.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

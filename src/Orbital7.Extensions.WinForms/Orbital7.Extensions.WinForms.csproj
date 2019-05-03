@@ -52,13 +52,12 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
-      <Name>Orbital7.Extensions</Name>
-    </ProjectReference>
+    <None Include="Orbital7.Extensions.WinForms.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Orbital7.Extensions.WinForms.nuspec" />
+    <PackageReference Include="Orbital7.Extensions">
+      <Version>2.2.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

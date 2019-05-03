@@ -101,10 +101,11 @@
       <Project>{fd232ff9-6466-4bd0-bd85-43415b4ef5e9}</Project>
       <Name>Orbital7.Extensions.WinForms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
-      <Name>Orbital7.Extensions</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Orbital7.Extensions">
+      <Version>2.2.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

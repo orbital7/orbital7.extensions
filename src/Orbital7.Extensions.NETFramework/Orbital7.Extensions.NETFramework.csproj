@@ -72,12 +72,6 @@
     <Compile Include="TasksSchedulerHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj">
-      <Project>{a0aac096-f757-491c-8bd3-41ee9168e5ce}</Project>
-      <Name>Orbital7.Extensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Orbital7.Extensions.NETFramework.nuspec" />
     <None Include="Resources\Document.png" />
   </ItemGroup>
@@ -90,6 +84,9 @@
   <ItemGroup>
     <PackageReference Include="iTextSharp">
       <Version>5.5.13</Version>
+    </PackageReference>
+    <PackageReference Include="Orbital7.Extensions">
+      <Version>2.2.3</Version>
     </PackageReference>
     <PackageReference Include="TaskScheduler">
       <Version>2.8.5</Version>
