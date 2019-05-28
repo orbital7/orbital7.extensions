@@ -21,7 +21,7 @@ namespace System
         December = 11,
     }
 
-    public static partial class DateTimeExtensions
+    public static class DateTimeExtensions
     {
         public static DateTime UTCToTimeZone(this DateTime date, TimeZoneInfo timeZone)
         {

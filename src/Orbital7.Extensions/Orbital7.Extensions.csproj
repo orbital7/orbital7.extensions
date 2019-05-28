@@ -13,6 +13,7 @@
     <PackageLicenseUrl>https://github.com/orbital7/orbital7.extensions/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
     <PackageIconUrl>https://avatars3.githubusercontent.com/u/15078943</PackageIconUrl>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

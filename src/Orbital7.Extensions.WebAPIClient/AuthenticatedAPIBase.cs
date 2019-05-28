@@ -64,11 +64,20 @@ namespace Orbital7.Extensions.WebAPIClient
 
         protected async Task<string> RetrieveJsonPostResponseObjectAsync(
             string requestUri, 
-            object content, 
+            object content = null, 
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, content, useAuthenticationBearer);
             return await response.Content.ReadAsStringAsync();
+        }
+
+        protected async Task<T> RetrieveJsonPostResponseObjectAsync<T>(
+            string requestUri,
+            object content = null,
+            bool useAuthenticationBearer = true)
+        {
+            HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, content, useAuthenticationBearer);
+            return await response.Content.ReadAsAsync<T>();
         }
 
         private async Task<HttpResponseMessage> RetrieveJsonGetResponseAsync(
@@ -126,9 +135,10 @@ namespace Orbital7.Extensions.WebAPIClient
 
         private HttpClient CreateHttpClient(bool useAuthenticationBearer)
         {
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(this.BaseAddress);
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(this.BaseAddress)
+            };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             if (useAuthenticationBearer && !string.IsNullOrEmpty(this.AuthenticationToken))
