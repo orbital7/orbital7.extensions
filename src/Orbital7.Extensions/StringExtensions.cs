@@ -724,5 +724,55 @@ namespace System
 
             return chars;
         }
+
+        public static int? ParseInt(
+            this string value,
+            int? defaultValue = null)
+        {
+            if (value != null && Int32.TryParse(value, out int parsedValue))
+                return parsedValue;
+            else
+                return defaultValue;
+        }
+
+        public static long? ParseLong(
+            this string value,
+            long? defaultValue = null)
+        {
+            if (value != null && Int64.TryParse(value, out long parsedValue))
+                return parsedValue;
+            else
+                return defaultValue;
+        }
+
+        public static decimal? ParseDecimal(
+            this string value,
+            decimal? defaultValue = null)
+        {
+            if (value != null && Decimal.TryParse(value, out decimal parsedValue))
+                return parsedValue;
+            else
+                return defaultValue;
+        }
+
+        public static double? ParseDouble(
+            this string value,
+            double? defaultValue = null)
+        {
+            if (value != null && Double.TryParse(value, out double parsedValue))
+                return parsedValue;
+            else
+                return defaultValue;
+        }
+
+        public static DateTime? ParseDateTime(
+            this string value,
+            DateTime? defaultValue = null)
+        {
+            if (value != null && DateTime.TryParse(value, out DateTime parsedValue))
+                return parsedValue;
+            else
+                return defaultValue;
+        }
     }
 }

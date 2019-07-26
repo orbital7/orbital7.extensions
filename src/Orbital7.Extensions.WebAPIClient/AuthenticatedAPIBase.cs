@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Orbital7.Extensions.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,14 +16,16 @@ namespace Orbital7.Extensions.WebAPIClient
         protected string BaseAddress { get; set; }
         protected string AuthenticationToken { get; set; }
 
-        protected AuthenticatedAPIBase(string baseAddress, string authenticationToken)
+        protected AuthenticatedAPIBase(
+            string baseAddress, 
+            string authenticationToken)
         {
             this.BaseAddress = baseAddress;
             this.AuthenticationToken = authenticationToken;
         }
 
         protected async Task<string> RetrieveJsonGetResponseStringAsync(
-            string requestUri, 
+            string requestUri,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonGetResponseAsync(requestUri, useAuthenticationBearer);
@@ -29,7 +33,7 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         protected async Task<Stream> RetrieveJsonGetResponseStreamAsync(
-            string requestUri, 
+            string requestUri,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonGetResponseAsync(requestUri, useAuthenticationBearer);
@@ -37,7 +41,7 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         protected async Task<T> RetrieveJsonGetResponseObjectAsync<T>(
-            string requestUri, 
+            string requestUri,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonGetResponseAsync(requestUri, useAuthenticationBearer);
@@ -45,8 +49,8 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         protected async Task<string> RetrieveJsonPostResponseStringAsync(
-            string requestUri, 
-            IEnumerable<KeyValuePair<string, string>> contentItems, 
+            string requestUri,
+            IEnumerable<KeyValuePair<string, string>> contentItems,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, contentItems, useAuthenticationBearer);
@@ -54,7 +58,7 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         protected async Task<Stream> RetrieveJsonPostResponseStreamAsync(
-            string requestUri, 
+            string requestUri,
             IEnumerable<KeyValuePair<string, string>> contentItems,
             bool useAuthenticationBearer = true)
         {
@@ -63,8 +67,8 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         protected async Task<string> RetrieveJsonPostResponseObjectAsync(
-            string requestUri, 
-            object content = null, 
+            string requestUri,
+            object content = null,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = await RetrieveJsonPostResponseAsync(requestUri, content, useAuthenticationBearer);
@@ -81,7 +85,7 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         private async Task<HttpResponseMessage> RetrieveJsonGetResponseAsync(
-            string requestUri, 
+            string requestUri,
             bool useAuthenticationBearer = true)
         {
             HttpResponseMessage response = null;
@@ -97,7 +101,7 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         private async Task<HttpResponseMessage> RetrieveJsonPostResponseAsync(
-            string requestUri, 
+            string requestUri,
             IEnumerable<KeyValuePair<string, string>> contentItems,
             bool useAuthenticationBearer = true)
         {
@@ -117,7 +121,7 @@ namespace Orbital7.Extensions.WebAPIClient
         }
 
         private async Task<HttpResponseMessage> RetrieveJsonPostResponseAsync(
-            string requestUri, 
+            string requestUri,
             object content,
             bool useAuthenticationBearer = true)
         {
@@ -156,14 +160,20 @@ namespace Orbital7.Extensions.WebAPIClient
             else
             {
                 string content = await response.Content.ReadAsStringAsync();
-                string description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\\r\\n\",");
-                if (string.IsNullOrEmpty(description))
-                    description = content.FindFirstBetween("\"ExceptionMessage\":\"", "\",");
-                if (string.IsNullOrEmpty(description))
-                    description = content.FindFirstBetween("\"error_description\":\"", "\"");
 
-                throw new Exception("Error " + Convert.ToInt32(response.StatusCode) + ": " + response.ReasonPhrase + ". " + 
-                    description);
+                Exception ex = null;
+                try
+                {
+                    var errorResult = JsonConvert.DeserializeObject<ApiErrorResult>(content);
+                    if (errorResult != null)
+                        ex = new ApiException(errorResult.Key, errorResult.Message);
+                }
+                catch { }
+
+                if (ex == null)
+                    ex = new ApiException(response.StatusCode.ToString(), response.ReasonPhrase);
+
+                throw ex;
             }
         }
     }

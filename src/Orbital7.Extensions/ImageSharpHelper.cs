@@ -13,17 +13,17 @@ namespace Orbital7.Extensions
             switch (fileExtension.ToLower())
             {
                 case ".gif":
-                    return ImageFormats.Gif;
+                    return SixLabors.ImageSharp.Formats.Gif.GifFormat.Instance;
 
                 case ".jpg":
                 case ".jpeg":
-                    return ImageFormats.Jpeg;
+                    return SixLabors.ImageSharp.Formats.Jpeg.JpegFormat.Instance;
 
                 case ".png":
-                    return ImageFormats.Png;
+                    return SixLabors.ImageSharp.Formats.Png.PngFormat.Instance;
 
                 case ".bmp":
-                    return ImageFormats.Bmp;
+                    return SixLabors.ImageSharp.Formats.Bmp.BmpFormat.Instance;
 
                     //case ".tif":
                     //case ".tiff":

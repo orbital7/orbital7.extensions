@@ -230,6 +230,22 @@ namespace System
             return new DateTime(date.Year, 12, 31).RoundToEndOfDay();
         }
 
+        public static DateTime RoundToEndOfQuarterHour(
+            this DateTime value)
+        {
+            var minutes = 0;
+            if (value.Minute > 45 && value.Minute < 59)
+                minutes = 60;
+            else if (value.Minute > 30 && value.Minute <= 45)
+                minutes = 45;
+            else if (value.Minute > 15 && value.Minute <= 30)
+                minutes = 30;
+            else if (value.Minute > 0 && value.Minute <= 15)
+                minutes = 15;
+
+            return value.RoundToStartOfHour().AddMinutes(minutes);
+        }
+
         public static string FormatAsFileSystemSafeDate(this DateTime dateTime)
         {
             return dateTime.ToString("yyyy-MM-dd");
