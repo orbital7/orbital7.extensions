@@ -23,13 +23,13 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         
         protected IServiceProvider ServiceProvider { get; private set; }
 
-        public IdentityDbContextMigrationScriptJobBase(
+        protected IdentityDbContextMigrationScriptJobBase(
             IServiceProvider serviceProvider)
         {
             this.ServiceProvider = serviceProvider;
         }
 
-        public IdentityDbContextMigrationScriptJobBase(
+        protected IdentityDbContextMigrationScriptJobBase(
             IServiceProvider serviceProvider, string[] args)
             : this(serviceProvider)
         {

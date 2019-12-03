@@ -18,7 +18,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             where TRole : IdentityRole<TKey>
             where TKey : IEquatable<TKey>
     {
-        public ValidatableIdentityDbContextBase(
+        protected ValidatableIdentityDbContextBase(
             DbContextOptions options)
             : base(options)
         {

@@ -21,7 +21,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         protected ValidatableIdentityDbContextBase<TUser, TRole, TKey> DbContext { get; private set; }
         protected DbSet<TEntity> DbSet { get; private set; }
 
-        public ValidatableIdentityDbContextQueryableRepositoryBase(
+        protected ValidatableIdentityDbContextQueryableRepositoryBase(
             ValidatableIdentityDbContextBase<TUser, TRole, TKey> dbContext)
         {
             this.DbContext = dbContext;
