@@ -69,8 +69,17 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public async Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query)
+            where TDynamic : class
         {
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<TDynamic> GetAsync<TDynamic>(
+            IQueryable<TDynamic> query,
+            List<string> includeNavigationPropertyPaths)
+            where TDynamic : class
+        {
+            return await query.SetIncludes(includeNavigationPropertyPaths).FirstOrDefaultAsync();
         }
 
         public virtual async Task<List<TEntity>> GatherAsync(
@@ -122,9 +131,16 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         }
 
         public async Task<List<TDynamic>> GatherAsync<TDynamic>(
-            IQueryable<TDynamic> query)
+            IQueryable<TDynamic> query) where TDynamic : class
         {
             return await query.ToListAsync();
+        }
+
+        public async Task<List<TDynamic>> GatherAsync<TDynamic>(
+            IQueryable<TDynamic> query,
+            List<string> includeNavigationPropertyPaths) where TDynamic : class
+        {
+            return await query.SetIncludes(includeNavigationPropertyPaths).ToListAsync();
         }
 
         public async Task<int> CountAsync<TDynamic>(IQueryable<TDynamic> query)

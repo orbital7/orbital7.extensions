@@ -25,7 +25,13 @@ namespace Orbital7.Extensions.RepositoryPattern
             List<string> includeNavigationPropertyPaths);
 
         Task<TDynamic> GetAsync<TDynamic>(
-            IQueryable<TDynamic> query);
+            IQueryable<TDynamic> query) 
+            where TDynamic : class;
+
+        Task<TDynamic> GetAsync<TDynamic>(
+            IQueryable<TDynamic> query,
+            List<string> includeNavigationPropertyPaths) 
+            where TDynamic : class;
 
         Task<List<TEntity>> GatherAsync(
             IList ids,
@@ -40,7 +46,13 @@ namespace Orbital7.Extensions.RepositoryPattern
             List<string> includeNavigationPropertyPaths);
 
         Task<List<TDynamic>> GatherAsync<TDynamic>(
-            IQueryable<TDynamic> query);
+            IQueryable<TDynamic> query) 
+            where TDynamic : class;
+
+        Task<List<TDynamic>> GatherAsync<TDynamic>(
+            IQueryable<TDynamic> query,
+            List<string> includeNavigationPropertyPaths) 
+            where TDynamic : class;
 
         Task<int> CountAsync<TDynamic>(
             IQueryable<TDynamic> query);

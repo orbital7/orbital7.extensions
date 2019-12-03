@@ -7,7 +7,7 @@ namespace Orbital7.Extensions.Models
 {
     public static class IIdObjectExtensions
     {
-        public static bool Contains<T>(this List<T> list, Guid? id)
+        public static bool Contains<T>(this IList<T> list, Guid? id)
             where T : IIdObject
         {
             if (id.HasValue)
@@ -18,7 +18,7 @@ namespace Orbital7.Extensions.Models
                 return false;
         }
 
-        public static T Get<T>(this List<T> list, Guid? id)
+        public static T Get<T>(this IList<T> list, Guid? id)
             where T : class, IIdObject
         {
             if (id.HasValue)
@@ -29,7 +29,7 @@ namespace Orbital7.Extensions.Models
                 return null;
         }
 
-        public static List<T> Gather<T>(this List<T> list, List<Guid> ids)
+        public static List<T> Gather<T>(this IList<T> list, IList<Guid> ids)
             where T : class, IIdObject
         {
             if (ids.Count > 0)
@@ -40,7 +40,7 @@ namespace Orbital7.Extensions.Models
                 return new List<T>();
         }
 
-        public static List<Guid> GatherIds<T>(this List<T> list)
+        public static List<Guid> GatherIds<T>(this IList<T> list)
             where T : IIdObject
         {
             return (from x in list
