@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Orbital7.Extensions
+namespace Orbital7.Extensions.Graphics
 {
     public static class ImageSharpHelper
     {
