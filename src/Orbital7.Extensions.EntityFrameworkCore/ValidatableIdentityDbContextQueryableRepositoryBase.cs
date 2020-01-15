@@ -67,6 +67,18 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             }
         }
 
+        public async Task<Guid> GetAsync(
+            IQueryable<Guid> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Guid?> GetAsync(
+            IQueryable<Guid?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query)
             where TDynamic : class
@@ -117,7 +129,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 // clauses can be passed in to this method.
                 var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})", GetTableName(),
                     (whereAndClause + " " + queryIdFieldName).Trim(), values.ToString());
-                return await GatherAsync(this.DbSet.FromSql(sql), asReadOnly, includeNavigationPropertyPaths);
+                return await GatherAsync(this.DbSet.FromSqlRaw(sql), asReadOnly, includeNavigationPropertyPaths);
             }
             else
             {

@@ -3,15 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/orbital7/orbital7.extensions/blob/master/LICENSE</PackageLicenseUrl>
-    <Copyright>Copyright © 2012-2019 Orbital7</Copyright>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>Copyright © 2012-2020 Orbital7</Copyright>
     <Authors>Josh van Eikeren</Authors>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <Description>.NET Standard 2.0 Attributes Extensions/Utilities</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/15078943</PackageIconUrl>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <PackageIconUrl></PackageIconUrl>
+    <AssemblyVersion>2.2.1.0</AssemblyVersion>
+    <FileVersion>2.2.1.0</FileVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>Orbital7.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -24,11 +26,18 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Orbital7.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

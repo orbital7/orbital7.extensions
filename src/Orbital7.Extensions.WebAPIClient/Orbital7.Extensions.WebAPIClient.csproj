@@ -2,19 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.2.2</Version>
+    <Version>2.2.3</Version>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
     <Product>Orbital7.Extensions</Product>
     <Description>.NET Standard 2.0 Extensions for creating WebAPI Client libraries</Description>
-    <Copyright>Copyright © 2012-2019 Orbital7</Copyright>
-    <PackageLicenseUrl>https://github.com/orbital7/orbital7.extensions/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright © 2012-2020 Orbital7</Copyright>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/15078943</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Owners>jvaneikeren</Owners>
     <Summary>.NET Standard 2.0 Extensions for creating WebAPI Client libraries</Summary>
     <Title>Orbital7.Extensions.WebAPIClient</Title>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>Orbital7.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -31,6 +33,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Orbital7.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

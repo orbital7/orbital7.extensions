@@ -26,7 +26,8 @@ namespace Orbital7.Extensions
             string url,
             string contents,
             string authorizationHeader = null,
-            string contentType = null)
+            string contentType = null,
+            List<SerializableTuple<string, string>> headers = null)
         {
             int retryCount = 0;
 
@@ -42,6 +43,9 @@ namespace Orbital7.Extensions
                         request.Headers["Authorization"] = authorizationHeader;
                     if (!string.IsNullOrEmpty(contentType))
                         request.ContentType = contentType;
+                    if (headers != null)
+                        foreach (var header in headers)
+                            request.Headers[header.Item1] = header.Item2;
 
                     // Write the request body.
                     var encoding = new UTF8Encoding();

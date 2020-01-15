@@ -24,6 +24,12 @@ namespace Orbital7.Extensions.RepositoryPattern
             bool asReadOnly,
             List<string> includeNavigationPropertyPaths);
 
+        Task<Guid> GetAsync(
+            IQueryable<Guid> query);
+
+        Task<Guid?> GetAsync(
+            IQueryable<Guid?> query);
+
         Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query) 
             where TDynamic : class;

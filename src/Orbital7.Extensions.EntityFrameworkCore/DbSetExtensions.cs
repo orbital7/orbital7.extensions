@@ -30,7 +30,7 @@ namespace Microsoft.EntityFrameworkCore
                 var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})",
                     tableNameOverride ?? typeof(T).Name.Pluralize(),
                     (whereAndClause + " " + queryIdColumnName).Trim(), values.ToString());
-                return dbSet.FromSql(sql);
+                return dbSet.FromSqlRaw(sql);
             }
             else
             {

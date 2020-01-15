@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Orbital7.Extensions;
 using System;
 using System.Collections.Generic;
@@ -14,10 +13,14 @@ namespace Microsoft.AspNetCore.Mvc
 {
     public static class MvcExtensions
     {
-        public static ModelExplorer GetModelExplorer<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper,
+        public static ModelExplorer GetModelExplorer<TModel, TProperty>(
+            this IHtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
         {
-            return ExpressionMetadataProvider.FromLambdaExpression(expression, htmlHelper.ViewData, htmlHelper.MetadataProvider);
+            ModelExpressionProvider modelExpressionProvider = 
+                (ModelExpressionProvider)htmlHelper.ViewContext.HttpContext.RequestServices.GetService(
+                    typeof(IModelExpressionProvider));
+            return modelExpressionProvider.CreateModelExpression(htmlHelper.ViewData, expression).ModelExplorer;
         }
         
         public static void AddOrInsertToExisting(this IDictionary<string, object> attributes, string key, object value, string append = " ")
