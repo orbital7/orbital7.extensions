@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     public enum GenericCompareOperator
     {

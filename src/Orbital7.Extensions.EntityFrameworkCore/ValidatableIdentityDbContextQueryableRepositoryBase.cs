@@ -148,6 +148,18 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             return await query.ToListAsync();
         }
 
+        public async Task<List<Guid>> GatherAsync(
+            IQueryable<Guid> query)
+        {
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<Guid?>> GatherAsync(
+            IQueryable<Guid?> query)
+        {
+            return await query.ToListAsync();
+        }
+
         public async Task<List<TDynamic>> GatherAsync<TDynamic>(
             IQueryable<TDynamic> query,
             List<string> includeNavigationPropertyPaths) where TDynamic : class

@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     // TODO: See https://stackoverflow.com/questions/36566836/asp-net-core-mvc-client-side-validation-for-custom-attribute for IClientModelValidator
     public partial class NotEqualAttribute : ValidationAttribute//, IClientModelValidator

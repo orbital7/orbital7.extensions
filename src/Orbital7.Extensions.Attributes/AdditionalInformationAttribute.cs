@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     public class AdditionalInformationAttribute : Attribute
     {

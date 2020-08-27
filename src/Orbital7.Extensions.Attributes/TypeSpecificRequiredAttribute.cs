@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     public class TypeSpecificRequiredAttribute : RequiredAttribute
     {

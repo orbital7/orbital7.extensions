@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     // SOURCE: http://forums.asp.net/t/1924941.aspx?Conditional+Validation+using+DataAnnotation
 

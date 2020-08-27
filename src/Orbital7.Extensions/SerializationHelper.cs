@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Orbital7.Extensions
 {
-    public static partial class SerializationHelper
+    public static class SerializationHelper
     {
         public static T CloneObject<T>(T objectToClone)
         {

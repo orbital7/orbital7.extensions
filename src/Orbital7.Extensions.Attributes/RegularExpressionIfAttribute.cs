@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     public partial class RegularExpressionIfAttribute : ConditionalValidationAttribute//, IClientModelValidator
     {

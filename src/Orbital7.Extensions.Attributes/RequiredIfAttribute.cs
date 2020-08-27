@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orbital7.Extensions.Attributes
+namespace System.ComponentModel.DataAnnotations
 {
     public partial class RequiredIfAttribute : ConditionalValidationAttribute//, IClientModelValidator
     {

@@ -55,6 +55,12 @@ namespace Orbital7.Extensions.RepositoryPattern
             IQueryable<TDynamic> query) 
             where TDynamic : class;
 
+        Task<List<Guid>> GatherAsync(
+            IQueryable<Guid> query);
+
+        Task<List<Guid?>> GatherAsync(
+            IQueryable<Guid?> query);
+
         Task<List<TDynamic>> GatherAsync<TDynamic>(
             IQueryable<TDynamic> query,
             List<string> includeNavigationPropertyPaths) 

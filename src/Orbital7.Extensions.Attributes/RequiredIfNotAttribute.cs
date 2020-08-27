@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Attributes
+﻿namespace System.ComponentModel.DataAnnotations
 {
     public partial class RequiredIfNotAttribute : RequiredIfAttribute//, IClientModelValidator
     {
