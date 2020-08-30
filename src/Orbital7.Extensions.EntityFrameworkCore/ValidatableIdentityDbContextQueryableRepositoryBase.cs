@@ -35,8 +35,8 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public virtual async Task<TEntity> GetAsync(
             IQueryable<TEntity> query,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths)
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null)
         {
             if (query != null)
             {
@@ -52,8 +52,8 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public virtual async Task<TEntity> GetAsync(
             Guid? id,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths)
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null)
         {
             if (id.HasValue && id != Guid.Empty)
             {
@@ -88,7 +88,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public async Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query,
-            List<string> includeNavigationPropertyPaths)
+            List<string> includeNavigationPropertyPaths = null)
             where TDynamic : class
         {
             return await query.SetIncludes(includeNavigationPropertyPaths).FirstOrDefaultAsync();
@@ -96,8 +96,8 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public virtual async Task<List<TEntity>> GatherAsync(
             IQueryable<TEntity> query,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths)
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null)
         {
             if (query != null)
             {
@@ -113,9 +113,9 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public virtual async Task<List<TEntity>> GatherAsync(
             IList ids,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths,
-            string whereAndClause = "",
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null,
+            string additionalWhereClause = "",
             string queryIdFieldName = "Id")
         {
             if (ids.Count > 0)
@@ -127,8 +127,10 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
                 // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
                 // clauses can be passed in to this method.
-                var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})", GetTableName(),
-                    (whereAndClause + " " + queryIdFieldName).Trim(), values.ToString());
+                var whereClause = queryIdFieldName;
+                if (!string.IsNullOrEmpty(additionalWhereClause))
+                    whereClause = additionalWhereClause + " AND " + whereClause;
+                var sql = $"SELECT * FROM {GetTableName()} WHERE {whereClause} IN ({values})";
                 return await GatherAsync(this.DbSet.FromSqlRaw(sql), asReadOnly, includeNavigationPropertyPaths);
             }
             else
@@ -143,7 +145,8 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         }
 
         public async Task<List<TDynamic>> GatherAsync<TDynamic>(
-            IQueryable<TDynamic> query) where TDynamic : class
+            IQueryable<TDynamic> query)
+            where TDynamic : class
         {
             return await query.ToListAsync();
         }
@@ -162,12 +165,14 @@ namespace Orbital7.Extensions.EntityFrameworkCore
 
         public async Task<List<TDynamic>> GatherAsync<TDynamic>(
             IQueryable<TDynamic> query,
-            List<string> includeNavigationPropertyPaths) where TDynamic : class
+            List<string> includeNavigationPropertyPaths = null) 
+            where TDynamic : class
         {
             return await query.SetIncludes(includeNavigationPropertyPaths).ToListAsync();
         }
 
-        public async Task<int> CountAsync<TDynamic>(IQueryable<TDynamic> query)
+        public async Task<int> CountAsync<TDynamic>(
+            IQueryable<TDynamic> query)
         {
             return await query.CountAsync();
         }

@@ -9,12 +9,16 @@ namespace System.Reflection
 {
     public static class AttributeExtensions
     {
-        public static IEnumerable<PropertyInfo> GetPropertiesWithAttribute(this Type objectType, Type attributeType)
+        public static IEnumerable<PropertyInfo> GetPropertiesWithAttribute(
+            this Type objectType, 
+            Type attributeType)
         {
             return objectType.GetRuntimeProperties().Where(prop => prop.IsDefined(attributeType));
         }
 
-        public static IEnumerable<Tuple<PropertyInfo, T>> GetPropertiesWithAttribute<T>(this Type objectType) where T : Attribute
+        public static IEnumerable<Tuple<PropertyInfo, T>> GetPropertiesWithAttribute<T>(
+            this Type objectType) 
+            where T : Attribute
         {
             return from p in objectType.GetRuntimeProperties()
                    let attr = p.GetCustomAttributes(typeof(T), true).ToList()
@@ -22,16 +26,23 @@ namespace System.Reflection
                    select new Tuple<PropertyInfo, T>(p, attr.First() as T);
         }
 
-        public static string GetPropertyDisplayName(this Type objectType, string propertyName)
+        public static string GetPropertyDisplayName(
+            this Type objectType, 
+            string propertyName)
         {
-            object displayName = GetPropertyAttributeValue(objectType, propertyName, typeof(DisplayAttribute), "Name");
+            object displayName = GetPropertyAttributeValue(
+                objectType, 
+                propertyName, 
+                typeof(DisplayAttribute), "Name");
+
             if (displayName != null)
                 return displayName.ToString();
             else
                 return propertyName;
         }
 
-        public static DisplayAttribute GetPropertyDisplayAttribute(this MemberInfo memberInfo)
+        public static DisplayAttribute GetPropertyDisplayAttribute(
+            this MemberInfo memberInfo)
         {
             if (memberInfo == null)
             {
@@ -43,7 +54,10 @@ namespace System.Reflection
             return memberInfo.GetAttribute<DisplayAttribute>(false);
         }
 
-        public static T GetPropertyAttribute<T>(this Type objectType, string propertyName) where T : Attribute
+        public static T GetPropertyAttribute<T>(
+            this Type objectType, 
+            string propertyName) 
+            where T : Attribute
         {
             Type attributeType = typeof(T);
             var propertyInfo = objectType.GetRuntimeProperty(propertyName);
@@ -54,7 +68,9 @@ namespace System.Reflection
             return null;
         }
 
-        public static T GetAttribute<T>(this MemberInfo member, bool isRequired)
+        public static T GetAttribute<T>(
+            this MemberInfo member, 
+            bool isRequired)
             where T : Attribute
         {
             var attribute = member.GetCustomAttributes(typeof(T), false).SingleOrDefault();
@@ -72,8 +88,11 @@ namespace System.Reflection
             return (T)attribute;
         }
 
-        public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(this Assembly assembly, Type objectType,
-            bool includeNullAttributes = false) where TAttribute : Attribute
+        public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(
+            this Assembly assembly, 
+            Type objectType,
+            bool includeNullAttributes = false) 
+            where TAttribute : Attribute
         {
             var types = assembly.GetTypes(objectType);
             var attributeType = typeof(TAttribute);
@@ -85,8 +104,12 @@ namespace System.Reflection
                     select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
         }
 
-        public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(this Assembly assembly, Type objectType, Type attributeType,
-            bool includeNullAttributes = false) where TAttribute : Attribute
+        public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(
+            this Assembly assembly, 
+            Type objectType, 
+            Type attributeType,
+            bool includeNullAttributes = false) 
+            where TAttribute : Attribute
         {
             var types = assembly.GetTypes(objectType);
 
@@ -96,7 +119,11 @@ namespace System.Reflection
                     select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
         }
 
-        public static object GetPropertyAttributeValue(this Type objectType, string propertyName, Type attributeType, string attributePropertyName)
+        public static object GetPropertyAttributeValue(
+            this Type objectType, 
+            string propertyName, 
+            Type attributeType, 
+            string attributePropertyName)
         {
             var propertyInfo = objectType.GetRuntimeProperty(propertyName);
             if (propertyInfo != null)

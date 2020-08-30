@@ -24,7 +24,7 @@ namespace Orbital7.Extensions.Models
             if (id.HasValue)
                 return (from x in list
                         where x.Id == id
-                        select x).FirstOrDefault();
+                        select x).SingleOrDefault();
             else
                 return null;
         }

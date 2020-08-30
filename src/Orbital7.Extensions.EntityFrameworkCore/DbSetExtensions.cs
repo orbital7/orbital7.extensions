@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore
         public static IQueryable<T> CreateContainsIdsQuery<T>(
             this DbSet<T> dbSet, 
             IList ids, 
-            string whereAndClause = "",
+            string additionalWhereClause = "",
             string queryIdColumnName = "Id", 
             string tableNameOverride = null) 
             where T : class
@@ -27,9 +27,11 @@ namespace Microsoft.EntityFrameworkCore
 
                 // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
                 // clauses can be passed in to this method.
-                var sql = string.Format("SELECT * FROM {0} WHERE {1} IN ({2})",
-                    tableNameOverride ?? typeof(T).Name.Pluralize(),
-                    (whereAndClause + " " + queryIdColumnName).Trim(), values.ToString());
+                var whereClause = queryIdColumnName;
+                if (!string.IsNullOrEmpty(additionalWhereClause))
+                    whereClause = additionalWhereClause + " AND " + whereClause;
+                var tableName = tableNameOverride ?? typeof(T).Name.Pluralize();
+                var sql = $"SELECT * FROM {tableName} WHERE {whereClause} IN ({values})";
                 return dbSet.FromSqlRaw(sql);
             }
             else
@@ -42,12 +44,12 @@ namespace Microsoft.EntityFrameworkCore
             this DbSet<T> dbSet, 
             IList ids, 
             bool asNoTracking,
-            string whereAndClause = "", 
+            string additionalWhereClause = "", 
             string queryIdColumnName = "Id", 
             string tableNameOverride = null) 
             where T : class
         {
-            return await CreateContainsIdsQuery(dbSet, ids, whereAndClause, queryIdColumnName,
+            return await CreateContainsIdsQuery(dbSet, ids, additionalWhereClause, queryIdColumnName,
                 tableNameOverride).ToListAsync(asNoTracking);
         }
 

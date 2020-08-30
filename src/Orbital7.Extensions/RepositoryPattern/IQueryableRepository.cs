@@ -16,13 +16,13 @@ namespace Orbital7.Extensions.RepositoryPattern
 
         Task<TEntity> GetAsync(
             Guid? id,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths);
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null);
 
         Task<TEntity> GetAsync(
             IQueryable<TEntity> query,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths);
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null);
 
         Task<Guid> GetAsync(
             IQueryable<Guid> query);
@@ -36,20 +36,20 @@ namespace Orbital7.Extensions.RepositoryPattern
 
         Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query,
-            List<string> includeNavigationPropertyPaths) 
+            List<string> includeNavigationPropertyPaths = null) 
             where TDynamic : class;
 
         Task<List<TEntity>> GatherAsync(
             IList ids,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths,
-            string whereAndClause = "",
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null,
+            string additionalWhereClause = "",
             string queryIdFieldName = "Id");
 
         Task<List<TEntity>> GatherAsync(
             IQueryable<TEntity> query,
-            bool asReadOnly,
-            List<string> includeNavigationPropertyPaths);
+            bool asReadOnly = true,
+            List<string> includeNavigationPropertyPaths = null);
 
         Task<List<TDynamic>> GatherAsync<TDynamic>(
             IQueryable<TDynamic> query) 
@@ -63,7 +63,7 @@ namespace Orbital7.Extensions.RepositoryPattern
 
         Task<List<TDynamic>> GatherAsync<TDynamic>(
             IQueryable<TDynamic> query,
-            List<string> includeNavigationPropertyPaths) 
+            List<string> includeNavigationPropertyPaths = null) 
             where TDynamic : class;
 
         Task<int> CountAsync<TDynamic>(
