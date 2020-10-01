@@ -60,9 +60,14 @@ namespace System
                 return 0;
         }
 
-        public static string ToHour(this int value)
+        public static string ToHour(
+            this int value,
+            bool includeMinutes = false)
         {
-            return new DateTime(2000, 1, 1, value, 0, 0).ToString("hh:mm tt");
+            if (includeMinutes)
+                return new DateTime(2000, 1, 1, value, 0, 0).ToString("hh:mm tt");
+            else
+                return new DateTime(2000, 1, 1, value, 0, 0).ToString("htt");
         }
 
         public static string ToString(this int? value, string nullValue)
