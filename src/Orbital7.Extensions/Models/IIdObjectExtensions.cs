@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,23 @@ namespace Orbital7.Extensions.Models
         {
             return (from x in list
                     select x.Id).ToList();
+        }
+
+        public static IIdObject GetChildItemByReflection(
+            object parent,
+            string itemsPropertyName,
+            Guid itemId)
+        {
+            var itemsProperty = parent.GetType()
+                .GetProperty(itemsPropertyName);
+            var items = itemsProperty.GetValue(parent);
+            foreach (IIdObject item in (IEnumerable)items)
+            {
+                if (item.Id == itemId)
+                    return item;
+            }
+
+            return null;
         }
     }
 }

@@ -70,6 +70,17 @@ namespace System
                 return new DateTime(2000, 1, 1, value, 0, 0).ToString("htt");
         }
 
+        public static string ToTime(
+            this double value,
+            bool includeLeadingZero = false)
+        {
+            var format = includeLeadingZero ? "hh:mm tt" : "h:mm tt";
+
+            var iPart = (int)value;
+            var dPart = value - iPart;
+            return new DateTime(2000, 1, 1, iPart, (int)Math.Round(60 * dPart, 2), 0).ToString(format);
+        }
+
         public static string ToString(this int? value, string nullValue)
         {
             if (value.HasValue)

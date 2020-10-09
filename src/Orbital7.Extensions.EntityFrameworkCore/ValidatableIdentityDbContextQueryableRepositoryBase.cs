@@ -79,6 +79,78 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<bool> GetAsync(
+            IQueryable<bool> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<bool?> GetAsync(
+            IQueryable<bool?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<int> GetAsync(
+            IQueryable<int> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> GetAsync(
+            IQueryable<int?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<long> GetAsync(
+            IQueryable<long> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<long?> GetAsync(
+            IQueryable<long?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<decimal> GetAsync(
+            IQueryable<decimal> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<decimal?> GetAsync(
+            IQueryable<decimal?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<double> GetAsync(
+            IQueryable<double> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<double?> GetAsync(
+            IQueryable<double?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<DateTime> GetAsync(
+            IQueryable<DateTime> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<DateTime?> GetAsync(
+            IQueryable<DateTime?> query)
+        {
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query)
             where TDynamic : class

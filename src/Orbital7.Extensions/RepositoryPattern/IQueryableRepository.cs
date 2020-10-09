@@ -30,6 +30,42 @@ namespace Orbital7.Extensions.RepositoryPattern
         Task<Guid?> GetAsync(
             IQueryable<Guid?> query);
 
+        Task<bool> GetAsync(
+            IQueryable<bool> query);
+
+        Task<bool?> GetAsync(
+            IQueryable<bool?> query);
+
+        Task<int> GetAsync(
+            IQueryable<int> query);
+
+        Task<int?> GetAsync(
+            IQueryable<int?> query);
+
+        Task<long> GetAsync(
+            IQueryable<long> query);
+
+        Task<long?> GetAsync(
+            IQueryable<long?> query);
+
+        Task<decimal> GetAsync(
+            IQueryable<decimal> query);
+
+        Task<decimal?> GetAsync(
+            IQueryable<decimal?> query);
+
+        Task<double> GetAsync(
+            IQueryable<double> query);
+
+        Task<double?> GetAsync(
+            IQueryable<double?> query);
+
+        Task<DateTime> GetAsync(
+            IQueryable<DateTime> query);
+
+        Task<DateTime?> GetAsync(
+            IQueryable<DateTime?> query);
+
         Task<TDynamic> GetAsync<TDynamic>(
             IQueryable<TDynamic> query) 
             where TDynamic : class;

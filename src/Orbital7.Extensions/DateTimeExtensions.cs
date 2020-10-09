@@ -255,5 +255,28 @@ namespace System
         {
             return dateTime.ToString("yyyy-MM-dd_HH-mm-ss");
         }
+
+        public static string ToAbbrevString(
+            this DayOfWeek dayOfWeek)
+        {
+            return DateTime.Now.RoundToDayofWeek(dayOfWeek).ToString("ddd");
+        }
+
+        public static DateTime RoundToDayofWeek(
+            this DateTime date,
+            DayOfWeek dayOfWeek)
+        {
+            var value = date;
+            while (value.DayOfWeek != dayOfWeek)
+                value = value.AddDays(1);
+
+            return value;
+        }
+
+        public static string FormatAsShortDayOfWeek(
+            this DateTime date)
+        {
+            return date.ToString("dddd, MMM d");
+        }
     }
 }
