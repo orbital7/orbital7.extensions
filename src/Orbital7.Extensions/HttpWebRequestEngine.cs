@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-// TODO: Move to Orbital7.
 namespace Orbital7.Extensions
 {
     public class HttpWebRequestEngine
@@ -22,9 +21,10 @@ namespace Orbital7.Extensions
             this.RetryDelayInMS = retryDelayInMS;
         }
 
-        public async Task<string> PostRequestAsync(
+        public async Task<string> SendRequestAsync(
             string url,
             string contents,
+            string method = "POST",
             string authorizationHeader = null,
             string contentType = null,
             List<SerializableTuple<string, string>> headers = null)
@@ -35,9 +35,8 @@ namespace Orbital7.Extensions
             {
                 try
                 {
-                    // Create the request.
                     var request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "POST";
+                    request.Method = method;
                     request.KeepAlive = true;
                     if (!string.IsNullOrEmpty(authorizationHeader))
                         request.Headers["Authorization"] = authorizationHeader;
@@ -47,7 +46,6 @@ namespace Orbital7.Extensions
                         foreach (var header in headers)
                             request.Headers[header.Item1] = header.Item2;
 
-                    // Write the request body.
                     var encoding = new UTF8Encoding();
                     byte[] queryBytes = encoding.GetBytes(contents);
                     using (var requestStream = request.GetRequestStream())
@@ -57,7 +55,6 @@ namespace Orbital7.Extensions
                         requestStream.Close();
                     }
 
-                    // Send.
                     try
                     {
                         using (var webResponse = await request.GetResponseAsync())
@@ -67,10 +64,7 @@ namespace Orbital7.Extensions
                     }
                     catch (WebException webException)
                     {
-                        string response = webException.Response != null ?
-                            await webException.Response.ReadAsStringAsync() :
-                            webException.Message;
-                        throw new Exception(response);
+                        throw new Exception(await GetWebExeptionMessageAsync(webException));
                     }
                 }
                 catch (Exception unhandledException)
@@ -85,13 +79,26 @@ namespace Orbital7.Extensions
             }
         }
 
-        public async Task<string> PostFileUploadRequestAsync(
+        private async Task<string> GetWebExeptionMessageAsync(
+            WebException webException)
+        {
+            string response = webException.Response != null ?
+            await webException.Response.ReadAsStringAsync() : null;
+
+            if (string.IsNullOrWhiteSpace(response))
+                response = null;
+
+            return response ?? webException.Message;
+        }
+
+        public async Task<string> SendFileUploadRequestAsync(
             string url,
             List<SerializableTuple<string, string>> formParamaters,
             string fileParam,
             string fileName,
             string fileContentType,
             byte[] fileContents,
+            string method = "POST",
             string authorizationHeader = null)
         {
             int retryCount = 0;
@@ -101,7 +108,7 @@ namespace Orbital7.Extensions
                 try
                 {
                     var request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "POST";
+                    request.Method = method;
                     request.KeepAlive = true;
                     if (!string.IsNullOrEmpty(authorizationHeader))
                         request.Headers["Authorization"] = authorizationHeader;
@@ -138,7 +145,6 @@ namespace Orbital7.Extensions
                         requestStream.Close();
                     }
 
-                    // Send.
                     try
                     {
                         using (var webResponse = await request.GetResponseAsync())
@@ -148,10 +154,7 @@ namespace Orbital7.Extensions
                     }
                     catch (WebException webException)
                     {
-                        string response = webException.Response != null ?
-                            await webException.Response.ReadAsStringAsync() :
-                            webException.Message;
-                        throw new Exception(response);
+                        throw new Exception(await GetWebExeptionMessageAsync(webException));
                     }
                 }
                 catch (Exception unhandledException)
