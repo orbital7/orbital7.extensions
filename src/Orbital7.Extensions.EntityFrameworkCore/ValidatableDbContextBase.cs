@@ -12,13 +12,10 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public abstract class ValidatableIdentityDbContextBase<TUser, TRole, TKey> 
-        : IdentityDbContext<TUser, TRole, TKey>, IValidatableDbContext
-            where TUser : IdentityUser<TKey>
-            where TRole : IdentityRole<TKey>
-            where TKey : IEquatable<TKey>
+    public abstract class ValidatableDbContextBase 
+        : DbContext, IValidatableDbContext
     {
-        protected ValidatableIdentityDbContextBase(
+        protected ValidatableDbContextBase(
             DbContextOptions options)
             : base(options)
         {

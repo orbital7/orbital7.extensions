@@ -75,6 +75,11 @@ namespace Orbital7.Extensions.RepositoryPattern
             List<string> includeNavigationPropertyPaths = null) 
             where TDynamic : class;
 
+        Task<List<Guid>> GatherIdsAsync(
+            IList ids,
+            string additionalWhereClause = "",
+            string queryIdFieldName = "Id");
+
         Task<List<TEntity>> GatherAsync(
             IList ids,
             bool asReadOnly = true,

@@ -11,11 +11,8 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public abstract class IdentityDbContextMigrationScriptJobBase<T, TUser, TRole, TKey> : ScriptJobBase
-        where T : IdentityDbContext<TUser, TRole, TKey>
-        where TUser : IdentityUser<TKey>
-        where TRole : IdentityRole<TKey>
-        where TKey : IEquatable<TKey>
+    public abstract class DbContextMigrationScriptJobBase<TDbContext> : ScriptJobBase
+        where TDbContext : DbContext
     {
         public const string ARG_INITIALIZE = "-Initialize";
 
@@ -23,13 +20,13 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         
         protected IServiceProvider ServiceProvider { get; private set; }
 
-        protected IdentityDbContextMigrationScriptJobBase(
+        protected DbContextMigrationScriptJobBase(
             IServiceProvider serviceProvider)
         {
             this.ServiceProvider = serviceProvider;
         }
 
-        protected IdentityDbContextMigrationScriptJobBase(
+        protected DbContextMigrationScriptJobBase(
             IServiceProvider serviceProvider, string[] args)
             : this(serviceProvider)
         {
@@ -47,7 +44,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             Console.Write("Deleting Database...");
             using (var scope = this.ServiceProvider.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<T>();
+                var context = scope.ServiceProvider.GetRequiredService<TDbContext>();
                 context.Database.EnsureDeleted();
                 Console.WriteLine("Success");
             }
@@ -73,7 +70,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             using (var scope = this.ServiceProvider.CreateScope())
             {
                 // Migrate.
-                var context = this.ServiceProvider.GetRequiredService<T>();
+                var context = this.ServiceProvider.GetRequiredService<TDbContext>();
                 context.Database.Migrate();
                 Console.WriteLine("Success");
 

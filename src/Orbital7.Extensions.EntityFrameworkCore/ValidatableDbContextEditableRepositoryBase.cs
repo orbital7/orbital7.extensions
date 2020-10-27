@@ -12,15 +12,13 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public abstract class ValidatableIdentityDbContextValidatableRepositoryBase<TEntity, TUser, TRole, TKey> 
-        : ValidatableIdentityDbContextQueryableRepositoryBase<TEntity, TUser, TRole, TKey>, IValidatableRepository<TEntity>
+    public abstract class ValidatableDbContextEditableRepositoryBase<TDbContext, TEntity> 
+        : ValidatableDbContextQueryableRepositoryBase<TDbContext, TEntity>, IValidatableRepository<TEntity>
+            where TDbContext : DbContext, IValidatableDbContext
             where TEntity : class, IIdObject
-            where TUser : IdentityUser<TKey>
-            where TRole : IdentityRole<TKey>
-            where TKey : IEquatable<TKey>
     {
-        protected ValidatableIdentityDbContextValidatableRepositoryBase(
-            ValidatableIdentityDbContextBase<TUser, TRole, TKey> dbContext)
+        protected ValidatableDbContextEditableRepositoryBase(
+            TDbContext dbContext)
             : base(dbContext)
         {
             

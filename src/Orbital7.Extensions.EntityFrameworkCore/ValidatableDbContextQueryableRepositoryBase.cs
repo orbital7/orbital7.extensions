@@ -11,18 +11,16 @@ using System.Threading.Tasks;
 
 namespace Orbital7.Extensions.EntityFrameworkCore
 {
-    public abstract class ValidatableIdentityDbContextQueryableRepositoryBase<TEntity, TUser, TRole, TKey> 
+    public abstract class ValidatableDbContextQueryableRepositoryBase<TDbContext, TEntity> 
         : IQueryableRepository<TEntity>
+            where TDbContext : DbContext, IValidatableDbContext
             where TEntity : class, IIdObject
-            where TUser : IdentityUser<TKey>
-            where TRole : IdentityRole<TKey>
-            where TKey : IEquatable<TKey>
     {
-        protected ValidatableIdentityDbContextBase<TUser, TRole, TKey> DbContext { get; private set; }
+        protected TDbContext DbContext { get; private set; }
         protected DbSet<TEntity> DbSet { get; private set; }
 
-        protected ValidatableIdentityDbContextQueryableRepositoryBase(
-            ValidatableIdentityDbContextBase<TUser, TRole, TKey> dbContext)
+        protected ValidatableDbContextQueryableRepositoryBase(
+            TDbContext dbContext)
         {
             this.DbContext = dbContext;
             this.DbSet = dbContext.Set<TEntity>();
@@ -166,6 +164,21 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             return await query.SetIncludes(includeNavigationPropertyPaths).FirstOrDefaultAsync();
         }
 
+        public virtual async Task<List<Guid>> GatherIdsAsync(
+            IQueryable<TEntity> query)
+        {
+            if (query != null)
+            {
+                return await query
+                    .Select(x => x.Id)
+                    .ToListAsync();
+            }
+            else
+            {
+                return new List<Guid>();
+            }
+        }
+
         public virtual async Task<List<TEntity>> GatherAsync(
             IQueryable<TEntity> query,
             bool asReadOnly = true,
@@ -183,6 +196,22 @@ namespace Orbital7.Extensions.EntityFrameworkCore
             }
         }
 
+        public virtual async Task<List<Guid>> GatherIdsAsync(
+            IList ids,
+            string additionalWhereClause = "",
+            string queryIdFieldName = "Id")
+        {
+            if (ids.Count > 0)
+            {
+                var sql = GetSelectFromIdsSql(ids, additionalWhereClause, queryIdFieldName);
+                return await GatherIdsAsync(this.DbSet.FromSqlRaw(sql));
+            }
+            else
+            {
+                return new List<Guid>();
+            }
+        }
+
         public virtual async Task<List<TEntity>> GatherAsync(
             IList ids,
             bool asReadOnly = true,
@@ -192,23 +221,33 @@ namespace Orbital7.Extensions.EntityFrameworkCore
         {
             if (ids.Count > 0)
             {
-                var values = new StringBuilder();
-                values.AppendFormat("'{0}'", ids[0]);
-                for (int i = 1; i < ids.Count; i++)
-                    values.AppendFormat(", '{0}'", ids[i]);
-
-                // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
-                // clauses can be passed in to this method.
-                var whereClause = queryIdFieldName;
-                if (!string.IsNullOrEmpty(additionalWhereClause))
-                    whereClause = additionalWhereClause + " AND " + whereClause;
-                var sql = $"SELECT * FROM {GetTableName()} WHERE {whereClause} IN ({values})";
+                var sql = GetSelectFromIdsSql(ids, additionalWhereClause, queryIdFieldName);
                 return await GatherAsync(this.DbSet.FromSqlRaw(sql), asReadOnly, includeNavigationPropertyPaths);
             }
             else
             {
                 return new List<TEntity>();
             }
+        }
+
+        private string GetSelectFromIdsSql(
+            IList ids,
+            string additionalWhereClause = "",
+            string queryIdFieldName = "Id")
+        {
+            var values = new StringBuilder();
+            values.AppendFormat("'{0}'", ids[0]);
+            for (int i = 1; i < ids.Count; i++)
+                values.AppendFormat(", '{0}'", ids[i]);
+
+            // TODO: Refactor this to use SQL parameterization; need to ensure that additional 'where' 
+            // clauses can be passed in to this method.
+            var whereClause = queryIdFieldName;
+            if (!string.IsNullOrEmpty(additionalWhereClause))
+                whereClause = additionalWhereClause + " AND " + whereClause;
+            var sql = $"SELECT * FROM {GetTableName()} WHERE {whereClause} IN ({values})";
+
+            return sql;
         }
 
         protected virtual string GetTableName()
