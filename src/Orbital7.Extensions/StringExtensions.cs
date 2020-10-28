@@ -57,6 +57,8 @@ namespace System
                 plural = value.PruneEnd(1) + "ies";
             else if (value.EndsWith("is"))
                 plural = value.PruneEnd(2) + "es";
+            else if (value.EndsWith("s"))
+                plural = value + "es";
             else
                 plural = value + "s";
 

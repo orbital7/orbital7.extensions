@@ -75,7 +75,7 @@ namespace Orbital7.Extensions.EntityFrameworkCore
                 Console.WriteLine("Success");
 
                 // Initialize.
-                if (this.Initialize)
+                if (this.Initialize && initializer != null)
                 {
                     Console.Write("Initializing...");
                     await initializer.InitializeAsync(scope.ServiceProvider);
