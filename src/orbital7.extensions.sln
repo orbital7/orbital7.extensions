@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.EntityF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.Configuration", "Orbital7.Extensions.Configuration\Orbital7.Extensions.Configuration.csproj", "{69EB768E-C9FD-4908-94D0-9FAA6505FB0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Graphics", "Orbital7.Extensions.Graphics\Orbital7.Extensions.Graphics.csproj", "{198E4242-E376-4187-B26A-8422B85A0867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.Graphics", "Orbital7.Extensions.Graphics\Orbital7.Extensions.Graphics.csproj", "{198E4242-E376-4187-B26A-8422B85A0867}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Xamarin", "Orbital7.Extensions.Xamarin\Orbital7.Extensions.Xamarin.csproj", "{30BEA95B-F103-4581-8972-C8E67D633242}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{198E4242-E376-4187-B26A-8422B85A0867}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{198E4242-E376-4187-B26A-8422B85A0867}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{198E4242-E376-4187-B26A-8422B85A0867}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30BEA95B-F103-4581-8972-C8E67D633242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30BEA95B-F103-4581-8972-C8E67D633242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30BEA95B-F103-4581-8972-C8E67D633242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30BEA95B-F103-4581-8972-C8E67D633242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

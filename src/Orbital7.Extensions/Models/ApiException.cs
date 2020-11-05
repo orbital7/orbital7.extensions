@@ -7,6 +7,8 @@ namespace Orbital7.Extensions.Models
     public class ApiException
         : Exception
     {
+        public const string DEFAULT_KEY = "ERROR";
+
         public string Key { get; set; }
 
         public ApiException(
@@ -15,6 +17,13 @@ namespace Orbital7.Extensions.Models
             : base(message)
         {
             this.Key = key;
+        }
+
+        public ApiException(
+            string message)
+            : this(DEFAULT_KEY, message)
+        {
+            
         }
 
         public ApiErrorResult ToApiErrorResult()
