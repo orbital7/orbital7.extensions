@@ -14,8 +14,8 @@ namespace Orbital7.Extensions.Xamarin
         public async Task<bool> DisplayAlertAsync(
             string title,
             string message,
-            string accept = "OK",
-            string cancel = "Cancel")
+            string accept,
+            string cancel)
         {
             var page = GetCurrentPage();
             if (page != null)
@@ -86,12 +86,18 @@ namespace Orbital7.Extensions.Xamarin
 
         public static Page GetCurrentPage()
         {
+            Page page = null;
+
             if (Application.Current.MainPage.Navigation.ModalStack.Count > 0)
-                return Application.Current.MainPage.Navigation.ModalStack.Last();
-            else if (Application.Current.MainPage.Navigation.NavigationStack.Count > 0)
-                return Application.Current.MainPage.Navigation.NavigationStack.Last();
-            else
-                return Application.Current.MainPage;
+                page = Application.Current.MainPage.Navigation.ModalStack.Last();
+            
+            if (page == null && Application.Current.MainPage.Navigation.NavigationStack.Count > 0)
+                page = Application.Current.MainPage.Navigation.NavigationStack.Last();
+            
+            if (page == null)
+                page = Application.Current.MainPage;
+
+            return page;
         }
     }
 }

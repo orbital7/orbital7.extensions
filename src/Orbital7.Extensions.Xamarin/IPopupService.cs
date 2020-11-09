@@ -9,8 +9,8 @@ namespace Orbital7.Extensions.Xamarin
         Task<bool> DisplayAlertAsync(
             string title,
             string message,
-            string accept = "OK",
-            string cancel = "Cancel");
+            string accept,
+            string cancel);
 
         Task<string> DisplayActionSheetAsync(
             string title,
