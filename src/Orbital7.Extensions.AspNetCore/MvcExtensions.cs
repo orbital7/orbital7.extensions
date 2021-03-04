@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Orbital7.Extensions;
@@ -23,7 +24,11 @@ namespace Microsoft.AspNetCore.Mvc
             return modelExpressionProvider.CreateModelExpression(htmlHelper.ViewData, expression).ModelExplorer;
         }
         
-        public static void AddOrInsertToExisting(this IDictionary<string, object> attributes, string key, object value, string append = " ")
+        public static void AddOrInsertToExisting(
+            this IDictionary<string, object> attributes, 
+            string key, 
+            object value, 
+            string append = " ")
         {
             if (!attributes.ContainsKey(key))
                 attributes.Add(key, value);
@@ -31,7 +36,11 @@ namespace Microsoft.AspNetCore.Mvc
                 attributes[key] = value + append + attributes[key];
         }
 
-        public static void AddOrAppendToExisting(this IDictionary<string, object> attributes, string key, object value, string append = " ")
+        public static void AddOrAppendToExisting(
+            this IDictionary<string, object> attributes, 
+            string key, 
+            object value, 
+            string append = " ")
         {
             if (!attributes.ContainsKey(key))
                 attributes.Add(key, value);
@@ -39,13 +48,17 @@ namespace Microsoft.AspNetCore.Mvc
                 attributes[key] = attributes[key] + append + value;
         }
 
-        public static void AddIfMissing(this IDictionary<string, object> attributes, string key, object value)
+        public static void AddIfMissing(
+            this IDictionary<string, object> attributes, 
+            string key, 
+            object value)
         {
             if (!attributes.ContainsKey(key))
                 attributes.Add(key, value);
         }
 
-        public static string GetPropertyDisplayName(this ModelExplorer modelExplorer)
+        public static string GetPropertyDisplayName(
+            this ModelExplorer modelExplorer)
         {
             string displayName = null;
             
@@ -61,17 +74,39 @@ namespace Microsoft.AspNetCore.Mvc
             return htmlHelper.GetModelExplorer(expression).GetPropertyDisplayName();
         }
 
-        public static IHtmlContent EncodedReplace(this IHtmlHelper helper, string input, string pattern, string replacement)
+        public static IHtmlContent EncodedReplace(
+            this IHtmlHelper helper, 
+            string input, 
+            string pattern, 
+            string replacement)
         {
             return new HtmlString(Regex.Replace(helper.Encode(input), pattern, replacement));
         }
 
-        public static IHtmlContent DisplayCurrency(this IHtmlHelper helper, decimal? number, bool addSymbol = false, bool blankIfZero = false)
+        public static IHtmlContent DisplayCurrency(
+            this IHtmlHelper helper, 
+            decimal? number, 
+            bool addSymbol = false, 
+            bool blankIfZero = false)
         {
             if (number.HasValue && (number.Value != 0 || !blankIfZero))
                 return new HtmlString("<span style='white-space: nowrap;'>" + number.Value.ToCurrency(addSymbol) + "</span>");
             else
                 return new HtmlString(string.Empty);
+        }
+
+        public static MvcOptions TrimInputStrings(
+            this MvcOptions options)
+        {
+            int formValueProviderFactoryIndex = options.ValueProviderFactories.IndexOf(
+                    options.ValueProviderFactories.OfType<FormValueProviderFactory>().Single());
+            options.ValueProviderFactories[formValueProviderFactoryIndex] = new TrimmedFormValueProviderFactory();
+
+            int queryStringValueProviderFactoryIndex = options.ValueProviderFactories.IndexOf(
+                options.ValueProviderFactories.OfType<QueryStringValueProviderFactory>().Single());
+            options.ValueProviderFactories[queryStringValueProviderFactoryIndex] = new TrimmedQueryStringValueProviderFactory();
+
+            return options;
         }
     }
 }
