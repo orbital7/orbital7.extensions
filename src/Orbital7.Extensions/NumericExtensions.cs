@@ -42,17 +42,21 @@ namespace System
             return ToCurrency(Convert.ToDouble(number), addSymbol, addCommas, addPlusForPositiveNumber);
         }
 
-        public static string ToFileSize(this long fileSizeInBytes)
+        public static string ToFileSize(
+            this long fileSizeInBytes)
         {
             return string.Format(new FileSizeFormatProvider(), "{0:fs}", fileSizeInBytes);
         }
 
-        public static string ToPercent(this double percent)
+        public static string ToPercent(
+            this double percent)
         {
             return percent.ToString("0.00%");
         }
 
-        public static double ToPercent(this double value, double total)
+        public static double ToPercent(
+            this double value, 
+            double total)
         {
             if (total != 0)
                 return value / total;
@@ -81,7 +85,9 @@ namespace System
             return new DateTime(2000, 1, 1, iPart, (int)Math.Round(60 * dPart, 2), 0).ToString(format);
         }
 
-        public static string ToString(this int? value, string nullValue)
+        public static string ToString(
+            this int? value, 
+            string nullValue)
         {
             if (value.HasValue)
                 return value.ToString();
@@ -89,7 +95,9 @@ namespace System
                 return nullValue;
         }
 
-        public static string ToString(this decimal? value, string nullValue)
+        public static string ToString(
+            this decimal? value, 
+            string nullValue)
         {
             if (value.HasValue)
                 return value.ToString();
@@ -97,7 +105,9 @@ namespace System
                 return nullValue;
         }
 
-        public static string ToString(this double? value, string nullValue)
+        public static string ToString(
+            this double? value, 
+            string nullValue)
         {
             if (value.HasValue)
                 return value.ToString();
@@ -105,19 +115,34 @@ namespace System
                 return nullValue;
         }
 
-        public static decimal SafeDivide(this decimal numerator, decimal denominator, decimal errorOutput = 0)
+        public static decimal SafeDivide(
+            this decimal numerator, 
+            decimal denominator, 
+            decimal errorOutput = 0)
         {
             return (denominator == 0) ? errorOutput : numerator / denominator;
         }
 
-        public static double SafeDivide(this double numerator, double denominator, double errorOutput = 0)
+        public static double SafeDivide(
+            this double numerator, 
+            double denominator, 
+            double errorOutput = 0)
         {
             return (denominator == 0) ? errorOutput : numerator / denominator;
         }
 
-        public static double SafeDivide(this int numerator, double denominator, double errorOutput = 0)
+        public static double SafeDivide(
+            this int numerator, 
+            double denominator, 
+            double errorOutput = 0)
         {
             return (denominator == 0) ? errorOutput : Convert.ToDouble(numerator) / denominator;
+        }
+
+        public static double RoundToPointFive(
+            this double value)
+        {
+            return Math.Ceiling(value * 2) / 2;
         }
     }
 }
