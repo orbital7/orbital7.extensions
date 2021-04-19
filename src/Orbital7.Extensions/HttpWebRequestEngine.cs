@@ -46,13 +46,16 @@ namespace Orbital7.Extensions
                         foreach (var header in headers)
                             request.Headers[header.Item1] = header.Item2;
 
-                    var encoding = new UTF8Encoding();
-                    byte[] queryBytes = encoding.GetBytes(contents);
-                    using (var requestStream = request.GetRequestStream())
+                    if (contents.HasText())
                     {
+                        var encoding = new UTF8Encoding();
+                        byte[] queryBytes = encoding.GetBytes(contents);
+                        using (var requestStream = request.GetRequestStream())
+                        {
 
-                        requestStream.Write(queryBytes, 0, queryBytes.Length);
-                        requestStream.Close();
+                            requestStream.Write(queryBytes, 0, queryBytes.Length);
+                            requestStream.Close();
+                        }
                     }
 
                     try
