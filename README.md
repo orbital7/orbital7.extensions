@@ -13,3 +13,4 @@
 <div>Install-Package Orbital7.Extensions.WebAPIClient</div>
 <div>Install-Package Orbital7.Extensions.WinForms</div>
 <div>Install-Package Orbital7.Extensions.WPF</div>
+<div>Install-Package Orbital7.Extensions.Xamarin</div>
