@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <FileVersion>6.0.0.0</FileVersion>
+    <AssemblyVersion>6.0.1.0</AssemblyVersion>
+    <FileVersion>6.0.1.0</FileVersion>
     <Company>Orbital7</Company>
     <Copyright>Copyright © 2012-2022 Orbital7</Copyright>
-    <Version>6.0.0</Version>
+    <Version>6.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>.NET Standard 2.0 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
@@ -35,10 +35,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Attributes\" />
   </ItemGroup>
 
 </Project>

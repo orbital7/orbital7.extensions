@@ -12,6 +12,9 @@ namespace Orbital7.Extensions
         public const string FILE_EXT_JPG = ".jpg";
         public const string MIME_TYPE_JPG = "image/jpeg";
 
+        public const string FILE_EXT_JPEG = ".jpeg";
+        public const string MIME_TYPE_JPEG = "image/jpeg";
+
         public const string FILE_EXT_GIF = ".gif";
         public const string MIME_TYPE_GIF = "image/gif";
 
@@ -49,6 +52,9 @@ namespace Orbital7.Extensions
 
                 case FILE_EXT_JPG:
                     return MIME_TYPE_JPG;
+
+                case FILE_EXT_JPEG:
+                    return MIME_TYPE_JPEG;
 
                 case FILE_EXT_GIF:
                     return MIME_TYPE_GIF;
@@ -90,6 +96,7 @@ namespace Orbital7.Extensions
                 case MIME_TYPE_PNG:
                     return FILE_EXT_PNG;
 
+                // Includes MIME_TYPE_JPEG as they're the same.
                 case MIME_TYPE_JPG:
                     return FILE_EXT_JPG;
 
