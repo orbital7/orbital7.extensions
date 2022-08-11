@@ -1,33 +1,37 @@
 ﻿using System;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SixLabors.ImageSharp
 {
     public static class ImageSharpExtensions
     {
-        public static IImageProcessingContext<TPixel> EnsureMaximumSize<TPixel>(this IImageProcessingContext<TPixel> source, int maxWidth, int maxHeight,
-            bool maintainAspectRatio = true) where TPixel : struct, IPixel<TPixel>
+        public static IImageProcessingContext EnsureMaximumSize(this IImageProcessingContext source, int maxWidth, int maxHeight,
+            bool maintainAspectRatio = true)
         {
-            return source.Apply(image =>
+            var size = source.GetCurrentSize();
+
+            if ((size.Width > maxWidth) || (size.Height > maxHeight))
             {
-                if ((image.Width > maxWidth) || (image.Height > maxHeight))
+                if (maintainAspectRatio)
                 {
-                    if (maintainAspectRatio)
-                    {
-                        // Handle if width is larger.
-                        if (image.Width > image.Height)
-                            image.Mutate(x => x.Resize(maxWidth, Convert.ToInt32(image.Height * maxWidth / image.Width)));
-                        // Else height is larger.
-                        else
-                            image.Mutate(x => x.Resize(Convert.ToInt32(image.Width * maxHeight / image.Height), maxHeight));
-                    }
+                    // Handle if width is larger.
+                    if (size.Width > size.Height)
+                        return source.Resize(maxWidth, Convert.ToInt32(size.Height * maxWidth / size.Width));
+                    // Else height is larger.
                     else
-                    {
-                        image.Mutate(x => x.Resize(maxWidth, maxHeight));
-                    }
+                        return source.Resize(Convert.ToInt32(size.Width * maxHeight / size.Height), maxHeight);
                 }
-            });
+                else
+                {
+                    return source.Resize(maxWidth, maxHeight);
+                }
+            }
+            else
+            {
+                return source;
+            }
         }
     }
 }
