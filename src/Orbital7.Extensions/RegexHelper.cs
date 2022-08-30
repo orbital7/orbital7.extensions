@@ -11,7 +11,7 @@ namespace Orbital7.Extensions
         public static bool IsValidPhoneNumber(
             string phoneNumber)
         {
-            return Regex.Match(phoneNumber, @"^d{1,7}$").Success;
+            return Regex.Match(phoneNumber, @"^\d{10}$").Success;
         }
 
         // Source: https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
