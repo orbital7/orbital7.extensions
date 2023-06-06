@@ -1,58 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.Text;
 
-namespace Orbital7.Extensions
+namespace System.IO;
+
+public class StringWriterWithEncoding : StringWriter
 {
-    public class StringWriterWithEncoding : StringWriter
+    private Encoding _encoding;
+
+    public StringWriterWithEncoding()
+        : base() { }
+
+    public StringWriterWithEncoding(IFormatProvider formatProvider)
+        : base(formatProvider) { }
+
+    public StringWriterWithEncoding(StringBuilder sb)
+        : base(sb) { }
+
+    public StringWriterWithEncoding(StringBuilder sb, IFormatProvider formatProvider)
+        : base(sb, formatProvider) { }
+
+
+    public StringWriterWithEncoding(Encoding encoding)
+        : base()
     {
-        private Encoding _encoding;
+        _encoding = encoding;
+    }
 
-        public StringWriterWithEncoding()
-            : base() { }
+    public StringWriterWithEncoding(IFormatProvider formatProvider, Encoding encoding)
+        : base(formatProvider)
+    {
+        _encoding = encoding;
+    }
 
-        public StringWriterWithEncoding(IFormatProvider formatProvider)
-            : base(formatProvider) { }
+    public StringWriterWithEncoding(StringBuilder sb, Encoding encoding)
+        : base(sb)
+    {
+        _encoding = encoding;
+    }
 
-        public StringWriterWithEncoding(StringBuilder sb)
-            : base(sb) { }
+    public StringWriterWithEncoding(StringBuilder sb, IFormatProvider formatProvider, Encoding encoding)
+        : base(sb, formatProvider)
+    {
+        _encoding = encoding;
+    }
 
-        public StringWriterWithEncoding(StringBuilder sb, IFormatProvider formatProvider)
-            : base(sb, formatProvider) { }
-
-
-        public StringWriterWithEncoding(Encoding encoding)
-            : base()
+    public override Encoding Encoding
+    {
+        get
         {
-            _encoding = encoding;
+            return (null == _encoding) ? base.Encoding : _encoding;
         }
-
-        public StringWriterWithEncoding(IFormatProvider formatProvider, Encoding encoding)
-            : base(formatProvider)
-        {
-            _encoding = encoding;
-        }
-
-        public StringWriterWithEncoding(StringBuilder sb, Encoding encoding)
-            : base(sb)
-        {
-            _encoding = encoding;
-        }
-
-        public StringWriterWithEncoding(StringBuilder sb, IFormatProvider formatProvider, Encoding encoding)
-            : base(sb, formatProvider)
-        {
-            _encoding = encoding;
-        }
-
-        public override Encoding Encoding
-        {
-            get
-            {
-                return (null == _encoding) ? base.Encoding : _encoding;
-            }
-        }
-    } 
-}
+    }
+} 

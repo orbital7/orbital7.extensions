@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Orbital7.Extensions.ScriptJobs
 {
@@ -32,7 +28,7 @@ namespace Orbital7.Extensions.ScriptJobs
             if (args.Length >= 1 && args[0].ToUpper() == ARG_FILE)
             {
                 if (args.Length >= 2 && File.Exists(args[1]))
-                    Load(SerializationHelper.DeserializeFromXml<ScriptJobExecutionSettings>(File.ReadAllText(args[1])));
+                    Load(JsonSerializationHelper.DeserializeFromJsonFile<ScriptJobExecutionSettings>(args[1]));
                 else
                     throw new Exception("FILE USAGE: -FILE [FilePath]");
             }
