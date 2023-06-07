@@ -16,6 +16,7 @@
     <LangVersion>latest</LangVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>Orbital7.png</PackageIcon>
+	<PackageReadmeFile>Readme.md</PackageReadmeFile>
 	<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
@@ -36,6 +37,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+	<None Include="Readme.md">
+      <Pack>True</Pack>
+	  <PackagePath></PackagePath>
+	  </None>
   </ItemGroup>
 
 </Project>
