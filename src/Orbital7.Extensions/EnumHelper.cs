@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace Orbital7.Extensions
+namespace System
 {
     public static class EnumHelper
     {

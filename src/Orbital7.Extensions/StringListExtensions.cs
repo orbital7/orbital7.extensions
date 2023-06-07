@@ -1,92 +1,88 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
-namespace System
-{
-    public static class StringListHelper
-    {     
-        // NOTE: This method assumes that the lists contain unique values and not duplicates.
-        public static bool ListsEqual(this List<string> list1, List<string> list2)
+namespace System;
+
+public static class StringListExtensions
+{     
+    // NOTE: This method assumes that the lists contain unique values and not duplicates.
+    public static bool ListsEqual(this List<string> list1, List<string> list2)
+    {
+        bool listsEqual = true;
+
+        // Compare count.
+        if (list1.Count == list2.Count)
         {
-            bool listsEqual = true;
-
-            // Compare count.
-            if (list1.Count == list2.Count)
+            // Check contents.
+            foreach (string value in list1)
             {
-                // Check contents.
-                foreach (string value in list1)
+                if (!list2.Contains(value))
                 {
-                    if (!list2.Contains(value))
-                    {
-                        listsEqual = false;
-                        break;
-                    }
+                    listsEqual = false;
+                    break;
                 }
             }
-            // Else not equal.
-            else
-            {
-                listsEqual = false;
-            }
-
-            return listsEqual;
+        }
+        // Else not equal.
+        else
+        {
+            listsEqual = false;
         }
 
-        public static bool ListsMatch(this List<string> list1, List<string> list2)
+        return listsEqual;
+    }
+
+    public static bool ListsMatch(this List<string> list1, List<string> list2)
+    {
+        bool match = false;
+
+        // Determine which set should be searched on the basis of length; you want
+        // to loop through the smaller set to limit the number of comparisons.
+        List<string> listToSearch = null;
+        List<string> listToCompare = null;
+        if (list1.Count > list2.Count)
         {
-            bool match = false;
+            listToSearch = list2;
+            listToCompare = list1;
+        }
+        else
+        {
+            listToSearch = list1;
+            listToCompare = list2;
+        }
 
-            // Determine which set should be searched on the basis of length; you want
-            // to loop through the smaller set to limit the number of comparisons.
-            List<string> listToSearch = null;
-            List<string> listToCompare = null;
-            if (list1.Count > list2.Count)
+        // Look through the list to search.
+        foreach (string searchItem in listToSearch)
+        {
+            foreach (string compareItem in listToCompare)
             {
-                listToSearch = list2;
-                listToCompare = list1;
-            }
-            else
-            {
-                listToSearch = list1;
-                listToCompare = list2;
-            }
-
-            // Look through the list to search.
-            foreach (string searchItem in listToSearch)
-            {
-                foreach (string compareItem in listToCompare)
+                if (compareItem.Equals(searchItem, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (compareItem.Equals(searchItem, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        match = true;
-                        break;
-                    }
+                    match = true;
+                    break;
                 }
-
-                if (match) break;
             }
 
-            return match;
+            if (match) break;
         }
 
-        public static List<string> GetDifference(this List<string> mainList, List<string> compareList)
-        {
-            List<string> difference = new List<string>();
+        return match;
+    }
 
-            foreach (string item in mainList)
-                if (!compareList.Contains(item)) difference.Add(item);
+    public static List<string> GetDifference(this List<string> mainList, List<string> compareList)
+    {
+        List<string> difference = new List<string>();
 
-            return difference;
-        }
+        foreach (string item in mainList)
+            if (!compareList.Contains(item)) difference.Add(item);
 
-        public static bool ContainsCaseInvariant(this IList<string> list, string value)
-        {
-            var lowercaseList = (from string x in list
-                                 select x.ToLower()).ToList();
+        return difference;
+    }
 
-            return lowercaseList.Contains(value.ToLower());
-        }
+    public static bool ContainsCaseInvariant(this IList<string> list, string value)
+    {
+        var lowercaseList = (from string x in list
+                             select x.ToLower()).ToList();
+
+        return lowercaseList.Contains(value.ToLower());
     }
 }

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Orbital7.Extensions.ScriptJobs;
 
-namespace Orbital7.Extensions.ScriptJobs
+public interface IScriptJobsRunnerStartUp
 {
-    public interface IScriptJobsRunnerStartUp
-    {
-        bool UnattendedExecution { get; }
+    bool UnattendedExecution { get; }
 
-        string WorkingFolderPath { get; }
+    string WorkingFolderPath { get; }
 
-        ScriptJobBase Create(string[] args);
-    }
+    ScriptJobBase Create(string[] args);
 }

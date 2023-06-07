@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Runtime.CompilerServices;
 
-namespace Orbital7.Extensions.Models
+namespace System.ComponentModel;
+
+public abstract class NotifyPropertyChangedModelBase 
+    : INotifyPropertyChanged
 {
-    public abstract class NotifyPropertyChangedModelBase 
-        : INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected bool SetProperty<T>(
+        ref T storage,
+        T value,
+        [CallerMemberName] string propertyName = null)
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        if (Object.Equals(storage, value))
+            return false;
 
-        protected bool SetProperty<T>(
-            ref T storage,
-            T value,
-            [CallerMemberName] string propertyName = null)
-        {
-            if (Object.Equals(storage, value))
-                return false;
+        storage = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 
-            storage = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-        protected virtual void OnPropertyChanged(
-            string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    protected virtual void OnPropertyChanged(
+        string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
-namespace System
+namespace System;
+
+public static class GuidExtensions
 {
-    public static class GuidExtensions
+    public static string ToString(this List<Guid> list, string delimiter, bool order, bool allowDuplicates, bool allowEmptyGuid)
     {
-        public static string ToString(this List<Guid> list, string delimiter, bool order, bool allowDuplicates, bool allowEmptyGuid)
-        {
-            var items = (from x in list where allowEmptyGuid || x != Guid.Empty select x);
+        var items = (from x in list where allowEmptyGuid || x != Guid.Empty select x);
 
-            if (order)
-                items = (from x in items orderby x select x);
+        if (order)
+            items = (from x in items orderby x select x);
 
-            if (!allowDuplicates)
-                items = items.Distinct();
-            
-            return items.ToList().ToString(delimiter);
-        }
+        if (!allowDuplicates)
+            items = items.Distinct();
+        
+        return items.ToList().ToString(delimiter);
     }
 }
