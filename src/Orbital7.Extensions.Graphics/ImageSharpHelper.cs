@@ -1,10 +1,7 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
+﻿using SixLabors.ImageSharp.Formats;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Orbital7.Extensions.Graphics
+namespace SixLabors.ImageSharp
 {
     public static class ImageSharpHelper
     {

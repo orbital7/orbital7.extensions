@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Orbital7.Extensions.Models;
+namespace System;
 
 public enum USState
 {

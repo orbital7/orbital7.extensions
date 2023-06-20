@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Models;
+﻿namespace System;
 
 public class LetteredNames
 {

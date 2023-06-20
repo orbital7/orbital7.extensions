@@ -1,13 +1,14 @@
 ﻿using System;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SixLabors.ImageSharp
 {
     public static class ImageSharpExtensions
     {
-        public static IImageProcessingContext EnsureMaximumSize(this IImageProcessingContext source, int maxWidth, int maxHeight,
+        public static IImageProcessingContext EnsureMaximumSize(
+            this IImageProcessingContext source, 
+            int maxWidth, 
+            int maxHeight,
             bool maintainAspectRatio = true)
         {
             var size = source.GetCurrentSize();

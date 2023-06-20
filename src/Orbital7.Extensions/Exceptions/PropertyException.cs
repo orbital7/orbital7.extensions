@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Exceptions;
+﻿namespace System;
 
 public class PropertyException : Exception
 {
