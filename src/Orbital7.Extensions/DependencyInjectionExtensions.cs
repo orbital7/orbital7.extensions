@@ -1,6 +1,8 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
 
-public static class ServiceCollectionConfigurationExtensions
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddConfiguration(
         this IServiceCollection services,

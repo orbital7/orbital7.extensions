@@ -2,7 +2,7 @@
 
 public static class NumericExtensions
 {
-    public static string ToCurrency(
+    public static string ToCurrencyString(
         this double number, 
         bool addSymbol = false, 
         bool addCommas = true,
@@ -27,28 +27,28 @@ public static class NumericExtensions
         return value;
     }
 
-    public static string ToCurrency(
+    public static string ToCurrencyString(
         this decimal number, 
         bool addSymbol = false, 
         bool addCommas = true,
         bool addPlusForPositiveNumber = false)
     {
-        return ToCurrency(Convert.ToDouble(number), addSymbol, addCommas, addPlusForPositiveNumber);
+        return ToCurrencyString(Convert.ToDouble(number), addSymbol, addCommas, addPlusForPositiveNumber);
     }
 
-    public static string ToFileSize(
+    public static string ToFileSizeString(
         this long fileSizeInBytes)
     {
         return string.Format(new FileSizeFormatProvider(), "{0:fs}", fileSizeInBytes);
     }
 
-    public static string ToPercent(
+    public static string ToPercentString(
         this double percent)
     {
         return percent.ToString("0.00%");
     }
 
-    public static double ToPercent(
+    public static double ToPercentString(
         this double value, 
         double total)
     {
@@ -58,7 +58,7 @@ public static class NumericExtensions
             return 0;
     }
 
-    public static string ToHour(
+    public static string ToHourString(
         this int value,
         bool includeMinutes = false)
     {
@@ -68,7 +68,7 @@ public static class NumericExtensions
             return new DateTime(2000, 1, 1, value, 0, 0).ToString("htt");
     }
 
-    public static string ToTime(
+    public static string ToTimeString(
         this double value,
         bool includeLeadingZero = false)
     {
@@ -133,9 +133,76 @@ public static class NumericExtensions
         return (denominator == 0) ? errorOutput : Convert.ToDouble(numerator) / denominator;
     }
 
+    public static string ToVectorString(
+            this int value)
+    {
+        if (value >= 0)
+            return "+" + value.ToString();
+        else
+            return value.ToString();
+    }
+
+    public static string ToVectorString(
+        this long value)
+    {
+        if (value >= 0)
+            return "+" + value.ToString();
+        else
+            return value.ToString();
+    }
+
+    public static string ToVectorString(
+        this double value)
+    {
+        if (value >= 0)
+            return "+" + value.ToString();
+        else
+            return value.ToString();
+    }
+
+    public static string ToNthString(
+        this int value)
+    {
+        if (value == 1)
+            return "1st";
+        else if (value == 2)
+            return "2nd";
+        else if (value == 3)
+            return "3rd";
+        else
+            return value + "th";
+    }
+
     public static double RoundToPointFive(
         this double value)
     {
         return Math.Ceiling(value * 2) / 2;
+    }
+
+    public static decimal RoundToTwoDigits(
+        this decimal value)
+    {
+        return Math.Round(value, 2, MidpointRounding.ToEven);
+    }
+
+    public static decimal RoundToNDigits(
+        this decimal value,
+        int digits)
+    {
+        return Math.Round(value, digits, MidpointRounding.ToEven);
+    }
+
+    public static decimal RoundUpToLargestQuarter(
+        this decimal value)
+    {
+        var nearestOf = 0.25m;
+        return Math.Ceiling(value / nearestOf) * nearestOf;
+    }
+
+    public static decimal RoundDownToSmallestQuarter(
+        this decimal value)
+    {
+        var nearestOf = 0.25m;
+        return Math.Floor(value / nearestOf) * nearestOf;
     }
 }

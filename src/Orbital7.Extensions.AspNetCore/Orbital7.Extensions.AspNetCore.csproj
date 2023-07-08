@@ -31,12 +31,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Orbital7.png">
+    <None Include="../../Orbital7.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
   </ItemGroup>

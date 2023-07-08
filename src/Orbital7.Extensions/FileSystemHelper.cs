@@ -22,7 +22,7 @@ public static class FileSystemHelper
         foreach (FileInfo file in new DirectoryInfo(folderPath).GetFiles())
             size += file.Length;
 
-        return size.ToFileSize();
+        return size.ToFileSizeString();
     }
 
     public static string GetParentFolderPath(string path)

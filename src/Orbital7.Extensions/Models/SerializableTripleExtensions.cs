@@ -22,8 +22,26 @@ public static class SerializableTripleExtensions
                 select x.Item2).ToList();
     }
 
+    public static T3 GetItem3<T1, T2, T3>(
+        this List<SerializableTriple<T1, T2, T3>> list,
+        T1 item1)
+    {
+        return (from x in list
+                where (x.Item1 == null && item1 == null) || (x.Item1 != null && x.Item1.Equals(item1))
+                select x.Item3).SingleOrDefault();
+    }
+
+    public static List<T3> GatherItem3s<T1, T2, T3>(
+        this List<SerializableTriple<T1, T2, T3>> list,
+        T1 item1)
+    {
+        return (from x in list
+                where (x.Item1 == null && item1 == null) || (x.Item1 != null && x.Item1.Equals(item1))
+                select x.Item3).ToList();
+    }
+
     public static T1 GetItem1<T1, T2, T3>(
-        this List<SerializableTriple<T1, T2, T3>> list, 
+        this List<SerializableTriple<T1, T2, T3>> list,
         T2 item2)
     {
         return (from x in list
@@ -32,7 +50,7 @@ public static class SerializableTripleExtensions
     }
 
     public static List<T1> GatherItem1s<T1, T2, T3>(
-        this List<SerializableTriple<T1, T2, T3>> list, 
+        this List<SerializableTriple<T1, T2, T3>> list,
         T2 item2)
     {
         return (from x in list

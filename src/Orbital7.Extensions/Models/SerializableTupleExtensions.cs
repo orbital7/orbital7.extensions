@@ -64,4 +64,34 @@ public static class SerializableTupleExtensions
                 where (x.Item2 == null && item2 == null) || (x.Item2 != null && x.Item2.Equals(item2))
                 select x.Item1).ToList();
     }
+
+    public static SerializableTuple<T1, T2> Add<T1, T2>(
+        this List<SerializableTuple<T1, T2>> list,
+        T1 item1,
+        T2 item2)
+    {
+        var item = new SerializableTuple<T1, T2>(item1, item2);
+        list.Add(item);
+        return item;
+    }
+
+    public static bool HasItem1<T1, T2>(
+        this List<SerializableTuple<T1, T2>> list,
+        T1 item1)
+    {
+        return (from x in list
+                where (x.Item1 == null && item1 == null) ||
+                      (x.Item1 != null && x.Item1.Equals(item1))
+                select x).Count() > 0;
+    }
+
+    public static bool HasItem2<T1, T2>(
+        this List<SerializableTuple<T1, T2>> list,
+        T2 item2)
+    {
+        return (from x in list
+                where (x.Item2 == null && item2 == null) ||
+                      (x.Item2 != null && x.Item2.Equals(item2))
+                select x).Count() > 0;
+    }
 }

@@ -1,17 +1,26 @@
-﻿namespace System;
+﻿using System.Security.Cryptography;
+
+namespace System;
 
 public class StringHelper
 {
-    public static string CreateRandomPassword(
-        int passwordLength)
+    public static string CreateRandomString(
+        int length,
+        string characters = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-")
     {
-        string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-";
-        char[] chars = new char[passwordLength];
-        Random rd = new Random();
+        var chars = characters.ToCharArray();
+        byte[] data = new byte[4 * length];
+        RandomNumberGenerator.Fill(data);
 
-        for (int i = 0; i < passwordLength; i++)
-            chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
+        StringBuilder result = new StringBuilder(length);
+        for (int i = 0; i < length; i++)
+        {
+            var rnd = BitConverter.ToUInt32(data, i * 4);
+            var idx = rnd % chars.Length;
 
-        return new string(chars);
+            result.Append(chars[idx]);
+        }
+
+        return result.ToString();
     }
 }

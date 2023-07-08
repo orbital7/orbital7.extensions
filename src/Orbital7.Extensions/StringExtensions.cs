@@ -14,7 +14,6 @@ public enum PhoneNumberFormat
 
 public static class StringExtensions
 {
-    public const string IllegalWindowsFileSystemChars = "|/\\\"*?:<>";
     public const string PunctuationDash = "-";
     public const string PunctuationUnderscore = "_";
     public const string PunctuationCharsBase = ".,()[]{}|\\';:!@#$&%?/<>–^+=*\"";
@@ -149,7 +148,8 @@ public static class StringExtensions
         return textInfo.ToTitleCase(value.ToLower());
     }
 
-    public static string GetHash(this string value)
+    public static string GetHash(
+        this string value)
     {
         var provider = System.Security.Cryptography.MD5.Create();
         byte[] data = System.Text.Encoding.ASCII.GetBytes(value);
@@ -165,9 +165,9 @@ public static class StringExtensions
     public static bool IsWindowsFileSystemSafe(
         this string value)
     {
-        var chars = IllegalWindowsFileSystemChars.ToCharArray();
+        var invalidChars = Path.GetInvalidFileNameChars();
 
-        foreach (var c in chars)
+        foreach (var c in invalidChars)
             if (value.Contains(c.ToString()))
                 return false;
 
@@ -176,13 +176,13 @@ public static class StringExtensions
 
     public static string ToWindowsFileSystemSafeString(
         this string value, 
-        string replaceChar = "")
+        string replacementChar = "")
     {
         var windowsSafeValue = value;
-        var chars = IllegalWindowsFileSystemChars.ToCharArray();
+        var invalidChars = Path.GetInvalidFileNameChars();
 
-        foreach (var c in chars)
-            windowsSafeValue = windowsSafeValue.Replace(c.ToString(), replaceChar);
+        foreach (var c in invalidChars)
+            windowsSafeValue = windowsSafeValue.Replace(c.ToString(), replacementChar);
 
         return windowsSafeValue;
     }
@@ -190,7 +190,7 @@ public static class StringExtensions
     public static MemoryStream ToStream(
         this string value)
     {
-        return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
+        return new MemoryStream(Encoding.UTF8.GetBytes(value ?? string.Empty));
     }
 
     public static string EnsureStartsWith(
@@ -223,7 +223,8 @@ public static class StringExtensions
             return emptyText;
     }
 
-    public static string ToTextString(this byte[] bytes)
+    public static string ToTextString(
+        this byte[] bytes)
     {
         UTF8Encoding encoding = new UTF8Encoding();
         return encoding.GetString(bytes, 0, bytes.Length);
@@ -392,7 +393,8 @@ public static class StringExtensions
         }
     }
 
-    public static bool IsNumbers(this string value)
+    public static bool IsNumbers(
+        this string value)
     {
         if (!string.IsNullOrEmpty(value))
         {
@@ -408,7 +410,8 @@ public static class StringExtensions
         }
     }
 
-    public static bool IsLetters(this string value)
+    public static bool IsLetters(
+        this string value)
     {
         if (!string.IsNullOrEmpty(value))
         {
@@ -424,7 +427,8 @@ public static class StringExtensions
         }
     }
 
-    public static bool IsAlphanumeric(this string value)
+    public static bool IsAlphanumeric(
+        this string value)
     {
         if (!string.IsNullOrEmpty(value))
         {
@@ -440,7 +444,14 @@ public static class StringExtensions
         }
     }
 
-    public static string[] Parse(this string input, bool byWhitespace, bool byPunctuation, bool includeDash, bool includeUnderscore, bool includeDelimitersInResults, bool removeEmptyEntries)
+    public static string[] Parse(
+        this string input, 
+        bool byWhitespace, 
+        bool byPunctuation, 
+        bool includeDash, 
+        bool includeUnderscore, 
+        bool includeDelimitersInResults, 
+        bool removeEmptyEntries)
     {
         string[] result = null;
 
@@ -469,12 +480,17 @@ public static class StringExtensions
         return result;
     }
 
-    public static string[] ParseLines(this string value, bool removeEmptyEntries = true)
+    public static string[] ParseLines(
+        this string value, 
+        bool removeEmptyEntries = true)
     {
         return value.NormalizeLineTerminators("\n").Split("\n".ToCharArray(), GetStringSplitOptions(removeEmptyEntries));
     }
 
-    public static string[] Parse(this string value, string delimiter, bool removeEmptyEntries = true)
+    public static string[] Parse(
+        this string value, 
+        string delimiter, 
+        bool removeEmptyEntries = true)
     {
         if (value != null)
             return value.Split(new string[] { delimiter }, GetStringSplitOptions(removeEmptyEntries));
@@ -482,7 +498,11 @@ public static class StringExtensions
             return new string[] { };
     }
 
-    public static List<Guid> ParseGuids(this string value, string delimiter, bool allowDuplicates, bool allowEmptyGuid)
+    public static List<Guid> ParseGuids(
+        this string value, 
+        string delimiter, 
+        bool allowDuplicates, 
+        bool allowEmptyGuid)
     {
         var items = new List<Guid>();
 
@@ -499,12 +519,19 @@ public static class StringExtensions
         return items;
     }
 
-    public static List<string> ParseBetween(this string value, string start, string end)
+    public static List<string> ParseBetween(
+        this string value, 
+        string start, 
+        string end)
     {
         return ParseBetween(value, start, end, true);
     }
 
-    public static List<string> ParseBetween(this string value, string start, string end, bool removeEmptyEntries)
+    public static List<string> ParseBetween(
+        this string value, 
+        string start, 
+        string end, 
+        bool removeEmptyEntries)
     {
         List<string> output = new List<string>();
         int startLength = start.Length;
@@ -535,7 +562,8 @@ public static class StringExtensions
         return output;
     }
 
-    public static string GetSingleLine(this string value)
+    public static string GetSingleLine(
+        this string value)
     {
         string output = value;
 
@@ -549,12 +577,19 @@ public static class StringExtensions
         return output;
     }
 
-    public static string FindFirstBetween(this string value, string start, string end)
+    public static string FindFirstBetween(
+        this string value, 
+        string start, 
+        string end)
     {
         return FindFirstBetween(value, start, end, true);
     }
 
-    public static string FindFirstBetween(this string value, string start, string end, bool autoTrim)
+    public static string FindFirstBetween(
+        this string value, 
+        string start, 
+        string end, 
+        bool autoTrim)
     {
         string output = string.Empty;
 
@@ -581,7 +616,8 @@ public static class StringExtensions
         return output;
     }
 
-    public static string[] ToStringArray(this string input)
+    public static string[] ToStringArray(
+        this string input)
     {
         string[] chars = new string[input.Length];
 
@@ -591,17 +627,21 @@ public static class StringExtensions
         return chars;
     }
 
-    public static string NormalizeLineTerminators(this string value, string lineTerm = "\n")
+    public static string NormalizeLineTerminators(
+        this string value, 
+        string lineTerm = "\n")
     {
         return value.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", lineTerm);
     }
 
-    public static string FormatLineTerminatorsAsHtml(this string value)
+    public static string FormatLineTerminatorsAsHtml(
+        this string value)
     {
         return value.NormalizeLineTerminators().Replace("\n", "<br />");
     }
 
-    public static string GetLineTerminator(this string value)
+    public static string GetLineTerminator(
+        this string value)
     {
         string term = string.Empty;
 
@@ -615,17 +655,22 @@ public static class StringExtensions
         return term;
     }
 
-    public static string EncloseInQuotes(this string value)
+    public static string EncloseInQuotes(
+        this string value)
     {
         return "\"" + value + "\"";
     }
 
-    public static string RemoveQuotes(this string value)
+    public static string RemoveQuotes(
+        this string value)
     {
         return PruneEnd(PruneStart(value, "\""), "\"");
     }
 
-    public static List<string> ToNGrams(this string input, int min, int max)
+    public static List<string> ToNGrams(
+        this string input, 
+        int min, 
+        int max)
     {
         List<string> nGrams = new List<string>();
 
@@ -649,14 +694,55 @@ public static class StringExtensions
             }
             string gram = inStr.Substring(pos, gramSize);
             nGrams.Add(gram);
-            int oldPos = pos;
             pos++;
         }
 
         return nGrams;
     }
 
-    public static string PruneEnd(this string value, string end)
+    public static string ToUrlSlug(
+        this string value)
+    {
+        return value
+            .Trim()
+            .ToLower()
+            .Replace(" ", "-")
+            .Replace("@", "")
+            .Replace("`", "")
+            .Replace("~", "")
+            .Replace("!", "")
+            .Replace("#", "")
+            .Replace("$", "")
+            .Replace("%", "")
+            .Replace("^", "")
+            .Replace("*", "")
+            .Replace("+", "")
+            .Replace("(", "")
+            .Replace(")", "")
+            .Replace("_", "")
+            .Replace("&", "")
+            .Replace("=", "")
+            .Replace("[", "")
+            .Replace("]", "")
+            .Replace("{", "")
+            .Replace("}", "")
+            .Replace("|", "")
+            .Replace(":", "")
+            .Replace(";", "")
+            .Replace("'", "")
+            .Replace(",", "")
+            .Replace(".", "")
+            .Replace("<", "")
+            .Replace(">", "")
+            .Replace("/", "")
+            .Replace("?", "")
+            .Replace("\"", "")
+            .Replace("\\", "");
+    }
+
+    public static string PruneEnd(
+        this string value, 
+        string end)
     {
         string output = value;
 
@@ -666,7 +752,9 @@ public static class StringExtensions
         return output;
     }
 
-    public static string PruneEnd(this string value, int length)
+    public static string PruneEnd(
+        this string value, 
+        int length)
     {
         string output = value;
 
@@ -676,7 +764,9 @@ public static class StringExtensions
         return output;
     }
 
-    public static string PruneStart(this string value, string start)
+    public static string PruneStart(
+        this string value, 
+        string start)
     {
         string output = value;
 
@@ -686,7 +776,9 @@ public static class StringExtensions
         return output;
     }
 
-    public static string PruneStart(this string value, int length)
+    public static string PruneStart(
+        this string value, 
+        int length)
     {
         string output = value;
 
@@ -696,17 +788,22 @@ public static class StringExtensions
         return output;
     }
 
-    public static string Left(this string value, int length)
+    public static string Left(
+        this string value, 
+        int length)
     {
         return value.Substring(0, length);
     }
 
-    public static string Right(this string value, int length)
+    public static string Right(
+        this string value, 
+        int length)
     {
         return value.Substring(value.Length - length, length);
     }
 
-    private static StringSplitOptions GetStringSplitOptions(bool removeEmptyEntries)
+    private static StringSplitOptions GetStringSplitOptions(
+        bool removeEmptyEntries)
     {
         StringSplitOptions options = StringSplitOptions.None;
         if (removeEmptyEntries) options = StringSplitOptions.RemoveEmptyEntries;
@@ -714,7 +811,9 @@ public static class StringExtensions
         return options;
     }
 
-    private static string GetPuncuationChars(bool includeDash, bool includeUnderscore)
+    private static string GetPuncuationChars(
+        bool includeDash, 
+        bool includeUnderscore)
     {
         string chars = PunctuationCharsBase;
         if (includeDash) chars += PunctuationDash;
@@ -737,7 +836,7 @@ public static class StringExtensions
         this string value,
         long? defaultValue = null)
     {
-        if (value != null && Int64.TryParse(value, out long parsedValue))
+        if (value != null && long.TryParse(value, out long parsedValue))
             return parsedValue;
         else
             return defaultValue;
@@ -747,7 +846,7 @@ public static class StringExtensions
         this string value,
         decimal? defaultValue = null)
     {
-        if (value != null && Decimal.TryParse(value, out decimal parsedValue))
+        if (value != null && decimal.TryParse(value, out decimal parsedValue))
             return parsedValue;
         else
             return defaultValue;
@@ -757,7 +856,7 @@ public static class StringExtensions
         this string value,
         double? defaultValue = null)
     {
-        if (value != null && Double.TryParse(value, out double parsedValue))
+        if (value != null && double.TryParse(value, out double parsedValue))
             return parsedValue;
         else
             return defaultValue;
@@ -768,6 +867,26 @@ public static class StringExtensions
         DateTime? defaultValue = null)
     {
         if (value != null && DateTime.TryParse(value, out DateTime parsedValue))
+            return parsedValue;
+        else
+            return defaultValue;
+    }
+
+    public static bool? ParseBoolean(
+        this string value,
+        bool? defaultValue = null)
+    {
+        if (value != null && bool.TryParse(value, out bool parsedValue))
+            return parsedValue;
+        else
+            return defaultValue;
+    }
+
+    public static Guid? ParseGuid(
+        this string value,
+        Guid? defaultValue = null)
+    {
+        if (value != null && Guid.TryParse(value, out Guid parsedValue))
             return parsedValue;
         else
             return defaultValue;

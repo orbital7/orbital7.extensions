@@ -90,7 +90,7 @@ namespace Microsoft.AspNetCore.Mvc
             bool blankIfZero = false)
         {
             if (number.HasValue && (number.Value != 0 || !blankIfZero))
-                return new HtmlString("<span style='white-space: nowrap;'>" + number.Value.ToCurrency(addSymbol) + "</span>");
+                return new HtmlString("<span style='white-space: nowrap;'>" + number.Value.ToCurrencyString(addSymbol) + "</span>");
             else
                 return new HtmlString(string.Empty);
         }

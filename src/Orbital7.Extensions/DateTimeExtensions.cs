@@ -18,12 +18,16 @@ public enum Month
 
 public static class DateTimeExtensions
 {
-    public static DateTime UTCToTimeZone(this DateTime date, TimeZoneInfo timeZone)
+    public static DateTime UtcToTimeZone(
+        this DateTime date, 
+        TimeZoneInfo timeZone)
     {
         return TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(date, DateTimeKind.Utc), timeZone);
     }
 
-    public static DateTime? UTCToTimeZone(this DateTime? date, TimeZoneInfo timeZone)
+    public static DateTime? UtcToTimeZone(
+        this DateTime? date, 
+        TimeZoneInfo timeZone)
     {
         if (date.HasValue)
             return TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(date.Value, DateTimeKind.Utc), timeZone);
@@ -31,37 +35,49 @@ public static class DateTimeExtensions
             return null;
     }
 
-    public static string FormatTimeSpan(this TimeSpan ts)
+    public static string FormatTimeSpan(
+        this TimeSpan ts)
     {
         return string.Format("{0:00}:{1:00}:{2:00}", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
     }
 
-    public static DateTimeSpan CalulateDateTimeSpan(this DateTime date, DateTime dateToCompare)
+    public static DateTimeSpan CalulateDateTimeSpan(
+        this DateTime date, 
+        DateTime dateToCompare)
     {
         return DateTimeSpan.CompareDates(date, dateToCompare);
     }
 
-    public static int CalculateMonthsDifference(this DateTime date, DateTime dateToCompare)
+    public static int CalculateMonthsDifference(
+        this DateTime date, 
+        DateTime dateToCompare)
     {
         return ((date.Year - dateToCompare.Year) * 12) + date.Month - dateToCompare.Month;
     }
 
-    public static int CalculateQuartersDifference(this DateTime date, DateTime dateToCompare)
+    public static int CalculateQuartersDifference(
+        this DateTime date, 
+        DateTime dateToCompare)
     {
         return ((date.Year - dateToCompare.Year) * 4) + date.ToQuarter() - dateToCompare.ToQuarter();
     }
 
-    public static double CalculateAverageMonthsDifference(this DateTime date, DateTime dateToCompare)
+    public static double CalculateAverageMonthsDifference(
+        this DateTime date, 
+        DateTime dateToCompare)
     {
         return date.Subtract(dateToCompare).Days / (365.25 / 12);
     }
     
-    public static string ToShortDateString(this DateTime date)
+    public static string ToShortDateString(
+        this DateTime date)
     {
         return date.ToString("MM/dd/yyyy");
     }
 
-    public static string ToShortDateString(this DateTime? date, string nullValue = "")
+    public static string ToShortDateString(
+        this DateTime? date, 
+        string nullValue = "")
     {
         if (date.HasValue)
             return date.Value.ToShortDateString();
@@ -69,12 +85,15 @@ public static class DateTimeExtensions
             return nullValue;
     }
     
-    public static string ToShortTimeString(this DateTime time)
+    public static string ToShortTimeString(
+        this DateTime time)
     {
         return time.ToString("h:mm:ss tt");
     }
 
-    public static string ToShortTimeString(this DateTime? time, string nullValue = "")
+    public static string ToShortTimeString(
+        this DateTime? time, 
+        string nullValue = "")
     {
         if (time.HasValue)
             return time.Value.ToShortTimeString();
@@ -82,12 +101,15 @@ public static class DateTimeExtensions
             return nullValue;
     }
 
-    public static string ToShortDateTimeString(this DateTime dateTime)
+    public static string ToShortDateTimeString(
+        this DateTime dateTime)
     {
         return dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
     }
 
-    public static string ToShortDateTimeString(this DateTime? dateTime, string nullValue = "")
+    public static string ToShortDateTimeString(
+        this DateTime? dateTime, 
+        string nullValue = "")
     {
         if (dateTime.HasValue)
             return dateTime.Value.ToShortDateTimeString();
@@ -95,7 +117,8 @@ public static class DateTimeExtensions
             return nullValue;
     }
 
-    public static string ToMonthDateString(this DateTime date)
+    public static string ToMonthDateString(
+        this DateTime date)
     {
         return date.ToString("MMMM yyyy");
     }
@@ -118,7 +141,8 @@ public static class DateTimeExtensions
         return string.Format("{0:yyyy-MM-dd}", dateTimeUtc);
     }
 
-    public static DateTime RoundToStartOfBusinessDay(this DateTime date)
+    public static DateTime RoundToStartOfBusinessDay(
+        this DateTime date)
     {
         if (date.DayOfWeek == DayOfWeek.Saturday)
             date = date.AddDays(2);
@@ -128,32 +152,38 @@ public static class DateTimeExtensions
         return date.RoundToStartOfDay();
     }
 
-    public static DateTime RoundToStartOfNextBusinessDay(this DateTime date)
+    public static DateTime RoundToStartOfNextBusinessDay(
+        this DateTime date)
     {
         return date.AddDays(1).RoundToStartOfBusinessDay();
     }
 
-    public static DateTime RoundToStartOfHour(this DateTime date)
+    public static DateTime RoundToStartOfHour(
+        this DateTime date)
     {
         return new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0);
     }
 
-    public static DateTime RoundToEndOfHour(this DateTime date)
+    public static DateTime RoundToEndOfHour(
+        this DateTime date)
     {
-        return date.RoundToStartOfHour().AddHours(1).Subtract(new TimeSpan(0, 0, 0, 1));
+        return date.RoundToStartOfHour().AddHours(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
     }
 
-    public static DateTime RoundToStartOfDay(this DateTime date)
+    public static DateTime RoundToStartOfDay(
+        this DateTime date)
     {
         return new DateTime(date.Year, date.Month, date.Day);
     }
 
-    public static DateTime RoundToEndOfDay(this DateTime date)
+    public static DateTime RoundToEndOfDay(
+        this DateTime date)
     {
-        return date.RoundToStartOfDay().AddDays(1).Subtract(new TimeSpan(0, 0, 0, 1));
+        return date.RoundToStartOfDay().AddDays(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
     }
 
-    public static DateTime RoundToStartOfWeek(this DateTime date)
+    public static DateTime RoundToStartOfWeek(
+        this DateTime date)
     {
         while (date.DayOfWeek != DayOfWeek.Sunday)
             date = date.AddDays(-1);
@@ -161,7 +191,8 @@ public static class DateTimeExtensions
         return date.RoundToStartOfDay();
     }
 
-    public static DateTime RoundToEndOfWeek(this DateTime date)
+    public static DateTime RoundToEndOfWeek(
+        this DateTime date)
     {
         while (date.DayOfWeek != DayOfWeek.Saturday)
             date = date.AddDays(1);
@@ -169,12 +200,14 @@ public static class DateTimeExtensions
         return date.RoundToEndOfDay();
     }
 
-    public static DateTime RoundToStartOfMonth(this DateTime date)
+    public static DateTime RoundToStartOfMonth(
+        this DateTime date)
     {
         return new DateTime(date.Year, date.Month, 1).RoundToStartOfDay();
     }
 
-    public static int ToQuarter(this DateTime date)
+    public static int ToQuarter(
+        this DateTime date)
     {
         if (date.Month <= 3)
             return 1;
@@ -185,7 +218,8 @@ public static class DateTimeExtensions
         return 4;
     }
 
-    public static DateTime RoundToStartOfQuarter(this DateTime date)
+    public static DateTime RoundToStartOfQuarter(
+        this DateTime date)
     {
         if (date.Month <= 3)
             return new DateTime(date.Year, 1, 1);
@@ -196,7 +230,8 @@ public static class DateTimeExtensions
         return new DateTime(date.Year, 10, 1);
     }
 
-    public static DateTime RoundToEndOfQuarter(this DateTime date)
+    public static DateTime RoundToEndOfQuarter(
+        this DateTime date)
     {
         if (date.Month <= 3)
             return new DateTime(date.Year, 4, 1).AddDays(-1);
@@ -207,7 +242,8 @@ public static class DateTimeExtensions
         return new DateTime(date.Year + 1, 1, 1).AddDays(-1);
     }
 
-    public static DateTime RoundToEndOfMonth(this DateTime date)
+    public static DateTime RoundToEndOfMonth(
+        this DateTime date)
     {
         if (date.Month == 12)
             return date.RoundToEndOfYear();
@@ -215,12 +251,14 @@ public static class DateTimeExtensions
             return new DateTime(date.Year, date.Month + 1, 1).AddDays(-1).RoundToEndOfDay();
     }
 
-    public static DateTime RoundToStartOfYear(this DateTime date)
+    public static DateTime RoundToStartOfYear(
+        this DateTime date)
     {
         return new DateTime(date.Year, 1, 1).RoundToStartOfDay();
     }
 
-    public static DateTime RoundToEndOfYear(this DateTime date)
+    public static DateTime RoundToEndOfYear(
+        this DateTime date)
     {
         return new DateTime(date.Year, 12, 31).RoundToEndOfDay();
     }
@@ -241,25 +279,9 @@ public static class DateTimeExtensions
         return value.RoundToStartOfHour().AddMinutes(minutes);
     }
 
-    public static string ToFileSystemSafeDateString(this DateTime dateTime)
-    {
-        return dateTime.ToString("yyyy-MM-dd");
-    }
-
-    public static string ToFileSystemSafeDateTimeString(this DateTime dateTime)
-    {
-        return dateTime.ToString("yyyy-MM-dd_HH-mm-ss");
-    }
-
-    public static string ToAbbrevString(
-        this DayOfWeek dayOfWeek)
-    {
-        return DateTime.Now.RoundToDayofWeek(dayOfWeek).ToString("ddd");
-    }
-
-    public static DateTime RoundToDayofWeek(
-        this DateTime date,
-        DayOfWeek dayOfWeek)
+    public static DateTime RoundForwardToDayOfWeek(
+            this DateTime date,
+            DayOfWeek dayOfWeek)
     {
         var value = date;
         while (value.DayOfWeek != dayOfWeek)
@@ -267,6 +289,58 @@ public static class DateTimeExtensions
 
         return value;
     }
+
+    public static DateTime RoundBackwardToDayOfWeek(
+        this DateTime date,
+        DayOfWeek dayOfWeek)
+    {
+        var value = date;
+        while (value.DayOfWeek != dayOfWeek)
+            value = value.AddDays(-1);
+
+        return value;
+    }
+
+    public static DateTime RoundToClosestDayOfWeek(
+        this DateTime date,
+        DayOfWeek dayOfWeek)
+    {
+        if (date.DayOfWeek == dayOfWeek)
+        {
+            return date;
+        }
+        else
+        {
+            // Move to halfway down the week.
+            var startDate = date.AddDays(-3);
+            for (int i = 0; i < 7; i++)
+            {
+                if (startDate.AddDays(i).DayOfWeek == dayOfWeek)
+                    return date;
+            }
+        }
+
+        return date;
+    }
+
+    public static string ToFileSystemSafeDateString(
+        this DateTime dateTime)
+    {
+        return dateTime.ToString("yyyy-MM-dd");
+    }
+
+    public static string ToFileSystemSafeDateTimeString(
+        this DateTime dateTime)
+    {
+        return dateTime.ToString("yyyy-MM-dd_HH-mm-ss");
+    }
+
+    public static string ToAbbrevString(
+        this DayOfWeek dayOfWeek)
+    {
+        return DateTime.Now.RoundForwardToDayOfWeek(dayOfWeek).ToString("ddd");
+    }
+
 
     public static string ToShortDateDayOfWeekString(
         this DateTime date)
