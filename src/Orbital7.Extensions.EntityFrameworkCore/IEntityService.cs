@@ -6,6 +6,8 @@ public interface IEntityService<TDbContext, TEntity>
 {
     TDbContext Context { get; }
 
+    DbSet<TEntity> EntitySet { get; }
+
     Task<TEntity> GetAsync(
         Guid id,
         bool untracked = true,

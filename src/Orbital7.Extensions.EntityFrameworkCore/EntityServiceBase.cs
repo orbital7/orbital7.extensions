@@ -9,7 +9,7 @@ public abstract class EntityServiceBase<TDbContext, TEntity> :
 {
     public TDbContext Context { get; private set; }
 
-    protected DbSet<TEntity> EntitySet { get; private set; }
+    public DbSet<TEntity> EntitySet { get; private set; }
 
     protected EntityServiceBase(
         TDbContext context)
