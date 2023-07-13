@@ -1,1 +1,0 @@
-..\nuget.exe pack ..\..\src\Orbital7.Extensions.AspNetMvc\Orbital7.Extensions.AspNetMvc.csproj -outputdirectory ..\packages -properties Configuration=Release
