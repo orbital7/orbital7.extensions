@@ -7,18 +7,17 @@ namespace System;
 public static class EnumExtensions
 {
     public static string ToDisplayString(
-        this Enum value, 
-        string nullValue = "")
+        this Enum value)
     {
         var attributes = value.GetAttributes<DisplayAttribute>();
         if (attributes != null && attributes.Any())
         {
-            return attributes.First().Name ?? nullValue;
+            return attributes.First().Name ?? value.ToString();
         }
         else
         {
-            return nullValue;
-        }
+            return value.ToString();
+        }  
     }
 
     public static TAttribute[] GetAttributes<TAttribute>(
