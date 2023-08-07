@@ -9,14 +9,14 @@ public abstract class EntityBase :
     [Key]
     public Guid Id { get; set; }
 
-    public DateTime CreatedDateUtc { get; set; }
+    public DateTime CreatedDateTimeUtc { get; set; }
 
-    public DateTime LastModifiedDateUtc { get; set; }
+    public DateTime LastModifiedDateTimeUtc { get; set; }
 
     protected EntityBase()
     {
         this.Id = SequentialGuidFactory.NewGuid();
-        this.CreatedDateUtc = DateTime.UtcNow;
-        this.LastModifiedDateUtc = this.CreatedDateUtc;
+        this.CreatedDateTimeUtc = DateTime.UtcNow;
+        this.LastModifiedDateTimeUtc = this.CreatedDateTimeUtc;
     }
 }

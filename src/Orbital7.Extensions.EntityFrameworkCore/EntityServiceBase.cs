@@ -62,7 +62,7 @@ public abstract class EntityServiceBase<TDbContext, TEntity> :
             entity.EnsureIsValid();
 
         this.Context.Entry(entity).State = EntityState.Modified;
-        entity.LastModifiedDateUtc = DateTime.UtcNow;
+        entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
         return entity;
     }
 
@@ -76,8 +76,8 @@ public abstract class EntityServiceBase<TDbContext, TEntity> :
 
         entry.Property(propertyExpression).IsModified = true;
 
-        entity.LastModifiedDateUtc = DateTime.UtcNow;
-        entry.Property(x => x.LastModifiedDateUtc).IsModified = true;
+        entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
+        entry.Property(x => x.LastModifiedDateTimeUtc).IsModified = true;
 
         return entity;
     }
@@ -93,8 +93,8 @@ public abstract class EntityServiceBase<TDbContext, TEntity> :
         foreach (var property in propertyNames)
             entry.Property(property).IsModified = true;
 
-        entity.LastModifiedDateUtc = DateTime.UtcNow;
-        entry.Property(x => x.LastModifiedDateUtc).IsModified = true;
+        entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
+        entry.Property(x => x.LastModifiedDateTimeUtc).IsModified = true;
 
         return entity;
     }
