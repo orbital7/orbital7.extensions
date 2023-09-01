@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.Graphic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.EntityFrameworkCore", "Orbital7.Extensions.EntityFrameworkCore\Orbital7.Extensions.EntityFrameworkCore.csproj", "{BAB4F10C-E653-478E-8D55-2911F4AC8279}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.AspNetCore.Identity", "Orbital7.Extensions.AspNetCore.Identity\Orbital7.Extensions.AspNetCore.Identity.csproj", "{9A216BF9-22D2-46A2-BD8D-188F437F9B14}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{BAB4F10C-E653-478E-8D55-2911F4AC8279}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAB4F10C-E653-478E-8D55-2911F4AC8279}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAB4F10C-E653-478E-8D55-2911F4AC8279}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A216BF9-22D2-46A2-BD8D-188F437F9B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A216BF9-22D2-46A2-BD8D-188F437F9B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A216BF9-22D2-46A2-BD8D-188F437F9B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A216BF9-22D2-46A2-BD8D-188F437F9B14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

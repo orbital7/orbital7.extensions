@@ -2,18 +2,38 @@
 
 public static class DictionaryExtensions
 {
-    public static Dictionary<T1, T2> FillWith<T1, T2>(this Dictionary<T1, T2> dictionary, T1 key, T2 value)
+    public static IDictionary<T1, T2> AddSingle<T1, T2>(
+        this IDictionary<T1, T2> dictionary, 
+        T1 key, 
+        T2 value)
     {
         dictionary.Add(key, value);
 
         return dictionary;
     }
 
-    public static Dictionary<T1, T2> FillWith<T1, T2>(this Dictionary<T1, T2> dictionary, List<SerializableTuple<T1, T2>> items)
+
+    public static IDictionary<T1, T2> AddRange<T1, T2>(
+        this IDictionary<T1, T2> dictionary,
+        IDictionary<T1, T2> dictionaryToAdd)
     {
-        foreach (var item in items)
-            dictionary.Add(item.Item1, item.Item2);
+        if (dictionaryToAdd != null && dictionaryToAdd.Any())
+        {
+            foreach (var item in dictionaryToAdd)
+            {
+                dictionary.Add(item.Key, item.Value);
+            }
+        }
 
         return dictionary;
+    }
+
+    public static IDictionary<T1, T2> ShallowClone<T1, T2>(
+        this IDictionary<T1, T2> dictionary)
+    {
+        var clonedDictionary = new Dictionary<T1, T2>();
+        clonedDictionary.AddRange(dictionary);
+
+        return clonedDictionary;
     }
 }
