@@ -1,30 +1,38 @@
-﻿namespace Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-public abstract class AutoClearingDbContextBase :
-    DbContext
+namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+public abstract class AtomicIdentityDbContextBase<TUser, TRole> :
+    IdentityDbContext<TUser, TRole, Guid>
+    where TUser : IdentityUser<Guid>
+    where TRole : IdentityRole<Guid>
 {
     public bool ClearChangeTrackerOnSave { get; set; } = true;
 
-    protected AutoClearingDbContextBase()
+    public virtual bool IsReadOnly => false;
+
+    protected AtomicIdentityDbContextBase()
     {
 
     }
 
-    protected AutoClearingDbContextBase(
-        DbContextOptions options)
-        : base(options)
+    protected AtomicIdentityDbContextBase(
+        DbContextOptions options) : 
+        base(options)
     {
 
     }
 
     public override int SaveChanges()
     {
+        ValidateSave();
         return HandlePostSave(base.SaveChanges());
     }
 
     public override int SaveChanges(
         bool acceptAllChangesOnSuccess)
     {
+        ValidateSave();
         return HandlePostSave(base.SaveChanges(acceptAllChangesOnSuccess));
     }
 
@@ -32,6 +40,7 @@ public abstract class AutoClearingDbContextBase :
         bool acceptAllChangesOnSuccess,
         CancellationToken cancellationToken = default)
     {
+        ValidateSave();
         return HandlePostSave(await base.SaveChangesAsync(
             acceptAllChangesOnSuccess,
             cancellationToken));
@@ -40,6 +49,7 @@ public abstract class AutoClearingDbContextBase :
     public override async Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
+        ValidateSave();
         return HandlePostSave(
             await base.SaveChangesAsync(cancellationToken));
     }
@@ -67,5 +77,13 @@ public abstract class AutoClearingDbContextBase :
         }
 
         return result;
+    }
+
+    private void ValidateSave()
+    {
+        if (this.IsReadOnly)
+        {
+            throw new Exception("Saving is not permitted on a read-only context");
+        }
     }
 }

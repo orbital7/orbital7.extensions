@@ -1,8 +1,12 @@
-﻿
+﻿using MassTransit;
 using System.ComponentModel.DataAnnotations;
 
 namespace System;
 
+// NOTE: This uses NewId to create sequential GUIDs; relevant links:
+// * https://masstransit.io/documentation/patterns/newid#newid
+// * https://github.com/phatboyg/NewId
+// * https://andrewlock.net/generating-sortable-guids-using-newid/
 public abstract class EntityBase :
     IEntity
 {
@@ -15,7 +19,7 @@ public abstract class EntityBase :
 
     protected EntityBase()
     {
-        this.Id = SequentialGuidFactory.NewGuid();
+        this.Id = NewId.NextSequentialGuid();
         this.CreatedDateTimeUtc = DateTime.UtcNow;
         this.LastModifiedDateTimeUtc = this.CreatedDateTimeUtc;
     }

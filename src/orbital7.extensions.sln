@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.Graphic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.EntityFrameworkCore", "Orbital7.Extensions.EntityFrameworkCore\Orbital7.Extensions.EntityFrameworkCore.csproj", "{BAB4F10C-E653-478E-8D55-2911F4AC8279}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9D8C0BDF-280D-41AC-9D6B-A30F59C2385D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Tests", "Tests\Orbital7.Extensions.Tests\Orbital7.Extensions.Tests.csproj", "{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{BAB4F10C-E653-478E-8D55-2911F4AC8279}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAB4F10C-E653-478E-8D55-2911F4AC8279}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAB4F10C-E653-478E-8D55-2911F4AC8279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{030AC8DD-DC25-4C1D-8241-ACC5452E02CD} = {9D8C0BDF-280D-41AC-9D6B-A30F59C2385D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2F3BC16-6417-4A69-9E02-8BEE7BD783F2}

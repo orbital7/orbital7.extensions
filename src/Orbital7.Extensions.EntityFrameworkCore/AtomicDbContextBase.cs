@@ -1,34 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Microsoft.EntityFrameworkCore;
 
-namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
-public abstract class AutoClearingIdentityDbContextBase<TUser, TRole> :
-    IdentityDbContext<TUser, TRole, Guid>
-    where TUser : IdentityUser<Guid>
-    where TRole : IdentityRole<Guid>
+public abstract class AtomicDbContextBase :
+    DbContext
 {
     public bool ClearChangeTrackerOnSave { get; set; } = true;
 
-    protected AutoClearingIdentityDbContextBase()
+    public virtual bool IsReadOnly => false;
+
+    protected AtomicDbContextBase()
     {
 
     }
 
-    protected AutoClearingIdentityDbContextBase(
-        DbContextOptions options) : 
-        base(options)
+    protected AtomicDbContextBase(
+        DbContextOptions options)
+        : base(options)
     {
 
     }
 
     public override int SaveChanges()
     {
+        ValidateSave();
         return HandlePostSave(base.SaveChanges());
     }
 
     public override int SaveChanges(
         bool acceptAllChangesOnSuccess)
     {
+        ValidateSave();
         return HandlePostSave(base.SaveChanges(acceptAllChangesOnSuccess));
     }
 
@@ -36,6 +36,7 @@ public abstract class AutoClearingIdentityDbContextBase<TUser, TRole> :
         bool acceptAllChangesOnSuccess,
         CancellationToken cancellationToken = default)
     {
+        ValidateSave();
         return HandlePostSave(await base.SaveChangesAsync(
             acceptAllChangesOnSuccess,
             cancellationToken));
@@ -44,6 +45,7 @@ public abstract class AutoClearingIdentityDbContextBase<TUser, TRole> :
     public override async Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
+        ValidateSave();
         return HandlePostSave(
             await base.SaveChangesAsync(cancellationToken));
     }
@@ -71,5 +73,13 @@ public abstract class AutoClearingIdentityDbContextBase<TUser, TRole> :
         }
 
         return result;
+    }
+
+    private void ValidateSave()
+    {
+        if (this.IsReadOnly)
+        {
+            throw new Exception("Saving is not permitted on a read-only context");
+        }
     }
 }

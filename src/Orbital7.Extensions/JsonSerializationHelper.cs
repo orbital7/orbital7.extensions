@@ -154,13 +154,16 @@ public static class JsonSerializationHelper
         bool ignoreNullValues,
         bool indentFormatting)
     {
-        await JsonSerializer.SerializeAsync(
-            stream, 
-            objectToSerialize, 
-            objectToSerialize.GetType(),
-            CreateOptions(
-                ignoreNullValues,
-                indentFormatting));
+        if (objectToSerialize != null)
+        {
+            await JsonSerializer.SerializeAsync(
+                stream,
+                objectToSerialize,
+                objectToSerialize.GetType(),
+                CreateOptions(
+                    ignoreNullValues,
+                    indentFormatting));
+        }
     }
 
     private static void Serialize(
@@ -169,13 +172,16 @@ public static class JsonSerializationHelper
         bool ignoreNullValues,
         bool indentFormatting)
     {
-        JsonSerializer.Serialize(
-            stream,
-            objectToSerialize,
-            objectToSerialize.GetType(),
-            CreateOptions(
-                ignoreNullValues,
-                indentFormatting));
+        if (objectToSerialize != null)
+        {
+            JsonSerializer.Serialize(
+                stream,
+                objectToSerialize,
+                objectToSerialize.GetType(),
+                CreateOptions(
+                    ignoreNullValues,
+                    indentFormatting));
+        }
     }
 
     private static async Task<T> DeserializeAsync<T>(

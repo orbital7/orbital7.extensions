@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.EntityFrameworkCore;
 
-public interface IEntityService<TDbContext, TEntity>
+public interface IEntityRepository<TDbContext, TEntity>
     where TDbContext : DbContext
     where TEntity : class, IEntity
 {

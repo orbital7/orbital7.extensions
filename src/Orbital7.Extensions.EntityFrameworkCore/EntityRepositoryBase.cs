@@ -1,9 +1,7 @@
-﻿using System.Security.Principal;
+﻿namespace Microsoft.EntityFrameworkCore;
 
-namespace Microsoft.EntityFrameworkCore;
-
-public abstract class EntityServiceBase<TDbContext, TEntity> :
-    IEntityService<TDbContext, TEntity>
+public abstract class EntityRepositoryBase<TDbContext, TEntity> :
+    IEntityRepository<TDbContext, TEntity>
     where TDbContext : DbContext
     where TEntity : class, IEntity
 {
@@ -11,7 +9,7 @@ public abstract class EntityServiceBase<TDbContext, TEntity> :
 
     public DbSet<TEntity> EntitySet { get; private set; }
 
-    protected EntityServiceBase(
+    protected EntityRepositoryBase(
         TDbContext context)
     {
         this.Context = context;
