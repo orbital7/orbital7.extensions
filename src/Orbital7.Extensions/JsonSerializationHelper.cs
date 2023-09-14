@@ -102,10 +102,7 @@ public static class JsonSerializationHelper
         using (var ms = new MemoryStream())
         {
             await SerializeAsync(objectToSerialize, ms, ignoreNullValues, indentFormatting);
-            using (var reader = new StreamReader(ms))
-            {
-                return await reader.ReadToEndAsync();
-            }
+            return ms.ToArray().ToTextString();
         }
     }
 
@@ -117,10 +114,7 @@ public static class JsonSerializationHelper
         using (var ms = new MemoryStream())
         {
             Serialize(objectToSerialize, ms, ignoreNullValues, indentFormatting);
-            using (var reader = new StreamReader(ms))
-            {
-                return reader.ReadToEnd();
-            }
+            return ms.ToArray().ToTextString();
         }
     }
 
