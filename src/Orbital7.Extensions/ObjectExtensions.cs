@@ -29,18 +29,45 @@ public static class ObjectExtensions
     }
 
     public static List<SerializableTuple<string, object>> GetPropertyValues(
-        this object objectInstance)
+        this object model)
     {
-        var type = objectInstance.GetType();
+        var type = model.GetType();
         PropertyInfo[] properties = type.GetProperties();
 
         return properties
             .Select(x => new SerializableTuple<string, object>()
             {
                 Item1 = x.Name,
-                Item2 = x.GetValue(objectInstance)
+                Item2 = x.GetValue(model)
             })
             .OrderBy(x => x.Item1)
             .ToList();
+    }
+
+    public static T CloneIgnoringReferenceProperties<T>(
+        this T model)
+        where T : class, new()
+    {
+        var clone = new T();
+
+        var stringPropertyType = typeof(string);
+        var properties = typeof(T).GetProperties();
+        foreach (var property in properties)
+        {
+            // If the property is both readable and writable and
+            // the property is either not a class property or a string,
+            // set it.
+            if (property.CanRead &&
+                property.CanWrite &&
+                (!property.PropertyType.IsClass ||
+                 property.PropertyType == stringPropertyType))
+            {
+                property.SetValue(
+                    clone,
+                    property.GetValue(model));
+            }
+        }
+
+        return clone;
     }
 }

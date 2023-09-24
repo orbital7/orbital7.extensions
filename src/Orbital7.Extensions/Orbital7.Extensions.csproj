@@ -5,9 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-	<Version>7.0.11</Version>
-    <AssemblyVersion>7.0.11.0</AssemblyVersion>
-    <FileVersion>7.0.11.0</FileVersion>
+	<Version>7.0.12</Version>
+    <AssemblyVersion>7.0.12.0</AssemblyVersion>
+    <FileVersion>7.0.12.0</FileVersion>
     <Company>Orbital7</Company>
     <Copyright>Copyright © 2012-2023 Orbital7</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

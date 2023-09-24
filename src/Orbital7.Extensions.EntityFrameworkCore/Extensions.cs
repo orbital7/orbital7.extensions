@@ -1,62 +1,244 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Linq.Expressions;
 
-namespace Microsoft.EntityFrameworkCore
+namespace Microsoft.EntityFrameworkCore;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static ModelConfigurationBuilder SetDefaults(
+        this ModelConfigurationBuilder builder)
     {
-        public static ModelConfigurationBuilder SetDefaults(
-            this ModelConfigurationBuilder builder)
+        builder.Properties<DateOnly>()
+            .HaveConversion<DateOnlyConverter>()
+            .HaveColumnType("date");
+
+        builder.Properties<TimeOnly>()
+            .HaveConversion<TimeOnlyConverter>()
+            .HaveColumnType("time");
+
+        return builder;
+    }
+
+    public static ModelBuilder SetDefaults(
+        this ModelBuilder modelBuilder)
+    {
+        // Set default decimal precision.
+        var decimalProperties = modelBuilder.GetPropertiesForType(typeof(decimal), typeof(decimal?));
+        foreach (var property in decimalProperties)
         {
-            builder.Properties<DateOnly>()
-                .HaveConversion<DateOnlyConverter>()
-                .HaveColumnType("date");
-
-            builder.Properties<TimeOnly>()
-                .HaveConversion<TimeOnlyConverter>()
-                .HaveColumnType("time");
-
-            return builder;
+            property.SetPrecision(18);
+            property.SetScale(2);
         }
 
-        public static ModelBuilder SetDefaults(
-            this ModelBuilder modelBuilder)
+        // Set property comparer for DateOnly.
+        var dateOnlyProperties = modelBuilder.GetPropertiesForType(typeof(DateOnly), typeof(DateOnly?));
+        foreach (var property in dateOnlyProperties)
         {
-            // Set default decimal precision.
-            var decimalProperties = modelBuilder.GetPropertiesForType(typeof(decimal), typeof(decimal?));
-            foreach (var property in decimalProperties)
-            {
-                property.SetPrecision(18);
-                property.SetScale(2);
-            }
-
-            // Set property comparer for DateOnly.
-            var dateOnlyProperties = modelBuilder.GetPropertiesForType(typeof(DateOnly), typeof(DateOnly?));
-            foreach (var property in dateOnlyProperties)
-            {
-                property.SetValueComparer(new DateOnlyComparer());
-            }
-
-            // Set property comparer for TimeOnly.
-            var timeOnlyProperties = modelBuilder.GetPropertiesForType(typeof(TimeOnly), typeof(TimeOnly?));
-            foreach (var property in timeOnlyProperties)
-            {
-                property.SetValueComparer(new TimeOnlyComparer());
-            }
-
-            return modelBuilder;
+            property.SetValueComparer(new DateOnlyComparer());
         }
 
-        public static IEnumerable<IMutableProperty> GetPropertiesForType(
-            this ModelBuilder modelBuilder,
-            Type type,
-            Type nullableType)
+        // Set property comparer for TimeOnly.
+        var timeOnlyProperties = modelBuilder.GetPropertiesForType(typeof(TimeOnly), typeof(TimeOnly?));
+        foreach (var property in timeOnlyProperties)
         {
-            var properties = modelBuilder.Model.GetEntityTypes()
-                .SelectMany(t => t.GetProperties())
-                .Where(p => p.ClrType == type || p.ClrType == nullableType);
-
-            return properties;
+            property.SetValueComparer(new TimeOnlyComparer());
         }
+
+        return modelBuilder;
+    }
+
+    public static IEnumerable<IMutableProperty> GetPropertiesForType(
+        this ModelBuilder modelBuilder,
+        Type type,
+        Type nullableType)
+    {
+        var properties = modelBuilder.Model.GetEntityTypes()
+            .SelectMany(t => t.GetProperties())
+            .Where(p => p.ClrType == type || p.ClrType == nullableType);
+
+        return properties;
+    }
+
+    public static TEntity UpdateEntity<TEntity>(
+        this DbContext context,
+        TEntity entity,
+        bool ensureIsValid = true)
+        where TEntity : class, IEntity
+    {
+        if (ensureIsValid)
+            entity.EnsureIsValid();
+
+        context.Entry(entity).State = EntityState.Modified;
+        entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
+        return entity;
+    }
+
+    public static TEntity UpdateEntityProperty<TEntity, TProperty>(
+        this DbContext context,
+        TEntity entity,
+        Expression<Func<TEntity, TProperty>> propertyExpression)
+        where TEntity : class, IEntity
+    {
+        var entry = context.Entry(entity);
+        entry.State = EntityState.Unchanged;
+
+        entry.Property(propertyExpression).IsModified = true;
+
+        entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
+        entry.Property(x => x.LastModifiedDateTimeUtc).IsModified = true;
+
+        return entity;
+    }
+
+    public static TEntity UpdateEntityProperties<TEntity>(
+        this DbContext context,
+        TEntity entity,
+        params string[] propertyNames)
+        where TEntity : class, IEntity
+    {
+        var entry = context.Entry(entity);
+        entry.State = EntityState.Unchanged;
+
+        foreach (var property in propertyNames)
+            entry.Property(property).IsModified = true;
+
+        entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
+        entry.Property(x => x.LastModifiedDateTimeUtc).IsModified = true;
+
+        return entity;
+    }
+
+    public static TEntity DeleteEntity<TEntity>(
+        this DbContext context,
+        TEntity entity)
+        where TEntity : class, IEntity
+    {
+        var entry = context.Entry(entity);
+        entry.State = EntityState.Deleted;
+        return entry.Entity;
+    }
+
+    public static TEntity AddEntity<TEntity>(
+        this DbSet<TEntity> entitySet,
+        TEntity entity)
+        where TEntity : class, IEntity
+    {
+        entitySet.Add(entity);
+        return entity;
+    }
+
+    public static async Task<TEntity> GetEntityAsync<TEntity>(
+        this DbSet<TEntity> entitySet,
+        Guid id,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        return await ExecuteGetEntityAsync(entitySet, id, true, includePaths);
+    }
+
+    public static async Task<TEntity> GetEntityWithTrackingAsync<TEntity>(
+        this DbSet<TEntity> entitySet,
+        Guid id,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        return await ExecuteGetEntityAsync(entitySet, id, false, includePaths);
+    }
+
+    public static async Task<TEntity> GetEntityAsync<TEntity>(
+        this DbSet<TEntity> entitySet,
+        Expression<Func<TEntity, bool>> selectQuery,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        return await ExecuteGetEntityAsync(entitySet, selectQuery, true, includePaths);
+    }
+
+    public static async Task<TEntity> GetEntityWithTrackingAsync<TEntity>(
+        this DbSet<TEntity> entitySet,
+        Expression<Func<TEntity, bool>> selectQuery,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        return await ExecuteGetEntityAsync(entitySet, selectQuery, false, includePaths);
+    }
+
+    public static async Task<List<TEntity>> GatherEntitiesAsync<TEntity>(
+        this DbSet<TEntity> entitySet,
+        Expression<Func<TEntity, bool>> selectQuery,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        return await ExecuteGatherEntitiesAsync(entitySet, selectQuery, true, includePaths);
+    }
+
+    public static async Task<List<TEntity>> GatherEntitiesWithTrackingAsync<TEntity>(
+        this DbSet<TEntity> entitySet,
+        Expression<Func<TEntity, bool>> selectQuery,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        return await ExecuteGatherEntitiesAsync(entitySet, selectQuery, false, includePaths);
+    }
+
+    private static async Task<TEntity> ExecuteGetEntityAsync<TEntity>(
+        DbSet<TEntity> entitySet,
+        Guid id,
+        bool untracked,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        var query = entitySet
+            .Where(x => x.Id == id);
+
+        query = CompleteEntityQuery(query, untracked, includePaths);
+
+        return await query.SingleOrDefaultAsync();
+    }
+
+    private static async Task<TEntity> ExecuteGetEntityAsync<TEntity>(
+        DbSet<TEntity> entitySet,
+        Expression<Func<TEntity, bool>> selectQuery,
+        bool untracked,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        var query = entitySet
+            .Where(selectQuery);
+
+        query = CompleteEntityQuery(query, untracked, includePaths);
+
+        return await query.FirstOrDefaultAsync();
+    }
+
+    private static async Task<List<TEntity>> ExecuteGatherEntitiesAsync<TEntity>(
+        DbSet<TEntity> entitySet,
+        Expression<Func<TEntity, bool>> selectQuery,
+        bool untracked,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        var query = entitySet
+            .Where(selectQuery);
+
+        query = CompleteEntityQuery(query, untracked, includePaths);
+
+        return await query.ToListAsync();
+    }
+
+    private static IQueryable<TEntity> CompleteEntityQuery<TEntity>(
+        IQueryable<TEntity> query,
+        bool untracked = true,
+        params string[] includePaths)
+        where TEntity : class, IEntity
+    {
+        foreach (var includePath in includePaths)
+            query = query.Include(includePath);
+
+        if (untracked)
+            query = query.AsNoTracking();
+
+        return query;
     }
 }
