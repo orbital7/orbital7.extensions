@@ -5,4 +5,6 @@ global using System.Linq;
 global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
+global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata;
+global using Microsoft.Extensions.DependencyInjection;

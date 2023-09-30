@@ -162,6 +162,19 @@ public static class DateTimeExtensions
         return string.Format("{0:yyyy-MM-dd}", dateTimeUtc);
     }
 
+    public static DateTime EnsureNotFutureDateTimeUtc(
+        this DateTime dateTimeUtc,
+        DateTime? nowUtc = null)
+    {
+        var myNowUtc = nowUtc ?? DateTime.UtcNow;
+        if (dateTimeUtc > myNowUtc)
+        {
+            dateTimeUtc = myNowUtc;
+        }
+
+        return dateTimeUtc;
+    }
+
     public static DateTime RoundToStartOfBusinessDay(
         this DateTime dateTime)
     {
@@ -177,6 +190,18 @@ public static class DateTimeExtensions
         this DateTime dateTime)
     {
         return dateTime.AddDays(1).RoundToStartOfBusinessDay();
+    }
+
+    public static DateTime RoundToStartOfMinute(
+        this DateTime dateTime)
+    {
+        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
+    }
+
+    public static DateTime RoundToEndOfMinute(
+        this DateTime dateTime)
+    {
+        return dateTime.RoundToStartOfMinute().AddMinutes(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
     }
 
     public static DateTime RoundToStartOfHour(
@@ -227,6 +252,15 @@ public static class DateTimeExtensions
         return new DateTime(dateTime.Year, dateTime.Month, 1).RoundToStartOfDay();
     }
 
+    public static DateTime RoundToEndOfMonth(
+        this DateTime dateTime)
+    {
+        if (dateTime.Month == 12)
+            return dateTime.RoundToEndOfYear();
+        else
+            return new DateTime(dateTime.Year, dateTime.Month + 1, 1).AddDays(-1).RoundToEndOfDay();
+    }
+
     public static int ToQuarter(
         this DateTime dateTime)
     {
@@ -261,15 +295,6 @@ public static class DateTimeExtensions
         if (dateTime.Month <= 9)
             return new DateTime(dateTime.Year, 10, 1).AddDays(-1);
         return new DateTime(dateTime.Year + 1, 1, 1).AddDays(-1);
-    }
-
-    public static DateTime RoundToEndOfMonth(
-        this DateTime dateTime)
-    {
-        if (dateTime.Month == 12)
-            return dateTime.RoundToEndOfYear();
-        else
-            return new DateTime(dateTime.Year, dateTime.Month + 1, 1).AddDays(-1).RoundToEndOfDay();
     }
 
     public static DateTime RoundToStartOfYear(
