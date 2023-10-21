@@ -55,4 +55,10 @@ public class UptimeHeartbeatsService :
         await this.Client.SendDeleteRequestAsync<string>(
             BuildRequestUrl($"{BASE_ROUTE}/{id}"));
     }
+
+    public async Task SendAsync(
+        string url)
+    {
+        await this.Client.SendPostRequestAsync<string>(url);
+    }
 }

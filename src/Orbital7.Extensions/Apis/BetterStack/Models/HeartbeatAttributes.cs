@@ -50,4 +50,9 @@ public class HeartbeatAttributes
     [JsonPropertyName("status")]
     [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public HeartbeatStatus? Status { get; set; }
+
+    public override string ToString()
+    {
+        return $"{this.Name}: {this.Status}";
+    }
 }

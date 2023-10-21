@@ -29,55 +29,61 @@ public class BetterStackApiTests
 
         // Create the client and service.
         var client = new BetterStackClient(this.BetterStackUptimeApiToken);
-        var heartbeatsService = new UptimeHeartbeatsService(client);
+        var service = new UptimeHeartbeatsService(client);
 
         // Create a heartbeat.
         const string CREATE_HEARTBEAT_NAME = "Test Heartbeat";
-        var createHeartbeatResponse = await heartbeatsService.CreateAsync(
+        var createHeartbeatResponse = await service.CreateAsync(
             new HeartbeatRequest()
             {
                 Name = CREATE_HEARTBEAT_NAME,
                 Period = 180,
                 Grace = 36,
                 Email = true,
-                Paused = true,
+                Paused = false,
             });
         Assert.True(createHeartbeatResponse != null);
 
         // Validate the heartbeat creation.
         var heartbeat = createHeartbeatResponse.Data;
-        Assert.True(heartbeat != null);
-        Assert.True(heartbeat.Attributes != null);
         Assert.True(heartbeat.Id.HasText());
         Assert.Equal(CREATE_HEARTBEAT_NAME, heartbeat.Attributes.Name);
-        Assert.True(heartbeat.Attributes.Paused);
+        Assert.Equal(HeartbeatStatus.Pending, heartbeat.Attributes.Status);
+        Assert.False(heartbeat.Attributes.Paused);
 
         // Test listing heartbeats.
-        var heartbeatsResponse = await heartbeatsService.ListAllExistingAsync();
+        var heartbeatsResponse = await service.ListAllExistingAsync();
         Assert.NotNull(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
+
+        // Send the heartbeat.
+        await service.SendAsync(heartbeat.Attributes.Url);
+
+        // Get the heartbeat.
+        var getHeartbeatResponse = await service.GetAsync(heartbeat.Id);
+        heartbeat = getHeartbeatResponse.Data;
+        Assert.Equal(HeartbeatStatus.Up, heartbeat.Attributes.Status);
+        Assert.False(heartbeat.Attributes.Paused);
 
         // Update the heartbeat.
         const string UPDATE_HEARTBEAT_NAME = "Test Heartbeat (updated)";
-        var updateHeartbeatResponse = await heartbeatsService.UpdateAsync(
+        var updateHeartbeatResponse = await service.UpdateAsync(
             heartbeat.Id,
             new HeartbeatRequest()
             {
                 Name = UPDATE_HEARTBEAT_NAME,
-                Paused = false,
+                Paused = true,
             });
         Assert.True(updateHeartbeatResponse != null);
 
         // Validate the heartbeat update.
         heartbeat = updateHeartbeatResponse.Data;
-        Assert.True(heartbeat != null);
-        Assert.True(heartbeat.Attributes != null);
-        Assert.True(heartbeat.Id.HasText());
         Assert.Equal(UPDATE_HEARTBEAT_NAME, heartbeat.Attributes.Name);
-        Assert.False(heartbeat.Attributes.Paused);
+        Assert.Equal(HeartbeatStatus.Paused, heartbeat.Attributes.Status);
+        Assert.True(heartbeat.Attributes.Paused);
 
         // Delete the heartbeat.
-        await heartbeatsService.DeleteAsync(heartbeat.Id);
-        heartbeatsResponse = await heartbeatsService.ListAllExistingAsync();
+        await service.DeleteAsync(heartbeat.Id);
+        heartbeatsResponse = await service.ListAllExistingAsync();
         Assert.Null(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
 
         // Test parsing page index.
@@ -93,7 +99,7 @@ public class BetterStackApiTests
 
         // Create the client and service.
         var client = new BetterStackClient(this.BetterStackLogsSourceToken);
-        var logsUploadService = new LogsUploadService(client);
+        var service = new LogsUploadService(client);
 
         // Create an event.
         var logEvent = new LogEvent()
@@ -118,7 +124,7 @@ public class BetterStackApiTests
         };
 
         // Upload single log event.
-        await logsUploadService.LogEventAsync(logEvent);
+        await service.LogEventAsync(logEvent);
 
         // Create multiple events.
         var logEvents = new LogEvent[]
@@ -150,7 +156,7 @@ public class BetterStackApiTests
         };
 
         // Upload multiple log events.
-        await logsUploadService.LogEventsAsync(logEvents);
+        await service.LogEventsAsync(logEvents);
     }
 
     private TestEntity1 CreateTestEntity1()

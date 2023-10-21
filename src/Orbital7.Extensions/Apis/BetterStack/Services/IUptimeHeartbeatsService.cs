@@ -17,4 +17,7 @@ public interface IUptimeHeartbeatsService
 
     Task DeleteAsync(
         string id);
+
+    Task SendAsync(
+        string url);
 }

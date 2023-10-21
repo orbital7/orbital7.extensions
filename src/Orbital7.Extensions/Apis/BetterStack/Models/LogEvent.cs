@@ -18,4 +18,9 @@ public class LogEvent
     {
         this.Timestamp = DateTime.UtcNow;
     }
+
+    public override string ToString()
+    {
+        return $"{this.Level}: {this.Message}";
+    }
 }

@@ -10,4 +10,11 @@ public class Heartbeat
 
     [JsonPropertyName("attributes")]
     public HeartbeatAttributes Attributes { get; set; }
+
+    public override string ToString()
+    {
+        return this.Attributes != null ?
+            this.Attributes.ToString() : 
+            this.Id;
+    }
 }
