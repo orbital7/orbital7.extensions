@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection;
+﻿using MassTransit;
+using System.ComponentModel.DataAnnotations;
 
 namespace System;
 
@@ -69,5 +69,17 @@ public static class ObjectExtensions
         }
 
         return clone;
+    }
+
+    public static T CloneAsNewEntityIgnoringReferenceProperties<T>(
+        this T model)
+        where T : class, IEntity, new()
+    {
+        var entity = model.CloneIgnoringReferenceProperties();
+        entity.Id = NewId.NextSequentialGuid();
+        entity.CreatedDateTimeUtc = DateTime.UtcNow;
+        entity.LastModifiedDateTimeUtc = model.CreatedDateTimeUtc;
+
+        return entity;
     }
 }

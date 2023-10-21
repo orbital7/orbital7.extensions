@@ -8,10 +8,13 @@ public static class DbContextMigrationHelper<TDbContext>
     {
         using (var scope = serviceProvider.CreateScope())
         {
-            Console.Write("Migrating database...");
             var context = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            await context.Database.MigrateAsync();
-            Console.WriteLine("Success");
+            if (context.Database.IsRelational())
+            {
+                Console.Write("Migrating database...");
+                await context.Database.MigrateAsync();
+                Console.WriteLine("Success");
+            }
         }
     }
 

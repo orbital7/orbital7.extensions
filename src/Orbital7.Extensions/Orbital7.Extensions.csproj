@@ -5,9 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-	<Version>7.0.14</Version>
-    <AssemblyVersion>7.0.14.0</AssemblyVersion>
-    <FileVersion>7.0.14.0</FileVersion>
+	<Version>7.0.16</Version>
+    <AssemblyVersion>7.0.16.0</AssemblyVersion>
+    <FileVersion>7.0.16.0</FileVersion>
     <Company>Orbital7</Company>
     <Copyright>Copyright © 2012-2023 Orbital7</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -31,6 +31,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="7.0.0" />
@@ -39,6 +40,7 @@
 	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
 	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 	<PackageReference Include="NewId" Version="4.0.1" />
+	<PackageReference Include="Polly" Version="8.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 	
