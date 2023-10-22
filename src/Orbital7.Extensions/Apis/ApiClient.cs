@@ -5,6 +5,10 @@ namespace Orbital7.Extensions.Apis;
 public class ApiClient :
     IApiClient
 {
+    protected virtual bool SerializeEnumsToStrings => true;
+
+    protected virtual bool DeserializeEnumsFromStrings => true;
+
     public async Task<TResponse> SendGetRequestAsync<TResponse>(
         string url)
     {
@@ -93,7 +97,7 @@ public class ApiClient :
 
         // Serialize the request body.
         var requestBody = request != null ?
-            JsonSerializationHelper.SerializeToJson(request) :
+            SerializeRequestBody(request) :
             null;
 
         // Create the request.
@@ -102,7 +106,7 @@ public class ApiClient :
         {
             Method = method,
             RequestUri = uri,
-            Content = request != null ?
+            Content = requestBody.HasText() ?
                 new StringContent(requestBody)
                 {
                     Headers =
@@ -152,6 +156,25 @@ public class ApiClient :
         return new Exception(responseBody);
     }
 
+    protected virtual string SerializeRequestBody<TRequest>(
+        TRequest request)
+    {
+        var requestType = typeof(TRequest);
+
+        // If we're serializing a string request, just return the request body.
+        if (requestType == typeof(string))
+        {
+            return request.ToString();
+        }
+        // Else serialize to json.
+        else
+        {
+            return JsonSerializationHelper.SerializeToJson(
+                request,
+                convertEnumsToStrings: this.SerializeEnumsToStrings);
+        }
+    }
+
     protected virtual TResponse DeserializeResponseBody<TResponse>(
         string responseBody)
     {
@@ -166,7 +189,8 @@ public class ApiClient :
         else
         {
             return JsonSerializationHelper.DeserializeFromJson<TResponse>(
-                responseBody);
+                responseBody,
+                convertEnumsToStrings: this.DeserializeEnumsFromStrings);
         }
     }
 }

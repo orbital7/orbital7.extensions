@@ -1,6 +1,4 @@
-﻿using System.IO.Pipes;
-
-namespace System.Text.Json.Serialization;
+﻿namespace System.Text.Json.Serialization;
 
 public static class JsonSerializationHelper
 {
@@ -21,7 +19,7 @@ public static class JsonSerializationHelper
     public static async Task<T> DeserializeFromJsonAsync<T>(
         string json,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
         {
@@ -32,7 +30,7 @@ public static class JsonSerializationHelper
     public static T DeserializeFromJson<T>(
         string json,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
         {
@@ -44,7 +42,7 @@ public static class JsonSerializationHelper
         Type type,
         string json,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
         {
@@ -56,7 +54,7 @@ public static class JsonSerializationHelper
         Type type,
         string json,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
         {
@@ -67,7 +65,7 @@ public static class JsonSerializationHelper
     public static async Task<T> DeserializeFromJsonFileAsync<T>(
         string filePath,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var openStream = File.OpenRead(filePath))
         {
@@ -78,7 +76,7 @@ public static class JsonSerializationHelper
     public static T DeserializeFromJsonFile<T>(
         string filePath,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var openStream = File.OpenRead(filePath))
         {
@@ -90,7 +88,7 @@ public static class JsonSerializationHelper
         Type type,
         string filePath,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var openStream = File.OpenRead(filePath))
         {
@@ -102,7 +100,7 @@ public static class JsonSerializationHelper
         Type type,
         string filePath,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var openStream = File.OpenRead(filePath))
         {
@@ -114,7 +112,7 @@ public static class JsonSerializationHelper
         object objectToSerialize,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var ms = new MemoryStream())
         {
@@ -127,7 +125,7 @@ public static class JsonSerializationHelper
         object objectToSerialize,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var ms = new MemoryStream())
         {
@@ -141,7 +139,7 @@ public static class JsonSerializationHelper
         string filePath,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var fileStream = File.Create(filePath))
         {
@@ -154,7 +152,7 @@ public static class JsonSerializationHelper
         string filePath,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
-        bool convertEnumsToStrings = false)
+        bool convertEnumsToStrings = true)
     {
         using (var fileStream = File.Create(filePath))
         {
@@ -271,7 +269,7 @@ public static class JsonSerializationHelper
         if (convertEnumsToStrings)
         {
             options.Converters.Add(
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                new JsonStringEnumMemberConverter());
         }
 
         return options;
@@ -289,7 +287,7 @@ public static class JsonSerializationHelper
         if (convertEnumsToStrings)
         {
             options.Converters.Add(
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                new JsonStringEnumMemberConverter());
         }
 
         return options;

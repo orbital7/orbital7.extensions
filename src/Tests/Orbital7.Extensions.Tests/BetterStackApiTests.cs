@@ -37,8 +37,8 @@ public class BetterStackApiTests
             new HeartbeatRequest()
             {
                 Name = CREATE_HEARTBEAT_NAME,
-                Period = 180,
-                Grace = 36,
+                Period = 60,
+                Grace = 12,
                 Email = true,
                 Paused = false,
             });
@@ -164,9 +164,11 @@ public class BetterStackApiTests
         return new TestEntity1()
         {
             Name = Guid.NewGuid().ToString(),
+            TestEnum = TestEnumType.EnumValue2,
             ChildEntity = new TestEntity2()
             {
                 Id = Guid.NewGuid(),
+                TestEnum = TestEnumType.EnumValue3,
                 ChildEntities = new List<TestEntity3>()
                 {
                     new TestEntity3()
@@ -175,6 +177,7 @@ public class BetterStackApiTests
                         TestValue2 = Guid.NewGuid().ToString(),
                         TestValue3 = true,
                         TestValue4 = DateTime.Now,
+                        TestValue5 = TestEnumType.EnumValue2
                     },
                     new TestEntity3()
                     {
@@ -182,6 +185,7 @@ public class BetterStackApiTests
                         TestValue2 = null,
                         TestValue3 = null,
                         TestValue4 = DateTime.Now,
+                        TestValue5 = null,
                     },
                     new TestEntity3()
                     {
@@ -189,6 +193,7 @@ public class BetterStackApiTests
                         TestValue2 = Guid.NewGuid().ToString(),
                         TestValue3 = false,
                         TestValue4 = DateTime.UtcNow,
+                        TestValue5 = TestEnumType.EnumValue1,
                     },
                             }
             }
@@ -200,11 +205,15 @@ public class BetterStackApiTests
         public string Name { get; set; }
 
         public TestEntity2 ChildEntity { get; set; }
+
+        public TestEnumType TestEnum { get; set; }
     }
 
     private class TestEntity2
     {
         public Guid Id { get; set; }
+
+        public TestEnumType TestEnum { get; set; }
 
         public List<TestEntity3> ChildEntities { get; set; }
     }
@@ -218,5 +227,16 @@ public class BetterStackApiTests
         public bool? TestValue3 { get; set; }
 
         public DateTime TestValue4 { get; set; }
+
+        public TestEnumType? TestValue5 { get; set; }
+    }
+
+    private enum TestEnumType
+    {
+        EnumValue1,
+
+        EnumValue2,
+
+        EnumValue3,
     }
 }

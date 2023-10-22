@@ -16,4 +16,27 @@ public class BetterStackClient :
     {
         httpRequest.AddBearerTokenAuthorizationHeader(this.BearerToken);
     }
+
+    protected override Exception CreateUnsuccessfulResponseException(
+        HttpResponseMessage httpResponse, 
+        string responseBody)
+    {
+        string message = responseBody;
+
+        if (responseBody.StartsWith("{\"errors\":\""))
+        {
+            var response = JsonSerializationHelper.DeserializeFromJson<SingleErrorsResponse>(responseBody);
+            message = response.Errors;
+        }
+        else if (responseBody.StartsWith("{\"errors\":{\""))
+        {
+            var response = JsonSerializationHelper.DeserializeFromJson<MultipleErrorsResponse>(responseBody);
+            message = response.Errors
+                .Select(x => $"{x.Key}: {x.Value.ToList().ToString(", ")}")
+                .ToList()
+                .ToString("; ");
+        }
+
+        return new Exception(message);
+    }
 }

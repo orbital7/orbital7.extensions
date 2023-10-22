@@ -48,7 +48,6 @@ public class HeartbeatAttributes
     public bool? Paused { get; set; }
 
     [JsonPropertyName("status")]
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public HeartbeatStatus? Status { get; set; }
 
     public override string ToString()
