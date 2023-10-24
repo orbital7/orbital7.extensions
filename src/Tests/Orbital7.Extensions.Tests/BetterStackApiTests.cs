@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Orbital7.Extensions.Apis.BetterStack;
+using Orbital7.Extensions.Integrations.BetterStackApi;
 using System.Text.Json.Serialization;
 
 namespace Orbital7.Extensions.Tests;

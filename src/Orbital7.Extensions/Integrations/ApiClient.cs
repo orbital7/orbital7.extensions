@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace Orbital7.Extensions.Apis;
+namespace Orbital7.Extensions.Integrations;
 
 public class ApiClient :
     IApiClient
@@ -97,7 +97,7 @@ public class ApiClient :
 
         // Serialize the request body.
         var requestBody = request != null ?
-            SerializeRequestBody(request) :
+            ExecuteSerializeRequestBody(request) :
             null;
 
         // Create the request.
@@ -130,7 +130,7 @@ public class ApiClient :
             }
             else
             {
-                return DeserializeResponseBody<TResponse>(responseBody);
+                return ExecuteDeserializeResponseBody<TResponse>(responseBody);
             }
         }
     }
@@ -156,7 +156,7 @@ public class ApiClient :
         return new Exception(responseBody);
     }
 
-    protected virtual string SerializeRequestBody<TRequest>(
+    private string ExecuteSerializeRequestBody<TRequest>(
         TRequest request)
     {
         var requestType = typeof(TRequest);
@@ -169,13 +169,19 @@ public class ApiClient :
         // Else serialize to json.
         else
         {
-            return JsonSerializationHelper.SerializeToJson(
-                request,
-                convertEnumsToStrings: this.SerializeEnumsToStrings);
+            return SerializeRequestBody(request);
         }
     }
 
-    protected virtual TResponse DeserializeResponseBody<TResponse>(
+    protected virtual string SerializeRequestBody<TRequest>(
+        TRequest request)
+    {
+        return JsonSerializationHelper.SerializeToJson(
+            request,
+            convertEnumsToStrings: this.SerializeEnumsToStrings);
+    }
+
+    private TResponse ExecuteDeserializeResponseBody<TResponse>(
         string responseBody)
     {
         var responseType = typeof(TResponse);
@@ -188,9 +194,15 @@ public class ApiClient :
         // Else deserialize to the expected type.
         else
         {
-            return JsonSerializationHelper.DeserializeFromJson<TResponse>(
-                responseBody,
-                convertEnumsToStrings: this.DeserializeEnumsFromStrings);
+            return DeserializeResponseBody<TResponse>(responseBody);
         }
+    }
+
+    protected virtual TResponse DeserializeResponseBody<TResponse>(
+        string responseBody)
+    {
+        return JsonSerializationHelper.DeserializeFromJson<TResponse>(
+            responseBody,
+            convertEnumsToStrings: this.DeserializeEnumsFromStrings);
     }
 }

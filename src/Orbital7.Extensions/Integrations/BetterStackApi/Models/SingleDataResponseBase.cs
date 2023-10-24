@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Apis.BetterStack;
+﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
 public abstract class SingleDataResponseBase<TData>
 {

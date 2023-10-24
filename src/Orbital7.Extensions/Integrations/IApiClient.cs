@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Apis;
+﻿namespace Orbital7.Extensions.Integrations;
 
 public interface IApiClient
 {
