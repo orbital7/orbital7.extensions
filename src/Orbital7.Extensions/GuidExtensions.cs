@@ -1,19 +1,58 @@
-﻿using System.Linq;
-
-namespace System;
+﻿namespace System;
 
 public static class GuidExtensions
 {
-    public static string ToString(this List<Guid> list, string delimiter, bool order, bool allowDuplicates, bool allowEmptyGuid)
+    public static string ToShortString(
+        this Guid guid)
     {
-        var items = (from x in list where allowEmptyGuid || x != Guid.Empty select x);
+        if (guid == Guid.Empty)
+        {
+            return null;
+        }
+        else
+        {
+            return GuidFactory.ToShortString(guid);
+        }
+    }
+
+    public static string ToShortString(
+        this Guid? guid)
+    {
+        if (guid == null)
+        {
+            return null;
+        }
+        else
+        {
+            return guid.Value.ToShortString();
+        }
+    }
+
+    public static string ToString(
+        this List<Guid> list, 
+        string delimiter, 
+        bool order, 
+        bool allowDuplicates, 
+        bool allowEmpty)
+    {
+        var query = (from x in list 
+                     where allowEmpty || x != Guid.Empty 
+                     select x);
 
         if (order)
-            items = (from x in items orderby x select x);
+        {
+            query = (from x in query
+                     orderby x
+                     select x);
+        }
 
         if (!allowDuplicates)
-            items = items.Distinct();
+        {
+            query = query.Distinct();
+        }
         
-        return items.ToList().ToString(delimiter);
+        return query
+            .ToList()
+            .ToString(delimiter);
     }
 }

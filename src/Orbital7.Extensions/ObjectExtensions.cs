@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace System;
 
@@ -76,7 +75,7 @@ public static class ObjectExtensions
         where T : class, IEntity, new()
     {
         var entity = model.CloneIgnoringReferenceProperties();
-        entity.Id = NewId.NextSequentialGuid();
+        entity.Id = GuidFactory.NextSequential();
         entity.CreatedDateTimeUtc = DateTime.UtcNow;
         entity.LastModifiedDateTimeUtc = model.CreatedDateTimeUtc;
 

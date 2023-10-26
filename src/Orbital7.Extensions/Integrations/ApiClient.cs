@@ -101,7 +101,7 @@ public class ApiClient :
             null;
 
         // Create the request.
-        var httpClient = new HttpClient();
+        var httpClient = CreateHttpClient();
         var httpRequest = new HttpRequestMessage
         {
             Method = method,
@@ -130,7 +130,7 @@ public class ApiClient :
             }
             else
             {
-                return ExecuteDeserializeResponseBody<TResponse>(responseBody);
+                return ExecuteDeserializeResponseBody<TResponse>(httpResponse, responseBody);
             }
         }
     }
@@ -140,6 +140,11 @@ public class ApiClient :
     {
         // Nothing to do here in the base implementation.
         await Task.CompletedTask;
+    }
+
+    protected virtual HttpClient CreateHttpClient()
+    {
+        return new HttpClient();
     }
 
     protected virtual void AddRequestHeaders(
@@ -182,6 +187,7 @@ public class ApiClient :
     }
 
     private TResponse ExecuteDeserializeResponseBody<TResponse>(
+        HttpResponseMessage httpResponse,
         string responseBody)
     {
         var responseType = typeof(TResponse);
@@ -194,11 +200,12 @@ public class ApiClient :
         // Else deserialize to the expected type.
         else
         {
-            return DeserializeResponseBody<TResponse>(responseBody);
+            return DeserializeResponseBody<TResponse>(httpResponse, responseBody);
         }
     }
 
     protected virtual TResponse DeserializeResponseBody<TResponse>(
+        HttpResponseMessage httpResponse,
         string responseBody)
     {
         return JsonSerializationHelper.DeserializeFromJson<TResponse>(

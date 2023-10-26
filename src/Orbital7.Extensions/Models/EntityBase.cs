@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace System;
 
@@ -19,7 +18,7 @@ public abstract class EntityBase :
 
     protected EntityBase()
     {
-        this.Id = NewId.NextSequentialGuid();
+        this.Id = GuidFactory.NextSequential();
         this.CreatedDateTimeUtc = DateTime.UtcNow;
         this.LastModifiedDateTimeUtc = this.CreatedDateTimeUtc;
     }
