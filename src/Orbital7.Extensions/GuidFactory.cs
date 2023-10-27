@@ -1,5 +1,6 @@
 ﻿using CSharpVitamins;
 using MassTransit;
+using MassTransit.NewIdProviders;
 
 namespace System;
 
@@ -7,6 +8,11 @@ public static class GuidFactory
 {
     // Source: https://github.com/csharpvitamins/CSharpVitamins.ShortGuid
     public const int SHORT_GUID_LENGTH = 22;
+
+    static GuidFactory()
+    {
+        NewId.SetProcessIdProvider(new CurrentProcessIdProvider());
+    }
 
     public static Guid NextSequential()
     {
