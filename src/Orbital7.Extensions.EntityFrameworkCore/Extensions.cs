@@ -6,20 +6,6 @@ namespace Microsoft.EntityFrameworkCore;
 
 public static class Extensions
 {
-    public static ModelConfigurationBuilder SetDefaults(
-        this ModelConfigurationBuilder builder)
-    {
-        builder.Properties<DateOnly>()
-            .HaveConversion<DateOnlyConverter>()
-            .HaveColumnType("date");
-
-        builder.Properties<TimeOnly>()
-            .HaveConversion<TimeOnlyConverter>()
-            .HaveColumnType("time");
-
-        return builder;
-    }
-
     public static ModelBuilder SetDefaults(
         this ModelBuilder modelBuilder)
     {
@@ -29,20 +15,6 @@ public static class Extensions
         {
             property.SetPrecision(18);
             property.SetScale(2);
-        }
-
-        // Set property comparer for DateOnly.
-        var dateOnlyProperties = modelBuilder.GetPropertiesForType(typeof(DateOnly), typeof(DateOnly?));
-        foreach (var property in dateOnlyProperties)
-        {
-            property.SetValueComparer(new DateOnlyComparer());
-        }
-
-        // Set property comparer for TimeOnly.
-        var timeOnlyProperties = modelBuilder.GetPropertiesForType(typeof(TimeOnly), typeof(TimeOnly?));
-        foreach (var property in timeOnlyProperties)
-        {
-            property.SetValueComparer(new TimeOnlyComparer());
         }
 
         return modelBuilder;
@@ -156,6 +128,19 @@ public static class Extensions
         where TEntity : class, IEntity
     {
         return await ExecuteGetAsync(entitySet, id, true, cancellationToken, includePaths);
+    }
+
+    public static async Task<TOutput> GetAsync<TEntity, TOutput>(
+        this DbSet<TEntity> entitySet,
+        Guid id,
+        Expression<Func<TEntity, TOutput>> select,
+        CancellationToken cancellationToken = default)
+        where TEntity : class, IEntity
+    {
+        return await entitySet
+            .Where(x => x.Id == id)
+            .Select(select)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public static async Task<TEntity> GetWithTrackingAsync<TEntity>(

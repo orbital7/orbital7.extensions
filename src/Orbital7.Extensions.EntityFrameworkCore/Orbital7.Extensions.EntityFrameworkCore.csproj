@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<Version>7.0.22</Version>
-		<AssemblyVersion>7.0.22.0</AssemblyVersion>
-		<FileVersion>7.0.22.0</FileVersion>
+		<Version>8.0.0</Version>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<FileVersion>8.0.0.0</FileVersion>
 		<Company>Orbital7</Company>
 		<Copyright>Copyright © 2012-2023 Orbital7</Copyright>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>.NET Entity Framework Core 7 Extensions/Utilities</Description>
+		<Description>.NET Entity Framework Core 8 Extensions/Utilities</Description>
 		<Authors>Josh van Eikeren</Authors>
 		<PackageLicenseUrl></PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
@@ -42,8 +42,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

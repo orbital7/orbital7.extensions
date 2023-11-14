@@ -50,13 +50,6 @@ public abstract class AtomicDbContextBase :
             await base.SaveChangesAsync(cancellationToken));
     }
 
-    protected override void ConfigureConventions(
-        ModelConfigurationBuilder builder)
-    {
-        base.ConfigureConventions(builder);
-        builder.SetDefaults();
-    }
-
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {

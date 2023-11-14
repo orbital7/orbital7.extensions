@@ -54,13 +54,6 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole> :
             await base.SaveChangesAsync(cancellationToken));
     }
 
-    protected override void ConfigureConventions(
-        ModelConfigurationBuilder builder)
-    {
-        base.ConfigureConventions(builder);
-        builder.SetDefaults();
-    }
-
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {
