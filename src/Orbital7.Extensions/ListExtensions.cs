@@ -4,7 +4,8 @@ namespace System;
 
 public static class ListExtensions
 {
-    public static DateTime Average(this List<DateTime> dates)
+    public static DateTime Average(
+        this IList<DateTime> dates)
     {
         int count = dates.Count;
         double temp = 0;
@@ -23,13 +24,13 @@ public static class ListExtensions
         {
             if (list.Count == 1)
             {
-                return GetListItemValue(list[0], nullValue);
+                return GetItemValue(list[0], nullValue);
             }
             else if (list.Count == 2)
             {
                 return string.Format("{0} and {1}",
-                    GetListItemValue(list[0], nullValue),
-                    GetListItemValue(list[1], nullValue));
+                    GetItemValue(list[0], nullValue),
+                    GetItemValue(list[1], nullValue));
             }
             else
             {
@@ -43,7 +44,7 @@ public static class ListExtensions
                     else if (index > 0)
                         sb.Append(", ");
 
-                    sb.Append(GetListItemValue(item, nullValue));
+                    sb.Append(GetItemValue(item, nullValue));
                     index++;
                 }
 
@@ -75,7 +76,7 @@ public static class ListExtensions
                     sb.Append(delim);
 
                 // Get the item text.
-                string value = GetListItemValue(item, nullValue);
+                string value = GetItemValue(item, nullValue);
                 if (encloseInQuotes)
                     value = value.EncloseInQuotes();
 
@@ -91,7 +92,7 @@ public static class ListExtensions
         return sb.ToString();
     }
 
-    private static string GetListItemValue(
+    private static string GetItemValue(
         object listItem, 
         string nullValue)
     {
@@ -102,7 +103,9 @@ public static class ListExtensions
         return value;
     }
 
-    public static List<T>[] SplitEvenly<T>(this IList<T> list, int segments)
+    public static List<T>[] SplitEvenly<T>(
+        this IList<T> list, 
+        int segments)
     {
         // Initialize.
         List<T>[] lists = new List<T>[segments];
@@ -122,7 +125,8 @@ public static class ListExtensions
         return lists;
     }
 
-    public static List<List<T>> SplitBySize<T>(this IList<T> list, int maxSize)
+    public static List<List<T>> SplitBySize<T>(
+        this IList<T> list, int maxSize)
     {
         List<List<T>> lists = new List<List<T>>();
 
@@ -141,7 +145,8 @@ public static class ListExtensions
         return lists;
     }
 
-    public static List<T> Randomize<T>(this IList<T> inputList)
+    public static List<T> Randomize<T>(
+        this IList<T> inputList)
     {
         List<T> randomList = new List<T>();
 
@@ -158,7 +163,9 @@ public static class ListExtensions
         return randomList;
     }
 
-    public static int? GetListItemIndex(this IList list, object listItem)
+    public static int? GetItemIndex(
+        this IList list, 
+        object listItem)
     {
         int? index = null;
 
@@ -178,65 +185,88 @@ public static class ListExtensions
 
         return index;
     }
-    public static bool CanMoveListItemUp(this IList list, object listItem)
+    public static bool CanMoveItemUp(
+        this IList list, 
+        object listItem)
     {
-        return CanMoveListItemUp(list, listItem, list.GetListItemIndex(listItem));
+        return CanMoveItemUp(list, listItem, list.GetItemIndex(listItem));
     }
 
-    public static bool CanMoveListItemUp(this IList list, object listItem, int? listItemIndex)
+    public static bool CanMoveItemUp(
+        this IList list, 
+        object listItem, 
+        int? listItemIndex)
     {
         return (listItem != null) && (listItemIndex != null) && (listItemIndex > 0);
     }
 
-    public static bool CanMoveListItemDown(this IList list, object listItem)
+    public static bool CanMoveItemDown(
+        this IList list, 
+        object listItem)
     {
-        return CanMoveListItemDown(list, listItem, list.GetListItemIndex(listItem));
+        return CanMoveItemDown(list, listItem, list.GetItemIndex(listItem));
     }
 
-    public static bool CanMoveListItemDown(this IList list, object listItem, int? listItemIndex)
+    public static bool CanMoveItemDown(
+        this IList list, 
+        object listItem, 
+        int? listItemIndex)
     {
         return (listItem != null) && (listItemIndex != null) && (listItemIndex < list.Count - 1);
     }
 
-    public static bool MoveListItemUp(this IList list, object listItem)
+    public static bool MoveItemUp(
+        this IList list, 
+        object listItem)
     {
-        return MoveListItemUp(list, listItem, list.GetListItemIndex(listItem));
+        return MoveItemUp(list, listItem, list.GetItemIndex(listItem));
     }
 
-    public static bool MoveListItemUp(this IList list, object listItem, int? listItemIndex)
+    public static bool MoveItemUp(
+        this IList list, 
+        object listItem, 
+        int? listItemIndex)
     {
         bool success = false;
 
-        if (CanMoveListItemUp(list, listItem, listItemIndex))
+        if (CanMoveItemUp(list, listItem, listItemIndex))
         {
             int insertIndex = (int)listItemIndex - 1;
-            MoveListItem(list, listItem, insertIndex);
+            MoveItem(list, listItem, insertIndex);
             success = true;
         }
 
         return success;
     }
 
-    public static bool MoveListItemDown(this IList list, object listItem)
+    public static bool MoveItemDown(
+        this IList list, 
+        object listItem)
     {
-        return MoveListItemDown(list, listItem, list.GetListItemIndex(listItem));
+        return MoveItemDown(list, listItem, list.GetItemIndex(listItem));
     }
 
-    public static bool MoveListItemDown(this IList list, object listItem, int? listItemIndex)
+    public static bool MoveItemDown(
+        this IList list, 
+        object listItem, 
+        int? listItemIndex)
     {
         bool success = false;
 
-        if (CanMoveListItemDown(list, listItem, listItemIndex))
+        if (CanMoveItemDown(list, listItem, listItemIndex))
         {
             int insertIndex = (int)listItemIndex + 1;
-            MoveListItem(list, listItem, insertIndex);
+            MoveItem(list, listItem, insertIndex);
             success = true;
         }
 
         return success;
     }
 
-    private static void MoveListItem(this IList list, object listItem, int insertIndex)
+    private static void MoveItem(
+        this IList list,
+        object listItem, 
+        int insertIndex)
     {
         list.Remove(listItem);
         list.Insert(insertIndex, listItem);

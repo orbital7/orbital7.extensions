@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.EntityF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9D8C0BDF-280D-41AC-9D6B-A30F59C2385D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orbital7.Extensions.Tests", "Tests\Orbital7.Extensions.Tests\Orbital7.Extensions.Tests.csproj", "{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orbital7.Extensions.Tests", "Tests\Orbital7.Extensions.Tests\Orbital7.Extensions.Tests.csproj", "{030AC8DD-DC25-4C1D-8241-ACC5452E02CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

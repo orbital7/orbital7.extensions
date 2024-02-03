@@ -28,4 +28,8 @@ public interface IApiClient
 
     Task<TResponse> SendPutRequestAsync<TResponse>(
         string url);
+
+    Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
+        string url,
+        List<KeyValuePair<string, string>> request);
 }

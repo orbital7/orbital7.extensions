@@ -84,21 +84,49 @@ public class ApiClient :
             null);
     }
 
-    // TODO: Add retry logic using Polly.
+    public async Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
+        string url,
+        List<KeyValuePair<string, string>> request)
+    {
+        return await SendRequestAsync<TResponse>(
+            HttpMethod.Post,
+            url,
+            new FormUrlEncodedContent(request));
+    }
+
     private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(
         HttpMethod method,
         string url,
         TRequest request)
     {
+        // Serialize the request body.
+        string requestBody = request != null ?
+            ExecuteSerializeRequestBody(request) :
+            null;
+
+        // Create request body content.
+        HttpContent content = requestBody.HasText() ?
+            new StringContent(requestBody)
+            {
+                Headers =
+                {
+                    ContentType = new MediaTypeHeaderValue("application/json")
+                }
+            } : null;
+
+        return await SendRequestAsync<TResponse>(method, url, content);
+    }
+
+    // TODO: Add retry logic using Polly.
+    private async Task<TResponse> SendRequestAsync<TResponse>(
+        HttpMethod method,
+        string url,
+        HttpContent content)
+    {
         var uri = new Uri(url);
 
         // Perform any pre-request creation logic.
         await BeforeCreateRequestAsync(uri);
-
-        // Serialize the request body.
-        var requestBody = request != null ?
-            ExecuteSerializeRequestBody(request) :
-            null;
 
         // Create the request.
         var httpClient = CreateHttpClient();
@@ -106,14 +134,7 @@ public class ApiClient :
         {
             Method = method,
             RequestUri = uri,
-            Content = requestBody.HasText() ?
-                new StringContent(requestBody)
-                {
-                    Headers =
-                    {
-                        ContentType = new MediaTypeHeaderValue("application/json")
-                    }
-                } : null,
+            Content = content,
         };
 
         // Add the request headers.

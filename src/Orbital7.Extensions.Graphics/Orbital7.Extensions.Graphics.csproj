@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+	<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright © 2012-2023 Orbital7</Copyright>
+    <Copyright>Copyright © 2012-2024 Orbital7</Copyright>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
     <Product>Orbital7.Extensions</Product>
     <PackageIcon>Orbital7.png</PackageIcon>
     <PackageIconUrl />
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
-    <Version>7.0.0</Version>
-    <Description>.NET 7 Graphics Extensions/Utilities</Description>
+	<Version>8.0.1</Version>
+	<AssemblyVersion>8.0.1.0</AssemblyVersion>
+	<FileVersion>8.0.1.0</FileVersion>
+    <Description>.NET Graphics Extensions/Utilities</Description>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
@@ -29,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
   </ItemGroup>
 	
   <ItemGroup>
