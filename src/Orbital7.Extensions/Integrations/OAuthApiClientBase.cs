@@ -64,7 +64,7 @@ public abstract class OAuthApiClientBase :
         this.TokenInfoUpdated?.Invoke(this.TokenInfo);
     }
 
-    private async Task<OAuthTokenInfo> EnsureValidAccessTokenAsync(
+    protected async Task<OAuthTokenInfo> EnsureValidAccessTokenAsync(
         DateTime? nowUtc = null)
     {
         // Ensure we have a specified refresh token.
