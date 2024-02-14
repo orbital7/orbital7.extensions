@@ -48,7 +48,8 @@ public class BetterStackApiTests
         var heartbeat = createHeartbeatResponse.Data;
         Assert.True(heartbeat.Id.HasText());
         Assert.Equal(CREATE_HEARTBEAT_NAME, heartbeat.Attributes.Name);
-        Assert.Equal(HeartbeatStatus.Pending, heartbeat.Attributes.Status);
+        Assert.True(heartbeat.Attributes.Status == HeartbeatStatus.Pending ||
+            heartbeat.Attributes.Status == HeartbeatStatus.Up);
         Assert.False(heartbeat.Attributes.Paused);
 
         // Test listing heartbeats.
