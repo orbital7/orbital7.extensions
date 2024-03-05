@@ -13,14 +13,14 @@ public abstract class OAuthApiClientBase :
 
     protected virtual int OAuthAccessTokenPreExpirationCutoffInMinutes => 10;
 
-    private Action<IServiceProvider, TokenInfo> OnTokenInfoUpdated { get; set; }
+    private Func<IServiceProvider, TokenInfo, Task> OnTokenInfoUpdated { get; set; }
 
     protected OAuthApiClientBase(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
         string clientId,
         TokenInfo tokenInfo,
-        Action<IServiceProvider, TokenInfo> onTokenInfoUpdated = null) :
+        Func<IServiceProvider, TokenInfo, Task> onTokenInfoUpdated = null) :
         base(httpClientFactory)
     {
         this.ServiceProvider = serviceProvider;
@@ -36,7 +36,7 @@ public abstract class OAuthApiClientBase :
             this.OAuthTokenEndpointUrl,
             request);
 
-        UpdateTokenInfo(response);
+        await UpdateTokenInfoAsync(response);
 
         return this.TokenInfo;
     }
@@ -49,14 +49,14 @@ public abstract class OAuthApiClientBase :
             this.OAuthTokenEndpointUrl,
             request);
 
-        UpdateTokenInfo(response);
+        await UpdateTokenInfoAsync(response);
 
         return this.TokenInfo;
     }
 
     protected abstract List<KeyValuePair<string, string>> GetRefreshTokenRequest();
 
-    private void UpdateTokenInfo(
+    private async Task UpdateTokenInfoAsync(
         OAuthTokenResponse response)
     {
         if (response.RefreshToken.HasText())
@@ -66,7 +66,11 @@ public abstract class OAuthApiClientBase :
 
         this.TokenInfo.AccessToken = response.AccessToken;
         this.TokenInfo.AccessTokenExpirationDateTimeUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
-        this.OnTokenInfoUpdated?.Invoke(this.ServiceProvider, this.TokenInfo);
+
+        if (this.OnTokenInfoUpdated != null)
+        {
+            await this.OnTokenInfoUpdated.Invoke(this.ServiceProvider, this.TokenInfo);
+        }
     }
 
     protected async Task<TokenInfo> EnsureValidAccessTokenAsync(
