@@ -32,7 +32,9 @@ public class BetterStackApiTests
         Skip.IfNot(this.BetterStackUptimeApiToken.HasText());
 
         // Create the client and service.
-        var client = new BetterStackClient(this.HttpClientFactory, this.BetterStackUptimeApiToken);
+        var client = new BetterStackClient(
+            this.HttpClientFactory, 
+            this.BetterStackUptimeApiToken);
         var service = new UptimeHeartbeatsService(client);
 
         // Create a heartbeat.
@@ -103,7 +105,7 @@ public class BetterStackApiTests
         Skip.IfNot(this.BetterStackLogsSourceToken.HasText());
 
         // Create the client and service.
-        var client = new BetterStackClient(this.HttpClientFactory, this.BetterStackLogsSourceToken);
+        var client = new BetterStackClient(this.HttpClientFactory);
         var service = new LogsUploadService(client);
 
         // Create an event.
@@ -129,7 +131,9 @@ public class BetterStackApiTests
         };
 
         // Upload single log event.
-        await service.LogEventAsync(logEvent);
+        await service.LogEventAsync(
+            this.BetterStackLogsSourceToken,
+            logEvent);
 
         // Create multiple events.
         var logEvents = new LogEvent[]
@@ -161,7 +165,9 @@ public class BetterStackApiTests
         };
 
         // Upload multiple log events.
-        await service.LogEventsAsync(logEvents);
+        await service.LogEventsAsync(
+            this.BetterStackLogsSourceToken, 
+            logEvents);
     }
 
     private TestEntity1 CreateTestEntity1()

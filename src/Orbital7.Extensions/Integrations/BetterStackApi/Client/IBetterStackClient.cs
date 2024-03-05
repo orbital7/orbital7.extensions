@@ -3,5 +3,5 @@
 public interface IBetterStackClient :
     IApiClient
 {
-    
+    string BearerToken { set; }
 }

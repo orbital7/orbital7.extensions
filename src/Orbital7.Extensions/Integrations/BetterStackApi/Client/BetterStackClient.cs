@@ -3,11 +3,11 @@
 public class BetterStackClient :
     ApiClient, IBetterStackClient
 {
-    private string BearerToken { get; set; }
+    public string BearerToken { private get; set; }
 
     public BetterStackClient(
         IHttpClientFactory httpClientFactory,
-        string bearerToken) :
+        string bearerToken = null) :
         base(httpClientFactory)
     {
         this.BearerToken = bearerToken;
