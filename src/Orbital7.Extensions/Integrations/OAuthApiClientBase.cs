@@ -1,30 +1,35 @@
 ﻿namespace Orbital7.Extensions.Integrations;
 
-public delegate void OAuthTokenInfoUpdatedHandler(
-    OAuthTokenInfo tokenInfo);
-
 public abstract class OAuthApiClientBase :
     ApiClient
 {
+    private IServiceProvider ServiceProvider { get; set; }
+
     protected string ClientId { get; private set; }
 
-    public OAuthTokenInfo TokenInfo { get; private set; }
+    public TokenInfo TokenInfo { get; private set; }
 
     protected abstract string OAuthTokenEndpointUrl { get; }
 
-    protected virtual int OAuthTokenPreExpirationCutoffInMinutes => 10;
+    protected virtual int OAuthAccessTokenPreExpirationCutoffInMinutes => 10;
 
-    public event OAuthTokenInfoUpdatedHandler TokenInfoUpdated;
+    private Action<IServiceProvider, TokenInfo> OnTokenInfoUpdated { get; set; }
 
     protected OAuthApiClientBase(
+        IServiceProvider serviceProvider,
+        IHttpClientFactory httpClientFactory,
         string clientId,
-        OAuthTokenInfo tokenInfo)
+        TokenInfo tokenInfo,
+        Action<IServiceProvider, TokenInfo> onTokenInfoUpdated = null) :
+        base(httpClientFactory)
     {
+        this.ServiceProvider = serviceProvider;
         this.ClientId = clientId;
         this.TokenInfo = tokenInfo;
+        this.OnTokenInfoUpdated = onTokenInfoUpdated;
     }
 
-    protected async Task<OAuthTokenInfo> SendObtainRefreshTokenRequestAsync(
+    protected async Task<TokenInfo> SendObtainTokenRequestAsync(
         List<KeyValuePair<string, string>> request)
     {
         var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
@@ -36,9 +41,9 @@ public abstract class OAuthApiClientBase :
         return this.TokenInfo;
     }
 
-    public async Task<OAuthTokenInfo> RefreshAccessTokenAsync()
+    private async Task<TokenInfo> RefreshTokenAsync()
     {
-        var request = GetRefreshAccessTokenRequest();
+        var request = GetRefreshTokenRequest();
 
         var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
             this.OAuthTokenEndpointUrl,
@@ -49,7 +54,7 @@ public abstract class OAuthApiClientBase :
         return this.TokenInfo;
     }
 
-    protected abstract List<KeyValuePair<string, string>> GetRefreshAccessTokenRequest();
+    protected abstract List<KeyValuePair<string, string>> GetRefreshTokenRequest();
 
     private void UpdateTokenInfo(
         OAuthTokenResponse response)
@@ -61,10 +66,10 @@ public abstract class OAuthApiClientBase :
 
         this.TokenInfo.AccessToken = response.AccessToken;
         this.TokenInfo.AccessTokenExpirationDateTimeUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
-        this.TokenInfoUpdated?.Invoke(this.TokenInfo);
+        this.OnTokenInfoUpdated?.Invoke(this.ServiceProvider, this.TokenInfo);
     }
 
-    protected async Task<OAuthTokenInfo> EnsureValidAccessTokenAsync(
+    protected async Task<TokenInfo> EnsureValidAccessTokenAsync(
         DateTime? nowUtc = null)
     {
         // Ensure we have a specified refresh token.
@@ -73,14 +78,14 @@ public abstract class OAuthApiClientBase :
 
         // Calculate an expiration cutoff as the next X minutes.
         var cutoffUtc = (nowUtc ?? DateTime.UtcNow)
-            .AddMinutes(this.OAuthTokenPreExpirationCutoffInMinutes);
+            .AddMinutes(this.OAuthAccessTokenPreExpirationCutoffInMinutes);
 
         // Check for either a missing or expiring access token.
         if (!this.TokenInfo.AccessToken.HasText() ||
             !this.TokenInfo.AccessTokenExpirationDateTimeUtc.HasValue ||
             this.TokenInfo.AccessTokenExpirationDateTimeUtc.Value < cutoffUtc)
         {
-            await RefreshAccessTokenAsync();
+            await RefreshTokenAsync();
         }
 
         return this.TokenInfo;
@@ -89,7 +94,7 @@ public abstract class OAuthApiClientBase :
     protected override async Task BeforeCreateRequestAsync(
         Uri uri)
     {
-        if (IsAuthorizationRequired(uri.ToString()))
+        if (IsAuthorizationRequired(uri))
         {
             await EnsureValidAccessTokenAsync();
         }
@@ -98,7 +103,7 @@ public abstract class OAuthApiClientBase :
     protected override void AddRequestHeaders(
         HttpRequestMessage httpRequest)
     {
-        if (IsAuthorizationRequired(httpRequest.RequestUri.ToString()))
+        if (IsAuthorizationRequired(httpRequest.RequestUri))
         {
             httpRequest.AddBearerTokenAuthorizationHeader(
                 this.TokenInfo.AccessToken);
@@ -106,9 +111,9 @@ public abstract class OAuthApiClientBase :
     }
 
     protected virtual bool IsAuthorizationRequired(
-        string url)
+        Uri uri)
     {
-        if (url.Equals(this.OAuthTokenEndpointUrl, StringComparison.CurrentCultureIgnoreCase))
+        if (uri.ToString().Equals(this.OAuthTokenEndpointUrl, StringComparison.CurrentCultureIgnoreCase))
         {
             return false;
         }

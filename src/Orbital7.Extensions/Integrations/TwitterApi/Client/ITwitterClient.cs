@@ -1,7 +1,7 @@
 ﻿namespace Orbital7.Extensions.Integrations.TwitterApi;
 
 public interface ITwitterClient :
-    IOAuthApiClient
+    IApiClient
 {
     string GetAuthorizationUrl(
         string redirectUri,
@@ -9,7 +9,7 @@ public interface ITwitterClient :
         string state,
         string codeChallenge);
 
-    Task<OAuthTokenInfo> ObtainRefreshTokenAsync(
+    Task<TokenInfo> ObtainTokenAsync(
         string authorizationCode,
         string redirectUri,
         string codeVerifier);

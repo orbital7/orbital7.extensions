@@ -7,9 +7,11 @@ public class TwitterClient :
     protected override string OAuthTokenEndpointUrl => "https://api.twitter.com/2/oauth2/token";
 
     public TwitterClient(
+        IServiceProvider serviceProvider,
+        IHttpClientFactory httpClientFactory,
         string clientId,
-        OAuthTokenInfo tokenInfo) :
-        base(clientId, tokenInfo)
+        TokenInfo tokenInfo) :
+        base(serviceProvider, httpClientFactory, clientId, tokenInfo)
     {
         
     }
@@ -30,7 +32,7 @@ public class TwitterClient :
             $"code_challenge_method=plain";
     }
 
-    public async Task<OAuthTokenInfo> ObtainRefreshTokenAsync(
+    public async Task<TokenInfo> ObtainTokenAsync(
         string authorizationCode,
         string redirectUri,
         string codeVerifier)
@@ -44,10 +46,10 @@ public class TwitterClient :
             new KeyValuePair<string, string>("code_verifier", codeVerifier),
         };
 
-        return await SendObtainRefreshTokenRequestAsync(request);
+        return await SendObtainTokenRequestAsync(request);
     }
 
-    protected override List<KeyValuePair<string, string>> GetRefreshAccessTokenRequest()
+    protected override List<KeyValuePair<string, string>> GetRefreshTokenRequest()
     {
         return new List<KeyValuePair<string, string>>()
         {

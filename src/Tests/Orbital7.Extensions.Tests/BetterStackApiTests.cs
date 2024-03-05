@@ -1,20 +1,24 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Orbital7.Extensions.Integrations.BetterStackApi;
+using System.Net.Http;
 using System.Text.Json.Serialization;
 
 namespace Orbital7.Extensions.Tests;
 
 public class BetterStackApiTests
 {
-    public string BetterStackUptimeApiToken { get; private set; }
+    private string BetterStackUptimeApiToken { get; set; }
 
-    public string BetterStackLogsSourceToken { get; private set; }
+    private string BetterStackLogsSourceToken { get; set; }
+
+    private IHttpClientFactory HttpClientFactory { get; set; }
 
     public BetterStackApiTests()
     {
         var config = ConfigurationHelper.GetConfigurationWithUserSecrets<BetterStackApiTests>();
         this.BetterStackUptimeApiToken = config["BetterStackUptimeApiToken"];
         this.BetterStackLogsSourceToken = config["BetterStackLogsSourceToken"];
+        this.HttpClientFactory = new BasicHttpClientFactory();
     }
 
     [SkippableFact]
@@ -28,7 +32,7 @@ public class BetterStackApiTests
         Skip.IfNot(this.BetterStackUptimeApiToken.HasText());
 
         // Create the client and service.
-        var client = new BetterStackClient(this.BetterStackUptimeApiToken);
+        var client = new BetterStackClient(this.HttpClientFactory, this.BetterStackUptimeApiToken);
         var service = new UptimeHeartbeatsService(client);
 
         // Create a heartbeat.
@@ -99,7 +103,7 @@ public class BetterStackApiTests
         Skip.IfNot(this.BetterStackLogsSourceToken.HasText());
 
         // Create the client and service.
-        var client = new BetterStackClient(this.BetterStackLogsSourceToken);
+        var client = new BetterStackClient(this.HttpClientFactory, this.BetterStackLogsSourceToken);
         var service = new LogsUploadService(client);
 
         // Create an event.

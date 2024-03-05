@@ -6,7 +6,9 @@ public class BetterStackClient :
     private string BearerToken { get; set; }
 
     public BetterStackClient(
-        string bearerToken)
+        IHttpClientFactory httpClientFactory,
+        string bearerToken) :
+        base(httpClientFactory)
     {
         this.BearerToken = bearerToken;
     }

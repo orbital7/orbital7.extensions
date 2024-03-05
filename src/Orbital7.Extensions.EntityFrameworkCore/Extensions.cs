@@ -67,16 +67,19 @@ public static class Extensions
         return entity;
     }
 
-    public static TEntity UpdateEntityProperty<TEntity, TProperty>(
+    public static TEntity UpdateEntityProperties<TEntity>(
         this DbSet<TEntity> entitySet,
         TEntity entity,
-        Expression<Func<TEntity, TProperty>> propertyExpression)
+        params Expression<Func<TEntity, object>>[] updatedProperties)
         where TEntity : class, IEntity
     {
         var entry = entitySet.Entry(entity);
         entry.State = EntityState.Unchanged;
 
-        entry.Property(propertyExpression).IsModified = true;
+        foreach (var property in updatedProperties)
+        {
+            entry.Property(property).IsModified = true;
+        }
 
         entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
         entry.Property(x => x.LastModifiedDateTimeUtc).IsModified = true;
@@ -86,15 +89,24 @@ public static class Extensions
 
     public static TEntity UpdateEntityProperties<TEntity>(
         this DbSet<TEntity> entitySet,
-        TEntity entity,
-        params string[] propertyNames)
-        where TEntity : class, IEntity
+        Guid entityId,
+        params (Expression<Func<TEntity, object>>, object)[] updatedPropertyValues)
+        where TEntity : class, IEntity, new()
     {
+        var entity = new TEntity()
+        {
+            Id = entityId,
+        };
+
         var entry = entitySet.Entry(entity);
         entry.State = EntityState.Unchanged;
 
-        foreach (var property in propertyNames)
-            entry.Property(property).IsModified = true;
+        foreach (var property in updatedPropertyValues)
+        {
+            var entryProperty = entry.Property(property.Item1);
+            entryProperty.CurrentValue = property.Item2;
+            entryProperty.IsModified = true;
+        }
 
         entity.LastModifiedDateTimeUtc = DateTime.UtcNow;
         entry.Property(x => x.LastModifiedDateTimeUtc).IsModified = true;

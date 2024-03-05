@@ -5,9 +5,19 @@ namespace Orbital7.Extensions.Integrations;
 public class ApiClient :
     IApiClient
 {
+    protected IHttpClientFactory HttpClientFactory { get; private set; }
+
     protected virtual bool SerializeEnumsToStrings => true;
 
     protected virtual bool DeserializeEnumsFromStrings => true;
+
+    protected virtual string HttpClientName => null;
+
+    public ApiClient(
+        IHttpClientFactory httpClientFactory)
+    {
+        this.HttpClientFactory = httpClientFactory;
+    }
 
     public async Task<TResponse> SendGetRequestAsync<TResponse>(
         string url)
@@ -129,7 +139,6 @@ public class ApiClient :
         await BeforeCreateRequestAsync(uri);
 
         // Create the request.
-        var httpClient = CreateHttpClient();
         var httpRequest = new HttpRequestMessage
         {
             Method = method,
@@ -141,17 +150,20 @@ public class ApiClient :
         AddRequestHeaders(httpRequest);
 
         // Send the request.
-        using (var httpResponse = await httpClient.SendAsync(httpRequest))
+        using (var httpClient = this.HttpClientFactory.CreateClient(this.HttpClientName ?? string.Empty))
         {
-            var responseBody = await httpResponse.Content.ReadAsStringAsync();
+            using (var httpResponse = await httpClient.SendAsync(httpRequest))
+            {
+                var responseBody = await httpResponse.Content.ReadAsStringAsync();
 
-            if (!httpResponse.IsSuccessStatusCode)
-            {
-                throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
-            }
-            else
-            {
-                return ExecuteDeserializeResponseBody<TResponse>(httpResponse, responseBody);
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
+                }
+                else
+                {
+                    return ExecuteDeserializeResponseBody<TResponse>(httpResponse, responseBody);
+                }
             }
         }
     }
@@ -161,11 +173,6 @@ public class ApiClient :
     {
         // Nothing to do here in the base implementation.
         await Task.CompletedTask;
-    }
-
-    protected virtual HttpClient CreateHttpClient()
-    {
-        return new HttpClient();
     }
 
     protected virtual void AddRequestHeaders(
