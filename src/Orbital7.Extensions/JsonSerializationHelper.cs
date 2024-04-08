@@ -230,12 +230,19 @@ public static class JsonSerializationHelper
         bool propertyNameCaseInsensitive,
         bool convertEnumsToStrings)
     {
-        return await JsonSerializer.DeserializeAsync(
-            stream, 
-            type,
-            CreateDeserializationOptions(
-                propertyNameCaseInsensitive,
-                convertEnumsToStrings));
+        if (stream.Length > 0)
+        {
+            return await JsonSerializer.DeserializeAsync(
+                stream,
+                type,
+                CreateDeserializationOptions(
+                    propertyNameCaseInsensitive,
+                    convertEnumsToStrings));
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private static object Deserialize(
@@ -244,12 +251,19 @@ public static class JsonSerializationHelper
         bool propertyNameCaseInsensitive,
         bool convertEnumsToStrings)
     {
-        return JsonSerializer.Deserialize(
-            stream, 
-            type, 
-            CreateDeserializationOptions(
-                propertyNameCaseInsensitive, 
-                convertEnumsToStrings));
+        if (stream.Length > 0)
+        {
+            return JsonSerializer.Deserialize(
+                stream,
+                type,
+                CreateDeserializationOptions(
+                    propertyNameCaseInsensitive,
+                    convertEnumsToStrings));
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private static JsonSerializerOptions CreateSerializationOptions(

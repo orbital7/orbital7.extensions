@@ -1,8 +1,8 @@
-﻿using Orbital7.Extensions.Integrations.BetterStackApi;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public static class BetterStackApiDependencyInjectionExtensions
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddBetterStackLogs(
         this IServiceCollection services)

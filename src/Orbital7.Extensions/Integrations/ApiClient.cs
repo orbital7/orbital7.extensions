@@ -158,7 +158,16 @@ public class ApiClient :
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
-                    throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
+                    var ex =  CreateUnsuccessfulResponseException(httpResponse, responseBody);
+
+                    if (ex != null)
+                    {
+                        throw ex;
+                    }
+                    else
+                    {
+                        return default;
+                    }
                 }
                 else
                 {

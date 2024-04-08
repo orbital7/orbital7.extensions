@@ -2,9 +2,13 @@
 
 namespace Orbital7.Extensions.Encryption;
 
-public class TripleDESEncryptionEngine : IEncryptionEngine
+public class TripleDESEncryptionEngine : 
+    IEncryptionEngine
 {
-    public byte[] Encrypt(byte[] data, string passphrase, Encoding encoding)
+    public byte[] Encrypt(
+        byte[] data, 
+        string passphrase, 
+        Encoding encoding)
     {
         // Source: http://www.dijksterhuis.org/encrypting-decrypting-string/
 
@@ -42,12 +46,10 @@ public class TripleDESEncryptionEngine : IEncryptionEngine
         return results;
     }
 
-    public byte[] Encrypt(byte[] data, string passphrase)
-    {
-        return Encrypt(data, passphrase, new System.Text.UTF8Encoding());
-    }
-
-    public byte[] Decrypt(byte[] data, string passphrase, Encoding encoding)
+    public byte[] Decrypt(
+        byte[] data, 
+        string passphrase, 
+        Encoding encoding)
     {
         byte[] results;
 
@@ -81,10 +83,5 @@ public class TripleDESEncryptionEngine : IEncryptionEngine
 
         // Step 5. Return the decrypted data
         return results;
-    }
-
-    public byte[] Decrypt(byte[] data, string passphrase)
-    {
-        return Decrypt(data, passphrase, new System.Text.UTF8Encoding());
     }
 }

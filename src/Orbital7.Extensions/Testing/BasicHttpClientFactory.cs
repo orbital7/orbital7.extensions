@@ -1,24 +1,24 @@
-﻿namespace System.Net.Http;
+﻿namespace Orbital7.Extensions.Testing;
 
 public class BasicHttpClientFactory :
     IHttpClientFactory, IDisposable
 {
-    private Lazy<HttpMessageHandler> LazyHttpMessageHandler { get; set; } = 
+    private Lazy<HttpMessageHandler> LazyHttpMessageHandler { get; set; } =
         new Lazy<HttpMessageHandler>(() => new HttpClientHandler());
 
     public HttpClient CreateClient(
         string name)
     {
         return new HttpClient(
-            this.LazyHttpMessageHandler.Value, 
+            LazyHttpMessageHandler.Value,
             disposeHandler: false);
     }
 
     public void Dispose()
     {
-        if (this.LazyHttpMessageHandler.IsValueCreated)
+        if (LazyHttpMessageHandler.IsValueCreated)
         {
-            this.LazyHttpMessageHandler.Value.Dispose();
+            LazyHttpMessageHandler.Value.Dispose();
         }
     }
 }

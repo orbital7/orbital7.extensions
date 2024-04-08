@@ -1,73 +1,177 @@
-﻿namespace Orbital7.Extensions.Encryption;
+﻿using System.Security.Cryptography;
+
+namespace Orbital7.Extensions.Encryption;
 
 public enum EncryptionMethod 
 { 
-    TripleDES 
+    TripleDES,
 }
 
 public static class EncryptionHelper
 {
-    public static byte[] Encrypt(byte[] data, string passphrase, EncryptionMethod encryptionMethod, Encoding encoding)
+    public static string CreatePassphrase(
+        int length)
     {
-        return GetEncryptionEngine(encryptionMethod).Encrypt(data, passphrase, encoding);
+        var randomNumber = new byte[length];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 
-    public static byte[] Encrypt(byte[] data, string passphrase, EncryptionMethod encryptionMethod)
+    public static byte[] Encrypt(
+        byte[] data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod, 
+        Encoding encoding)
     {
-        return Encrypt(data, passphrase, encryptionMethod, GetDefaultEncoding());
+        return GetEncryptionEngine(encryptionMethod)
+            .Encrypt(
+                data, 
+                passphrase, 
+                encoding);
     }
 
-    public static byte[] Encrypt(string data, string passphrase, EncryptionMethod encryptionMethod, Encoding encoding)
+    public static byte[] Encrypt(
+        byte[] data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod)
     {
-        return GetEncryptionEngine(encryptionMethod).Encrypt(new System.Text.UTF8Encoding().GetBytes(data), passphrase, encoding);
+        return Encrypt(
+            data, 
+            passphrase, 
+            encryptionMethod, 
+            GetDefaultEncoding());
     }
 
-    public static byte[] Encrypt(string data, string passphrase, EncryptionMethod encryptionMethod)
+    public static byte[] Encrypt(
+        string data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod, 
+        Encoding encoding)
     {
-        return Encrypt(data, passphrase, encryptionMethod, GetDefaultEncoding());
+        return GetEncryptionEngine(encryptionMethod)
+            .Encrypt(
+                encoding.GetBytes(data), 
+                passphrase, 
+                encoding);
     }
 
-    public static string EncryptAsString(string data, string passphrase, EncryptionMethod encryptionMethod, Encoding encoding)
+    public static byte[] Encrypt(
+        string data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod)
     {
-        return Convert.ToBase64String(Encrypt(data, passphrase, encryptionMethod, encoding));
+        return Encrypt(
+            data, 
+            passphrase, 
+            encryptionMethod, 
+            GetDefaultEncoding());
     }
 
-    public static string EncryptAsString(string data, string passphrase, EncryptionMethod encryptionMethod)
+    public static string EncryptAsString(
+        string data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod, 
+        Encoding encoding)
     {
-        return EncryptAsString(data, passphrase, encryptionMethod, GetDefaultEncoding());
+        return Convert.ToBase64String(
+            Encrypt(
+                data, 
+                passphrase, 
+                encryptionMethod, 
+                encoding));
     }
 
-    public static byte[] Decrypt(byte[] data, string passphrase, EncryptionMethod encryptionMethod, Encoding encoding)
+    public static string EncryptAsString(
+        string data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod)
     {
-        return GetEncryptionEngine(encryptionMethod).Decrypt(data, passphrase, encoding);
+        return EncryptAsString(
+            data, 
+            passphrase, 
+            encryptionMethod, 
+            GetDefaultEncoding());
     }
 
-    public static byte[] Decrypt(byte[] data, string passphrase, EncryptionMethod encryptionMethod)
+    public static byte[] Decrypt(
+        byte[] data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod, 
+        Encoding encoding)
     {
-        return Decrypt(data, passphrase, encryptionMethod, GetDefaultEncoding());
+        return GetEncryptionEngine(encryptionMethod)
+            .Decrypt(
+                data, 
+                passphrase, 
+                encoding);
     }
 
-    public static string DecryptAsString(byte[] data, string passphrase, EncryptionMethod encryptionMethod, Encoding encoding)
+    public static byte[] Decrypt(
+        byte[] data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod)
     {
-        return encoding.GetString(Decrypt(data, passphrase, encryptionMethod, encoding));
+        return Decrypt(
+            data, 
+            passphrase, 
+            encryptionMethod, 
+            GetDefaultEncoding());
     }
 
-    public static string DecryptAsString(byte[] data, string passphrase, EncryptionMethod encryptionMethod)
+    public static string DecryptAsString(
+        byte[] data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod, 
+        Encoding encoding)
     {
-        return DecryptAsString(data, passphrase, encryptionMethod, GetDefaultEncoding());
+        return encoding.GetString(
+            Decrypt(
+                data, 
+                passphrase, 
+                encryptionMethod, 
+                encoding));
     }
 
-    public static string DecryptAsString(string data, string passphrase, EncryptionMethod encryptionMethod, Encoding encoding)
+    public static string DecryptAsString(
+        byte[] data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod)
     {
-        return DecryptAsString(Convert.FromBase64String(data), passphrase, encryptionMethod, encoding);
+        return DecryptAsString(
+            data, 
+            passphrase, 
+            encryptionMethod, 
+            GetDefaultEncoding());
     }
 
-    public static string DecryptAsString(string data, string passphrase, EncryptionMethod encryptionMethod)
+    public static string DecryptAsString(
+        string data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod, 
+        Encoding encoding)
     {
-        return DecryptAsString(data, passphrase, encryptionMethod, GetDefaultEncoding());
+        return DecryptAsString(
+            Convert.FromBase64String(data), 
+            passphrase, 
+            encryptionMethod, 
+            encoding);
     }
 
-    private static IEncryptionEngine GetEncryptionEngine(EncryptionMethod encryptionMethod)
+    public static string DecryptAsString(
+        string data, 
+        string passphrase, 
+        EncryptionMethod encryptionMethod)
+    {
+        return DecryptAsString(
+            data, 
+            passphrase, 
+            encryptionMethod, 
+            GetDefaultEncoding());
+    }
+
+    private static IEncryptionEngine GetEncryptionEngine(
+        EncryptionMethod encryptionMethod)
     {
         IEncryptionEngine engine = null;
 
@@ -83,6 +187,6 @@ public static class EncryptionHelper
 
     private static Encoding GetDefaultEncoding()
     {
-        return new System.Text.UTF8Encoding();
+        return new UTF8Encoding();
     }
 }
