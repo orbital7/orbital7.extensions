@@ -6,8 +6,8 @@ namespace System;
 // * https://masstransit.io/documentation/patterns/newid#newid
 // * https://github.com/phatboyg/NewId
 // * https://andrewlock.net/generating-sortable-guids-using-newid/
-public abstract class EntityBase :
-    IEntity
+public abstract class EntityGuidKeyedBase :
+    IEntity<Guid>
 {
     [Key]
     public Guid Id { get; set; }
@@ -16,7 +16,7 @@ public abstract class EntityBase :
 
     public DateTime LastModifiedDateTimeUtc { get; set; }
 
-    protected EntityBase()
+    protected EntityGuidKeyedBase()
     {
         this.Id = GuidFactory.NextSequential();
         this.CreatedDateTimeUtc = DateTime.UtcNow;

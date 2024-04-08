@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
-public abstract class AtomicIdentityDbContextBase<TUser, TRole> :
-    IdentityDbContext<TUser, TRole, Guid>
-    where TUser : IdentityUser<Guid>
-    where TRole : IdentityRole<Guid>
+public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
+    IdentityDbContext<TUser, TRole, TKey>
+    where TUser : IdentityUser<TKey>
+    where TRole : IdentityRole<TKey>
+    where TKey : IEquatable<TKey>
 {
     public bool ClearChangeTrackerOnSave { get; set; } = true;
 

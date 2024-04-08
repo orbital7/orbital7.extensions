@@ -23,6 +23,18 @@ public static class StringExtensions
     public const string AlphanumericChars = NumberChars + LetterChars;
     public const string WhitespaceChars = " \r\n\t\v\f";
 
+    public static string ShuffleCharacters(
+        this string value)
+    {
+        var chars = value.ToCharArray();
+
+        var randomlyOrderedChars = chars.Randomize();
+
+        var sb = new StringBuilder();
+        sb.Append(randomlyOrderedChars);
+        return sb.ToString();
+    }
+
     public static string First(
         this string value, 
         int numCharacters)

@@ -36,7 +36,7 @@ public static class Extensions
         this DbSet<TEntity> entitySet,
         TEntity entity,
         bool validate = true)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         if (validate)
         {
@@ -87,11 +87,12 @@ public static class Extensions
         return entity;
     }
 
-    public static TEntity UpdateEntityProperties<TEntity>(
+    public static TEntity UpdateEntityProperties<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
-        Guid entityId,
+        TKey entityId,
         params (Expression<Func<TEntity, object>>, object)[] updatedPropertyValues)
-        where TEntity : class, IEntity, new()
+        where TEntity : class, IEntity<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         var entity = new TEntity()
         {
@@ -117,59 +118,64 @@ public static class Extensions
     public static TEntity DeleteEntity<TEntity>(
         this DbSet<TEntity> entitySet,
         TEntity entity)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         var entry = entitySet.Remove(entity);
         return entry.Entity;
     }
 
-    public static async Task<TEntity> GetAsync<TEntity>(
+    public static async Task<TEntity> GetAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
-        Guid id,
+        TKey id,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
         return await ExecuteGetAsync(entitySet, id, true, null, includePaths);
     }
 
-    public static async Task<TEntity> GetAsync<TEntity>(
+    public static async Task<TEntity> GetAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
-        Guid id,
+        TKey id,
         CancellationToken cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
         return await ExecuteGetAsync(entitySet, id, true, cancellationToken, includePaths);
     }
 
-    public static async Task<TOutput> GetAsync<TEntity, TOutput>(
+    public static async Task<TOutput> GetAsync<TEntity, TKey, TOutput>(
         this DbSet<TEntity> entitySet,
-        Guid id,
+        TKey id,
         Expression<Func<TEntity, TOutput>> select,
         CancellationToken cancellationToken = default)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
         return await entitySet
-            .Where(x => x.Id == id)
+            .Where(x => x.Id.Equals(id))
             .Select(select)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public static async Task<TEntity> GetWithTrackingAsync<TEntity>(
+    public static async Task<TEntity> GetWithTrackingAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
-        Guid id,
+        TKey id,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
         return await ExecuteGetAsync(entitySet, id, false, null, includePaths);
     }
 
-    public static async Task<TEntity> GetWithTrackingAsync<TEntity>(
+    public static async Task<TEntity> GetWithTrackingAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
-        Guid id,
+        TKey id,
         CancellationToken cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
         return await ExecuteGetAsync(entitySet, id, false, cancellationToken, includePaths);
     }
@@ -177,7 +183,7 @@ public static class Extensions
     public static async Task<TEntity> GetAsync<TEntity>(
         this IQueryable<TEntity> query,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGetAsync(query, true, null, includePaths);
     }
@@ -186,7 +192,7 @@ public static class Extensions
         this IQueryable<TEntity> query,
         CancellationToken cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGetAsync(query, true, cancellationToken, includePaths);
     }
@@ -194,7 +200,7 @@ public static class Extensions
     public static async Task<TEntity> GetWithTrackingAsync<TEntity>(
         this IQueryable<TEntity> query,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGetAsync(query, false, null, includePaths);
     }
@@ -203,7 +209,7 @@ public static class Extensions
         this IQueryable<TEntity> query,
         CancellationToken cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGetAsync(query, false, cancellationToken, includePaths);
     }
@@ -212,7 +218,7 @@ public static class Extensions
         this IQueryable<TEntity> query,
         Expression<Func<TEntity, TOutput>> select,
         CancellationToken cancellationToken = default)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await query
             .Select(select)
@@ -222,7 +228,7 @@ public static class Extensions
     public static async Task<List<TEntity>> GatherAsync<TEntity>(
         this IQueryable<TEntity> query,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGatherAsync(query, true, null, includePaths);
     }
@@ -231,7 +237,7 @@ public static class Extensions
         this IQueryable<TEntity> query,
         CancellationToken cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGatherAsync(query, true, cancellationToken, includePaths);
     }
@@ -239,7 +245,7 @@ public static class Extensions
     public static async Task<List<TEntity>> GatherWithTrackingAsync<TEntity>(
         this IQueryable<TEntity> query,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGatherAsync(query, false, null, includePaths);
     }
@@ -248,7 +254,7 @@ public static class Extensions
         this IQueryable<TEntity> query,
         CancellationToken cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await ExecuteGatherAsync(query, false, cancellationToken, includePaths);
     }
@@ -257,22 +263,23 @@ public static class Extensions
         this IQueryable<TEntity> query,
         Expression<Func<TEntity, TOutput>> select,
         CancellationToken cancellationToken = default)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         return await query
             .Select(select)
             .ToListAsync(cancellationToken);
     }
 
-    private static async Task<TEntity> ExecuteGetAsync<TEntity>(
+    private static async Task<TEntity> ExecuteGetAsync<TEntity, TKey>(
         DbSet<TEntity> entitySet,
-        Guid id,
+        TKey id,
         bool untracked,
         CancellationToken? cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
-        var query = entitySet.Where(x => x.Id == id);
+        var query = entitySet.Where(x => x.Id.Equals(id));
         return await ExecuteGetAsync(
             query,
             untracked,
@@ -285,7 +292,7 @@ public static class Extensions
         bool untracked,
         CancellationToken? cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         query = CompleteQuery(query, untracked, includePaths);
 
@@ -304,7 +311,7 @@ public static class Extensions
         bool untracked,
         CancellationToken? cancellationToken,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         query = CompleteQuery(query, untracked, includePaths);
 
@@ -322,7 +329,7 @@ public static class Extensions
         IQueryable<TEntity> query,
         bool untracked = true,
         params string[] includePaths)
-        where TEntity : class, IEntity
+        where TEntity : class
     {
         foreach (var includePath in includePaths)
         {

@@ -4,9 +4,9 @@ namespace System;
 
 public class StringHelper
 {
-    public static string CreateRandomString(
+    public static string CreateRandom(
         int length,
-        string characters = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-")
+        string characters = StringExtensions.AlphanumericChars)
     {
         var chars = characters.ToCharArray();
         byte[] data = new byte[4 * length];

@@ -43,14 +43,14 @@ public static class ObjectExtensions
             .ToList();
     }
 
-    public static T CloneIgnoringReferenceProperties<T>(
-        this T model)
-        where T : class, new()
+    public static TEntity CloneIgnoringReferenceProperties<TEntity>(
+        this TEntity model)
+        where TEntity : class, new()
     {
-        var clone = new T();
+        var clone = new TEntity();
 
         var stringPropertyType = typeof(string);
-        var properties = typeof(T).GetProperties();
+        var properties = typeof(TEntity).GetProperties();
         foreach (var property in properties)
         {
             // If the property is both readable and writable and
@@ -70,12 +70,33 @@ public static class ObjectExtensions
         return clone;
     }
 
-    public static T CloneAsNewEntityIgnoringReferenceProperties<T>(
-        this T model)
-        where T : class, IEntity, new()
+    public static TEntity CloneAsNewEntityIgnoringReferenceProperties<TEntity>(
+        this TEntity model)
+        where TEntity : EntityGuidKeyedBase, new()
+    {
+        return ExecuteCloneAsNewEntityIgnoringReferenceProperties(
+            model,
+            GuidFactory.NextSequential());
+    }
+
+    public static TEntity CloneAsNewEntityIgnoringReferenceProperties<TEntity>(
+        this TEntity model,
+        long newId = 0L)
+        where TEntity : EntityLongKeyedBase, new()
+    {
+        return ExecuteCloneAsNewEntityIgnoringReferenceProperties(
+            model,
+            newId);
+    }
+
+    private static TEntity ExecuteCloneAsNewEntityIgnoringReferenceProperties<TEntity, TKey>(
+        TEntity model,
+        TKey id)
+        where TEntity : class, IEntity<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         var entity = model.CloneIgnoringReferenceProperties();
-        entity.Id = GuidFactory.NextSequential();
+        entity.Id = id;
         entity.CreatedDateTimeUtc = DateTime.UtcNow;
         entity.LastModifiedDateTimeUtc = model.CreatedDateTimeUtc;
 

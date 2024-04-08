@@ -5,9 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>8.0.5</Version>
-	<AssemblyVersion>8.0.5.0</AssemblyVersion>
-    <FileVersion>8.0.5.0</FileVersion>
+    <Version>8.0.6</Version>
+	<AssemblyVersion>8.0.6.0</AssemblyVersion>
+    <FileVersion>8.0.6.0</FileVersion>
     <Description>ASP.NET Core 8 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
