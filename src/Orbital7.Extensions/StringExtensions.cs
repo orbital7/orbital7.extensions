@@ -5,11 +5,12 @@ namespace System;
 
 public enum PhoneNumberFormat
 {
-    ParenthesisAndDashes,
 
     DashesOnly,
 
     PeriodsOnly,
+
+    ParenthesisAndDashes,
 }
 
 public static class StringExtensions
@@ -72,7 +73,9 @@ public static class StringExtensions
         return plural;
     }
 
-    public static string Remove(this string value, string toRemove)
+    public static string Remove(
+        this string value, 
+        string toRemove)
     {
         return value.Replace(toRemove, "");
     }
@@ -90,7 +93,7 @@ public static class StringExtensions
 
     public static string ToFormattedPhoneNumber(
         this string value, 
-        PhoneNumberFormat format = PhoneNumberFormat.ParenthesisAndDashes)
+        PhoneNumberFormat format = PhoneNumberFormat.DashesOnly)
     {
         // TODO: Expand to include non-NorthAmerican phone numbers.
 
@@ -225,14 +228,23 @@ public static class StringExtensions
             return value;
     }
 
-    public static string EnsureContent(
+    public static string EnsureHasText(
         this string value, 
-        string emptyText)
+        string defaultText)
     {
-        if (!string.IsNullOrEmpty(value))
+        if (!value.HasText())
             return value;
         else
-            return emptyText;
+            return defaultText;
+    }
+
+    public static string EnsureNullIfEmpty(
+        this string value)
+    {
+        if (value.HasText())
+            return value;
+        else
+            return null;
     }
 
     public static string ToTextString(

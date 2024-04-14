@@ -1,12 +1,12 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public class LogsUploadService :
-    LogsServiceBase, ILogsUploadService
+public class LogsUploadApi :
+    LogsApiBase, ILogsUploadApi
 {
     public override string BaseUrl => "https://in.logs.betterstack.com/";
 
-    public LogsUploadService(
-        IBetterStackClient client) :
+    public LogsUploadApi(
+        IBetterStackApiClient client) :
         base(client)
     {
 

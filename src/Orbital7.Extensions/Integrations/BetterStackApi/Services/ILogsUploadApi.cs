@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public interface ILogsUploadService
+public interface ILogsUploadApi
 {
     Task LogEventAsync(
         string sourceToken,

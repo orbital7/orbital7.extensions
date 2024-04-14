@@ -1,12 +1,12 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public class UptimeHeartbeatsService :
-    UptimeServiceBase, IUptimeHeartbeatsService
+public class UptimeHeartbeatsApi :
+    UptimeApiBase, IUptimeHeartbeatsApi
 {
     private const string BASE_ROUTE = "heartbeats";
 
-    public UptimeHeartbeatsService(
-        IBetterStackClient client) : 
+    public UptimeHeartbeatsApi(
+        IBetterStackApiClient client) : 
         base(client)
     {
 

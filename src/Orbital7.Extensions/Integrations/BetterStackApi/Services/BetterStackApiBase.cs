@@ -1,13 +1,13 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public abstract class BetterStackServiceBase
+public abstract class BetterStackApiBase
 {
-    public IBetterStackClient Client { get; set; }
+    public IBetterStackApiClient Client { get; set; }
 
     public abstract string BaseUrl { get; }
 
-    protected BetterStackServiceBase(
-        IBetterStackClient client)
+    protected BetterStackApiBase(
+        IBetterStackApiClient client)
     {
         this.Client = client;
     }

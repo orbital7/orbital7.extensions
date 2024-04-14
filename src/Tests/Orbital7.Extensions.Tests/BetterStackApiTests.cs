@@ -32,14 +32,14 @@ public class BetterStackApiTests
         Skip.IfNot(this.BetterStackUptimeApiToken.HasText());
 
         // Create the client and service.
-        var client = new BetterStackClient(
+        var client = new BetterStackApiClient(
             this.HttpClientFactory, 
             this.BetterStackUptimeApiToken);
-        var service = new UptimeHeartbeatsService(client);
+        var uptimeHeartbeatsApi = new UptimeHeartbeatsApi(client);
 
         // Create a heartbeat.
         const string CREATE_HEARTBEAT_NAME = "Test Heartbeat";
-        var createHeartbeatResponse = await service.CreateAsync(
+        var createHeartbeatResponse = await uptimeHeartbeatsApi.CreateAsync(
             new HeartbeatRequest()
             {
                 Name = CREATE_HEARTBEAT_NAME,
@@ -59,21 +59,21 @@ public class BetterStackApiTests
         Assert.False(heartbeat.Attributes.Paused);
 
         // Test listing heartbeats.
-        var heartbeatsResponse = await service.ListAllExistingAsync();
+        var heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync();
         Assert.NotNull(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
 
         // Send the heartbeat.
-        await service.SendAsync(heartbeat.Attributes.Url);
+        await uptimeHeartbeatsApi.SendAsync(heartbeat.Attributes.Url);
 
         // Get the heartbeat.
-        var getHeartbeatResponse = await service.GetAsync(heartbeat.Id);
+        var getHeartbeatResponse = await uptimeHeartbeatsApi.GetAsync(heartbeat.Id);
         heartbeat = getHeartbeatResponse.Data;
         Assert.Equal(HeartbeatStatus.Up, heartbeat.Attributes.Status);
         Assert.False(heartbeat.Attributes.Paused);
 
         // Update the heartbeat.
         const string UPDATE_HEARTBEAT_NAME = "Test Heartbeat (updated)";
-        var updateHeartbeatResponse = await service.UpdateAsync(
+        var updateHeartbeatResponse = await uptimeHeartbeatsApi.UpdateAsync(
             heartbeat.Id,
             new HeartbeatRequest()
             {
@@ -89,8 +89,8 @@ public class BetterStackApiTests
         Assert.True(heartbeat.Attributes.Paused);
 
         // Delete the heartbeat.
-        await service.DeleteAsync(heartbeat.Id);
-        heartbeatsResponse = await service.ListAllExistingAsync();
+        await uptimeHeartbeatsApi.DeleteAsync(heartbeat.Id);
+        heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync();
         Assert.Null(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
 
         // Test parsing page index.
@@ -99,14 +99,14 @@ public class BetterStackApiTests
     }
 
     [SkippableFact]
-    public async Task TestLogsUpload()
+    public async Task TestLogsUploadApi()
     {
         // Skip this test unless we have the necessary configuration data.
         Skip.IfNot(this.BetterStackLogsSourceToken.HasText());
 
         // Create the client and service.
-        var client = new BetterStackClient(this.HttpClientFactory);
-        var service = new LogsUploadService(client);
+        var client = new BetterStackApiClient(this.HttpClientFactory);
+        var logsUploadApi = new LogsUploadApi(client);
 
         // Create an event.
         var logEvent = new LogEvent()
@@ -131,7 +131,7 @@ public class BetterStackApiTests
         };
 
         // Upload single log event.
-        await service.LogEventAsync(
+        await logsUploadApi.LogEventAsync(
             this.BetterStackLogsSourceToken,
             logEvent);
 
@@ -165,7 +165,7 @@ public class BetterStackApiTests
         };
 
         // Upload multiple log events.
-        await service.LogEventsAsync(
+        await logsUploadApi.LogEventsAsync(
             this.BetterStackLogsSourceToken, 
             logEvents);
     }

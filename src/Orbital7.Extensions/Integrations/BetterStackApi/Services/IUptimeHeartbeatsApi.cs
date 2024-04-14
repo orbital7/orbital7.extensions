@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public interface IUptimeHeartbeatsService
+public interface IUptimeHeartbeatsApi
 {
     Task<HeartbeatsResponse> ListAllExistingAsync(
         int? page = null);

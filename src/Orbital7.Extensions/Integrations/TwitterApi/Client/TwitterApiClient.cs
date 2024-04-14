@@ -1,12 +1,12 @@
 ﻿namespace Orbital7.Extensions.Integrations.TwitterApi;
 
 // Authorization: https://developer.twitter.com/en/docs/authentication/oauth-2-0/user-access-token
-public class TwitterClient :
-    OAuthApiClientBase, ITwitterClient
+public class TwitterApiClient :
+    OAuthApiClientBase, ITwitterApiClient
 {
     protected override string OAuthTokenEndpointUrl => "https://api.twitter.com/2/oauth2/token";
 
-    public TwitterClient(
+    public TwitterApiClient(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
         string clientId,

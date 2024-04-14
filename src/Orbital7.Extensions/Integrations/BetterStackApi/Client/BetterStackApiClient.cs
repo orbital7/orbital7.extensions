@@ -1,11 +1,11 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
-public class BetterStackClient :
-    ApiClient, IBetterStackClient
+public class BetterStackApiClient :
+    ApiClient, IBetterStackApiClient
 {
     public string BearerToken { private get; set; }
 
-    public BetterStackClient(
+    public BetterStackApiClient(
         IHttpClientFactory httpClientFactory,
         string bearerToken = null) :
         base(httpClientFactory)

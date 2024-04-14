@@ -7,9 +7,9 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddBetterStackLogs(
         this IServiceCollection services)
     {
-        services.AddScoped<ILogsUploadService, LogsUploadService>(
-            (serviceProvider) => new LogsUploadService(
-                new BetterStackClient(
+        services.AddScoped<ILogsUploadApi, LogsUploadApi>(
+            (serviceProvider) => new LogsUploadApi(
+                new BetterStackApiClient(
                     serviceProvider.GetRequiredService<IHttpClientFactory>())));
 
         return services;
@@ -19,9 +19,9 @@ public static class DependencyInjectionExtensions
         this IServiceCollection services,
         string apiToken)
     {
-        services.AddScoped<IUptimeHeartbeatsService, UptimeHeartbeatsService>(
-            (serviceProvider) => new UptimeHeartbeatsService(
-                new BetterStackClient(
+        services.AddScoped<IUptimeHeartbeatsApi, UptimeHeartbeatsApi>(
+            (serviceProvider) => new UptimeHeartbeatsApi(
+                new BetterStackApiClient(
                     serviceProvider.GetRequiredService<IHttpClientFactory>(),
                     apiToken)));
 
