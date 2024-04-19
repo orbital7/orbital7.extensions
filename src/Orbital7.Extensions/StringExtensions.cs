@@ -56,6 +56,19 @@ public static class StringExtensions
             return null;
     }
 
+    public static string PascalCaseToPhrase(
+        this string value)
+    {
+        if (value.HasText())
+        {
+            return Regex.Replace(value, "([A-Z])", " $1").Trim();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public static string Pluralize(
         this string value)
     {
@@ -139,7 +152,7 @@ public static class StringExtensions
 
     public static string Replace(
         this string text, 
-        List<SerializableTuple<string, string>> textReplacementKeys)
+        List<(string, string)> textReplacementKeys)
     {
         string value = text;
 
@@ -189,7 +202,7 @@ public static class StringExtensions
         return true;
     }
 
-    public static string ToWindowsFileSystemSafeString(
+    public static string EnsureWindowsFileSystemSafe(
         this string value, 
         string replacementChar = "")
     {
@@ -247,14 +260,14 @@ public static class StringExtensions
             return null;
     }
 
-    public static string ToTextString(
+    public static string DecodeToString(
         this byte[] bytes)
     {
         UTF8Encoding encoding = new UTF8Encoding();
         return encoding.GetString(bytes, 0, bytes.Length);
     }
 
-    public static byte[] ToByteArray(
+    public static byte[] EncodeToByteArray(
         this string value)
     {
         UTF8Encoding encoding = new UTF8Encoding();
@@ -291,7 +304,7 @@ public static class StringExtensions
         }
     }
 
-    public static string CapitalizeFirstLetter(
+    public static string EnsureCapitalized(
         this string value)
     {
         var firstLetter = value.Substring(0, 1);

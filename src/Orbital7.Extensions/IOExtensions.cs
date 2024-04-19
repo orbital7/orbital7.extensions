@@ -57,12 +57,12 @@ public static class IOExtensions
 
     public static string ReadText(this Stream stream)
     {
-        return stream.ReadAll().ToTextString();
+        return stream.ReadAll().DecodeToString();
     }
 
     public static string ReadXML(this Stream stream)
     {
-        string xml = stream.ReadAll().ToTextString();
+        string xml = stream.ReadAll().DecodeToString();
         int index = xml.IndexOf("<");
         xml = xml.Substring(index, xml.Length - index);
 

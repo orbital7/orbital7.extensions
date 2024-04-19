@@ -16,6 +16,33 @@ public static class JsonSerializationHelper
             SerializeToJson(objectToClone));
     }
 
+    public static JsonSerializerOptions SetSerializerOptions(
+        JsonSerializerOptions options,
+        bool ignoreNullValues = true,
+        bool indentFormatting = false,
+        bool convertEnumsToStrings = true)
+    {
+        // Set defaults.
+        options.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.DefaultIgnoreCondition = ignoreNullValues ?
+            JsonIgnoreCondition.WhenWritingNull :
+            JsonIgnoreCondition.Never;
+        options.WriteIndented = indentFormatting;
+        options.IncludeFields = true;
+
+        // Ensure property naming policy is null so it won't auto-convert to camel case.
+        options.PropertyNamingPolicy = null;
+
+        // Handle enum to string conversion.
+        if (convertEnumsToStrings)
+        {
+            options.Converters.Add(
+                new JsonStringEnumMemberConverter());
+        }
+
+        return options;
+    }
+
     public static async Task<T> DeserializeFromJsonAsync<T>(
         string json,
         bool propertyNameCaseInsensitive = false,
@@ -32,9 +59,16 @@ public static class JsonSerializationHelper
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
-        using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+        if (json.HasText())
         {
-            return Deserialize<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+            {
+                return Deserialize<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            }
+        }
+        else
+        {
+            return default(T);
         }
     }
 
@@ -44,9 +78,16 @@ public static class JsonSerializationHelper
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
-        using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+        if (json.HasText())
         {
-            return await DeserializeAsync(type, stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+            {
+                return await DeserializeAsync(type, stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            }
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -56,9 +97,16 @@ public static class JsonSerializationHelper
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
-        using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+        if (json.HasText())
         {
-            return Deserialize(type, stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+            {
+                return Deserialize(type, stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            }
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -117,7 +165,14 @@ public static class JsonSerializationHelper
         using (var ms = new MemoryStream())
         {
             await SerializeAsync(objectToSerialize, ms, ignoreNullValues, indentFormatting, convertEnumsToStrings);
-            return ms.ToArray().ToTextString();
+            if (ms.Length > 0)
+            {
+                return ms.ToArray().DecodeToString();
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
@@ -130,7 +185,14 @@ public static class JsonSerializationHelper
         using (var ms = new MemoryStream())
         {
             Serialize(objectToSerialize, ms, ignoreNullValues, indentFormatting, convertEnumsToStrings);
-            return ms.ToArray().ToTextString();
+            if (ms.Length > 0)
+            {
+                return ms.ToArray().DecodeToString();
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
@@ -271,22 +333,11 @@ public static class JsonSerializationHelper
         bool indentFormatting,
         bool convertEnumsToStrings)
     {
-        var options = new JsonSerializerOptions()
-        {
-            ReferenceHandler = ReferenceHandler.IgnoreCycles,
-            DefaultIgnoreCondition = ignoreNullValues ?
-                JsonIgnoreCondition.WhenWritingNull :
-                JsonIgnoreCondition.Never,
-            WriteIndented = indentFormatting,
-        };
-
-        if (convertEnumsToStrings)
-        {
-            options.Converters.Add(
-                new JsonStringEnumMemberConverter());
-        }
-
-        return options;
+        return SetSerializerOptions(
+            new JsonSerializerOptions(),
+            ignoreNullValues,
+            indentFormatting,
+            convertEnumsToStrings);
     }
 
     private static JsonSerializerOptions CreateDeserializationOptions(
@@ -296,6 +347,7 @@ public static class JsonSerializationHelper
         var options = new JsonSerializerOptions()
         {
             PropertyNameCaseInsensitive = propertyNameCaseInsensitive,
+            IncludeFields = true,
         };
 
         if (convertEnumsToStrings)

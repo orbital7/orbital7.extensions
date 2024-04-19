@@ -1,10 +1,10 @@
 ﻿namespace System.ComponentModel.DataAnnotations;
 
-public class ValueLessThanAttribute : ValueCompareAttribute
+public class ValueLessThanAttribute : ValueCompareAttributeBase
 {
     protected override string CompareAction
     {
-        get { return "greater than"; }
+        get { return "less than"; }
     }
 
     public ValueLessThanAttribute(string propertyName, bool allowEqualValues = false)

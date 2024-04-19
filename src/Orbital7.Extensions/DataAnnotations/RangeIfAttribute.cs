@@ -1,6 +1,7 @@
 ﻿namespace System.ComponentModel.DataAnnotations;
 
-public partial class RangeIfAttribute : ConditionalValidationAttribute//, IClientModelValidator
+public class RangeIfAttribute : 
+    ConditionalValidationAttributeBase
 {
     private readonly int minimum;
     private readonly int maximum;
@@ -11,19 +12,4 @@ public partial class RangeIfAttribute : ConditionalValidationAttribute//, IClien
         this.minimum = minimum;
         this.maximum = maximum;
     }
-
-    //protected override string ValidationName
-    //{
-    //    get { return "rangeif"; }
-    //}
-
-    //protected override IDictionary<string, object> GetExtraValidationParameters()
-    //{
-    //    // Set the rule Range and the rule param [minumum,maximum]
-    //    return new Dictionary<string, object>
-    //    {
-    //        {"rule", "range"},
-    //        { "ruleparam", string.Format("[{0},{1}]", this.minimum, this.maximum) }
-    //    };
-    //}
 }

@@ -27,19 +27,15 @@ public static class ObjectExtensions
             throw new ValidationException(result.ToString());
     }
 
-    public static List<SerializableTuple<string, object>> GetPropertyValues(
+    public static List<NamedValue<object>> GetPropertyValues(
         this object model)
     {
         var type = model.GetType();
         PropertyInfo[] properties = type.GetProperties();
 
         return properties
-            .Select(x => new SerializableTuple<string, object>()
-            {
-                Item1 = x.Name,
-                Item2 = x.GetValue(model)
-            })
-            .OrderBy(x => x.Item1)
+            .Select(x => new NamedValue<object>(x.Name, x.GetValue(model)))
+            .OrderBy(x => x.Name)
             .ToList();
     }
 

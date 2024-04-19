@@ -1,6 +1,6 @@
 ﻿namespace System.ComponentModel.DataAnnotations;
 
-public class ValueGreaterThanAttribute : ValueCompareAttribute
+public class ValueGreaterThanAttribute : ValueCompareAttributeBase
 {
     protected override string CompareAction
     {

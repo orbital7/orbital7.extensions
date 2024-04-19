@@ -1,28 +1,26 @@
-﻿using System.Reflection;
+﻿namespace System.ComponentModel.DataAnnotations;
 
-namespace System.ComponentModel.DataAnnotations;
-
-public abstract class ValueCompareAttribute : ValidationAttribute
+public abstract class ValueCompareAttributeBase : ValidationAttribute
 {
-    protected string PropertyName { get; set; }
+    protected string CompareToPropertyName { get; set; }
     protected readonly bool AllowEqualValues;
 
     protected abstract string CompareAction { get; }
 
     protected abstract bool CompareValue(double thisValue, double compareValue);
 
-    protected ValueCompareAttribute(string propertyName, bool allowEqualValues = false)
+    protected ValueCompareAttributeBase(string compareToPropertyName, bool allowEqualValues = false)
     {
-        this.PropertyName = propertyName;
+        this.CompareToPropertyName = compareToPropertyName;
         this.AllowEqualValues = allowEqualValues;
         this.ErrorMessage = "The {0} field must be " + this.CompareAction + " the {1} field";
     }
 
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        var compareProperty = validationContext.ObjectType.GetRuntimeProperty(this.PropertyName);
+        var compareProperty = validationContext.ObjectType.GetRuntimeProperty(this.CompareToPropertyName);
         if (compareProperty == null)
-            return new ValidationResult(string.Format("unknown property {0}", this.PropertyName));
+            return new ValidationResult(string.Format("unknown property {0}", this.CompareToPropertyName));
 
         var comparePropertyValue = Double.Parse(compareProperty.GetValue(validationContext.ObjectInstance, null).ToString());
         var thisValue = Double.Parse(value.ToString());
@@ -31,6 +29,6 @@ public abstract class ValueCompareAttribute : ValidationAttribute
             return ValidationResult.Success;
 
         return new ValidationResult(string.Format(this.ErrorMessage, validationContext.DisplayName,
-            validationContext.ObjectType.GetPropertyDisplayName(this.PropertyName)));
+            validationContext.ObjectType.GetPropertyDisplayName(this.CompareToPropertyName)), new[] { validationContext.MemberName });
     }
 }

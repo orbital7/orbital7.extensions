@@ -1,68 +1,50 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 namespace System.Linq.Expressions;
 
 public static class ExpressionExtensions
 {
-    public static TAttribute GetAttribute<TModel, TProperty, TAttribute>(this Expression<Func<TModel, TProperty>> propertyExpression)
-        where TAttribute : Attribute
+    public static TAttribute GetAttribute<TProperty, TAttribute>(
+       this Expression<Func<TProperty>> expression)
+       where TAttribute : Attribute
     {
-        var memberInfo = propertyExpression.Body.GetPropertyInformation();
-        return memberInfo.GetAttribute<TAttribute>(false);
+        return expression.Body
+            .GetPropertyInformation()
+            .GetAttribute<TAttribute>(isRequired: false);
     }
 
-    public static bool HasAttribute<TModel, TProperty, TAttribute>(this Expression<Func<TModel, TProperty>> expression)
+    public static bool HasAttribute<TProperty, TAttribute>(
+        this Expression<Func<TProperty>> expression)
         where TAttribute : Attribute
     {
         return expression.HasAttribute(typeof(TAttribute));
     }
 
-    public static bool HasAttribute<TModel, TProperty>(this Expression<Func<TModel, TProperty>> expression, Type attributeType)
+    public static bool HasAttribute<TProperty>(
+        this Expression<Func<TProperty>> expression, 
+        Type attributeType)
     {
-        if (expression.Body is MemberExpression property)
+        if (expression.Body is MemberExpression memberExpression)
         {
-            var results = property.Member.GetCustomAttributes(attributeType, false);
-            return results.Length > 0;
+            return memberExpression.Member
+                .GetCustomAttributes(attributeType, inherit: false)
+                .Length > 0;
         }
 
         return false;
     }
 
-    public static string GetPropertyDisplayName<TModel, TProperty>(this Expression<Func<TModel, TProperty>> propertyExpression)
+    public static string GetDisplayName<TProperty>(
+        this Expression<Func<TProperty>> expression)
     {
-        var memberInfo = propertyExpression.Body.GetPropertyInformation();
-        var attr = memberInfo.GetPropertyDisplayAttribute();
-        if (attr != null && !string.IsNullOrEmpty(attr.Name))
-            return attr.Name;
-
-        return memberInfo.Name;
+        var memberInfo = expression.Body.GetPropertyInformation();
+        return memberInfo.GetDisplayName();
     }
 
-    public static string GetPropertyDisplayShortName<TModel, TProperty>(this Expression<Func<TModel, TProperty>> propertyExpression)
+    public static DisplayAttribute GetDisplayAttribute<TProperty>(
+        this Expression<Func<TProperty>> expression)
     {
-        var memberInfo = propertyExpression.Body.GetPropertyInformation();
-        var attr = memberInfo.GetPropertyDisplayAttribute();
-        if (attr != null)
-        {
-            if (!string.IsNullOrEmpty(attr.ShortName))
-                return attr.ShortName;
-            else if (!string.IsNullOrEmpty(attr.Name))
-                return attr.Name;
-        }
-
-        return memberInfo.Name;
-    }
-
-    public static string GetPropertyDisplayDescription<TModel, TProperty>(this Expression<Func<TModel, TProperty>> propertyExpression)
-    {
-        var attr = GetPropertyDisplayAttribute(propertyExpression);
-        return attr?.Description;
-    }
-
-    public static DisplayAttribute GetPropertyDisplayAttribute<TModel, TProperty>(this Expression<Func<TModel, TProperty>> propertyExpression)
-    {
-        var memberInfo = propertyExpression.Body.GetPropertyInformation();
-        return memberInfo.GetPropertyDisplayAttribute();
+        var memberInfo = expression.Body.GetPropertyInformation();
+        return memberInfo.GetDisplayAttribute();
     }
 }

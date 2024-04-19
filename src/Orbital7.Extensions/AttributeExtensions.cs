@@ -13,14 +13,14 @@ public static class AttributeExtensions
         return objectType.GetRuntimeProperties().Where(prop => prop.IsDefined(attributeType));
     }
 
-    public static IEnumerable<Tuple<PropertyInfo, T>> GetPropertiesWithAttribute<T>(
+    public static IEnumerable<(PropertyInfo, T)> GetPropertiesWithAttribute<T>(
         this Type objectType) 
         where T : Attribute
     {
         return from p in objectType.GetRuntimeProperties()
                let attr = p.GetCustomAttributes(typeof(T), true).ToList()
                where attr.Count == 1
-               select new Tuple<PropertyInfo, T>(p, attr.First() as T);
+               select ((p, attr.First() as T));
     }
 
     public static string GetPropertyDisplayName(
@@ -38,7 +38,7 @@ public static class AttributeExtensions
             return propertyName;
     }
 
-    public static DisplayAttribute GetPropertyDisplayAttribute(
+    public static DisplayAttribute GetDisplayAttribute(
         this MemberInfo memberInfo)
     {
         if (memberInfo == null)
@@ -49,6 +49,13 @@ public static class AttributeExtensions
         }
 
         return memberInfo.GetAttribute<DisplayAttribute>(false);
+    }
+
+    public static string GetDisplayName(
+        this MemberInfo memberInfo)
+    {
+        return memberInfo.GetDisplayAttribute()?.Name ??
+            memberInfo.Name.PascalCaseToPhrase();
     }
 
     public static T GetPropertyAttribute<T>(
@@ -85,7 +92,14 @@ public static class AttributeExtensions
         return (T)attribute;
     }
 
-    public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(
+    public static bool HasAttribute<T>(
+        this MemberInfo member)
+        where T : Attribute
+    {
+        return member.GetAttribute<T>(false) != null;
+    }
+
+    public static List<(Type, TAttribute)> GetTypeAttributePairs<TAttribute>(
         this Assembly assembly, 
         Type objectType,
         bool includeNullAttributes = false) 
@@ -98,10 +112,10 @@ public static class AttributeExtensions
                 let a = x.GetCustomAttribute(attributeType) as TAttribute
                 where includeNullAttributes || a != null
 
-                select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
+                select (x, a)).ToList();
     }
 
-    public static List<SerializableTuple<Type, TAttribute>> GetTypeAttributePairs<TAttribute>(
+    public static List<(Type, TAttribute)> GetTypeAttributePairs<TAttribute>(
         this Assembly assembly, 
         Type objectType, 
         Type attributeType,
@@ -113,7 +127,7 @@ public static class AttributeExtensions
         return (from x in types
                 let a = x.GetCustomAttribute(attributeType) as TAttribute
                 where includeNullAttributes || a != null
-                select new SerializableTuple<Type, TAttribute>(x, a)).ToList();
+                select (x, a)).ToList();
     }
 
     public static object GetPropertyAttributeValue(

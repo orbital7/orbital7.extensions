@@ -205,4 +205,34 @@ public static class NumericExtensions
         var nearestOf = 0.25m;
         return Math.Floor(value / nearestOf) * nearestOf;
     }
+
+    public static decimal RoundUpToNearestStep(
+        this decimal value,
+        decimal step)
+    {
+        if (value >= 0)
+        {
+            if (value % step == 0) return value;
+            return (step - value % step) + value;
+        }
+        else
+        {
+            if (value % step == 0) return value;
+            return (step + value % step) + value;
+        }
+    }
+
+    public static decimal RoundDownToNearestStep(
+        this decimal value,
+        decimal step)
+    {
+        if (value >= 0)
+        {
+            return value - value % step;
+        }
+        else
+        {
+            return value + value % step;
+        }
+    }
 }

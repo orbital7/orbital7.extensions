@@ -1,6 +1,7 @@
 ﻿namespace System.ComponentModel.DataAnnotations;
 
-public partial class RegularExpressionIfAttribute : ConditionalValidationAttribute//, IClientModelValidator
+public class RegularExpressionIfAttribute : 
+    ConditionalValidationAttributeBase
 {
     private readonly string pattern;
 
@@ -9,19 +10,4 @@ public partial class RegularExpressionIfAttribute : ConditionalValidationAttribu
     {
         this.pattern = pattern;
     }
-
-    //protected override string ValidationName
-    //{
-    //    get { return "regularexpressionif"; }
-    //}
-
-    //protected override IDictionary<string, object> GetExtraValidationParameters()
-    //{
-    //    // Set the rule RegEx and the rule param pattern
-    //    return new Dictionary<string, object>
-    //    {
-    //        {"rule", "regex"},
-    //        { "ruleparam", pattern }
-    //    };
-    //}
 }

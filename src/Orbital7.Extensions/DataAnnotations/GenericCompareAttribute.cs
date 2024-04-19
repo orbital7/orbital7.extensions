@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace System.ComponentModel.DataAnnotations;
+﻿namespace System.ComponentModel.DataAnnotations;
 
 public enum GenericCompareOperator
 {
@@ -10,17 +8,30 @@ public enum GenericCompareOperator
     LessThanOrEqual
 }
 
-public sealed partial class GenericCompareAttribute : ValidationAttribute//, IClientModelValidator
+public sealed class GenericCompareAttribute : 
+    ValidationAttribute
 {
     private GenericCompareOperator operatorname = GenericCompareOperator.GreaterThanOrEqual;
 
     public string CompareToPropertyName { get; set; }
 
-    public GenericCompareOperator OperatorName { get { return operatorname; } set { operatorname = value; } }
+    public GenericCompareOperator OperatorName 
+    { 
+        get 
+        { 
+            return operatorname; 
+        } 
+        set 
+        { 
+            operatorname = value; 
+        } 
+    }
 
     public GenericCompareAttribute() : base() { }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(
+        object value, 
+        ValidationContext validationContext)
     {
         string operstring = (OperatorName == GenericCompareOperator.GreaterThan ?
         "greater than " : (OperatorName == GenericCompareOperator.GreaterThanOrEqual ?
@@ -37,18 +48,7 @@ public sealed partial class GenericCompareAttribute : ValidationAttribute//, ICl
             (operatorname == GenericCompareOperator.GreaterThanOrEqual && valThis.CompareTo(valOther) < 0) ||
             (operatorname == GenericCompareOperator.LessThan && valThis.CompareTo(valOther) >= 0) ||
             (operatorname == GenericCompareOperator.LessThanOrEqual && valThis.CompareTo(valOther) > 0))
-            return new ValidationResult(base.ErrorMessage);
+            return new ValidationResult(base.ErrorMessage, new[] { validationContext.MemberName });
         return null;
     }
-
-    //public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
-    //{
-    //    string errorMessage = this.FormatErrorMessage(metadata.DisplayName);
-    //    ModelClientValidationRule compareRule = new ModelClientValidationRule();
-    //    compareRule.ErrorMessage = errorMessage;
-    //    compareRule.ValidationType = "genericcompare";
-    //    compareRule.ValidationParameters.Add("comparetopropertyname", CompareToPropertyName);
-    //    compareRule.ValidationParameters.Add("operatorname", OperatorName.ToString());
-    //    yield return compareRule;
-    //}
 }
