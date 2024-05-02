@@ -52,7 +52,7 @@ public abstract class DbContextMigrationScriptJobBase<TDbContext> :
         }
         else
         {
-            await DbContextMigrationHelper<DbContext>.MigrateAsync(
+            await DbContextMigrationHelper<TDbContext>.MigrateAsync(
                 this.ServiceProvider);
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace System;
+﻿using System.Globalization;
+
+namespace System;
 
 public enum Month
 {
@@ -89,51 +91,77 @@ public static class DateTimeExtensions
     {
         return dateTime.Subtract(dateToCompare).Days / (365.25 / 12);
     }
-    
-    public static string ToShortDateString(
+
+    #if NET6_0_OR_GREATER
+        public static string ToDefaultDateString(
+            this DateOnly date)
+        {
+            return date.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
+        }
+
+        public static string ToDefaultDateString(
+            this DateOnly? date,
+            string nullValue = null)
+        {
+            if (date.HasValue)
+                return date.Value.ToDefaultDateString();
+            else
+                return nullValue;
+        }
+    #endif
+
+    public static string ToDefaultDateString(
         this DateTime dateTime)
     {
-        return dateTime.ToString("MM/dd/yyyy");
+        return dateTime.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
     }
 
-    public static string ToShortDateString(
+    public static string ToDefaultDateString(
         this DateTime? dateTime, 
-        string nullValue = "")
+        string nullValue = null)
     {
         if (dateTime.HasValue)
-            return dateTime.Value.ToShortDateString();
+            return dateTime.Value.ToDefaultDateString();
         else
             return nullValue;
     }
     
-    public static string ToShortTimeString(
+    public static string ToDefaultTimeString(
         this DateTime dateTime)
     {
-        return dateTime.ToString("h:mm:ss tt");
+        var fi = new DateTimeFormatInfo();
+        fi.AMDesignator = "am";
+        fi.PMDesignator = "pm";
+
+        var format = dateTime.Second == 0 ?
+            "hh:mmtt" :
+            "hh:mm:sstt";
+
+        return dateTime.ToString(format, fi);
     }
 
-    public static string ToShortTimeString(
+    public static string ToDefaultTimeString(
         this DateTime? dateTime, 
-        string nullValue = "")
+        string nullValue = null)
     {
         if (dateTime.HasValue)
-            return dateTime.Value.ToShortTimeString();
+            return dateTime.Value.ToDefaultTimeString();
         else
             return nullValue;
     }
 
-    public static string ToShortDateTimeString(
+    public static string ToDefaultDateTimeString(
         this DateTime dateTime)
     {
-        return dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+        return dateTime.ToDefaultDateString() + " " + dateTime.ToDefaultTimeString();
     }
 
-    public static string ToShortDateTimeString(
+    public static string ToDefaultDateTimeString(
         this DateTime? dateTime, 
-        string nullValue = "")
+        string nullValue = null)
     {
         if (dateTime.HasValue)
-            return dateTime.Value.ToShortDateTimeString();
+            return dateTime.Value.ToDefaultDateTimeString();
         else
             return nullValue;
     }
@@ -388,9 +416,23 @@ public static class DateTimeExtensions
     }
 
 
-    public static string ToShortDateDayOfWeekString(
+    public static string ToDayOfWeekDateString(
         this DateTime dateTime)
     {
         return dateTime.ToString("dddd, MMM d");
+    }
+
+    public static string ToDayOfWeekDateString(
+        this DateTime? dateTime,
+        string nullValue = null)
+    {
+        if (dateTime.HasValue)
+        {
+            return dateTime.Value.ToString("dddd, MMM d");
+        }
+        else
+        {
+            return nullValue;
+        }
     }
 }

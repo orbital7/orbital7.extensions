@@ -1,0 +1,39 @@
+﻿@typeparam TValue
+
+@if (this.Value != null)
+{
+    <div class="ra-property-label @this.Class"
+         style="@this.Style">
+        <label for="@this.ForId"
+               class="form-label">
+            @this.Value
+        </label>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public Expression<Func<TValue>> For { get; set; }
+
+    [Parameter]
+    public string ForId { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (this.For != null && !this.Value.HasText())
+        {
+            var memberInfo = this.For.Body.GetPropertyInformation();
+            this.Value = memberInfo?.GetDisplayName() ?? memberInfo?.Name;
+        }
+    }
+}

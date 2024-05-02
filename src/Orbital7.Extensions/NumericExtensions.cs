@@ -4,11 +4,11 @@ public static class NumericExtensions
 {
     public static string ToCurrencyString(
         this double number, 
-        bool addSymbol = false, 
-        bool addCommas = true,
-        bool addPlusForPositiveNumber = false)
+        DisplayValueOptions options = null)
     {
-        var format = addCommas ? "#,##0.00" : "0.00";
+        var displayOptions = options ?? new DisplayValueOptions();
+
+        var format = displayOptions.ForCurrencyAddCommas ? "#,##0.00" : "0.00";
 
         var roundedNumber = Math.Round(number, 2);
         var isNegative = roundedNumber < 0;
@@ -16,10 +16,10 @@ public static class NumericExtensions
 
         if (isNegative)
             value += "-";
-        else if (addPlusForPositiveNumber && roundedNumber > 0)
+        else if (displayOptions.ForCurrencyAddPlusIfPositive && roundedNumber > 0)
             value += "+";
 
-        if (addSymbol)
+        if (displayOptions.ForCurrencyAddSymbol)
             value += "$";
 
         value += Math.Abs(roundedNumber).ToString(format);
@@ -28,12 +28,36 @@ public static class NumericExtensions
     }
 
     public static string ToCurrencyString(
-        this decimal number, 
-        bool addSymbol = false, 
-        bool addCommas = true,
-        bool addPlusForPositiveNumber = false)
+        this double? number,
+        DisplayValueOptions options = null,
+        string nullValue = null)
     {
-        return ToCurrencyString(Convert.ToDouble(number), addSymbol, addCommas, addPlusForPositiveNumber);
+        if (number.HasValue)
+        {
+            return number.Value.ToCurrencyString(options);
+        }
+
+        return nullValue;
+    }
+
+    public static string ToCurrencyString(
+        this decimal number,
+        DisplayValueOptions options = null)
+    {
+        return ToCurrencyString(Convert.ToDouble(number), options);
+    }
+
+    public static string ToCurrencyString(
+        this decimal? number,
+        DisplayValueOptions options = null,
+        string nullValue = null)
+    {
+        if (number.HasValue)
+        {
+            return number.Value.ToCurrencyString(options);
+        }
+
+        return nullValue;
     }
 
     public static string ToFileSizeString(

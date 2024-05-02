@@ -1,0 +1,28 @@
+﻿@typeparam TValue
+
+@if (this.SelectList != null)
+{
+    @foreach (var item in this.SelectList)
+    {
+        <option value="@GetOptionValue(item)">@item.Name</option>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public List<NamedValue<TValue>> SelectList { get; set; }
+
+    private string GetOptionValue(
+        NamedValue<TValue> option)
+    {
+        if (option.Value != null)
+        {
+            return option.Value.ToString();
+        }
+        else
+        {
+            return String.Empty;
+        }
+    }
+}

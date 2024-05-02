@@ -1,46 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿namespace Microsoft.AspNetCore.Http;
 
-namespace Microsoft.AspNetCore.Http
+public static class HttpExtensions
 {
-    public static class HttpExtensions
+    public static string GetRelativeUri(
+        this HttpRequest request)
     {
-        public static string GetRelativeUri(
-            this HttpRequest request)
-        {
-            return string.Format("{0}{1}", request.Path, request.QueryString.ToUriComponent());
-        }
+        return string.Format("{0}{1}", request.Path, request.QueryString.ToUriComponent());
+    }
 
-        public static string GetAbsoluteUri(
-            this HttpRequest request)
-        {
-            return string.Format("{0}://{1}{2}{3}", request.Scheme, request.Host, request.Path, 
-                request.QueryString.ToUriComponent());
-        }
+    public static string GetAbsoluteUri(
+        this HttpRequest request)
+    {
+        return string.Format("{0}://{1}{2}{3}", request.Scheme, request.Host, request.Path, 
+            request.QueryString.ToUriComponent());
+    }
 
-        public static string GetBaseUrl(
-            this HttpRequest request)
-        {
-            return string.Format("{0}://{1}/", request.Scheme, request.Host);
-        }
+    public static string GetBaseUrl(
+        this HttpRequest request)
+    {
+        return string.Format("{0}://{1}/", request.Scheme, request.Host);
+    }
 
-        public static string GetIPAddress(
-            this HttpRequest request)
-        {
-            var ipAddress = request.HttpContext.Connection.RemoteIpAddress.ToString();
+    public static string GetIPAddress(
+        this HttpRequest request)
+    {
+        var ipAddress = request.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            if (ipAddress == "::1")
-                ipAddress = "127.0.0.1";
+        if (ipAddress == "::1")
+            ipAddress = "127.0.0.1";
 
-            return ipAddress;
-        }
+        return ipAddress;
+    }
 
-        public static void SetFailureState(
-            this HttpResponse response)
-        {
-            response.StatusCode = (int)HttpStatusCode.BadRequest;
-        }
+    public static void SetFailureState(
+        this HttpResponse response)
+    {
+        response.StatusCode = (int)HttpStatusCode.BadRequest;
     }
 }

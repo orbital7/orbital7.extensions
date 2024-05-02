@@ -12,7 +12,7 @@ public static class EnumExtensions
         var attributes = value.GetAttributes<DisplayAttribute>();
         if (attributes != null && attributes.Any())
         {
-            return attributes.First().Name ?? value.ToString();
+            return attributes.First().Name ?? value.ToString().PascalCaseToPhrase();
         }
         else
         {

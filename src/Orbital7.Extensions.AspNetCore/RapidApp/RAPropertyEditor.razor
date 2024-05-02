@@ -1,0 +1,42 @@
+﻿@typeparam TValue
+@inherits RAEditor<TValue>
+
+@if (_isLoaded)
+{
+    @if (this.ShowLabel)
+    {
+        <RAPropertyLabel For="@this.ValueExpression"
+                         ForId="@this.Id"
+                         Value="@this.Label"
+                         Class="@this.VisibilityClass" />
+    }
+    <div class="@this.VisibilityClass">
+
+        @{
+            base.BuildRenderTree(__builder);
+        }
+
+        @if (this.EditContext != null)
+        {
+            <ValidationMessage For="@ValueExpression"
+                               class="text-danger" />
+        }
+
+        <div class="">@this.Note</div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string Note { get; set; }
+
+    [Parameter]
+    public bool ShowLabel { get; set; } = true;
+
+    [CascadingParameter]
+    public EditContext EditContext { get; set; }
+}

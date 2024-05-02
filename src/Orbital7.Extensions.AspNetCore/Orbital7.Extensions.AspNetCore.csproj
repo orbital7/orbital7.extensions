@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>8.0.8</Version>
-	<AssemblyVersion>8.0.8.0</AssemblyVersion>
-    <FileVersion>8.0.8.0</FileVersion>
+    <Version>8.0.9</Version>
+	<AssemblyVersion>8.0.9.0</AssemblyVersion>
+    <FileVersion>8.0.9.0</FileVersion>
     <Description>ASP.NET Core 8 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
@@ -44,9 +44,17 @@
 	  <PackagePath></PackagePath>
 	 </None>
   </ItemGroup>
-	
+
   <ItemGroup>
-    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.Modal" Version="7.3.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
+    <PackageReference Include="Orbital7.Extensions" Version="8.0.9" />
   </ItemGroup>
 
 </Project>

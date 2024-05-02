@@ -1,0 +1,97 @@
+﻿@typeparam TValue
+@inject TimeConverter TimeConverter
+
+<RAPropertyLabel For="@this.For"
+                 Value="@this.Label" />
+
+<div>
+    @if (this.ChildContent != null)
+    {
+        @this.ChildContent
+    }
+    else if (_displayValue != null)
+    {
+        @_displayValue
+    }
+    else
+    {
+        <span>Loading...</span>
+    }
+</div>
+
+@code {
+
+    private string _displayValue;
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string ValueOverride { get; set; }
+
+    [Parameter]
+    public string DefaultValue { get; set; } = "-";
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public Expression<Func<TValue>> For { get; set; }
+
+    [Parameter]
+    public Func<TValue, Task<string>> GetDisplayValue { get; set; }
+
+    [Parameter]
+    public Action<DisplayValueOptions> ConfigureDisplayValueOptions { get; set; }
+
+    [Parameter]
+    public DisplayValueOptions DisplayValueOptions { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        // Determine the value if we're not showing child content.
+        if (this.ChildContent == null)
+        {
+            // Look for a default value.
+            if (this.ValueOverride.HasText())
+            {
+                _displayValue = this.ValueOverride;
+            }
+            // Else get the value.
+            else
+            {
+                var value = this.For.Compile()();
+                if (this.GetDisplayValue != null)
+                {
+                    _displayValue = await this.GetDisplayValue(value);
+                }
+                else
+                {
+                    if (this.DisplayValueOptions == null)
+                    {
+                        this.DisplayValueOptions = new();
+                        this.ConfigureDisplayValueOptions?.Invoke(this.DisplayValueOptions);
+                    }
+
+                    var memberInfo = this.For.Body.GetPropertyInformation();
+                    _displayValue = memberInfo.GetDisplayValue(
+                        value,
+                        this.TimeConverter,
+                        this.DisplayValueOptions);
+                }
+            }
+
+            // Use the default value.
+            if (!_displayValue.HasText())
+            {
+                _displayValue = this.DefaultValue;
+            }
+
+            // Ensure our display value is not null so it will get rendered above.
+            if (!_displayValue.HasText())
+            {
+                _displayValue = String.Empty;
+            }
+        }
+    }
+}

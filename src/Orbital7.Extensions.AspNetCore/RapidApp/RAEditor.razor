@@ -1,0 +1,320 @@
+﻿@typeparam TValue
+
+@if (_isLoaded)
+{
+    @if (this.EditorType.Value == RAEditorType.SelectList)
+    {
+        <InputSelect id="@this.Id"
+                     Value="@this.Value"
+                     ValueChanged="@this.ValueChanged"
+                     ValueExpression="@this.ValueExpression"
+                     disabled="@this.IsDisabled"
+                     class="@($"form-select {this.VisibilityClass} {this.Class}")"
+                     style="@this.Style">
+            <RAInputSelectOptions SelectList="@this.SelectList" />
+        </InputSelect>
+    }
+    else if (this.EditorType == RAEditorType.RadioButton)
+    {
+        <InputRadioGroup id="@this.Id"
+                         Name="@this.Id"
+                         Value="@this.Value"
+                         ValueChanged="@this.ValueChanged"
+                         ValueExpression="@this.ValueExpression">
+            @foreach (var item in this.SelectList)
+            {
+                var itemId = GuidFactory.ToShortString(Guid.NewGuid());
+                <div class="form-check @this.VisibilityClass @this.Class"
+                     style="@this.Style">
+                    <InputRadio id="@itemId"
+                                Name="@this.Id"
+                                Value="@item.Value"
+                                disabled="@this.IsDisabled"
+                                class="form-check-input" />
+                    <label class="form-check-label"
+                           for="@itemId">
+                        @item.Name
+                    </label>
+                </div>
+            }
+        </InputRadioGroup>
+    }
+    else if (this.EditorType == RAEditorType.Switch)
+    {
+        // See issue description for Checkbox below; it's the same issue here.
+        //
+        @* <div class="form-check form-switch @this.VisibilityClass">
+            <RAInputCheckbox id="@this.Id"
+                             Value="@this.Value"
+                             ValueChanged="this.ValueChanged"
+                             ValueExpression="@this.ValueExpression"
+                             role="switch"
+                             disabled="@this.IsDisabled"
+                             class="form-check-input" />
+            <label class="form-check-label user-select-none"
+                   for="@this.Id">
+                
+            </label>
+        </div> *@
+
+        <div class="form-check form-switch @this.VisibilityClass @this.Class"
+             style="@this.Style">
+            <label class="form-check-label user-select-none">  @* for="@this.Id" *@
+                <RAInputCheckbox id="@this.Id"
+                                 Value="@this.Value"
+                                 ValueChanged="this.ValueChanged"
+                                 ValueExpression="@this.ValueExpression"
+                                 role="switch"
+                                 disabled="@this.IsDisabled"
+                                 class="form-check-input" />
+                @this.SwitchText
+            </label>
+        </div>
+    }
+    else if (this.EditorType == RAEditorType.Checkbox)
+    {
+        // Ideally, we would form the HTML as commented out below as documented
+        // by Bootstrap. But the RAInputCheckbox is NOT passing the "id" parameter
+        // to the resulting checkbox HTML, so when specifying the "for" parameter
+        // on the label the link between the elements gets broken and clicking 
+        // on the label does not activate the checkbox. So put the checkbox inside
+        // the label for now and don't specify a "for" on the label.
+        //
+        @* <div class="form-check @this.VisibilityClass">
+            <RAInputCheckbox id="@this.Id"
+                             Value="@this.Value"
+                             ValueChanged="this.ValueChanged"
+                             ValueExpression="@this.ValueExpression"
+                             disabled="@this.IsDisabled"
+                             class="form-check-input" />
+            <label class="form-check-label user-select-none"
+                   >
+                @this.ChildContent
+            </label>
+        </div> *@
+
+        <div class="form-check @this.VisibilityClass @this.Class"
+             style="@this.Style">
+            <label class="form-check-label user-select-none">  @* for="@this.Id" *@
+                <RAInputCheckbox id="@this.Id"
+                                 Value="@this.Value"
+                                 ValueChanged="this.ValueChanged"
+                                 ValueExpression="@this.ValueExpression"
+                                 disabled="@this.IsDisabled"
+                                 class="form-check-input" />
+                @this.ChildContent
+            </label>
+        </div>
+    }
+    else if (this.EditorType.Value == RAEditorType.Number)
+    {
+        <InputNumber id="@this.Id"
+                     Value="@this.Value"
+                     ValueChanged="@this.ValueChanged"
+                     ValueExpression="@this.ValueExpression"
+                     disabled="@this.IsDisabled"
+                     placeholder="@this.Placeholder"
+                     class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                     style="@this.Style" />
+    }
+    else if (this.EditorType.Value == RAEditorType.Date)
+    {
+        <InputDate id="@this.Id"
+                   Value="@this.Value"
+                   ValueChanged="@this.ValueChanged"
+                   ValueExpression="@this.ValueExpression"
+                   disabled="@this.IsDisabled"
+                   class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                   style="@this.Style" />
+    }
+    else if (this.EditorType.Value == RAEditorType.TextMultiLine)
+    {
+        <RAInputTextArea id="@this.Id"
+                         Value="@this.Value"
+                         ValueChanged="@this.ValueChanged"
+                         ValueExpression="@this.ValueExpression"
+                         disabled="@this.IsDisabled"
+                         placeholder="@this.Placeholder"
+                         class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                         style="@this.Style" />
+    }
+
+    else if (this.EditorType.Value.UsesInputTextEditor())
+    {
+        <RAInputText id="@this.Id"
+                     type="@(this.EditorType.Value == RAEditorType.Password ? "password" : "text")"
+                     Value="@this.Value"
+                     ValueChanged="@this.ValueChanged"
+                     ValueExpression="@this.ValueExpression"
+                     disabled="@this.IsDisabled"
+                     placeholder="@this.Placeholder"
+                     class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                     style="@this.Style" />
+    }
+}
+
+@code {
+
+    protected bool _isLoaded = false;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; }
+
+    [Parameter]
+    public bool SortSelectList { get; set; } = true;
+
+    [Parameter]
+    public string SwitchTextValueTrue { get; set; } = true.ToYesNo();
+
+    [Parameter]
+    public string SwitchTextValueFalse { get; set; } = false.ToYesNo();
+
+    [Parameter]
+    public List<NamedValue<TValue>> SelectList { get; set; }
+
+    [Parameter]
+    public string SelectListOptionLabel { get; set; } = "(Select)";
+
+    [Parameter]
+    public Func<Task<List<NamedValue<TValue>>>> LoadSelectList { get; set; }
+
+    [Parameter]
+    public RAEditorType? EditorType { get; set; }
+
+    [Parameter]
+    public TValue Value { get; set; }
+
+    [Parameter]
+    public EventCallback<TValue> ValueChanged { get; set; }
+
+    [Parameter]
+    public Expression<Func<TValue>> ValueExpression { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+
+    [Parameter]
+    public bool IsDisabled { get; set; } = false;
+
+    private string SwitchText => ((bool)(object)this.Value) ?
+        this.SwitchTextValueTrue :
+        this.SwitchTextValueFalse;
+
+    protected string VisibilityClass => this.IsVisible ? "" : "d-none";
+
+    public void Enable(
+        bool enable)
+    {
+        this.IsDisabled = !enable;
+    }
+
+    public void SetVisibility(
+        bool isVisible)
+    {
+        this.IsVisible = isVisible;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var type = typeof(TValue);
+
+        // Create an ID for the input.
+        this.Id = this.Id ?? GuidFactory.ToShortString(Guid.NewGuid());
+
+        // Handle select list.
+        if (this.EditorType == RAEditorType.SelectList || 
+            this.EditorType == RAEditorType.RadioButton ||
+            this.SelectList != null ||
+            this.LoadSelectList != null ||
+            type.IsBaseOrNullableEnumType())
+        {
+            // Clear out the option label if the type is not 
+            // nullable and not a string.
+            if (this.SelectListOptionLabel.HasText() &&
+                !type.IsNullableType() && type != typeof(string))
+            {
+                this.SelectListOptionLabel = null;
+            }
+
+            await LoadSelectListAsync(type);
+        }
+
+        // Determine the editor type.
+        if (!this.EditorType.HasValue)
+        {
+            this.EditorType = this.ValueExpression.GetEditorType();
+        }
+
+        // Now loaded.
+        _isLoaded = true;
+    }
+
+    public void UpdateSelectList(
+    List<NamedValue<TValue>> selectList)
+    {
+        this.SelectList = selectList;
+
+        // Remove the select list option label if present.
+        if (this.SelectListOptionLabel.HasText())
+        {
+            var optionLabel = this.SelectList
+                .Where(x => x.Value.Equals(default(TValue)))
+                .FirstOrDefault();
+            if (optionLabel != null)
+            {
+                this.SelectList.Remove(optionLabel);
+            }
+        }
+
+        // Sort the list.
+        if (this.SortSelectList)
+        {
+            this.SelectList = this.SelectList.OrderBy(x => x.Name).ToList();
+        }
+
+        // Add the option label.
+        if (this.SelectListOptionLabel.HasText())
+        {
+            this.SelectList.Insert(0, new NamedValue<TValue>(this.SelectListOptionLabel, default(TValue)));
+        }
+    }
+
+    private async Task LoadSelectListAsync(
+        Type type)
+    {
+        this.EditorType = this.EditorType ?? RAEditorType.SelectList;
+
+        if (this.SelectList == null)
+        {
+            if (type.IsBaseOrNullableEnumType())
+            {
+                this.SelectList = EnumHelper.ToNamedValueList<TValue>();
+            }
+            else if (this.LoadSelectList != null)
+            {
+                try
+                {
+                    this.SelectList = await this.LoadSelectList();
+                }
+                catch
+                {
+                    this.SelectList.Add(new NamedValue<TValue>("ERROR: LoadSelectList()", default(TValue)));
+                }
+            }
+        }
+
+        UpdateSelectList(this.SelectList);
+    }
+}

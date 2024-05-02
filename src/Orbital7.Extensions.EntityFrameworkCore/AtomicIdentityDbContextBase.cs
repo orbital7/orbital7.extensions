@@ -10,16 +10,14 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
 
     public virtual bool IsReadOnly => false;
 
-    protected AtomicIdentityDbContextBase()
-    {
-
-    }
-
     protected AtomicIdentityDbContextBase(
         DbContextOptions options) : 
         base(options)
     {
-
+        if (this.Database.IsRelational())
+        {
+            this.Database.SetCommandTimeout(3600);
+        }
     }
 
     public override int SaveChanges()

@@ -1,0 +1,33 @@
+﻿@typeparam TEntity
+@inject TimeConverter TimeConverter
+
+@if (this.Column != null)
+{
+    var type = this.Column.GetForType();
+
+    if (this.Column.CreateCellContent != null)
+    {
+        @this.Column.CreateCellContent(this.Item)
+    }
+    else if (type.IsBaseOrNullableTemporalType())
+    {
+        <LocalDateTime Value="@((DateTime)this.Column.GetForValue(this.Item))"
+                       DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
+                       TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
+                       DefaultValue="@this.Column.DefaultValue" />
+    }
+    else
+    {
+        @this.Column.GetCellContent(this.Item, this.TimeConverter)
+    }
+}
+
+@code {
+
+    [Parameter]
+    public RATableTemplate<TEntity>.Column<TEntity> Column { get; set; }
+
+    [Parameter]
+    public TEntity Item { get; set; }
+
+}

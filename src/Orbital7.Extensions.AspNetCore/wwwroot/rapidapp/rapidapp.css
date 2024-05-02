@@ -1,0 +1,130 @@
+﻿/* Defaults */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    -webkit-appearance: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--bs-dark-bg-subtle);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--bs-tertiary-color);
+    border-radius: 5px !important;
+    border: 3px solid var(--bs-dark-bg-subtle);
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #737373;
+    }
+
+
+/* Layout */
+
+.ra-flex-body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.ra-flex-container-scrollable-wrapper {
+    flex-grow: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+.ra-flex-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+}
+
+.ra-flex-nostretch {
+    align-self: flex-start;
+}
+
+.ra-scrollable-x {
+    overflow-x: auto;
+}
+
+.ra-scrollable-y {
+    overflow-y: auto;
+}
+
+.ra-clickable {
+    cursor: pointer;
+}
+
+div.ra-toolbar {
+    margin-bottom: 20px;
+}
+
+div.ra-navbar {
+    display: flex;
+    flex-direction: row;
+}
+
+a.ra-navbar-item {
+    background-color: red;
+}
+
+    a.ra-navbar-item:active {
+        background-color: blue;
+    }
+
+div.ra-navbar-item-image img {
+    width: 32px;
+    height: 32px;
+}
+
+div.ra-navbar-item-text {
+    
+}
+
+
+/* RADialog: Not currently using CSS isolation as there are 
+   two components -- RADialogForm and RADialogMessage -- that 
+   need these styles.
+*/
+
+div.ra-dialog-content {
+    max-height: calc(100vh * 0.75);
+    margin-bottom: 20px;
+}
+
+div.ra-dialog-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+button.ra-dialog-control-btn {
+    min-width: 90px;
+}
+
+/* Override Blazored Modal defaults and set additional values. */
+div.blazored-modal {
+    background-color: var(--bs-body-bg) !important;
+    border: 1px solid var(--bs-border-color) !important;
+}
+
+h3.bm-title {
+}

@@ -55,7 +55,7 @@ public static class AttributeExtensions
         this MemberInfo memberInfo)
     {
         return memberInfo.GetDisplayAttribute()?.Name ??
-            memberInfo.Name.PascalCaseToPhrase();
+            memberInfo.Name?.PascalCaseToPhrase();
     }
 
     public static T GetPropertyAttribute<T>(
