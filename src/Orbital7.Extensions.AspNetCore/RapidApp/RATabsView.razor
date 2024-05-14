@@ -1,4 +1,4 @@
-﻿<div class="btn-group @this.Class" role="group">
+﻿<div class="btn-group @this.HeaderClass" role="group">
 
     @foreach (TabPage tabPage in _pages)
     {
@@ -11,7 +11,7 @@
 
 </div>
 
-<div class="ra-flex-container-scrollable-wrapper ra-tabsview-content @this.ContentClass">
+<div class="ra-flex-container-scrollable-wrapper ra-tabsview-content @this.Class">
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>
@@ -29,10 +29,10 @@
     public RATabsViewRenderMode RenderMode { get; set; } = RATabsViewRenderMode.Dynamic;
 
     [Parameter]
-    public string Class { get; set; }
+    public string HeaderClass { get; set; }
 
     [Parameter]
-    public string ContentClass { get; set; }
+    public string Class { get; set; }
 
     public TabPage ActiveTab => _activePage;
 

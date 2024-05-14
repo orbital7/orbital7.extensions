@@ -121,7 +121,6 @@ public static class ReflectionExtensions
             options);
     }
 
-    // TODO: Move to Orbital7.Extensions.
     public static string GetDisplayValue<TValue>(
         this TValue value,
         TimeConverter timeConverter,

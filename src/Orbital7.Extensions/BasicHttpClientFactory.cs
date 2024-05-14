@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Testing;
+﻿namespace System.Net.Http;
 
 public class BasicHttpClientFactory :
     IHttpClientFactory, IDisposable

@@ -1,0 +1,6 @@
+﻿/* NOTE: This will have the same CSS isolation styles as defined in 
+   RADialogForm.razor.css.
+
+   This is because we're using CSS isolation scope identifiers
+   defined in the project file.
+*/

@@ -16,7 +16,7 @@ public static class EnumExtensions
         }
         else
         {
-            return value.ToString();
+            return value.ToString().PascalCaseToPhrase();
         }  
     }
 

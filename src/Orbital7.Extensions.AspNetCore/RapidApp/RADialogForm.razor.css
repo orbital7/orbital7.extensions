@@ -1,0 +1,22 @@
+﻿/* NOTE: These styles will be additionally shared with  
+   RADialogMessage.razor.css via CSS isolation.
+
+   This is because we're using CSS isolation scope identifiers
+   defined in the project file.
+*/
+
+div.ra-dialog-content {
+    max-height: calc(100vh * 0.75);
+    margin-bottom: 20px;
+}
+
+div.ra-dialog-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+button.ra-dialog-control-btn {
+    min-width: 90px;
+}

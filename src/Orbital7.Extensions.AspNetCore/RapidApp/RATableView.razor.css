@@ -3,10 +3,6 @@
     border-spacing: 0;
 }
 
-    table.ra-tableview tbody tr:nth-child(odd) {
-        background-color: var(--bs-secondary-bg);
-    }
-
     table.ra-tableview thead tr th {
         position: sticky;
         top: 0;
@@ -14,9 +10,67 @@
         background-color: var(--bs-dark-bg-subtle);
         padding: 3px 13px 3px 3px;
         border-bottom: 1px solid var(--bs-border-color);
+        font-size: 0.9rem;
+        font-weight: bold;
+        white-space: nowrap;
     }
 
     table.ra-tableview tbody tr td {
         padding: 3px 13px 3px 3px;
         border-bottom: 1px solid var(--bs-border-color);
+        font-size: 0.9rem;
+    }
+
+    table.ra-tableview tfoot tr td {
+        position: sticky;
+        bottom: 0;
+        background-color: var(--bs-dark-bg-subtle);
+        padding: 3px 13px 3px 3px;
+        border-bottom: 1px solid var(--bs-border-color);
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    table.ra-tableview thead tr th svg {
+        width: 8px;
+        height: 8px;
+        margin-top: -10px;
+        margin-left: 2px;
+    }
+
+    table.ra-tableview thead tr th span.ra-tableview-sorting-placeholder {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        margin-left: 2px;
+    }
+
+table.ra-tableview-striped tbody tr:nth-child(odd) {
+    background-color: var(--bs-secondary-bg);
+}
+
+table.ra-tableview-selectable tbody tr:hover {
+    background-color: var(--bs-primary);
+    cursor: pointer;
+}
+
+table.ra-tableview tbody tr.ra-tableview-indented-row td:first-child {
+    padding-left: 26px;
+}
+
+table.ra-tableview tbody tr.ra-tableview-segment-row {
+    font-weight: bold;
+    font-style: italic;
+}
+
+    table.ra-tableview tbody tr.ra-tableview-segment-row:hover {
+        cursor: revert;
+    }
+
+table.ra-tableview-selectable tbody tr.ra-tableview-selected-row {
+    background-color: var(--bs-primary-border-subtle);
+}
+
+    table.ra-tableview-selectable tbody tr.ra-tableview-selected-row:hover {
+        cursor: revert;
     }

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace System;
 
@@ -20,7 +19,9 @@ public static class StringExtensions
     public const string PunctuationCharsBase = ".,()[]{}|\\';:!@#$&%?/<>–^+=*\"";
     public const string PunctuationChars = PunctuationCharsBase + PunctuationDash + PunctuationUnderscore;
     public const string NumberChars = "0123456789";
-    public const string LetterChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    public const string LowercaseLetterChars = "abcdefghijklmnopqrstuvwxyz";
+    public const string CapitalLetterChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public const string LetterChars = CapitalLetterChars + LowercaseLetterChars;
     public const string AlphanumericChars = NumberChars + LetterChars;
     public const string WhitespaceChars = " \r\n\t\v\f";
 

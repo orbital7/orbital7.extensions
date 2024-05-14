@@ -8,23 +8,34 @@
         this.HasItems(segments))
     {
         <div class="@GetTableWrapperClass()">
-            <table class="@GetTableClass()" style="@GetTableStyle()">
+            <table class="@GetTableClass(this.Template)" style="@GetTableStyle()">
                 <thead>
                     <tr>
                         @foreach (var column in this.Template.Columns)
                         {
                             <th class="@GetHeaderCellClass(column)"
                                 @onclick="() => HandleOnSortBy(column)">
-                                @column.HeadingText 
-                                @if (column.SortBy)
+                                @column.HeadingText
+                                @if (column.IsSortable)
                                 {
-                                    if (column.SortDescending)
+                                    @if (column.SortBy)
                                     {
-                                        <span>*</span>
+                                        if (column.SortDescending)
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="" viewBox="0 0 16 16">
+                                                <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                                            </svg>
+                                        }
+                                        else
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="" viewBox="0 0 16 16">
+                                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                            </svg>
+                                        }
                                     }
                                     else
                                     {
-                                        <span>^</span>
+                                        <span class="ra-tableview-sorting-placeholder"></span>
                                     }
                                 }
                             </th>
@@ -36,7 +47,7 @@
                     {
                         if (segments.Count > 1)
                         {
-                            <tr>
+                            <tr class="ra-tableview-segment-row">
                                 <td colspan="@this.Template.Columns.Count">
                                     @segment.Name
                                 </td>
@@ -46,43 +57,76 @@
                         // Don't use ForEach here, as rapid updates may cause overlapping rendering, 
                         // which errors out mid-enumeration.
                         var sortedItems = this.Template.GetSortedItems(segment);
-                        for (int j = 0; j < this.DebugContentCount; j++)
+                        if (sortedItems != null)
                         {
-                        for (int i = 0; i < sortedItems.Count; i++)
-                        {
-                            var item = sortedItems.ElementAt(i);
+                            for (int j = 0; j < this.DebugContentCount; j++)
+                            {
+                            for (int i = 0; i < sortedItems.Count; i++)
+                            {
+                                var item = sortedItems.ElementAt(i);
 
-                            <tr>
-                                @foreach (var column in this.Template.Columns)
-                                {
-                                    <td class="@GetCellClass(column, segment, item)"
-                                        style="@GetCellStyle(column, segment, item)">
+                                <tr class="@GetRowClass(item)" 
+                                    @onclick="this.Template.OnRowSelected != null && !IsRowSelected(item) ? () => HandleOnRowSelected(segment, item) : null">
+
+                                    @foreach (var column in this.Template.Columns)
+                                    {
+                                        <td class="@GetCellClass(column, segment, item)"
+                                            style="@GetCellStyle(column, segment, item)">
                                 
-                                        @if (column.OnCellUrlClicked != null)
-                                        {
-                                            <a href=""
-                                               @onclick="() => column.OnCellUrlClicked(column, segment, item)"
-                                               @onclick:preventDefault="true">
+                                            @if (column.OnCellUrlClicked != null)
+                                            {
+                                                <a href=""
+                                                   @onclick="() => column.OnCellUrlClicked(column, segment, item)"
+                                                   @onclick:preventDefault="true">
+                                                    <RATableViewCellContents Column="column" Item="item" />
+                                                </a>
+                                            }
+                                            else if (column.GetCellUrl != null)
+                                            {
+                                                <a href="@column.GetCellUrl(column, segment, item)">
+                                                    <RATableViewCellContents Column="column" Item="item" />
+                                                </a>
+                                            }
+                                            else
+                                            {
                                                 <RATableViewCellContents Column="column" Item="item" />
-                                            </a>
-                                        }
-                                        else if (column.GetCellUrl != null)
-                                        {
-                                            <a href="@column.GetCellUrl(column, segment, item)">
-                                                <RATableViewCellContents Column="column" Item="item" />
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <RATableViewCellContents Column="column" Item="item" />
-                                        }
-                                    </td>
-                                }
-                            </tr>
-                        }
+                                            }
+                                        </td>
+                                    }
+
+                                </tr>
+                            }
+                            }
                         }
                     }
                 </tbody>
+
+                @if (this.Template.HasFooter)
+                {
+                    <tfoot>
+                        <tr>
+                            @foreach (var column in this.Template.Columns)
+                            {
+                                var footerCellData = new RATableViewFooterData<TEntity>()
+                                {
+                                    Column = column,
+                                    Segments = segments,
+                                };
+
+                                <td class="@GetFooterCellClass(footerCellData)">
+                                    @if (column.GetFooterCellValue != null)
+                                    {
+                                        @column.GetFooterCellValue(footerCellData);
+                                    }
+                                    else if (column.CreateFooterCellContent != null)
+                                    {
+                                        @column.CreateFooterCellContent(footerCellData);
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    </tfoot>
+                }
             </table>
         </div>
     }
@@ -93,6 +137,8 @@
 }
 
 @code {
+
+    private TEntity _selectedRowEntity;
 
     [Parameter]
     public RATableTemplate<TEntity> Template { get; set; }
@@ -118,6 +164,12 @@
     [Parameter]
     public int DebugContentCount { get; set; } = 1;
 
+    [Parameter]
+    public bool StripeRows { get; set; } = true;
+
+    [Parameter]
+    public bool ShowSelectedRow { get; set; } = false;
+
     private string GetTableWrapperClass()
     {
         var classes = "ra-scrollable-x ";
@@ -130,9 +182,20 @@
         return classes.Trim();
     }
 
-    private string GetTableClass()
+    private string GetTableClass(
+        RATableTemplate<TEntity> template)
     {
         var classes = "ra-tableview ";
+
+        if (this.StripeRows)
+        {
+            classes += "ra-tableview-striped ";
+        }
+
+        if (template.OnRowSelected != null)
+        {
+            classes += "ra-tableview-selectable ";
+        }
 
         // if (this.IsScrollableHorizontally)
         // {
@@ -172,12 +235,37 @@
         return classes.Trim();
     }
 
+    private bool IsRowSelected(
+        TEntity item)
+    {
+        return item != null &&
+            _selectedRowEntity != null &&
+            _selectedRowEntity.Equals(item);
+    }
+
+    private string GetRowClass(
+        TEntity item)
+    {
+        string classes = this.Segments?.Count > 1 ?
+            "ra-tableview-indented-row" :
+            String.Empty;
+
+        if (this.Template.OnRowSelected != null &&
+            this.ShowSelectedRow &&
+            IsRowSelected(item))
+        {
+            classes += "ra-tableview-selected-row ";
+        }
+
+        return classes.Trim();
+    }
+
     private string GetCellClass(
         RATableTemplate<TEntity>.Column<TEntity> column,
         RATableViewSegment<TEntity> segment,
         TEntity item)
     {
-        string classes = String.Empty;
+        string classes = GetCellHorizontalAlignmentClass(column) + " ";
 
         if (column.GetCellClass != null)
         {
@@ -185,6 +273,35 @@
         }
 
         return classes.Trim();
+    }
+
+    private string GetFooterCellClass(
+        RATableViewFooterData<TEntity> footerData)
+    {
+        string classes = GetCellHorizontalAlignmentClass(footerData.Column) + " ";
+
+        if (footerData.Column.GetFooterCellClass != null)
+        {
+            classes += footerData.Column.GetFooterCellClass(footerData) + " ";
+        }
+
+        return classes.Trim();
+    }
+
+    private string GetCellHorizontalAlignmentClass(
+        RATableTemplate<TEntity>.Column<TEntity> column)
+    {
+        switch (column.CellHorizontalAlignment)
+        {
+            case RATableViewCellHorizontalAlignment.Center:
+                return "text-center";
+
+            case RATableViewCellHorizontalAlignment.Right:
+                return "text-end";
+
+            default:
+                return "text-start";
+        }
     }
 
     private string GetCellStyle(
@@ -236,5 +353,17 @@
         return segments != null &&
             segments.Count > 0 &&
             segments.Any(x => x.HasItems);
+    }
+
+    private void HandleOnRowSelected(
+        RATableViewSegment<TEntity> segment,
+        TEntity item)
+    {
+        if (this.ShowSelectedRow)
+        {
+            _selectedRowEntity = item;
+        }
+
+        this.Template.OnRowSelected?.Invoke(segment, item);
     }
 }

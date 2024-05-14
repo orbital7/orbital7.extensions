@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 
 namespace System;
 
@@ -27,16 +28,64 @@ public static class ObjectExtensions
             throw new ValidationException(result.ToString());
     }
 
-    public static List<NamedValue<object>> GetPropertyValues(
+    public static List<PropertyValue> GetPropertyValues(
         this object model)
     {
         var type = model.GetType();
         PropertyInfo[] properties = type.GetProperties();
 
         return properties
-            .Select(x => new NamedValue<object>(x.Name, x.GetValue(model)))
-            .OrderBy(x => x.Name)
+            .Select(x => new PropertyValue(x.Name, x.GetDisplayName(), x.GetValue(model)))
+            .OrderBy(x => x.DisplayName)
             .ToList();
+    }
+
+    public static List<PropertyValue> ToPropertyValuesList<TEntity>(
+        this TEntity entity,
+        params Expression<Func<TEntity, object>>[] properties)
+        where TEntity : class
+    {
+        var list = new List<PropertyValue>();
+
+        foreach (var property in properties)
+        {
+            var memberInfo = property.Body.GetPropertyInformation();
+            list.Add(new PropertyValue()
+            {
+                Name = memberInfo.Name,
+                DisplayName = memberInfo.GetDisplayName(),
+                Value = property.Compile().Invoke(entity),
+            });
+        }
+
+        return list;
+    }
+
+    public static List<PropertyValue> ToPropertyValuesList<TEntity>(
+        this TEntity entity,
+        params (Expression<Func<TEntity, object>>, string)[] propertiesWithDisplayNameOverrides)
+        where TEntity : class
+    {
+        var list = new List<PropertyValue>();
+
+        foreach (var property in propertiesWithDisplayNameOverrides)
+        {
+            var memberInfo = property.Item1.Body.GetPropertyInformation();
+            list.Add(new PropertyValue()
+            {
+                Name = property.Item1.Name,
+
+                DisplayName = property.Item2.HasText() ?
+                    property.Item2 :
+                    memberInfo.GetDisplayName(),
+
+                Value = property.Item1
+                    .Compile()
+                    .Invoke(entity),
+            });
+        }
+
+        return list;
     }
 
     public static TEntity CloneIgnoringReferenceProperties<TEntity>(

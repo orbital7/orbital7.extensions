@@ -58,7 +58,7 @@ public static class ListExtensions
     }
 
     public static string ToString(
-        this IList list, 
+        this IEnumerable list, 
         string delim, 
         bool encloseInQuotes = false, 
         string nullValue = "", 

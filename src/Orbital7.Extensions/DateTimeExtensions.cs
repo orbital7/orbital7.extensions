@@ -129,15 +129,21 @@ public static class DateTimeExtensions
     public static string ToDefaultTimeString(
         this DateTime dateTime)
     {
-        var fi = new DateTimeFormatInfo();
-        fi.AMDesignator = "am";
-        fi.PMDesignator = "pm";
+        // TODO: Not liking the am/pm without a space, and
+        // the conditional seconds are a problem; go back
+        // to default for now.
+        //var fi = new DateTimeFormatInfo()
+        //{
+        //    AMDesignator = "am",
+        //    PMDesignator = "pm"
+        //};
 
-        var format = dateTime.Second == 0 ?
-            "hh:mmtt" :
-            "hh:mm:sstt";
+        //var format = dateTime.Second == 0 ?
+        //    "h:mmtt" :
+        //    "h:mm:sstt";
+        var format = "h:mmtt";
 
-        return dateTime.ToString(format, fi);
+        return dateTime.ToString(format); //, fi);
     }
 
     public static string ToDefaultTimeString(
@@ -428,7 +434,7 @@ public static class DateTimeExtensions
     {
         if (dateTime.HasValue)
         {
-            return dateTime.Value.ToString("dddd, MMM d");
+            return dateTime.Value.ToDayOfWeekDateString();
         }
         else
         {

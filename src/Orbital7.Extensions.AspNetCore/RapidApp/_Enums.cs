@@ -35,3 +35,12 @@ public enum RATabsViewRenderMode
 
     Static,
 }
+
+public enum RATableViewCellHorizontalAlignment
+{
+    Left,
+
+    Center,
+
+    Right,
+}
