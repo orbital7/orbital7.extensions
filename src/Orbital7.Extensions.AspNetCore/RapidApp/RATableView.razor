@@ -5,7 +5,7 @@
     var segments = this.GetSegments();
 
     @if (!this.NoItemsMessage.HasText() ||
-        this.HasItems(segments))
+         this.HasItems(segments))
     {
         <div class="@GetTableWrapperClass()">
             <table class="@GetTableClass(this.Template)" style="@GetTableStyle()">
@@ -15,7 +15,7 @@
                         {
                             <th class="@GetHeaderCellClass(column)"
                                 @onclick="() => HandleOnSortBy(column)">
-                                @column.HeadingText
+                                @column.HeaderText
                                 @if (column.IsSortable)
                                 {
                                     @if (column.SortBy)
@@ -45,22 +45,22 @@
                 <tbody>
                     @foreach (var segment in segments)
                     {
-                        if (segments.Count > 1)
-                        {
-                            <tr class="ra-tableview-segment-row">
-                                <td colspan="@this.Template.Columns.Count">
-                                    @segment.Name
-                                </td>
-                            </tr>
-                        }
-
-                        // Don't use ForEach here, as rapid updates may cause overlapping rendering, 
-                        // which errors out mid-enumeration.
                         var sortedItems = this.Template.GetSortedItems(segment);
-                        if (sortedItems != null)
+                        if (sortedItems != null && sortedItems.Count > 0)
                         {
-                            for (int j = 0; j < this.DebugContentCount; j++)
+                            if (segments.Count > 1)
                             {
+                                <tr class="ra-tableview-segment-row">
+                                    <td colspan="@this.Template.Columns.Count">
+                                        @segment.Name
+                                    </td>
+                                </tr>
+                            }
+
+                            for (int j = 0; j < this.DebugContentCount; j++) { 
+
+                            // Don't use ForEach here, as rapid updates may cause overlapping rendering, 
+                            // which errors out mid-enumeration.
                             for (int i = 0; i < sortedItems.Count; i++)
                             {
                                 var item = sortedItems.ElementAt(i);
@@ -96,6 +96,7 @@
 
                                 </tr>
                             }
+
                             }
                         }
                     }
@@ -225,7 +226,8 @@
     private string GetHeaderCellClass(
         RATableTemplate<TEntity>.Column<TEntity> column)
     {
-        string classes = String.Empty;
+        string classes = GetCellHorizontalAlignmentClass(
+            column.HeaderCellHorizontalAlignment) + " ";
 
         if (column.IsSortable)
         {
@@ -265,7 +267,7 @@
         RATableViewSegment<TEntity> segment,
         TEntity item)
     {
-        string classes = GetCellHorizontalAlignmentClass(column) + " ";
+        string classes = GetCellHorizontalAlignmentClass(column.CellHorizontalAlignment) + " ";
 
         if (column.GetCellClass != null)
         {
@@ -278,7 +280,7 @@
     private string GetFooterCellClass(
         RATableViewFooterData<TEntity> footerData)
     {
-        string classes = GetCellHorizontalAlignmentClass(footerData.Column) + " ";
+        string classes = GetCellHorizontalAlignmentClass(footerData.Column.CellHorizontalAlignment) + " ";
 
         if (footerData.Column.GetFooterCellClass != null)
         {
@@ -289,9 +291,9 @@
     }
 
     private string GetCellHorizontalAlignmentClass(
-        RATableTemplate<TEntity>.Column<TEntity> column)
+        RATableViewCellHorizontalAlignment cellHorizontalAlignment)
     {
-        switch (column.CellHorizontalAlignment)
+        switch (cellHorizontalAlignment)
         {
             case RATableViewCellHorizontalAlignment.Center:
                 return "text-center";

@@ -27,12 +27,12 @@
 }
 else
 {
-    <RAForm Input="@this.Input"
+    <RAForm @ref="_form" 
+            Input="@this.Input"
             ValidateInput="@this.ValidateInput"
             InvalidInputMessage="@this.InvalidInputMessage"
             OnValidateInputBeforeSubmit="@this.OnValidateInputBeforeSubmit"
             OnSubmit="@this.OnSubmit"
-            OnBeforeSubmit="@HandleBeforeSubmitAsync"
             OnAfterSubmit="@HandleAfterSubmitAsync">
 
         <div class="ra-dialog-content ra-scrollable-y">
@@ -45,9 +45,9 @@ else
 
                 <button type="submit"
                         class="btn btn-sm @this.ActionButtonClass ra-dialog-control-btn"
-                        disabled="@(_isProcessing || !this.IsActionButtonEnabled)">
+                        disabled="@(_form.IsProcessing || !this.IsActionButtonEnabled)">
 
-                    @if (_isProcessing)
+                    @if (_form.IsProcessing)
                     {
                         <div class="spinner-border spinner-border-sm" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -65,7 +65,7 @@ else
                     <button type="button"
                             class="btn btn-sm @this.CancelButtonClass ra-dialog-control-btn"
                             @onclick="@HandleCancelAsync"
-                            disabled="@_isProcessing">
+                            disabled="@_form.IsProcessing">
                         @this.CancelButtonText
                     </button>
                 }
@@ -81,7 +81,7 @@ else
 
     private string _inputCreationErrorMessage;
 
-    private bool _isProcessing;
+    private RAForm<TInput> _form;
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -140,13 +140,6 @@ else
         }
     }
 
-    private async Task HandleBeforeSubmitAsync()
-    {
-        // TODO: Disable parent container and show loading.
-        _isProcessing = true;
-        await Task.CompletedTask;
-    }
-
     private async Task HandleAfterSubmitAsync(
         RAFormSubmissionResult result)
     {
@@ -157,11 +150,6 @@ else
                 ModalResult.Ok(result.ReturnedResult) :
                 ModalResult.Ok();
             await this.ModalInstance.CloseAsync(modalResult);
-        }
-        // Else re-enable parent container.
-        else
-        {
-            _isProcessing = false;
         }
     }    
 

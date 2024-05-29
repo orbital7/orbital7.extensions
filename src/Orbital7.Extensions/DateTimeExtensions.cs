@@ -141,7 +141,7 @@ public static class DateTimeExtensions
         //var format = dateTime.Second == 0 ?
         //    "h:mmtt" :
         //    "h:mm:sstt";
-        var format = "h:mmtt";
+        var format = "h:mm tt";
 
         return dateTime.ToString(format); //, fi);
     }

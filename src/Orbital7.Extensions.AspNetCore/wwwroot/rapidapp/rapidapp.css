@@ -82,6 +82,10 @@ div.ra-buttonbar {
     gap: 8px;
 }
 
+    div.ra-buttonbar button {
+        height: 28px;
+    }
+
 div.ra-navbar {
     display: flex;
     flex-direction: row;
@@ -102,6 +106,11 @@ div.ra-navbar-item-image img {
 
 div.ra-navbar-item-text {
     
+}
+
+div.ra-tableview-badgecell div.badge {
+    margin-top: 0px;
+    margin-bottom: 3px;
 }
 
 /* Override Blazored Modal defaults and set additional values. This 

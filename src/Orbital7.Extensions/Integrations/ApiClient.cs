@@ -98,7 +98,7 @@ public class ApiClient :
         string url,
         List<KeyValuePair<string, string>> request)
     {
-        return await SendRequestAsync<TResponse>(
+        return await ExecuteSendRequestAsync<TResponse>(
             HttpMethod.Post,
             url,
             new FormUrlEncodedContent(request));
@@ -124,11 +124,11 @@ public class ApiClient :
                 }
             } : null;
 
-        return await SendRequestAsync<TResponse>(method, url, content);
+        return await ExecuteSendRequestAsync<TResponse>(method, url, content);
     }
 
     // TODO: Add retry logic using Polly.
-    private async Task<TResponse> SendRequestAsync<TResponse>(
+    private async Task<TResponse> ExecuteSendRequestAsync<TResponse>(
         HttpMethod method,
         string url,
         HttpContent content)
