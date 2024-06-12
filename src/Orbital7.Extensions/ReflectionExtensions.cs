@@ -6,7 +6,8 @@ namespace System;
 
 public static class ReflectionExtensions
 {
-    public static MemberInfo GetPropertyInformation(this Expression propertyExpression)
+    public static MemberInfo GetPropertyInformation(
+        this Expression propertyExpression)
     {
         MemberExpression memberExpr = propertyExpression as MemberExpression;
         if (memberExpr == null)
@@ -26,12 +27,15 @@ public static class ReflectionExtensions
         return null;
     }
 
-    public static List<Type> GetTypes<T>(this Assembly assembly)
+    public static List<Type> GetTypes<T>(
+        this Assembly assembly)
     {
         return assembly.GetTypes(typeof(T));
     }
 
-    public static List<Type> GetTypes(this Assembly assembly, Type baseType)
+    public static List<Type> GetTypes(
+        this Assembly assembly, 
+        Type baseType)
     {
         var types = new List<Type>();
         string targetInterface = baseType.ToString();
@@ -48,17 +52,21 @@ public static class ReflectionExtensions
         return types;
     }
 
-    public static T CreateInstance<T>(this Type type)
+    public static T CreateInstance<T>(
+        this Type type)
     {
         return (T)Activator.CreateInstance(type);
     }
 
-    public static T CreateInstance<T>(this Type type, object[] parameters)
+    public static T CreateInstance<T>(
+        this Type type, 
+        object[] parameters)
     {
         return (T)Activator.CreateInstance(type, parameters);
     }
 
-    public static List<T> CreateInstances<T>(this List<Type> types)
+    public static List<T> CreateInstances<T>(
+        this List<Type> types)
     {
         var instances = new List<T>();
 
@@ -75,22 +83,28 @@ public static class ReflectionExtensions
         return instances;
     }
 
-    public static List<T> CreateInstances<T>(this Assembly assembly)
+    public static List<T> CreateInstances<T>(
+        this Assembly assembly)
     {
         return assembly.GetTypes<T>().CreateInstances<T>();
     }
 
-    public static List<T> CreateInstances<T>(this Assembly assembly, Type baseType)
+    public static List<T> CreateInstances<T>(
+        this Assembly assembly, 
+        Type baseType)
     {
         return assembly.GetTypes(baseType).CreateInstances<T>();
     }
 
-    public static List<Type> GetExternalTypes(this Type baseType)
+    public static List<Type> GetExternalTypes(
+        this Type baseType)
     {
         return baseType.GetExternalTypes(ReflectionHelper.GetExecutingAssemblyFolderPath());
     }
 
-    public static List<Type> GetExternalTypes(this Type baseType, string assembliesFolderPath)
+    public static List<Type> GetExternalTypes(
+        this Type baseType, 
+        string assembliesFolderPath)
     {
         List<Type> types = new List<Type>();
 

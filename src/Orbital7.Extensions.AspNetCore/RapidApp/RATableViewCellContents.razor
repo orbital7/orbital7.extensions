@@ -5,9 +5,9 @@
 {
     var type = this.Column.GetForType();
 
-    if (this.Column.CreateCellContent != null)
+    if (this.Column.GetCellContent != null)
     {
-        @this.Column.CreateCellContent(this.Item)
+        @this.Column.GetCellContent(this.Item)
     }
     else if (type.IsBaseOrNullableTemporalType())
     {
@@ -18,7 +18,7 @@
     }
     else
     {
-        @this.Column.GetCellContent(this.Item, this.TimeConverter)
+        @this.Column.GetCellDisplayValue(this.Item, this.TimeConverter)
     }
 }
 

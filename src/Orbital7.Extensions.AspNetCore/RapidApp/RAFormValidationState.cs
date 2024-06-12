@@ -4,9 +4,11 @@ namespace Orbital7.Extensions.AspNetCore.RapidApp;
 
 public class RAFormValidationState
 {
-    private ValidationMessageStore ValidationMessageStore { get; set; }
+    public const string CASCADING_INPUT_PARAMETER_NAME = "RAFormInput";
+    public const string CASCADING_INPUT_FOR_TOSTRING_PARAMETER_NAME = "RAFormInputForToString";
 
-    private EditContext EditContext { get; set; }
+    private readonly EditContext _editContext;
+    private ValidationMessageStore _validationMessageStore;
 
     public List<string> GeneralErrors { get; set; } = new List<string>();
 
@@ -17,21 +19,21 @@ public class RAFormValidationState
     public RAFormValidationState(
         EditContext editContext)
     {
-        this.EditContext = editContext;
-        this.ValidationMessageStore = new ValidationMessageStore(this.EditContext);
+        _editContext = editContext;
+        _validationMessageStore = new ValidationMessageStore(_editContext);
     }
 
     public void Validate(
         object inputModel)
     {
         // Clear.
-        this.ValidationMessageStore.Clear();
+        _validationMessageStore.Clear();
         this.GeneralErrors.Clear();
         this.FieldErrors.Clear();
 
         // Reset.
         // TODO: Does this need to be done every time?
-        this.ValidationMessageStore = new ValidationMessageStore(this.EditContext);
+        _validationMessageStore = new ValidationMessageStore(_editContext);
 
         // Validate.
         var result = inputModel.Validate();
@@ -53,23 +55,17 @@ public class RAFormValidationState
         }
     }
 
-    //public void AddErrors(
-    //    List<(string, string)> errors)
-    //{
-    //    foreach (var error in errors)
-    //    {
-    //        AddPropertyError(error.Item1, error.Item2);
-    //    }
-    //}
-
     public void AddPropertyError(
         string propertyName,
         string error)
     {
         if (propertyName.HasText())
         {
-            this.ValidationMessageStore.Add(
-                this.EditContext.Field(propertyName), error);
+            // TODO: Need to setup cascading parameter for Model in RAForm that get into RAValidationMessage, then use that
+            // as the model to create the FieldIdentifier.
+            _validationMessageStore.Add(
+                new FieldIdentifier(_editContext.Model, propertyName), //this.EditContext.Field(propertyName), 
+                error);
 
             this.FieldErrors.Add((propertyName, error));
         }
@@ -82,8 +78,8 @@ public class RAFormValidationState
     public void AddGeneralError(
         string error)
     {
-        this.ValidationMessageStore.Add(
-            new FieldIdentifier(this.EditContext.Model, fieldName: string.Empty), 
+        _validationMessageStore.Add(
+            new FieldIdentifier(_editContext.Model, fieldName: string.Empty), 
             error);
 
         this.GeneralErrors.Add(error);

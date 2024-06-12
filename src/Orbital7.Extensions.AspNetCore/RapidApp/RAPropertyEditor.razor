@@ -10,19 +10,21 @@
                          Value="@this.Label"
                          Class="@this.VisibilityClass" />
     }
-    <div class="@this.VisibilityClass">
+    <div class="ra-property-editor @this.VisibilityClass">
 
         @{
             base.BuildRenderTree(__builder);
         }
 
+        <div class="fst-italic ra-text-small">@this.Note</div>
+
         @if (this.EditContext != null)
         {
-            <ValidationMessage For="@ValueExpression"
-                               class="text-danger fs-6 fw-bold" />
+            <RAValidationMessage For="@ValueExpression"
+                                 class="text-danger fw-bold ra-text-small ra-property-editor-error"
+                                 style="margin-left: 3px;"/>
         }
 
-        <div class="fs-6 fst-italic">@this.Note</div>
     </div>
 }
 

@@ -8,16 +8,7 @@ public static class ObjectExtensions
     public static ObjectValidationResult Validate(
         this object model)
     {
-        var results = new List<ValidationResult>();
-        var context = new ValidationContext(model);
-
-        var isValid = Validator.TryValidateObject(model, context, results, true);
-
-        return new ObjectValidationResult()
-        {
-            IsValid = isValid,
-            Results = results,
-        };
+        return ValidateRecur(model, null);
     }
 
     public static void EnsureIsValid(
@@ -26,6 +17,24 @@ public static class ObjectExtensions
         var result = model.Validate();
         if (!result.IsValid)
             throw new ValidationException(result.ToString());
+    }
+
+    public static object GetPropertyValue(
+        this object model, 
+        string propertyName)
+    {
+        object objValue = string.Empty;
+
+        var propertyInfo = model
+            .GetType()
+            .GetProperty(propertyName);
+
+        if (propertyInfo != null)
+        {
+            objValue = propertyInfo.GetValue(model, null);
+        }
+
+        return objValue;
     }
 
     public static List<PropertyValue> GetPropertyValues(
@@ -88,6 +97,15 @@ public static class ObjectExtensions
         return list;
     }
 
+    public static string GetDisplayName<TEntity>(
+        this TEntity entity,
+        Expression<Func<TEntity, object>> property)
+        where TEntity : class
+    {
+        var memberInfo = property.Body.GetPropertyInformation();
+        return memberInfo.GetDisplayName();
+    }
+
     public static TEntity CloneIgnoringReferenceProperties<TEntity>(
         this TEntity model)
         where TEntity : class, new()
@@ -146,5 +164,62 @@ public static class ObjectExtensions
         entity.LastModifiedDateTimeUtc = model.CreatedDateTimeUtc;
 
         return entity;
+    }
+
+    private static ObjectValidationResult ValidateRecur(
+        object model,
+        string memberNamePrefix)
+    {
+        // NOTE: This method currently fails to validate Structs.
+
+        var results = new List<ValidationResult>();
+        var context = new ValidationContext(model);
+
+        // Validate the base model.
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Create the validation result and apply the membername prefix if there
+        // is one.
+        var validationResult = new ObjectValidationResult()
+        {
+            IsValid = isValid,
+            Results = memberNamePrefix.HasText() ?
+                results
+                    .Select(x => new ValidationResult(
+                        x.ErrorMessage,
+                        x.MemberNames.Select(x => $"{memberNamePrefix}.{x}").ToArray()))
+                    .ToList() :
+                results,
+        };
+
+        // Get the properties for the model (exclude any 
+        // properties that require parameters, like indexers).
+        var properties = model
+            .GetType()
+            .GetProperties()
+            .Where(x => x.GetIndexParameters().Length == 0);
+
+        // Recursively validate any complex properties.
+        var stringType = typeof(string);
+        foreach (var property in properties)
+        {
+            if (property.PropertyType.IsClass &&
+                property.PropertyType != stringType)
+            {
+                var propertyValue = property.GetValue(model);
+                if (propertyValue != null)
+                {
+                    var propertyValidationResult = ValidateRecur(
+                        propertyValue,
+                        memberNamePrefix.HasText() ?
+                            memberNamePrefix + "." + property.Name :
+                            property.Name);
+
+                    validationResult.Append(propertyValidationResult);
+                }
+            }
+        }
+
+        return validationResult;
     }
 }

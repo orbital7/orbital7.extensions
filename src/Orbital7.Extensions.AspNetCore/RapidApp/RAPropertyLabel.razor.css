@@ -8,5 +8,8 @@
 
     div.ra-property-label label {
         font-weight: bold;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 8px;
     }

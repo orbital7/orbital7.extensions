@@ -5,9 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>8.0.11</Version>
-	<AssemblyVersion>8.0.11.0</AssemblyVersion>
-    <FileVersion>8.0.11.0</FileVersion>
+    <Version>8.0.12</Version>
+	<AssemblyVersion>8.0.12.0</AssemblyVersion>
+    <FileVersion>8.0.12.0</FileVersion>
     <Description>ASP.NET Core 8 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
@@ -60,7 +60,13 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.6" />
-    <PackageReference Include="Orbital7.Extensions" Version="8.0.10" />
+    <!---->
+	<PackageReference Include="Orbital7.Extensions" Version="8.0.12" />
   </ItemGroup>
+
+  <!-- 
+  <ItemGroup>
+    <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+  </ItemGroup>-->
 
 </Project>

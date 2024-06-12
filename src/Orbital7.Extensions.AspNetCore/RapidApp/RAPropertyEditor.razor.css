@@ -1,0 +1,11 @@
+﻿div.ra-property-editor {
+    margin-bottom: -17px;
+}
+
+    div.ra-property-editor:last-child {
+        margin-bottom: 0px;
+    }
+
+.ra-property-editor-error {
+    /*margin-left: 3px; TODO: Doesn't work - class isn't getting picked up at all */
+}

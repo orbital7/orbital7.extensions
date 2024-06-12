@@ -4,20 +4,22 @@
 <RAPropertyLabel For="@this.For"
                  Value="@this.Label" />
 
-<div>
-    @if (this.ChildContent != null)
-    {
+@if (this.ChildContent != null)
+{
+    <div>
         @this.ChildContent
-    }
-    else if (_displayValue != null)
-    {
+    </div>
+}
+else if (_displayValue != null)
+{
+    <div style="margin-top: -8px;">
         @_displayValue
-    }
-    else
-    {
-        <span>Loading...</span>
-    }
-</div>
+    </div>
+}
+else
+{
+    <LoadingView IsInline="true" />
+}
 
 @code {
 

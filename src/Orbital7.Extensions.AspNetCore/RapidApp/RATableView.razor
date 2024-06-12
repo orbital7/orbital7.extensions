@@ -14,9 +14,9 @@
                         @foreach (var column in this.Template.Columns)
                         {
                             <th class="@GetHeaderCellClass(column)"
-                                @onclick="() => HandleOnSortBy(column)">
+                                @onclick="this.Template.IsSortable && column.IsSortable ? () => HandleOnSortBy(column) : null">
                                 @column.HeaderText
-                                @if (column.IsSortable)
+                                @if (this.Template.IsSortable && column.IsSortable)
                                 {
                                     @if (column.SortBy)
                                     {
@@ -119,9 +119,9 @@
                                     {
                                         @column.GetFooterCellValue(footerCellData);
                                     }
-                                    else if (column.CreateFooterCellContent != null)
+                                    else if (column.GetFooterCellContent != null)
                                     {
-                                        @column.CreateFooterCellContent(footerCellData);
+                                        @column.GetFooterCellContent(footerCellData);
                                     }
                                 </td>
                             }
@@ -229,7 +229,7 @@
         string classes = GetCellHorizontalAlignmentClass(
             column.HeaderCellHorizontalAlignment) + " ";
 
-        if (column.IsSortable)
+        if (this.Template.IsSortable && column.IsSortable)
         {
             classes += "ra-clickable ";
         }
@@ -267,7 +267,9 @@
         RATableViewSegment<TEntity> segment,
         TEntity item)
     {
-        string classes = GetCellHorizontalAlignmentClass(column.CellHorizontalAlignment) + " ";
+        string classes = 
+            column.CellClass + " " + 
+            GetCellHorizontalAlignmentClass(column.CellHorizontalAlignment) + " ";
 
         if (column.GetCellClass != null)
         {
@@ -324,16 +326,13 @@
     private void HandleOnSortBy(
         RATableTemplate<TEntity>.Column<TEntity> column)
     {
-        if (column.IsSortable)
+        if (column.SortBy)
         {
-            if (column.SortBy)
-            {
-                column.SortDescending = !column.SortDescending;
-            }
-            else
-            {
-                this.Template.SetSortByColumn(column, false);
-            }
+            column.SortDescending = !column.SortDescending;
+        }
+        else
+        {
+            this.Template.SetSortByColumn(column, false);
         }
     }
 

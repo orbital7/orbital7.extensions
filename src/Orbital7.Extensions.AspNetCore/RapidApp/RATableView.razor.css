@@ -9,7 +9,7 @@
         user-select: none;
         background-color: var(--bs-dark-bg-subtle);
         padding: 3px 13px 3px 3px;
-        border-bottom: 1px solid var(--bs-border-color);
+        border-bottom: 2px solid var(--bs-body-color);
         font-size: 0.9rem;
         font-weight: bold;
         white-space: nowrap;

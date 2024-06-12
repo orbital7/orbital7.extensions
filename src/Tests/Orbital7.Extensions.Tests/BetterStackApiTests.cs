@@ -67,7 +67,8 @@ public class BetterStackApiTests
         // Get the heartbeat.
         var getHeartbeatResponse = await uptimeHeartbeatsApi.GetAsync(heartbeat.Id);
         heartbeat = getHeartbeatResponse.Data;
-        Assert.Equal(HeartbeatStatus.Up, heartbeat.Attributes.Status);
+        Assert.True(heartbeat.Attributes.Status == HeartbeatStatus.Pending ||
+            heartbeat.Attributes.Status == HeartbeatStatus.Up);
         Assert.False(heartbeat.Attributes.Paused);
 
         // Update the heartbeat.

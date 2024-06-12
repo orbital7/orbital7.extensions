@@ -56,6 +56,24 @@
     height: 100%;
 }
 
+.ra-flex-columns-scrollable-wrapper {
+    flex-grow: 1;
+    overflow-x: auto;
+    min-height: 0;
+    min-width: 0;
+}
+
+.ra-flex-columns {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    min-width: 0;
+    min-height: 0;
+    /*width: 100%;
+    height: 100%;*/
+    gap: 30px;
+}
+
 .ra-flex-nostretch {
     align-self: flex-start;
 }
@@ -72,7 +90,28 @@
     cursor: pointer;
 }
 
+.ra-text-small {
+    font-size: 0.7rem;
+}
+
+div.ra-headingbar {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+div.ra-headingbar h3 {
+    display: inline-block;
+    margin-top: 5px;
+}
+
 div.ra-toolbar {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
     margin-bottom: 20px;
 }
 

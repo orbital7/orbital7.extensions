@@ -24,4 +24,11 @@ public class ObjectValidationResult
             return this.Errors.ToString(", ");
         }
     }
+
+    internal void Append(
+        ObjectValidationResult validationResult)
+    {
+        this.IsValid = this.IsValid && validationResult.IsValid;
+        this.Results.AddRange(validationResult.Results);
+    }
 }

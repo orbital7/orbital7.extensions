@@ -1,0 +1,32 @@
+﻿@typeparam TInput
+@typeparam TChildInput where TChildInput : class
+
+<CascadingValue Name="@RAFormValidationState.CASCADING_INPUT_FOR_TOSTRING_PARAMETER_NAME"
+                IsFixed="true"
+                Value="this.For?.ToString()">
+
+    @this.ChildContent
+
+</CascadingValue>
+
+@code {
+
+    protected TChildInput ChildInput;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public TInput Input { get; set; }
+
+    [Parameter]
+    public Expression<Func<TInput, TChildInput>> For { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this.ChildInput = this.Input is TChildInput ?
+            this.Input as TChildInput :
+            this.For.Compile().Invoke(this.Input);
+    }
+
+}

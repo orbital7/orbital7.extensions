@@ -15,18 +15,24 @@
 
                 @if (_validationState.GeneralErrors.Count > 0)
                 {
-                <ul>
-                    @foreach (var error in _validationState.GeneralErrors)
-                    {
-                        <li>@error</li>
-                    }
-                </ul>
+                    <ul>
+                        @foreach (var error in _validationState.GeneralErrors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
                 }
 
             </div>
         }
 
-        @this.ChildContent
+        <CascadingValue Value="this.Input"
+                        IsFixed="true"
+                        Name="@RAFormValidationState.CASCADING_INPUT_PARAMETER_NAME">
+
+            @this.ChildContent
+
+        </CascadingValue>
 
         <SectionOutlet SectionName="@CONTROLS_SECTION_NAME" />
 
@@ -36,12 +42,10 @@
 @code {
 
     public const string DEFAULT_INVALID_INPUT_MSG = "WHOOPS! Please see issue(s) below.";
+    public const string CONTROLS_SECTION_NAME = "RAForm-Controls";
 
     private EditContext _editContext;
-
     private RAFormValidationState _validationState;
-
-    public const string CONTROLS_SECTION_NAME = "RAForm-Controls";
 
     public bool IsProcessing { get; private set; }
 
