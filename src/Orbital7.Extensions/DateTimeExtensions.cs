@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace System;
+﻿namespace System;
 
 public enum Month
 {
@@ -58,10 +56,28 @@ public static class DateTimeExtensions
         return null;
     }
 
-    public static string FormatTimeSpan(
+    public static string ToHoursMinutesString(
+        this TimeSpan ts,
+        bool includeSecondsIfLessThanOneMinute = false,
+        bool includeSecondsIfZero = false)
+    {
+        if (includeSecondsIfLessThanOneMinute &&
+            (int)ts.TotalHours == 0 &&
+            ts.Minutes == 0 &&
+            (includeSecondsIfZero || ts.Seconds != 0))
+        {
+            return ts.ToHoursMinutesSecondsString();
+        }
+        else
+        {
+            return String.Format("{0:00}:{1:00}", (int)ts.TotalHours, ts.Minutes);
+        }
+    }
+
+    public static string ToHoursMinutesSecondsString(
         this TimeSpan ts)
     {
-        return string.Format("{0:00}:{1:00}:{2:00}", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
+        return String.Format("{0:00}:{1:00}:{2:00}", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
     }
 
     public static DateTimeSpan CalulateDateTimeSpan(

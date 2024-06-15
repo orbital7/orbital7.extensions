@@ -1,0 +1,17 @@
+﻿@typeparam TValue
+
+@if (this.EditContext != null)
+{
+    <RAValidationMessage For="@For"
+                         class="text-danger fw-bold ra-text-small ra-property-editor-error"
+                         style="margin-left: 3px;" />
+}
+
+@code {
+
+    [Parameter]
+    public Expression<Func<TValue>> For { get; set; }
+
+    [CascadingParameter]
+    public EditContext EditContext { get; set; }
+}

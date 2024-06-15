@@ -201,6 +201,7 @@ public static class ObjectExtensions
 
         // Recursively validate any complex properties.
         var stringType = typeof(string);
+        var enumerableType = typeof(Collections.IEnumerable);
         foreach (var property in properties)
         {
             if (property.PropertyType.IsClass &&
@@ -209,13 +210,35 @@ public static class ObjectExtensions
                 var propertyValue = property.GetValue(model);
                 if (propertyValue != null)
                 {
-                    var propertyValidationResult = ValidateRecur(
-                        propertyValue,
-                        memberNamePrefix.HasText() ?
-                            memberNamePrefix + "." + property.Name :
-                            property.Name);
+                    // If the property is enumerable, we want to recursively loop
+                    // through and validate the collection items.
+                    if (enumerableType.IsAssignableFrom(property.PropertyType))
+                    {
+                        int i = 0;
+                        foreach (var item in propertyValue as Collections.IEnumerable)
+                        {
+                            var propertyName = $"{property.Name}[{i}]";
 
-                    validationResult.Append(propertyValidationResult);
+                            var itemValidationResult = ValidateRecur(
+                                item,
+                                memberNamePrefix.HasText() ?
+                                    memberNamePrefix + "." + propertyName :
+                                    propertyName);
+
+                            validationResult.Append(itemValidationResult);
+                        }
+                    }
+                    // Else recursively validate the property value entity.
+                    else
+                    {
+                        var propertyValidationResult = ValidateRecur(
+                            propertyValue,
+                            memberNamePrefix.HasText() ?
+                                memberNamePrefix + "." + property.Name :
+                                property.Name);
+
+                        validationResult.Append(propertyValidationResult);
+                    }
                 }
             }
         }

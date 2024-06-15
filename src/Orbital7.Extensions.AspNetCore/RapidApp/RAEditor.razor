@@ -11,7 +11,7 @@
                      disabled="@this.IsDisabled"
                      class="@($"form-select {this.VisibilityClass} {this.Class}")"
                      style="@this.Style">
-            <RAInputSelectOptions SelectList="@this.SelectList" />
+            <RAInputSelectOptions SelectList="@_selectList" />
         </InputSelect>
     }
     else if (this.EditorType == RAEditorType.RadioButton)
@@ -21,7 +21,7 @@
                          Value="@this.Value"
                          ValueChanged="@this.ValueChanged"
                          ValueExpression="@this.ValueExpression">
-            @foreach (var item in this.SelectList)
+            @foreach (var item in _selectList)
             {
                 var itemId = GuidFactory.ToShortString(Guid.NewGuid());
                 <div class="form-check @this.VisibilityClass @this.Class"
@@ -156,6 +156,7 @@
 @code {
 
     protected bool _isLoaded = false;
+    private List<NamedValue<TValue>> _selectList;
 
     [Parameter]
     public string Id { get; set; }
@@ -178,8 +179,8 @@
     [Parameter]
     public string SwitchTextValueFalse { get; set; } = false.ToYesNo();
 
-    [Parameter]
-    public List<NamedValue<TValue>> SelectList { get; set; }
+    // [Parameter]
+    // public List<NamedValue<TValue>> SelectList { get; set; }
 
     [Parameter]
     public string SelectListOptionLabel { get; set; } = "(Select)";
@@ -236,7 +237,7 @@
         // Handle select list.
         if (this.EditorType == RAEditorType.SelectList || 
             this.EditorType == RAEditorType.RadioButton ||
-            this.SelectList != null ||
+            _selectList != null ||
             this.LoadSelectList != null ||
             type.IsBaseOrNullableEnumType())
         {
@@ -262,32 +263,32 @@
     }
 
     public void UpdateSelectList(
-    List<NamedValue<TValue>> selectList)
+        List<NamedValue<TValue>> selectList)
     {
-        this.SelectList = selectList;
+        _selectList = selectList;
 
         // Remove the select list option label if present.
         if (this.SelectListOptionLabel.HasText())
         {
-            var optionLabel = this.SelectList
+            var optionLabel = _selectList
                 .Where(x => x.Value.Equals(default(TValue)))
                 .FirstOrDefault();
             if (optionLabel != null)
             {
-                this.SelectList.Remove(optionLabel);
+                _selectList.Remove(optionLabel);
             }
         }
 
         // Sort the list.
         if (this.SortSelectList)
         {
-            this.SelectList = this.SelectList.OrderBy(x => x.Name).ToList();
+            _selectList = _selectList.OrderBy(x => x.Name).ToList();
         }
 
         // Add the option label.
         if (this.SelectListOptionLabel.HasText())
         {
-            this.SelectList.Insert(0, new NamedValue<TValue>(this.SelectListOptionLabel, default(TValue)));
+            _selectList.Insert(0, new NamedValue<TValue>(this.SelectListOptionLabel, default(TValue)));
         }
     }
 
@@ -296,25 +297,25 @@
     {
         this.EditorType = this.EditorType ?? RAEditorType.SelectList;
 
-        if (this.SelectList == null)
+        if (_selectList == null)
         {
             if (type.IsBaseOrNullableEnumType())
             {
-                this.SelectList = EnumHelper.ToNamedValueList<TValue>();
+                _selectList = EnumHelper.ToNamedValueList<TValue>();
             }
             else if (this.LoadSelectList != null)
             {
                 try
                 {
-                    this.SelectList = await this.LoadSelectList();
+                    _selectList = await this.LoadSelectList();
                 }
                 catch
                 {
-                    this.SelectList.Add(new NamedValue<TValue>("ERROR: LoadSelectList()", default(TValue)));
+                    _selectList.Add(new NamedValue<TValue>("ERROR: LoadSelectList()", default(TValue)));
                 }
             }
         }
 
-        UpdateSelectList(this.SelectList);
+        UpdateSelectList(_selectList);
     }
 }

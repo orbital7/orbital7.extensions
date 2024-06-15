@@ -2,7 +2,7 @@
     margin-top: 20px;
 }
 
-    div.ra-property-label:first-child {
+    div.ra-property-label:first-of-type {
         margin-top: 0px;
     }
 

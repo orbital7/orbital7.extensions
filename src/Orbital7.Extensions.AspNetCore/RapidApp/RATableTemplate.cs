@@ -146,6 +146,8 @@ public class RATableTemplate<TEntity> :
 
         public string CellClass { get; set; }
 
+        public int? FixedWidth { get; set; }
+
         public Expression<Func<TItem, object>> For { get; set; }
 
         public Action<Column<TItem>, RATableViewSegment<TItem>, TItem> OnCellUrlClicked { get; set; }
@@ -155,6 +157,8 @@ public class RATableTemplate<TEntity> :
         public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string> GetCellClass { get; set; }
 
         public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string> GetCellStyle { get; set; }
+
+        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, object> GetCellValue { get; set; }
 
         public RenderFragment<TItem> GetCellContent { get; set; }
 
@@ -184,7 +188,7 @@ public class RATableTemplate<TEntity> :
             RATableViewCellHorizontalAlignment? headerCellHorizontalAlignment = null,
             string cellClass = null)
         {
-            var memberInfo = forValue.Body.GetPropertyInformation();
+            var memberInfo = forValue?.Body.GetPropertyInformation();
             this.IsSortable = isSortable ?? memberInfo != null;
 
             this.For = forValue;
@@ -216,12 +220,18 @@ public class RATableTemplate<TEntity> :
             this.CellClass = cellClass;
         }
 
-        internal string GetCellDisplayValue(
+        internal string GetItemDisplayValue(
             TItem item,
             TimeConverter timeConverter)
         {
             var value = GetForValue(item);
+            return GetDisplayValue(value, timeConverter);
+        }
 
+        internal string GetDisplayValue(
+            object value,
+            TimeConverter timeConverter)
+        {
             var displayValue = value.GetDisplayValue(
                 timeConverter,
                 propertyName: this.For?.Name,

@@ -7,6 +7,7 @@
         <label for="@this.ForId"
                class="form-label">
             @this.Value
+            @this.ChildContent
         </label>
     </div>
 }
@@ -27,6 +28,9 @@
 
     [Parameter]
     public string Style { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
 
     protected override void OnParametersSet()
     {

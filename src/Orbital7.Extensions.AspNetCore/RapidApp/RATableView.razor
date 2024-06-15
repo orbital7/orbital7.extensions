@@ -14,7 +14,9 @@
                         @foreach (var column in this.Template.Columns)
                         {
                             <th class="@GetHeaderCellClass(column)"
+                                style="@GetHeaderCellStyle(column)"
                                 @onclick="this.Template.IsSortable && column.IsSortable ? () => HandleOnSortBy(column) : null">
+
                                 @column.HeaderText
                                 @if (this.Template.IsSortable && column.IsSortable)
                                 {
@@ -38,6 +40,7 @@
                                         <span class="ra-tableview-sorting-placeholder"></span>
                                     }
                                 }
+
                             </th>
                         }
                     </tr>
@@ -78,18 +81,24 @@
                                                 <a href=""
                                                    @onclick="() => column.OnCellUrlClicked(column, segment, item)"
                                                    @onclick:preventDefault="true">
-                                                    <RATableViewCellContents Column="column" Item="item" />
+                                                    <RATableViewCellContents Column="column" 
+                                                                             Segment="segment"
+                                                                             Item="item" />
                                                 </a>
                                             }
                                             else if (column.GetCellUrl != null)
                                             {
                                                 <a href="@column.GetCellUrl(column, segment, item)">
-                                                    <RATableViewCellContents Column="column" Item="item" />
+                                                    <RATableViewCellContents Column="column" 
+                                                                             Segment="segment"
+                                                                             Item="item" />
                                                 </a>
                                             }
                                             else
                                             {
-                                                <RATableViewCellContents Column="column" Item="item" />
+                                                <RATableViewCellContents Column="column" 
+                                                                         Segment="segment"
+                                                                         Item="item" />
                                             }
                                         </td>
                                     }
@@ -235,6 +244,19 @@
         }
 
         return classes.Trim();
+    }
+
+    private string GetHeaderCellStyle(
+        RATableTemplate<TEntity>.Column<TEntity> column)
+    {
+        string style = String.Empty;
+
+        if (column.FixedWidth.HasValue)
+        {
+            style += $"width: {column.FixedWidth.Value}px";
+        }
+
+        return style.Trim();
     }
 
     private bool IsRowSelected(

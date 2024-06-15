@@ -1,0 +1,18 @@
+﻿@typeparam TValue
+
+<CascadingValue Name="@RAFormValidationState.CASCADING_PARAMETER_RAChildInputValidationFacilitatorForToString"
+                IsFixed="true"
+                Value="this.For.ToString()">
+
+    @this.ChildContent
+
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public Expression<Func<TValue>> For { get; set; }
+}

@@ -2,17 +2,19 @@
 @inject TimeConverter TimeConverter
 
 <RAPropertyLabel For="@this.For"
-                 Value="@this.Label" />
+                 Value="@this.Label"
+                 Class="@this.LabelClass" 
+                 Style="@this.LabelStyle" />
 
 @if (this.ChildContent != null)
 {
-    <div>
+    <div class="@this.Class" style="@this.Style">
         @this.ChildContent
     </div>
 }
 else if (_displayValue != null)
 {
-    <div style="margin-top: -8px;">
+    <div class="@this.Class" style="margin-top: -8px; @this.Style">
         @_displayValue
     </div>
 }
@@ -27,6 +29,18 @@ else
 
     [Parameter]
     public string Label { get; set; }
+
+    [Parameter]
+    public string LabelClass { get; set; }
+
+    [Parameter]
+    public string LabelStyle { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
 
     [Parameter]
     public string ValueOverride { get; set; }

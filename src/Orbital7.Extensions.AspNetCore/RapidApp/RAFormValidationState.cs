@@ -4,8 +4,8 @@ namespace Orbital7.Extensions.AspNetCore.RapidApp;
 
 public class RAFormValidationState
 {
-    public const string CASCADING_INPUT_PARAMETER_NAME = "RAFormInput";
-    public const string CASCADING_INPUT_FOR_TOSTRING_PARAMETER_NAME = "RAFormInputForToString";
+    public const string CASCADING_PARAMETER_RAFormInput = "RAFormInput";
+    public const string CASCADING_PARAMETER_RAChildInputValidationFacilitatorForToString = "RAChildInputValidationFacilitatorForToString";
 
     private readonly EditContext _editContext;
     private ValidationMessageStore _validationMessageStore;

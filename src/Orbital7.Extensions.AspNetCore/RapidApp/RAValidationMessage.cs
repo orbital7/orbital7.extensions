@@ -28,10 +28,10 @@ public class RAValidationMessage<TValue> : ComponentBase, IDisposable
     [CascadingParameter] EditContext CurrentEditContext { get; set; } = default!;
 
     // JVE: Added cascading RAFormInput parameter.
-    [CascadingParameter(Name = RAFormValidationState.CASCADING_INPUT_PARAMETER_NAME)] public object RAFormInput { get; set; }
+    [CascadingParameter(Name = RAFormValidationState.CASCADING_PARAMETER_RAFormInput)] public object RAFormInput { get; set; }
 
     // JVE: Added cascading RAFormInputForToString parameter.
-    [CascadingParameter(Name = RAFormValidationState.CASCADING_INPUT_FOR_TOSTRING_PARAMETER_NAME)] public string RAFormInputForToString { get; set; }
+    [CascadingParameter(Name = RAFormValidationState.CASCADING_PARAMETER_RAChildInputValidationFacilitatorForToString)] public string RAChildInputValidationFacilitatorForToString { get; set; }
 
     /// <summary>
     /// Specifies the field for which validation messages should be displayed.
@@ -69,9 +69,9 @@ public class RAValidationMessage<TValue> : ComponentBase, IDisposable
             //
             //_fieldIdentifier = FieldIdentifier.Create(For);
             var fieldName = ParseRAFieldName();
-            if (this.RAFormInputForToString.HasText())
+            if (this.RAChildInputValidationFacilitatorForToString.HasText())
             {
-                fieldName = ParseRAFormInputForPrefix() + "." + fieldName;
+                fieldName = ParseRAFormChildInputPrefix() + "." + fieldName;
             }
 
             _fieldIdentifier = new FieldIdentifier(
@@ -104,9 +104,9 @@ public class RAValidationMessage<TValue> : ComponentBase, IDisposable
         return fieldName.PruneEnd(".");
     }
 
-    private string ParseRAFormInputForPrefix()
+    private string ParseRAFormChildInputPrefix()
     {
-        var frags = this.RAFormInputForToString.Parse(".");
+        var frags = this.RAChildInputValidationFacilitatorForToString.Parse(".");
         return frags.Last();
     }
 

@@ -170,10 +170,9 @@ public static class ReflectionExtensions
             else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
             {
                 var date = (DateOnly)(object)value;
-                if (options.DateTimeFormat.HasText())
+                if (options.DateOnlyFormat.HasText())
                 {
-                    return new DateTime(date, new TimeOnly()).ToString(
-                        options.DateTimeFormat);
+                    return date.ToString(options.DateOnlyFormat);
                 }
                 else
                 {
@@ -183,13 +182,20 @@ public static class ReflectionExtensions
             else if (type == typeof(TimeOnly) || type == typeof(TimeOnly?))
             {
                 var time = (TimeOnly)(object)value;
-                var dateTime = ToDateTime(
-                        new DateTime(new DateOnly(), time),
-                    propertyName,
-                    timeConverter,
-                    options);
+                if (options.TimeOnlyFormat.HasText())
+                {
+                    return time.ToString(options.TimeOnlyFormat);
+                }
+                else
+                {
+                    var dateTime = ToDateTime(
+                            new DateTime(new DateOnly(), time),
+                        propertyName,
+                        timeConverter,
+                        options);
 
-                return dateTime.ToShortTimeString();
+                    return dateTime.ToShortTimeString();
+                }
             }
         #endif
             else if (type == typeof(DateTime) || type == typeof(DateTime?))
@@ -209,18 +215,32 @@ public static class ReflectionExtensions
                     return dateTime.ToDefaultDateTimeString();
                 }
             }
+            else if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
+            {
+                var timeSpan = (TimeSpan)(object)value;
+                if (options.TimeSpanFormat.HasText())
+                {
+                    return timeSpan.ToString(options.TimeSpanFormat);
+                }
+                else
+                {
+                    return timeSpan.ToHoursMinutesSecondsString();
+                }
+            }
             else if (type == typeof(bool) || type == typeof(bool?))
             {
                 return ((bool)(object)value).ToYesNo();
             }
-            else if (options.UseCurrencyForDecimals && (
-                type == typeof(decimal) || type == typeof(decimal?)))
+            else if (options.UseCurrencyForDecimals &&
+                (type == typeof(decimal) || type == typeof(decimal?)))
             {
-                var currency = (decimal?)(object)value;
-                if (currency.HasValue)
-                {
-                    return currency.Value.ToCurrencyString(options);
-                }
+                var currency = (decimal)(object)value;
+                return currency.ToCurrencyString(options);
+            }
+            else if (options.ForNumbersAddPlusIfPositive && 
+                type.IsBaseOrNullableNumericType())
+            {
+                return "+" + value.ToString();
             }
             else if (dataTypeAttribute?.DataType == DataType.Password)
             {
