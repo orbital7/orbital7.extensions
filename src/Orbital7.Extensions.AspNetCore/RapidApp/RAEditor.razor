@@ -8,7 +8,7 @@
                      Value="@this.Value"
                      ValueChanged="@this.ValueChanged"
                      ValueExpression="@this.ValueExpression"
-                     disabled="@this.IsDisabled"
+                     disabled="@(!this.IsEnabled)"
                      class="@($"form-select {this.VisibilityClass} {this.Class}")"
                      style="@this.Style">
             <RAInputSelectOptions SelectList="@_selectList" />
@@ -29,7 +29,7 @@
                     <InputRadio id="@itemId"
                                 Name="@this.Id"
                                 Value="@item.Value"
-                                disabled="@this.IsDisabled"
+                                disabled="@(!this.IsEnabled)"
                                 class="form-check-input" />
                     <label class="form-check-label"
                            for="@itemId">
@@ -49,7 +49,7 @@
                              ValueChanged="this.ValueChanged"
                              ValueExpression="@this.ValueExpression"
                              role="switch"
-                             disabled="@this.IsDisabled"
+                             disabled="@(!this.IsEnabled)"
                              class="form-check-input" />
             <label class="form-check-label user-select-none"
                    for="@this.Id">
@@ -65,7 +65,7 @@
                                  ValueChanged="this.ValueChanged"
                                  ValueExpression="@this.ValueExpression"
                                  role="switch"
-                                 disabled="@this.IsDisabled"
+                                 disabled="@(!this.IsEnabled)"
                                  class="form-check-input" />
                 @this.SwitchText
             </label>
@@ -85,7 +85,7 @@
                              Value="@this.Value"
                              ValueChanged="this.ValueChanged"
                              ValueExpression="@this.ValueExpression"
-                             disabled="@this.IsDisabled"
+                             disabled="@(!this.IsEnabled)"
                              class="form-check-input" />
             <label class="form-check-label user-select-none"
                    >
@@ -100,7 +100,7 @@
                                  Value="@this.Value"
                                  ValueChanged="this.ValueChanged"
                                  ValueExpression="@this.ValueExpression"
-                                 disabled="@this.IsDisabled"
+                                 disabled="@(!this.IsEnabled)"
                                  class="form-check-input" />
                 @this.ChildContent
             </label>
@@ -112,7 +112,8 @@
                      Value="@this.Value"
                      ValueChanged="@this.ValueChanged"
                      ValueExpression="@this.ValueExpression"
-                     disabled="@this.IsDisabled"
+                     disabled="@(!this.IsEnabled)"
+                     readonly="@this.IsReadOnly"
                      placeholder="@this.Placeholder"
                      class="@($"form-control {this.VisibilityClass} {this.Class}")"
                      style="@this.Style" />
@@ -123,7 +124,8 @@
                    Value="@this.Value"
                    ValueChanged="@this.ValueChanged"
                    ValueExpression="@this.ValueExpression"
-                   disabled="@this.IsDisabled"
+                   disabled="@(!this.IsEnabled)"
+                   readonly="@this.IsReadOnly"
                    class="@($"form-control {this.VisibilityClass} {this.Class}")"
                    style="@this.Style" />
     }
@@ -133,7 +135,8 @@
                          Value="@this.Value"
                          ValueChanged="@this.ValueChanged"
                          ValueExpression="@this.ValueExpression"
-                         disabled="@this.IsDisabled"
+                         disabled="@(!this.IsEnabled)"
+                         readonly="@this.IsReadOnly"
                          placeholder="@this.Placeholder"
                          class="@($"form-control {this.VisibilityClass} {this.Class}")"
                          style="@this.Style" />
@@ -141,15 +144,37 @@
 
     else if (this.EditorType.Value.UsesInputTextEditor())
     {
-        <RAInputText id="@this.Id"
-                     type="@(this.EditorType.Value == RAEditorType.Password ? "password" : "text")"
-                     Value="@this.Value"
-                     ValueChanged="@this.ValueChanged"
-                     ValueExpression="@this.ValueExpression"
-                     disabled="@this.IsDisabled"
-                     placeholder="@this.Placeholder"
-                     class="@($"form-control {this.VisibilityClass} {this.Class}")"
-                     style="@this.Style" />
+        @if (this.ButtonText.HasText() && this.OnButtonClick != null)
+        {
+            <div class="input-group">
+                <RAInputText id="@this.Id"
+                             type="@(this.EditorType.Value == RAEditorType.Password ? "password" : "text")"
+                             Value="@this.Value"
+                             ValueChanged="@this.ValueChanged"
+                             ValueExpression="@this.ValueExpression"
+                             disabled="@(!this.IsEnabled)"
+                             readonly="@this.IsReadOnly"
+                             placeholder="@this.Placeholder"
+                             class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                             style="@this.Style" />
+                <button type="button" 
+                        class="btn @this.ButtonClass"
+                        @onclick="@this.OnButtonClick">@this.ButtonText</button>
+            </div>
+        }
+        else
+        {
+            <RAInputText id="@this.Id"
+                         type="@(this.EditorType.Value == RAEditorType.Password ? "password" : "text")"
+                         Value="@this.Value"
+                         ValueChanged="@this.ValueChanged"
+                         ValueExpression="@this.ValueExpression"
+                         disabled="@(!this.IsEnabled)"
+                         readonly="@this.IsReadOnly"
+                         placeholder="@this.Placeholder"
+                         class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                         style="@this.Style" />
+        }
     }
 }
 
@@ -189,6 +214,15 @@
     public Func<Task<List<NamedValue<TValue>>>> LoadSelectList { get; set; }
 
     [Parameter]
+    public Func<Task> OnButtonClick { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    [Parameter]
+    public string ButtonClass { get; set; } = "btn-outline-secondary";
+
+    [Parameter]
     public RAEditorType? EditorType { get; set; }
 
     [Parameter]
@@ -207,7 +241,10 @@
     public bool IsVisible { get; set; } = true;
 
     [Parameter]
-    public bool IsDisabled { get; set; } = false;
+    public bool IsEnabled { get; set; } = true;
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
 
     private string SwitchText => ((bool)(object)this.Value) ?
         this.SwitchTextValueTrue :
@@ -215,10 +252,10 @@
 
     protected string VisibilityClass => this.IsVisible ? "" : "d-none";
 
-    public void Enable(
-        bool enable)
+    public void SetEnabled(
+        bool isEnabled)
     {
-        this.IsDisabled = !enable;
+        this.IsEnabled = isEnabled;
     }
 
     public void SetVisibility(
