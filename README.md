@@ -3,3 +3,4 @@
 <div>&nbsp;</div>
 <div>Install-Package Orbital7.Extensions</div>
 <div>Install-Package Orbital7.Extensions.EntityFrameworkCore</div>
+<div>Install-Package Orbital7.Extensions.AspNetCore [v8 coming soon]</div>
