@@ -162,6 +162,8 @@ public class RATableTemplate<TEntity> :
 
         public RenderFragment<TItem> GetCellContent { get; set; }
 
+        public RenderFragment<List<RATableViewSegment<TEntity>>> GetHeaderCellContent { get; set; }
+
         public RenderFragment<RATableViewFooterData<TItem>> GetFooterCellContent { get; set; }
 
         public Func<RATableViewFooterData<TItem>, object> GetFooterCellValue { get; set; }

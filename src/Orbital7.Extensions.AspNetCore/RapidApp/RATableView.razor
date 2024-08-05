@@ -17,7 +17,15 @@
                                 style="@GetHeaderCellStyle(column)"
                                 @onclick="this.Template.IsSortable && column.IsSortable ? () => HandleOnSortBy(column) : null">
 
-                                @column.HeaderText
+                                @if (column.GetHeaderCellContent != null)
+                                {
+                                    @column.GetHeaderCellContent(segments)
+                                }
+                                else
+                                {
+                                    @column.HeaderText
+                                }
+
                                 @if (this.Template.IsSortable && column.IsSortable)
                                 {
                                     @if (column.SortBy)

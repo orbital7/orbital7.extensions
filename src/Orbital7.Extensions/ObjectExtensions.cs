@@ -72,12 +72,12 @@ public static class ObjectExtensions
 
     public static List<PropertyValue> ToPropertyValuesList<TEntity>(
         this TEntity entity,
-        params (Expression<Func<TEntity, object>>, string)[] propertiesWithDisplayNameOverrides)
+        params (Expression<Func<TEntity, object>>, string)[] propertiesAndDisplayNameOverrides)
         where TEntity : class
     {
         var list = new List<PropertyValue>();
 
-        foreach (var property in propertiesWithDisplayNameOverrides)
+        foreach (var property in propertiesAndDisplayNameOverrides)
         {
             var memberInfo = property.Item1.Body.GetPropertyInformation();
             list.Add(new PropertyValue()
