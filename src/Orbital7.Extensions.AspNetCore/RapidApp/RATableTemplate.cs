@@ -249,6 +249,16 @@ public class RATableTemplate<TEntity> :
 
         internal Type GetForType()
         {
+            if (this.For?.Body is ConditionalExpression)
+            {
+                var conditionalExpression = this.For.Body as ConditionalExpression;
+                var ifTrueExpression = conditionalExpression.IfTrue as UnaryExpression;
+                if (ifTrueExpression != null)
+                {
+                    return ifTrueExpression.Operand.Type;
+                }
+            }
+            
             return this.For?.Body?
                 .GetPropertyInformation()?
                 .GetType();
