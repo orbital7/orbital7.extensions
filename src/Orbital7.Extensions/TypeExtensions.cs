@@ -5,13 +5,9 @@ public static class TypeExtensions
     public static bool IsBaseOrNullableTemporalType(
         this Type type)
     {
-        #if NET6_0_OR_GREATER
-            return type == typeof(DateTime) || type == typeof(DateTime?) ||
-                   type == typeof(DateOnly) || type == typeof(DateOnly?) ||
-                   type == typeof(TimeOnly) || type == typeof(TimeOnly?);
-        #else
-            return type == typeof(DateTime) || type == typeof(DateTime?);
-        #endif
+        return type == typeof(DateTime) || type == typeof(DateTime?) ||
+               type == typeof(DateOnly) || type == typeof(DateOnly?) ||
+               type == typeof(TimeOnly) || type == typeof(TimeOnly?);
     }
 
     public static bool IsBaseOrNullableNumericType(

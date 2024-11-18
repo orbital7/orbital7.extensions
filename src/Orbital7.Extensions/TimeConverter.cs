@@ -15,18 +15,10 @@ public class TimeConverter
     {
         TimeZoneInfo timeZone = null;
 
-        #if NET8_0_OR_GREATER
-            if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZoneId, out timeZone))
-            {
-                timeZone = null;
-            }
-        #else
-            try
-            { 
-                timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            }
-            catch { }
-        #endif
+        if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZoneId, out timeZone))
+        {
+            timeZone = null;
+        }
 
         if (timeZone != TimeZoneInfo.Local)
         {

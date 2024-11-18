@@ -16,7 +16,7 @@
 
         if (value != null && IsDateTime(value.GetType()))
         {
-            <LocalDateTime Value="@((DateTime)value)"
+            <LocalDateTime Value="@((DateTime?)value)"
                            DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
                            TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
                            DefaultValue="@this.Column.DefaultValue" />
@@ -30,7 +30,7 @@
     {
         if (IsDateTime(this.Column.GetForType()))
         {
-            <LocalDateTime Value="@((DateTime)this.Column.GetForValue(this.Item))"
+            <LocalDateTime Value="@((DateTime?)this.Column.GetForValue(this.Item))"
                            DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
                            TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
                            DefaultValue="@this.Column.DefaultValue" />

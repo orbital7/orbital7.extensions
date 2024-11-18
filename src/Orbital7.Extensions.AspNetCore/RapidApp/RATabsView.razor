@@ -1,6 +1,11 @@
-﻿<div class="btn-group @this.HeaderClass" role="group">
+﻿@if (_activeTab != null && !_activeTab.IsVisible)
+{
+    _activeTab = this.VisibleTabs.FirstOrDefault();
+}
 
-    @foreach (TabPage tabPage in _pages)
+<div class="btn-group @this.HeaderClass" role="group">
+
+    @foreach (TabPage tabPage in this.VisibleTabs)
     {
         <button type="button"
                 class="btn @GetButtonClass(tabPage)"
@@ -19,8 +24,8 @@
 
 @code {
 
-    private List<TabPage> _pages = new List<TabPage>();
-    private TabPage _activePage { get; set; }
+    private List<TabPage> _tabs = new List<TabPage>();
+    private TabPage _activeTab { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -34,16 +39,18 @@
     [Parameter]
     public string Class { get; set; }
 
-    public TabPage ActiveTab => _activePage;
+    public TabPage ActiveTab => _activeTab;
+
+    private List<TabPage> VisibleTabs => _tabs.Where(x => x.IsVisible).ToList();
 
     internal void AddPage(
         TabPage tabPage)
     {
-        _pages.Add(tabPage);
+        _tabs.Add(tabPage);
 
-        if (_pages.Count == 1)
+        if (_tabs.Count == 1)
         {
-            _activePage = tabPage;
+            _activeTab = tabPage;
         }
         StateHasChanged();
     }
@@ -51,13 +58,13 @@
     public async Task SelectAsync(
         string tabId)
     {
-        var tab = _pages
+        var tab = _tabs
             .Where(x => x.ID == tabId)
             .FirstOrDefault();
 
         if (tab != null)
         {
-            _activePage = tab;
+            _activeTab = tab;
             await this.InvokeAsync(StateHasChanged);
         }
         else
@@ -69,13 +76,13 @@
     private string GetButtonClass(
         TabPage page)
     {
-        return page == _activePage ? "btn-primary" : "btn-secondary";
+        return page == _activeTab ? "btn-primary" : "btn-secondary";
     }
 
     private void ActivatePage(
         TabPage page)
     {
-        _activePage = page;
+        _activeTab = page;
     }
 
 }

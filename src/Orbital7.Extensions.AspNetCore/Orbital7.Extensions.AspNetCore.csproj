@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>8.0.15</Version>
-	<AssemblyVersion>8.0.15.0</AssemblyVersion>
-    <FileVersion>8.0.15.0</FileVersion>
-    <Description>ASP.NET Core 8 Extensions/Utilities</Description>
+    <Version>9.0.0</Version>
+	<AssemblyVersion>9.0.0.0</AssemblyVersion>
+    <FileVersion>9.0.0.0</FileVersion>
+    <Description>ASP.NET Core 9 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
     <Copyright>Copyright © 2012-2024 Orbital7</Copyright>
@@ -57,11 +57,11 @@
 	
 	<ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="7.3.1" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
     <!---->
-	<PackageReference Include="Orbital7.Extensions" Version="8.0.15" />
+	<PackageReference Include="Orbital7.Extensions" Version="9.0.0" />
   </ItemGroup>
 
   <!-- 

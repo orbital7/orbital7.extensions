@@ -108,23 +108,21 @@ public static class DateTimeExtensions
         return dateTime.Subtract(dateToCompare).Days / (365.25 / 12);
     }
 
-    #if NET6_0_OR_GREATER
-        public static string ToDefaultDateString(
-            this DateOnly date)
-        {
-            return date.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
-        }
+    public static string ToDefaultDateString(
+        this DateOnly date)
+    {
+        return date.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
+    }
 
-        public static string ToDefaultDateString(
-            this DateOnly? date,
-            string nullValue = null)
-        {
-            if (date.HasValue)
-                return date.Value.ToDefaultDateString();
-            else
-                return nullValue;
-        }
-    #endif
+    public static string ToDefaultDateString(
+        this DateOnly? date,
+        string nullValue = null)
+    {
+        if (date.HasValue)
+            return date.Value.ToDefaultDateString();
+        else
+            return nullValue;
+    }
 
     public static string ToDefaultDateString(
         this DateTime dateTime)

@@ -166,7 +166,6 @@ public static class ReflectionExtensions
             {
                 return (value as Enum).ToDisplayString();
             }
-        #if NET8_0_OR_GREATER
             else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
             {
                 var date = (DateOnly)(object)value;
@@ -197,7 +196,6 @@ public static class ReflectionExtensions
                     return dateTime.ToShortTimeString();
                 }
             }
-        #endif
             else if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
                 var dateTime = ToDateTime(

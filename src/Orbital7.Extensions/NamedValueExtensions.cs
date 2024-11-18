@@ -1,6 +1,6 @@
 ﻿namespace System;
 
-public static class NamedIdExtensions
+public static class NamedValueExtensions
 {
     public static NamedValue<TId> ToNamedValue<TId>(
         this NamedId<TId> namedId)
@@ -13,6 +13,14 @@ public static class NamedIdExtensions
     {
         return list
             .Select(x => x.ToNamedValue())
+            .ToList();
+    }
+
+    public static List<NamedValue<T>> ToNamedValueList<T>(
+        this List<T> list)
+    {
+        return list
+            .Select(x => new NamedValue<T>(x.ToString(), x))
             .ToList();
     }
 }

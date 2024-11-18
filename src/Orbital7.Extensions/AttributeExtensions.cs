@@ -99,6 +99,27 @@ public static class AttributeExtensions
         return member.GetAttribute<T>(false) != null;
     }
 
+    public static List<Type> GetTypesWithAttribute<TAttribute>(
+        this Assembly assembly,
+        Type objectType)
+        where TAttribute : Attribute
+    {
+        var types = assembly.GetTypes(objectType);
+        var attributeType = typeof(TAttribute);
+
+        return (from x in types
+                let a = x.GetCustomAttribute(attributeType) as TAttribute
+                where a != null
+                select x).ToList();
+    }
+
+    public static List<Type> GetTypesWithAttribute<TObject, TAttribute>(
+        this Assembly assembly)
+        where TAttribute : Attribute
+    {
+        return assembly.GetTypesWithAttribute<TAttribute>(typeof(TObject));
+    }
+
     public static List<(Type, TAttribute)> GetTypeAttributePairs<TAttribute>(
         this Assembly assembly, 
         Type objectType,
@@ -107,22 +128,6 @@ public static class AttributeExtensions
     {
         var types = assembly.GetTypes(objectType);
         var attributeType = typeof(TAttribute);
-
-        return (from x in types
-                let a = x.GetCustomAttribute(attributeType) as TAttribute
-                where includeNullAttributes || a != null
-
-                select (x, a)).ToList();
-    }
-
-    public static List<(Type, TAttribute)> GetTypeAttributePairs<TAttribute>(
-        this Assembly assembly, 
-        Type objectType, 
-        Type attributeType,
-        bool includeNullAttributes = false) 
-        where TAttribute : Attribute
-    {
-        var types = assembly.GetTypes(objectType);
 
         return (from x in types
                 let a = x.GetCustomAttribute(attributeType) as TAttribute

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 namespace System;
@@ -112,21 +113,31 @@ public static class ObjectExtensions
     {
         var clone = new TEntity();
 
-        var stringPropertyType = typeof(string);
-        var properties = typeof(TEntity).GetProperties();
-        foreach (var property in properties)
+        if (clone is IList list)
         {
-            // If the property is both readable and writable and
-            // the property is either not a class property or a string,
-            // set it.
-            if (property.CanRead &&
-                property.CanWrite &&
-                (!property.PropertyType.IsClass ||
-                 property.PropertyType == stringPropertyType))
+            foreach (var item in (IList)model)
             {
-                property.SetValue(
-                    clone,
-                    property.GetValue(model));
+                list.Add(item.CloneIgnoringReferenceProperties());
+            }
+        }
+        else
+        {
+            var stringPropertyType = typeof(string);
+            var properties = typeof(TEntity).GetProperties();
+            foreach (var property in properties)
+            {
+                // If the property is both readable and writable and
+                // the property is either not a class property or a string,
+                // set it.
+                if (property.CanRead &&
+                    property.CanWrite &&
+                    (!property.PropertyType.IsClass ||
+                     property.PropertyType == stringPropertyType))
+                {
+                    property.SetValue(
+                        clone,
+                        property.GetValue(model));
+                }
             }
         }
 

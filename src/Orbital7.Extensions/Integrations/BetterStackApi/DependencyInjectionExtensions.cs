@@ -1,10 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Orbital7.Extensions.Integrations.BetterStackApi;
+﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddBetterStackLogs(
+    public static IServiceCollection AddBetterStackLogsApi(
         this IServiceCollection services)
     {
         services.AddScoped<ILogsUploadApi, LogsUploadApi>(
@@ -15,7 +13,7 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddBetterStackUptime(
+    public static IServiceCollection AddBetterStackUptimeApi(
         this IServiceCollection services,
         string apiToken)
     {

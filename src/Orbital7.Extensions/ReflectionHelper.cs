@@ -42,6 +42,18 @@ public static class ReflectionHelper
         return CreateInstance<T>(typeof(T), parameters);
     }
 
+    public static List<T> CreateInstancesWithAttribute<T, TAttribute>()
+        where TAttribute : Attribute
+    {
+        var types = Assembly
+            .GetExecutingAssembly()
+            .GetTypesWithAttribute<T, TAttribute>();
+
+        return types
+            .Select(x => x.CreateInstance<T>())
+            .ToList();
+    }
+
     private static T CreateInstance<T>(
         Type type, 
         object[] parameters)

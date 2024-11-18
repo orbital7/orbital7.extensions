@@ -204,8 +204,8 @@
     [Parameter]
     public string SwitchTextValueFalse { get; set; } = false.ToYesNo();
 
-    // [Parameter]
-    // public List<NamedValue<TValue>> SelectList { get; set; }
+    [Parameter]
+    public List<NamedValue<TValue>> SelectList { get; set; }
 
     [Parameter]
     public string SelectListOptionLabel { get; set; } = "(Select)";
@@ -299,7 +299,64 @@
         _isLoaded = true;
     }
 
-    public void UpdateSelectList(
+    public async Task UpdateSelectListAsync(
+        List<NamedValue<TValue>> selectList)
+    {
+        var currentValue = this.Value;
+        UpdateSelectList(selectList);
+
+        var previousValue = this.Value;
+        bool previousValueExists = selectList
+            .Where(x => x.Value.Equals(previousValue))
+            .Count() > 0;
+
+        // Clear out the old value.
+        this.Value = default;
+        await this.ValueChanged.InvokeAsync(default);
+        await this.InvokeAsync(StateHasChanged);
+
+        // Restore the old value.
+        if (previousValueExists)
+        {
+            this.Value = previousValue;
+            await this.ValueChanged.InvokeAsync(previousValue);
+            await this.InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadSelectListAsync(
+        Type type)
+    {
+        this.EditorType = this.EditorType ?? RAEditorType.SelectList;
+
+        if (_selectList == null)
+        {
+            if (this.SelectList != null)
+            {
+                // TODO: Use CloneIgnoringReferenceProperties() after Orbital7.Extensions 8.0.16 is available.
+                _selectList = JsonSerializationHelper.CloneObject<List<NamedValue<TValue>>>(this.SelectList);
+            }
+            else if (type.IsBaseOrNullableEnumType())
+            {
+                _selectList = EnumHelper.ToNamedValueList<TValue>();
+            }
+            else if (this.LoadSelectList != null)
+            {
+                try
+                {
+                    _selectList = await this.LoadSelectList();
+                }
+                catch
+                {
+                    _selectList.Add(new NamedValue<TValue>("ERROR: LoadSelectList()", default(TValue)));
+                }
+            }
+        }
+
+        UpdateSelectList(_selectList);
+    }
+
+    private void UpdateSelectList(
         List<NamedValue<TValue>> selectList)
     {
         _selectList = selectList;
@@ -327,32 +384,5 @@
         {
             _selectList.Insert(0, new NamedValue<TValue>(this.SelectListOptionLabel, default(TValue)));
         }
-    }
-
-    private async Task LoadSelectListAsync(
-        Type type)
-    {
-        this.EditorType = this.EditorType ?? RAEditorType.SelectList;
-
-        if (_selectList == null)
-        {
-            if (type.IsBaseOrNullableEnumType())
-            {
-                _selectList = EnumHelper.ToNamedValueList<TValue>();
-            }
-            else if (this.LoadSelectList != null)
-            {
-                try
-                {
-                    _selectList = await this.LoadSelectList();
-                }
-                catch
-                {
-                    _selectList.Add(new NamedValue<TValue>("ERROR: LoadSelectList()", default(TValue)));
-                }
-            }
-        }
-
-        UpdateSelectList(_selectList);
     }
 }
