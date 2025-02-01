@@ -5,11 +5,11 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-	<Version>9.0.0</Version>
-    <AssemblyVersion>9.0.0.0</AssemblyVersion>
-    <FileVersion>9.0.0.0</FileVersion>
+	<Version>9.0.1</Version>
+    <AssemblyVersion>9.0.1.0</AssemblyVersion>
+    <FileVersion>9.0.1.0</FileVersion>
     <Company>Orbital7</Company>
-    <Copyright>Copyright © 2012-2024 Orbital7</Copyright>
+    <Copyright>Copyright © 2012-2025 Orbital7</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>.NET Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
@@ -33,16 +33,16 @@
   <ItemGroup>
 	<PackageReference Include="CSharpVitamins.ShortGuid" Version="2.0.0" />
 	<PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.1" />
 	<PackageReference Include="NewId" Version="4.0.1" />
-	<PackageReference Include="Polly" Version="8.5.0" />
+	<PackageReference Include="Polly" Version="8.5.1" />
 	<PackageReference Include="Sqids" Version="3.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
