@@ -13,6 +13,8 @@ public class ApiClient :
 
     protected virtual string HttpClientName => null;
 
+    protected virtual string CharSet => "utf-8";
+
     public ApiClient(
         IHttpClientFactory httpClientFactory)
     {
@@ -120,7 +122,7 @@ public class ApiClient :
             {
                 Headers =
                 {
-                    ContentType = new MediaTypeHeaderValue("application/json")
+                    ContentType = new MediaTypeHeaderValue("application/json", this.CharSet)
                 }
             } : null;
 

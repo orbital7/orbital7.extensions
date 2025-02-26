@@ -1,5 +1,8 @@
 ﻿namespace Orbital7.Extensions.Integrations.BetterStackApi;
 
+// Documentation:
+//  https://betterstack.com/docs/uptime/api/getting-started-with-uptime-api/
+//  https://betterstack.com/docs/uptime/api/list-all-existing-hearbeats/
 public class UptimeHeartbeatsApi :
     UptimeApiBase, IUptimeHeartbeatsApi
 {

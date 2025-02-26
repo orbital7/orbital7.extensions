@@ -10,6 +10,8 @@ public class BetterStackApiTests
 
     private string BetterStackLogsSourceToken { get; set; }
 
+    private string BetterStackLogsIngestingHost { get; set; }
+
     private IHttpClientFactory HttpClientFactory { get; set; }
 
     public BetterStackApiTests()
@@ -17,6 +19,7 @@ public class BetterStackApiTests
         var config = ConfigurationHelper.GetConfigurationWithUserSecrets<BetterStackApiTests>();
         this.BetterStackUptimeApiToken = config["BetterStackUptimeApiToken"];
         this.BetterStackLogsSourceToken = config["BetterStackLogsSourceToken"];
+        this.BetterStackLogsIngestingHost = config["BetterStackLogsIngestingHost"];
         this.HttpClientFactory = new BasicHttpClientFactory();
     }
 
@@ -133,6 +136,7 @@ public class BetterStackApiTests
         // Upload single log event.
         await logsUploadApi.LogEventAsync(
             this.BetterStackLogsSourceToken,
+            this.BetterStackLogsIngestingHost,
             logEvent);
 
         // Create multiple events.
@@ -166,7 +170,8 @@ public class BetterStackApiTests
 
         // Upload multiple log events.
         await logsUploadApi.LogEventsAsync(
-            this.BetterStackLogsSourceToken, 
+            this.BetterStackLogsSourceToken,
+            this.BetterStackLogsIngestingHost,
             logEvents);
     }
 
