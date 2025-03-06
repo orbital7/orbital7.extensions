@@ -18,6 +18,17 @@ public static class EncryptionHelper
         return Convert.ToBase64String(randomNumber);
     }
 
+    public static string ComputeHmacSha256Hash(
+        string input,
+        string salt)
+    {
+        using (var hmacsha256 = new HMACSHA256(Encoding.UTF8.GetBytes(salt)))
+        {
+            byte[] hashBytes = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+            return Convert.ToBase64String(hashBytes);
+        }
+    }
+
     public static byte[] Encrypt(
         byte[] data, 
         string passphrase, 

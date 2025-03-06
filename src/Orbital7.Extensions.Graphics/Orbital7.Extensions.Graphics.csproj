@@ -12,9 +12,9 @@
     <Product>Orbital7.Extensions</Product>
     <PackageIcon>Orbital7.png</PackageIcon>
     <PackageIconUrl />
-	<Version>9.0.2</Version>
-	<AssemblyVersion>9.0.2.0</AssemblyVersion>
-	<FileVersion>9.0.2.0</FileVersion>
+	<Version>9.0.3</Version>
+	<AssemblyVersion>9.0.3.0</AssemblyVersion>
+	<FileVersion>9.0.3.0</FileVersion>
     <Description>.NET Graphics Extensions/Utilities</Description>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
   </ItemGroup>
 	
   <ItemGroup>
