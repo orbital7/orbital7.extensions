@@ -2,21 +2,9 @@
 
 public interface IExternalNotificationService
 {
-    Task<bool> SendTraceAsync(
-        string message);
+    public const string MSG_LINE_TERM = "\n";
 
-    Task<bool> SendDebugAsync(
-        string message);
-
-    Task<bool> SendInformationAsync(
-        string message);
-
-    Task<bool> SendWarningAsync(
-        string message);
-
-    Task<bool> SendErrorAsync(
-        string message);
-
-    Task<bool> SendCriticalAsync(
+    Task<bool> SendAsync(
+        LogLevel logLevel,
         string message);
 }

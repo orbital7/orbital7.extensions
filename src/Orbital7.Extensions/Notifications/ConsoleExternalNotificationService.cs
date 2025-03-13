@@ -3,47 +3,30 @@
 public class ConsoleExternalNotificationService :
     IExternalNotificationService
 {
-    public async Task<bool> SendTraceAsync(
+    public Task<bool> SendAsync(
+        LogLevel logLevel,
         string message)
     {
-        return await SendAsync("#trace", message);
+        if (logLevel != LogLevel.None)
+        {
+            Console.WriteLine($"{GetChannel(logLevel)}: {message}");
+        }
+
+        return Task.FromResult(true);
     }
 
-    public async Task<bool> SendDebugAsync(
-        string message)
+    protected virtual string GetChannel(
+        LogLevel logLevel)
     {
-        return await SendAsync("#debug", message);
-    }
-
-    public async Task<bool> SendInformationAsync(
-        string message)
-    {
-        return await SendAsync("#information", message);
-    }
-
-    public async Task<bool> SendWarningAsync(
-        string message)
-    {
-        return await SendAsync("#warning", message);
-    }
-
-    public async Task<bool> SendErrorAsync(
-        string message)
-    {
-        return await SendAsync("#error", message);
-    }
-
-    public async Task<bool> SendCriticalAsync(
-        string message)
-    {
-        return await SendAsync("#critical", message);
-    }
-
-    private async Task<bool> SendAsync(
-        string channel, 
-        string message)
-    {
-        Console.WriteLine($"{channel}: {message}");
-        return await Task.FromResult(true);
+        return logLevel switch
+        {
+            LogLevel.Trace => "#trace",
+            LogLevel.Debug => "#debug",
+            LogLevel.Information => "#information",
+            LogLevel.Warning => "#warning",
+            LogLevel.Error => "#error",
+            LogLevel.Critical => "#critical",
+            _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
+        };
     }
 }

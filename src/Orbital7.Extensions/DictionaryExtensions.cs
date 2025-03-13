@@ -36,4 +36,11 @@ public static class DictionaryExtensions
 
         return clonedDictionary;
     }
+
+    public static T2 TryGetValue<T1, T2>(
+        this IDictionary<T1, T2> dictionary,
+        T1 key)
+    {
+        return dictionary.TryGetValue(key, out T2 value) ? value : default;
+    }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Orbital7.Extensions.Integrations.BetterStackApi;
 
 namespace Orbital7.Extensions.Notifications;
@@ -26,182 +25,51 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         _externalNotificationService = externalNotificationService;
     }
 
-    public virtual async Task LogTraceAsync(
-        string message,
-        IDictionary<string, object> metadata = null,
-        [CallerMemberName] string callerMemberName = null,
-        bool sendExternalNotification = false)
-    {
-        await LogAsync(
-            LogLevel.Trace,
-            message,
-            null,
-            metadata,
-            callerMemberName,
-            sendExternalNotification);
-    }
-
-    public virtual async Task LogDebugAsync(
-        string message,
-        IDictionary<string, object> metadata = null,
-        [CallerMemberName] string callerMemberName = null,
-        bool sendExternalNotification = false)
-    {
-        await LogAsync(
-            LogLevel.Debug,
-            message,
-            null,
-            metadata,
-            callerMemberName,
-            sendExternalNotification);
-    }
-
-    public virtual async Task LogInformationAsync(
-        string message,
-        IDictionary<string, object> metadata = null,
-        [CallerMemberName] string callerMemberName = null,
-        bool sendExternalNotification = false)
-    {
-        await LogAsync(
-            LogLevel.Information,
-            message,
-            null,
-            metadata,
-            callerMemberName,
-            sendExternalNotification);
-    }
-
-    public virtual async Task LogWarningAsync(
+    public virtual async Task LogAsync(
+        LogLevel logLevel,
         string message,
         Exception exception = null,
         IDictionary<string, object> metadata = null,
         [CallerMemberName] string callerMemberName = null,
         bool sendExternalNotification = false)
-    {
-        await LogAsync(
-            LogLevel.Warning,
-            message,
-            exception,
-            metadata,
-            callerMemberName,
-            sendExternalNotification);
-    }
-
-    public virtual async Task LogErrorAsync(
-        string message,
-        Exception exception = null,
-        IDictionary<string, object> metadata = null,
-        [CallerMemberName] string callerMemberName = null,
-        bool sendExternalNotification = false)
-    {
-        await LogAsync(
-            LogLevel.Error,
-            message,
-            exception,
-            metadata,
-            callerMemberName,
-            sendExternalNotification);
-    }
-
-    public virtual async Task LogCriticalAsync(
-        string message,
-        Exception exception = null,
-        IDictionary<string, object> metadata = null,
-        [CallerMemberName] string callerMemberName = null,
-        bool sendExternalNotification = false)
-    {
-        await LogAsync(
-            LogLevel.Critical,
-            message,
-            exception,
-            metadata,
-            callerMemberName,
-            sendExternalNotification);
-    }
-
-    protected virtual void AddLogMetadata(
-        IDictionary<string, object> metadata)
-    {
-
-    }
-
-    protected virtual void AddExternalNotificationText(
-        StringBuilder externalNotificationMessageBuilder)
-    {
-
-    }
-
-    protected virtual async Task LogAsync(
-        LogLevel logLevel, 
-        string message, 
-        Exception exception, 
-        IDictionary<string, object> metadata, 
-        string callerMemberName,
-        bool sendExternalNotification)
     {
         // Validate token configuration and log level.
-        if (this.BetterStackLogsSourceToken.HasText() && 
-            this.BetterStackLogsIngestingHost.HasText() &&
-            logLevel != LogLevel.None)
+        if (logLevel != LogLevel.None &&
+            this.BetterStackLogsSourceToken.HasText() &&
+            this.BetterStackLogsIngestingHost.HasText())
         {
-            var externalNotificationMessageBuilder = new StringBuilder();
             var logger = typeof(TCategoryName).FullName;
+            string externalNotificationMessage = null;
 
             try
             {
-                // Create the metadata collection.
-                var logMetadata = new Dictionary<string, object>
-                {
-                    { METADATA_LOGGER, logger }
-                };
-                if (callerMemberName.HasText())
-                {
-                    logMetadata.Add(METADATA_CALLERMEMBERNAME, callerMemberName);
-                }
-
-                // Add custom metadata.
-                AddLogMetadata(logMetadata);
-
-                // Add exception metadata.
-                if (exception != null)
-                {
-                    logMetadata.Add(METADATA_EXCEPTION, new ExceptionInfo(exception));
-                }
-
-                // Add specified meta data.
-                if (metadata != null && metadata.Count > 0)
-                {
-                    foreach (var item in metadata)
-                    {
-                        // Apparently can't pass null dictionary item values to BetterStack.
-                        if (item.Key.HasText() && item.Value != null)
-                        {
-                            logMetadata.Add(item.Key, item.Value);
-                        }
-                    }
-                }
-
                 #if DEBUG
                     Console.WriteLine($"{DateTime.Now.ToDefaultDateTimeString()} [{logLevel.ToString().ToUpper()}] {logger}: {message}");
                 #endif
+
+                // Create the metadata collection.
+                var logMetadata = GetLogMetadata(
+                    logLevel,
+                    message,
+                    exception,
+                    metadata,
+                    logger,
+                    callerMemberName);
 
                 // Form the external notification message.
                 if (_externalNotificationService != null &&
                     sendExternalNotification)
                 {
-                    externalNotificationMessageBuilder.AppendLine(message);
-                    externalNotificationMessageBuilder.AppendLine();
-                    externalNotificationMessageBuilder.AppendLine($" * Source: {logger}");
-                    externalNotificationMessageBuilder.AppendLine($" * Caller: {callerMemberName}");
-
-                    AddExternalNotificationText(externalNotificationMessageBuilder);
-                    
-                    if (exception != null)
-                    {
-                        externalNotificationMessageBuilder.AppendLine($" * Error: {exception.Message}");
-                    }
-
-                    externalNotificationMessageBuilder.AppendLine("--------------");
+                    externalNotificationMessage = 
+                        GetExternalNotificationMessage(
+                            logLevel,
+                            message,
+                            exception,
+                            logMetadata,
+                            logger,
+                            callerMemberName)?
+                        .NormalizeLineTerminators(
+                            IExternalNotificationService.MSG_LINE_TERM);
                 }
 
                 // Create the log entry.
@@ -220,7 +88,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
             }
             catch (Exception ex)
             {
-                await _externalNotificationService.SendErrorAsync(
+                await _externalNotificationService?.SendAsync(
+                    LogLevel.Error,
                     $"BetterStackLoggingService Error: {ex.Message?.PruneEnd(".")}. " +
                     $"[{logLevel.ToString().ToUpper()}] {logger} {message}");
             }
@@ -229,35 +98,112 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
             if (_externalNotificationService != null &&
                 sendExternalNotification)
             {
-                var externalNotificationMessage = externalNotificationMessageBuilder.ToString();
+                await _externalNotificationService.SendAsync(
+                    logLevel,
+                    externalNotificationMessage);
+            }
+        }
+    }
 
-                switch (logLevel)
+    protected virtual IDictionary<string, object> GetLogMetadata(
+        LogLevel logLevel,
+        string message,
+        Exception exception,
+        IDictionary<string, object> metadata,
+        string logger,
+        string callerMemberName)
+    {
+        var logMetadata = new Dictionary<string, object>
+        {
+            { METADATA_LOGGER, logger }
+        };
+
+        if (callerMemberName.HasText())
+        {
+            logMetadata.Add(METADATA_CALLERMEMBERNAME, callerMemberName);
+        }
+
+        // Add custom metadata.
+        AddAdditionalLogMetadata(logMetadata);
+
+        // Add exception metadata.
+        if (exception != null)
+        {
+            logMetadata.Add(METADATA_EXCEPTION, new ExceptionInfo(exception));
+        }
+
+        // Add specified meta data.
+        if (metadata != null && metadata.Count > 0)
+        {
+            foreach (var item in metadata)
+            {
+                // Cannot pass null dictionary item values to BetterStack.
+                if (item.Key.HasText() && item.Value != null)
                 {
-                    case LogLevel.Trace:
-                        await _externalNotificationService.SendTraceAsync(externalNotificationMessage);
-                        break;
-
-                    case LogLevel.Debug:
-                        await _externalNotificationService.SendDebugAsync(externalNotificationMessage);
-                        break;
-
-                    case LogLevel.Information:
-                        await _externalNotificationService.SendInformationAsync(externalNotificationMessage);
-                        break;
-
-                    case LogLevel.Warning:
-                        await _externalNotificationService.SendWarningAsync(externalNotificationMessage);
-                        break;
-
-                    case LogLevel.Error:
-                        await _externalNotificationService.SendErrorAsync(externalNotificationMessage);
-                        break;
-
-                    case LogLevel.Critical:
-                        await _externalNotificationService.SendCriticalAsync(externalNotificationMessage);
-                        break;
+                    logMetadata.Add(item.Key, item.Value);
                 }
             }
         }
+
+        return logMetadata;
+    }
+
+    protected virtual void AddAdditionalLogMetadata(
+        IDictionary<string, object> metadata)
+    {
+
+    }
+
+    protected virtual string GetExternalNotificationMessage(
+        LogLevel logLevel,
+        string message,
+        Exception exception,
+        IDictionary<string, object> metadata,
+        string logger,
+        string callerMemberName)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"**{message}**");
+        sb.AppendLine();
+        sb.AppendLine($"* Source: {logger}");
+        sb.AppendLine($"* Caller: {callerMemberName}");
+
+        var externalNotificationBulletLines = GetAdditionalExternalNotificationMessageBulletLines(
+            logLevel,
+            message,
+            exception,
+            metadata,
+            logger,
+            callerMemberName);
+
+        if (externalNotificationBulletLines != null)
+        {
+            foreach (var bulletLine in externalNotificationBulletLines)
+            {
+                sb.AppendLine($"* {bulletLine}");
+            }
+        }
+
+        if (exception != null)
+        {
+            sb.AppendLine($"* Error: {exception.Message}");
+        }
+
+        sb.AppendLine("--------------");
+        sb.AppendLine();
+
+        return sb.ToString();
+    }
+
+    protected virtual List<string> GetAdditionalExternalNotificationMessageBulletLines(
+        LogLevel logLevel,
+        string message,
+        Exception exception,
+        IDictionary<string, object> metadata,
+        string logger,
+        string callerMemberName)
+    {
+        return null;
     }
 }

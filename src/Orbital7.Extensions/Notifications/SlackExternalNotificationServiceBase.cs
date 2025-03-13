@@ -25,57 +25,57 @@ public abstract class SlackExternalNotificationServiceBase :
         _chatApi = chatApi;
     }
 
-    public virtual async Task<bool> SendTraceAsync(
+    public virtual async Task<bool> SendAsync(
+        LogLevel logLevel,
         string message)
     {
-        return await SendAsync(this.TraceChannel, message);
+        if (logLevel == LogLevel.None)
+        {
+            return false;
+        }
+        else
+        {
+            var channel = GetChannel(logLevel);
+            return await ExecuteSendAsync(channel, message);
+        }
     }
 
-    public virtual async Task<bool> SendDebugAsync(
-        string message)
+    protected virtual string GetChannel(
+        LogLevel logLevel)
     {
-        return await SendAsync(this.DebugChannel, message);
+        return logLevel switch
+        {
+            LogLevel.Trace => this.TraceChannel,
+            LogLevel.Debug => this.DebugChannel,
+            LogLevel.Information => this.InformationChannel,
+            LogLevel.Warning => this.WarningChannel,
+            LogLevel.Error => this.ErrorChannel,
+            LogLevel.Critical => this.CriticalChannel,
+            _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
+        };
     }
 
-    public virtual async Task<bool> SendInformationAsync(
-        string message)
-    {
-        return await SendAsync(this.InformationChannel, message);
-    }
-
-    public virtual async Task<bool> SendWarningAsync(
-        string message)
-    {
-        return await SendAsync(this.WarningChannel, message);
-    }
-
-    public virtual async Task<bool> SendErrorAsync(
-        string message)
-    {
-        return await SendAsync(this.ErrorChannel, message);
-    }
-
-    public virtual async Task<bool> SendCriticalAsync(
-        string message)
-    {
-        return await SendAsync(this.CriticalChannel, message);
-    }
-
-    protected virtual async Task<bool> SendAsync(
+    protected virtual async Task<bool> ExecuteSendAsync(
         string channel, 
         string message)
     {
         try
         {
-            var request = new PostMessageRequest()
+            // Only send if we have a channel.
+            if (channel.HasText())
             {
-                Channel = channel,
-                Text = message,
-            };
+                var cleanedMessage = CleanMessage(message);
 
-            var response = await _chatApi.PostMessageAsync(request);
-            response.AssertOk();
-            return true;
+                var request = new PostMessageRequest()
+                {
+                    Channel = channel,
+                    Text = cleanedMessage,
+                };
+
+                var response = await _chatApi.PostMessageAsync(request);
+                response.AssertOk();
+                return true;
+            }
         }
         catch (Exception)
         {
@@ -84,7 +84,19 @@ public abstract class SlackExternalNotificationServiceBase :
             // more important that the logging service sends to the external
             // notification service than we send to the logging service here.
             // We want the logging service to be the source of truth.
-            return false;
         }
+
+        return false;
+    }
+
+    protected virtual string CleanMessage(
+        string message)
+    {
+        return message
+            .Replace( // Try to add nice looking bullets.
+                $"{IExternalNotificationService.MSG_LINE_TERM}* ",
+                $"{IExternalNotificationService.MSG_LINE_TERM}  •  ")
+            .Replace("**", "*")     // Convert from Discord markdown to Slack markdown.
+            .Replace("__", "_");    // Convert from Discord markdown to Slack markdown.
     }
 }

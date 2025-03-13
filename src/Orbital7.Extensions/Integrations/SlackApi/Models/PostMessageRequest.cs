@@ -10,6 +10,9 @@ public class PostMessageRequest
     [JsonPropertyName("text")]
     public string Text { get; set; }
 
+    [JsonPropertyName("blocks")]
+    public List<object> Blocks { get; set; }
+
     [JsonPropertyName("thread_ts")]
     public string ThreadTs { get; set; }
 

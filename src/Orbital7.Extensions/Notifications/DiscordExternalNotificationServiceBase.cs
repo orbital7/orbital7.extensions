@@ -32,63 +32,64 @@ public abstract class DiscordExternalNotificationServiceBase :
         await _discordRestClient.DisposeAsync();
     }
 
-    public virtual async Task<bool> SendTraceAsync(
+    public virtual async Task<bool> SendAsync(
+        LogLevel logLevel,
         string message)
     {
-        return await SendAsync(this.TraceChannelId, message);
+        if (logLevel == LogLevel.None)
+        {
+            return false;
+        }
+        else
+        {
+            var channelId = GetChannelId(logLevel);
+            return await ExecuteSendAsync(channelId, message);
+        }
     }
 
-    public virtual async Task<bool> SendDebugAsync(
-        string message)
+    protected virtual ulong GetChannelId(
+        LogLevel logLevel)
     {
-        return await SendAsync(this.DebugChannelId, message);
+        return logLevel switch
+        {
+            LogLevel.Trace => this.TraceChannelId,
+            LogLevel.Debug => this.DebugChannelId,
+            LogLevel.Information => this.InformationChannelId,
+            LogLevel.Warning => this.WarningChannelId,
+            LogLevel.Error => this.ErrorChannelId,
+            LogLevel.Critical => this.CriticalChannelId,
+            _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
+        };
     }
 
-    public virtual async Task<bool> SendInformationAsync(
-        string message)
-    {
-        return await SendAsync(this.InformationChannelId, message);
-    }
-
-    public virtual async Task<bool> SendWarningAsync(
-        string message)
-    {
-        return await SendAsync(this.WarningChannelId, message);
-    }
-
-    public virtual async Task<bool> SendErrorAsync(
-        string message)
-    {
-        return await SendAsync(this.ErrorChannelId, message);
-    }
-
-    public virtual async Task<bool> SendCriticalAsync(
-        string message)
-    {
-        return await SendAsync(this.CriticalChannelId, message);
-    }
-
-    protected virtual async Task<bool> SendAsync(
+    protected virtual async Task<bool> ExecuteSendAsync(
         ulong channelId,
         string message)
     {
         try
         {
-            // Ensure we're logged in.
-            if (_discordRestClient.LoginState != Discord.LoginState.LoggedIn)
-            { 
-                await _discordRestClient.LoginAsync(
-                    TokenType.Bot,
-                    this.BotToken);
-            }
-
-            // Get the channel.
-            var channel = await _discordRestClient.GetChannelAsync(channelId) as IMessageChannel;
-            if (channel != null)
+            // Only attempt login if we have a token and a channel ID.
+            if (this.BotToken.HasText() && channelId > 0)
             {
-                // TODO: Unclear what happens here when sending a message fails.
-                var result = await channel.SendMessageAsync(message);
-                return result != null;
+                // Ensure we're logged in.
+                if (_discordRestClient.LoginState != LoginState.LoggedIn)
+                {
+                    await _discordRestClient.LoginAsync(
+                        TokenType.Bot,
+                        this.BotToken);
+                }
+
+                // Get the channel.
+                var channel = await _discordRestClient.GetChannelAsync(channelId) as IMessageChannel;
+                if (channel != null)
+                {
+                    // Clean the message.
+                    var cleanedMessage = CleanMessage(message);
+
+                    // TODO: Unclear what happens here when sending a message fails.
+                    var result = await channel.SendMessageAsync(cleanedMessage);
+                    return result != null;
+                }
             }
         }
         catch (Exception)
@@ -101,5 +102,16 @@ public abstract class DiscordExternalNotificationServiceBase :
         }
 
         return false;
+    }
+
+    protected virtual string CleanMessage(
+        string message)
+    {
+        // Discord double line spaces are huge, so take them out.
+        message = message.Replace(
+            $"{IExternalNotificationService.MSG_LINE_TERM}{IExternalNotificationService.MSG_LINE_TERM}",
+            $"{IExternalNotificationService.MSG_LINE_TERM}");
+
+        return message;
     }
 }

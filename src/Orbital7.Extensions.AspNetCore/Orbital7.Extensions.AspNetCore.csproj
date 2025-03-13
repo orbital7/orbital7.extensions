@@ -5,20 +5,21 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>9.0.3</Version>
-	<AssemblyVersion>9.0.3.0</AssemblyVersion>
-    <FileVersion>9.0.3.0</FileVersion>
+    <Version>9.0.4</Version>
+	<AssemblyVersion>9.0.4.0</AssemblyVersion>
+    <FileVersion>9.0.4.0</FileVersion>
     <Description>ASP.NET Core 9 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
     <Copyright>Copyright © 2012-2025 Orbital7</Copyright>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>Orbital7.png</PackageIcon>
 	<PackageReadmeFile>Readme.md</PackageReadmeFile>
+	<RepositoryUrl>https://github.com/orbital7/orbital7.extensions</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
 	<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
@@ -37,11 +38,11 @@
   <ItemGroup>
     <None Include="../../Orbital7.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>/</PackagePath>
     </None>
 	<None Include="Readme.md">
       <Pack>True</Pack>
-	  <PackagePath></PackagePath>
+	  <PackagePath>/</PackagePath>
 	 </None>
   </ItemGroup>
 
@@ -58,10 +59,10 @@
 	<ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="7.3.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.3" />
     <!---->
-	<PackageReference Include="Orbital7.Extensions" Version="9.0.3" />
+	<PackageReference Include="Orbital7.Extensions" Version="9.0.4" />
   </ItemGroup>
 
   <!-- 
