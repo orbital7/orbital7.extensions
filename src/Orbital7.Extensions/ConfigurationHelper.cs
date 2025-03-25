@@ -78,9 +78,41 @@ public static class ConfigurationHelper
         JsonSerializationHelper.SerializeToJsonFile(
             userSecrets, 
             secretsFilePath, 
+            ignoreNullValues: false,
             indentFormatting: true);
 
         return userSecrets;
+    }
+
+    public static dynamic UpdateUserSecretsDynamically<TAssemblyClass>(
+        Action<dynamic> updateAction)
+        where TAssemblyClass : class
+    {
+        // NOTE: This method uses Newtonsoft.Json, which we don't normally
+        // use, but appears to be included in this project via a dependent
+        // assembly, so fuck it, we're going for it.
+
+        // Read the existing secrets JSON.
+        var secretsFilePath = GetUserSecretsFilePath<TAssemblyClass>();
+        var secretsJson = File.ReadAllText(secretsFilePath);
+        dynamic secrets = Newtonsoft.Json.JsonConvert
+            .DeserializeObject<System.Dynamic.ExpandoObject>(
+                secretsJson, 
+                new Newtonsoft.Json.Converters.ExpandoObjectConverter());
+
+        // Execute the provided update action.
+        updateAction?.Invoke(secrets);
+
+        // Overwrite the file with changes.
+        var updatedSecretsJson = Newtonsoft.Json.JsonConvert
+            .SerializeObject(
+                secrets,
+                Newtonsoft.Json.Formatting.Indented);
+        File.WriteAllText(
+            secretsFilePath, 
+            updatedSecretsJson);
+
+        return secrets;
     }
 
     public static string GetUserSecretsFilePath<TAssemblyClass>()

@@ -167,7 +167,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         sb.AppendLine($"**{message}**");
         sb.AppendLine();
         sb.AppendLine($"* Source: {logger}");
-        sb.AppendLine($"* Caller: {callerMemberName}");
+        sb.AppendLine($"* Caller: {callerMemberName}()");
 
         var externalNotificationBulletLines = GetAdditionalExternalNotificationMessageBulletLines(
             logLevel,

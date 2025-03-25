@@ -27,24 +27,28 @@ public static class DbContextMigrationHelper<TDbContext>
         ValidateInitialize(initializer, validateInitialize);
 
         // Delete the database.
-        using (var scope = serviceProvider.CreateScope())
-        {
-            Console.Write("Deleting database...");
-            var context = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            await context.Database.EnsureDeletedAsync();
-            Console.WriteLine("Success");
-        }
+        await ExecuteDeleteAsync(serviceProvider);
 
         // Migrate the database.
         await MigrateAsync(serviceProvider);
 
         // Initialize the database.
-        using (var scope = serviceProvider.CreateScope())
-        {
-            Console.Write("Initializing database...");
-            await initializer.InitializeAsync(scope.ServiceProvider);
-            Console.WriteLine("Success");
-        }
+        await ExecuteInitializeAsync(serviceProvider, initializer);
+    }
+
+    public static async Task MigrateAndInitializeAsync(
+        IServiceProvider serviceProvider,
+        IServiceProviderInitializer initializer,
+        Func<bool> validateInitialize)
+    {
+        // Validate.
+        ValidateInitialize(initializer, validateInitialize);
+
+        // Migrate the database.
+        await MigrateAsync(serviceProvider);
+
+        // Initialize the database.
+        await ExecuteInitializeAsync(serviceProvider, initializer);
     }
 
     private static void ValidateInitialize(
@@ -62,6 +66,30 @@ public static class DbContextMigrationHelper<TDbContext>
         else if (!validateInitialize())
         {
             throw new Exception("Initialize action was not validated per provided validation function");
+        }
+    }
+
+    private static async Task ExecuteInitializeAsync(
+        IServiceProvider serviceProvider,
+        IServiceProviderInitializer initializer)
+    {
+        using (var scope = serviceProvider.CreateScope())
+        {
+            Console.Write("Initializing database...");
+            await initializer.InitializeAsync(scope.ServiceProvider);
+            Console.WriteLine("Success");
+        }
+    }
+
+    private static async Task ExecuteDeleteAsync(
+        IServiceProvider serviceProvider)
+    {
+        using (var scope = serviceProvider.CreateScope())
+        {
+            Console.Write("Deleting database...");
+            var context = scope.ServiceProvider.GetRequiredService<TDbContext>();
+            await context.Database.EnsureDeletedAsync();
+            Console.WriteLine("Success");
         }
     }
 }
