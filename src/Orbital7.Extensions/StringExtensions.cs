@@ -2,16 +2,6 @@
 
 namespace System;
 
-public enum PhoneNumberFormat
-{
-
-    DashesOnly,
-
-    PeriodsOnly,
-
-    ParenthesisAndDashes,
-}
-
 public static class StringExtensions
 {
     public const string PunctuationDash = "-";
@@ -92,50 +82,6 @@ public static class StringExtensions
         string toRemove)
     {
         return value.Replace(toRemove, "");
-    }
-
-    public static string ToRawPhoneNumber(
-        this string value, 
-        bool includePlus1Prefix = false)
-    {
-        string phoneNumber = value.NumbersOnly().PruneStart("+").PruneStart("1");
-        if (includePlus1Prefix && !phoneNumber.StartsWith("+1"))
-            phoneNumber = "+1" + phoneNumber;
-
-        return phoneNumber;
-    }
-
-    public static string ToFormattedPhoneNumber(
-        this string value, 
-        PhoneNumberFormat format = PhoneNumberFormat.DashesOnly)
-    {
-        // TODO: Expand to include non-NorthAmerican phone numbers.
-
-        // Convert to numbers only 
-        var raw = value.ToRawPhoneNumber();
-        if (raw.Length >= 10)
-        {
-            var template = "({0}) {1}-{2}";
-            if (format == PhoneNumberFormat.DashesOnly)
-                template = "{0}-{1}-{2}";
-            else if (format == PhoneNumberFormat.PeriodsOnly)
-                template = "{0}.{1}.{2}";
-
-            var phoneNumber = string.Format(template,
-                raw.Substring(0, 3),
-                raw.Substring(3, 3),
-                raw.Substring(6, 4));
-
-            // Treat the remainder as the extension.
-            if (raw.Length > 10)
-                return string.Format("{0} x{1}", phoneNumber, raw.Substring(10, raw.Length - 10));
-            else
-                return phoneNumber;
-        }
-        else
-        {
-            return raw;
-        }
     }
 
     public static string Replace(
@@ -875,6 +821,16 @@ public static class StringExtensions
         long? defaultValue = null)
     {
         if (value != null && long.TryParse(value, out long parsedValue))
+            return parsedValue;
+        else
+            return defaultValue;
+    }
+
+    public static ulong? ParseULong(
+        this string value,
+        ulong? defaultValue = null)
+    {
+        if (value != null && ulong.TryParse(value, out ulong parsedValue))
             return parsedValue;
         else
             return defaultValue;

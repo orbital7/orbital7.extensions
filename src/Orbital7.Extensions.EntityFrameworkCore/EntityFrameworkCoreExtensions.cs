@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using Orbital7.Extensions.Entities;
+using System.Linq.Expressions;
 
 namespace Microsoft.EntityFrameworkCore;
 
-public static class Extensions
+public static class EntityFrameworkCoreExtensions
 {
     public static ModelBuilder SetDefaults(
         this ModelBuilder modelBuilder)
@@ -38,7 +39,7 @@ public static class Extensions
     {
         if (validate)
         {
-            entity.EnsureIsValid();
+            ValidationHelper.EnsureIsValid(entity);
         }
 
         entitySet.Add(entity);
@@ -53,7 +54,7 @@ public static class Extensions
     {
         if (validate)
         {
-            entity.EnsureIsValid();
+            ValidationHelper.EnsureIsValid(entity);
         }
 
         var entry = entitySet.Entry(entity);

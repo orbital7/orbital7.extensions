@@ -9,7 +9,7 @@ public class ValidationTests
     {
         var testComposite = new TestComposite();
 
-        var validationResult = testComposite.Validate();
+        var validationResult = ValidationHelper.Validate(testComposite);
 
         // TODO: Complete this test.
     }

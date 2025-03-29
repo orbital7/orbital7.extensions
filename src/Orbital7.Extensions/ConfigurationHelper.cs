@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration.UserSecrets;
+using System.Dynamic;
 
 namespace Microsoft.Extensions.Configuration;
 
@@ -88,29 +89,20 @@ public static class ConfigurationHelper
         Action<dynamic> updateAction)
         where TAssemblyClass : class
     {
-        // NOTE: This method uses Newtonsoft.Json, which we don't normally
-        // use, but appears to be included in this project via a dependent
-        // assembly, so fuck it, we're going for it.
-
-        // Read the existing secrets JSON.
+        // Read the existing secrets file.
         var secretsFilePath = GetUserSecretsFilePath<TAssemblyClass>();
-        var secretsJson = File.ReadAllText(secretsFilePath);
-        dynamic secrets = Newtonsoft.Json.JsonConvert
-            .DeserializeObject<System.Dynamic.ExpandoObject>(
-                secretsJson, 
-                new Newtonsoft.Json.Converters.ExpandoObjectConverter());
+        dynamic secrets = JsonSerializationHelper.DeserializeFromJsonFile<ExpandoObject>(
+            secretsFilePath);
 
         // Execute the provided update action.
         updateAction?.Invoke(secrets);
 
         // Overwrite the file with changes.
-        var updatedSecretsJson = Newtonsoft.Json.JsonConvert
-            .SerializeObject(
-                secrets,
-                Newtonsoft.Json.Formatting.Indented);
-        File.WriteAllText(
-            secretsFilePath, 
-            updatedSecretsJson);
+        JsonSerializationHelper.SerializeToJsonFile(
+            secrets,
+            secretsFilePath,
+            ignoreNullValues: false,
+            indentFormatting: true);
 
         return secrets;
     }

@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.AspNetCore.RapidApp;
 
-public static class _Extensions
+public static class Extensions
 {
     public static ModalParameters ToModalParameters(
         this List<(string, object)> parameters)

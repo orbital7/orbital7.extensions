@@ -1,3 +1,5 @@
+using Orbital7.Extensions.Entities;
+
 namespace Orbital7.Extensions.Tests;
 
 public class GuidTests

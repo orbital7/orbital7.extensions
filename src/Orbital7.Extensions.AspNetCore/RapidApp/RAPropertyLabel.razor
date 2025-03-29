@@ -36,7 +36,7 @@
     {
         if (this.For != null && !this.Value.HasText())
         {
-            var memberInfo = this.For.Body.GetPropertyInformation();
+            var memberInfo = this.For.Body.GetMemberInfo();
             this.Value = memberInfo?.GetDisplayName() ?? memberInfo?.Name;
         }
     }

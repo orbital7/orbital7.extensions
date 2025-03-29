@@ -1,4 +1,4 @@
-﻿namespace System;
+﻿namespace Orbital7.Extensions.Entities;
 
 public interface IEntity<TKey> :
     IEntity

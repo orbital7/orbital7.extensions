@@ -36,7 +36,7 @@ public class RAFormValidationState
         _validationMessageStore = new ValidationMessageStore(_editContext);
 
         // Validate.
-        var result = inputModel.Validate();
+        var result = ValidationHelper.Validate(inputModel);
 
         // Process.
         foreach (var item in result.Results)

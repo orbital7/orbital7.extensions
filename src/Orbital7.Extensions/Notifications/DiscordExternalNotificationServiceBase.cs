@@ -1,14 +1,11 @@
-﻿using Discord;
-using Discord.Rest;
+﻿using Orbital7.Extensions.Integrations.DiscordApi;
 
 namespace Orbital7.Extensions.Notifications;
 
 public abstract class DiscordExternalNotificationServiceBase :
-    IExternalNotificationService, IDisposable, IAsyncDisposable
+    IExternalNotificationService
 {
-    private readonly DiscordRestClient _discordRestClient = new();
-
-    protected abstract string BotToken { get; }
+    private readonly IChannelsApi _channelsApi;
 
     protected abstract ulong TraceChannelId { get; }
 
@@ -22,14 +19,10 @@ public abstract class DiscordExternalNotificationServiceBase :
 
     protected abstract ulong CriticalChannelId { get; }
 
-    public void Dispose()
+    protected DiscordExternalNotificationServiceBase(
+        IChannelsApi channelsApi)
     {
-        _discordRestClient.Dispose();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await _discordRestClient.DisposeAsync();
+        _channelsApi = channelsApi;
     }
 
     public virtual async Task<bool> SendAsync(
@@ -68,28 +61,21 @@ public abstract class DiscordExternalNotificationServiceBase :
     {
         try
         {
-            // Only attempt login if we have a token and a channel ID.
-            if (this.BotToken.HasText() && channelId > 0)
+            // Only send if we have a channel.
+            if (channelId > 0)
             {
-                // Ensure we're logged in.
-                if (_discordRestClient.LoginState != LoginState.LoggedIn)
-                {
-                    await _discordRestClient.LoginAsync(
-                        TokenType.Bot,
-                        this.BotToken);
-                }
+                var cleanedMessage = CleanMessage(message);
 
-                // Get the channel.
-                var channel = await _discordRestClient.GetChannelAsync(channelId) as IMessageChannel;
-                if (channel != null)
+                var request = new CreateMessageRequest()
                 {
-                    // Clean the message.
-                    var cleanedMessage = CleanMessage(message);
+                    Content = cleanedMessage,
+                };
 
-                    // TODO: Unclear what happens here when sending a message fails.
-                    var result = await channel.SendMessageAsync(cleanedMessage);
-                    return result != null;
-                }
+                var result = await _channelsApi.CreateMessageAsync(
+                    channelId,
+                    request);
+
+                return result?.Id.HasText() ?? false;
             }
         }
         catch (Exception)

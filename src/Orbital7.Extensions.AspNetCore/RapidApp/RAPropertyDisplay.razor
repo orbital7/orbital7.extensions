@@ -89,7 +89,7 @@ else
                         this.ConfigureDisplayValueOptions?.Invoke(this.DisplayValueOptions);
                     }
 
-                    var memberInfo = this.For.Body.GetPropertyInformation();
+                    var memberInfo = this.For.Body.GetMemberInfo();
                     _displayValue = memberInfo.GetDisplayValue(
                         value,
                         this.TimeConverter,

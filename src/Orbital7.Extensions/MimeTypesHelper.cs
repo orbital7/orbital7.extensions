@@ -6,8 +6,6 @@ public static class MimeTypesHelper
     public const string MIME_TYPE_PNG = "image/png";
 
     public const string FILE_EXT_JPG = ".jpg";
-    public const string MIME_TYPE_JPG = "image/jpeg";
-
     public const string FILE_EXT_JPEG = ".jpeg";
     public const string MIME_TYPE_JPEG = "image/jpeg";
 
@@ -38,6 +36,17 @@ public static class MimeTypesHelper
     public const string FILE_EXT_CSV = ".csv";
     public const string MIME_TYPE_CSV = "text/csv";
 
+    public const string FILE_EXT_BMP = ".bmp";
+    public const string MIME_TYPE_BMP = "image/bmp";
+
+    public const string FILE_EXT_TIF = ".tif";
+    public const string FILE_EXT_TIFF = ".tiff";
+    public const string MIME_TYPE_TIFF = "image/tiff";
+
+    public const string FILE_EXT_EMF = ".emf";
+    public const string FILE_EXT_WMF = ".wmf";
+    public const string MIME_TYPE_WMF = "application/x-msmetafile";
+
     public static string FileExtensionToMimeType(
         string fileExtension)
     {
@@ -47,8 +56,6 @@ public static class MimeTypesHelper
                 return MIME_TYPE_PNG;
 
             case FILE_EXT_JPG:
-                return MIME_TYPE_JPG;
-
             case FILE_EXT_JPEG:
                 return MIME_TYPE_JPEG;
 
@@ -79,6 +86,17 @@ public static class MimeTypesHelper
             case FILE_EXT_CSV:
                 return MIME_TYPE_CSV;
 
+            case FILE_EXT_BMP:
+                return MIME_TYPE_BMP;
+
+            case FILE_EXT_TIF:
+            case FILE_EXT_TIFF:
+                return MIME_TYPE_TIFF;
+
+            case FILE_EXT_EMF:
+            case FILE_EXT_WMF:
+                return MIME_TYPE_WMF;
+
             default:
                 return null;
         }
@@ -92,8 +110,7 @@ public static class MimeTypesHelper
             case MIME_TYPE_PNG:
                 return FILE_EXT_PNG;
 
-            // Includes MIME_TYPE_JPEG as they're the same.
-            case MIME_TYPE_JPG:
+            case MIME_TYPE_JPEG:
                 return FILE_EXT_JPG;
 
             case MIME_TYPE_GIF:
@@ -123,8 +140,102 @@ public static class MimeTypesHelper
             case MIME_TYPE_CSV:
                 return FILE_EXT_CSV;
 
+            case MIME_TYPE_BMP:
+                return FILE_EXT_BMP;
+
+            case MIME_TYPE_TIFF:
+                return FILE_EXT_TIF;
+
+            case MIME_TYPE_WMF:
+                return FILE_EXT_WMF;
+
             default:
                 return null;
         }
+    }
+
+    public static bool IsBitmapMimeType(
+        string mimeType)
+    {
+        switch (mimeType.ToLower())
+        {
+            case MIME_TYPE_PNG:
+            case MIME_TYPE_JPEG:
+            case MIME_TYPE_GIF:
+            case MIME_TYPE_BMP:
+            case MIME_TYPE_TIFF:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static bool IsBitmapFileExtension(
+        string fileExtension)
+    {
+        switch (fileExtension.ToLower())
+        {
+            case FILE_EXT_PNG:
+            case FILE_EXT_JPG:
+            case FILE_EXT_JPEG:
+            case FILE_EXT_GIF:
+            case FILE_EXT_BMP:
+            case FILE_EXT_TIF:
+            case FILE_EXT_TIFF:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static List<string> GetBitmapFileExtensions()
+    {
+        return new List<string>
+        {
+            FILE_EXT_PNG,
+            FILE_EXT_JPG,
+            FILE_EXT_JPEG,
+            FILE_EXT_GIF,
+            FILE_EXT_BMP,
+            FILE_EXT_TIF,
+            FILE_EXT_TIFF,
+        };
+    }
+
+    public static bool IsMetaFileMimeType(
+        string mimeType)
+    {
+        switch (mimeType.ToLower())
+        {
+            case MIME_TYPE_WMF:
+            case MIME_TYPE_SVG:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static bool IsMetaFileFileExtension(
+        string fileExtension)
+    {
+        switch (fileExtension.ToLower())
+        {
+            case FILE_EXT_EMF:
+            case FILE_EXT_WMF:
+            case FILE_EXT_SVG:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static List<string> GetMetaFileFileExtensions()
+    {
+        return new List<string>
+        {
+            FILE_EXT_EMF,
+            FILE_EXT_WMF,
+            FILE_EXT_SVG,
+        };
     }
 }

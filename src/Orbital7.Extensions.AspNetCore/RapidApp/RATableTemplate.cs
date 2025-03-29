@@ -190,7 +190,7 @@ public class RATableTemplate<TEntity> :
             RATableViewCellHorizontalAlignment? headerCellHorizontalAlignment = null,
             string cellClass = null)
         {
-            var memberInfo = forValue?.Body.GetPropertyInformation();
+            var memberInfo = forValue?.Body.GetMemberInfo();
             this.IsSortable = isSortable ?? memberInfo != null;
 
             this.For = forValue;
@@ -260,7 +260,7 @@ public class RATableTemplate<TEntity> :
             }
             
             return this.For?.Body?
-                .GetPropertyInformation()?
+                .GetMemberInfo()?
                 .GetType();
         }
 

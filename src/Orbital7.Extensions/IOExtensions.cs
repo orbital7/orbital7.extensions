@@ -2,10 +2,12 @@
 
 public static class IOExtensions
 {
-    public static readonly string[] BitmapExtensions = { ".gif", ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff" };
-    public static readonly string[] MetaFileExtensions = { ".wmf", ".emf" };
+    // TODO: These methods are fairly old. Are these still needed or should they be removed 
+    // and/or updated?
 
-    public static byte[] ReadAll(this Stream stream, int initialLength)
+    public static byte[] ReadAll(
+        this Stream stream, 
+        int initialLength)
     {
         // If we've been passed an unhelpful initial length, just
         // use 32K.
@@ -50,17 +52,20 @@ public static class IOExtensions
         return ret;
     }
 
-    public static byte[] ReadAll(this Stream stream)
+    public static byte[] ReadAll(
+        this Stream stream)
     {
         return stream.ReadAll(-1);
     }
 
-    public static string ReadText(this Stream stream)
+    public static string ReadText(
+        this Stream stream)
     {
         return stream.ReadAll().DecodeToString();
     }
 
-    public static string ReadXML(this Stream stream)
+    public static string ReadXML
+        (this Stream stream)
     {
         string xml = stream.ReadAll().DecodeToString();
         int index = xml.IndexOf("<");

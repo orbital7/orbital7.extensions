@@ -13,6 +13,6 @@ public abstract class SlackApiBase
     protected string BuildRequestUrl(
         string endpointUrl)
     {
-        return $"https://slack.com/api/{endpointUrl}";
+        return $"https://slack.com/api/{endpointUrl.PruneStart("/")}";
     }
 }

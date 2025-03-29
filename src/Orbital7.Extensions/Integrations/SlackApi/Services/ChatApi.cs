@@ -1,16 +1,10 @@
 ﻿namespace Orbital7.Extensions.Integrations.SlackApi;
 
 // Documentation: https://api.slack.com/messaging/sending
-public class ChatApi :
-    SlackApiBase, IChatApi
+public class ChatApi(
+    ISlackApiClient client) :
+    SlackApiBase(client), IChatApi
 {
-    public ChatApi(
-        ISlackApiClient client) :
-        base(client)
-    {
-
-    }
-
     public async Task<PostMessageResponse> PostMessageAsync(
         PostMessageRequest request)
     {

@@ -4,18 +4,26 @@ namespace System.Net.Http;
 
 public static class HttpExtensions
 {
-    public static AuthenticationHeaderValue AddBearerTokenAuthorizationHeader(
+    public static AuthenticationHeaderValue AddAuthorizationHeader(
         this HttpRequestMessage httpRequest,
-        string bearerToken)
+        string scheme,
+        string parameter)
     {
-        if (bearerToken.HasText())
+        if (parameter.HasText())
         {
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue(
-                "Bearer",
-                bearerToken);
+                scheme,
+                parameter);
             return httpRequest.Headers.Authorization;
         }
 
         return null;
+    }
+
+    public static AuthenticationHeaderValue AddBearerTokenAuthorizationHeader(
+        this HttpRequestMessage httpRequest,
+        string bearerToken)
+    {
+        return httpRequest.AddAuthorizationHeader("Bearer", bearerToken);
     }
 }

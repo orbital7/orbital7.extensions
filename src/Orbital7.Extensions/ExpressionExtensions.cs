@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace System.Linq.Expressions;
+﻿namespace System.Linq.Expressions;
 
 public static class ExpressionExtensions
 {
@@ -9,7 +7,7 @@ public static class ExpressionExtensions
        where TAttribute : Attribute
     {
         return expression.Body
-            .GetPropertyInformation()
+            .GetMemberInfo()
             .GetAttribute<TAttribute>(isRequired: false);
     }
 
@@ -37,14 +35,14 @@ public static class ExpressionExtensions
     public static string GetDisplayName<TProperty>(
         this Expression<Func<TProperty>> expression)
     {
-        var memberInfo = expression.Body.GetPropertyInformation();
+        var memberInfo = expression.Body.GetMemberInfo();
         return memberInfo.GetDisplayName();
     }
 
     public static DisplayAttribute GetDisplayAttribute<TProperty>(
         this Expression<Func<TProperty>> expression)
     {
-        var memberInfo = expression.Body.GetPropertyInformation();
+        var memberInfo = expression.Body.GetMemberInfo();
         return memberInfo.GetDisplayAttribute();
     }
 }

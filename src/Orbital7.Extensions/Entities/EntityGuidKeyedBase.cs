@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace System;
+﻿namespace Orbital7.Extensions.Entities;
 
 // NOTE: This uses NewId to create sequential GUIDs; relevant links:
 // * https://masstransit.io/documentation/patterns/newid#newid
@@ -18,8 +16,8 @@ public abstract class EntityGuidKeyedBase :
 
     protected EntityGuidKeyedBase()
     {
-        this.Id = GuidFactory.NextSequential();
-        this.CreatedDateTimeUtc = DateTime.UtcNow;
-        this.LastModifiedDateTimeUtc = this.CreatedDateTimeUtc;
+        Id = GuidFactory.NextSequential();
+        CreatedDateTimeUtc = DateTime.UtcNow;
+        LastModifiedDateTimeUtc = CreatedDateTimeUtc;
     }
 }

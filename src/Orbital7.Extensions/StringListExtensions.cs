@@ -1,11 +1,14 @@
-﻿using System.Linq;
+﻿namespace System;
 
-namespace System;
+// TODO: These methods are super old. We can problem remove them as I believe
+// there is now built-in LINQ methods for these operations.
 
 public static class StringListExtensions
 {     
     // NOTE: This method assumes that the lists contain unique values and not duplicates.
-    public static bool ListsEqual(this List<string> list1, List<string> list2)
+    public static bool ListsEqual(
+        this List<string> list1, 
+        List<string> list2)
     {
         bool listsEqual = true;
 
@@ -31,7 +34,9 @@ public static class StringListExtensions
         return listsEqual;
     }
 
-    public static bool ListsMatch(this List<string> list1, List<string> list2)
+    public static bool ListsMatch(
+        this List<string> list1, 
+        List<string> list2)
     {
         bool match = false;
 
@@ -68,7 +73,9 @@ public static class StringListExtensions
         return match;
     }
 
-    public static List<string> GetDifference(this List<string> mainList, List<string> compareList)
+    public static List<string> GetDifference(
+        this List<string> mainList, 
+        List<string> compareList)
     {
         List<string> difference = new List<string>();
 
@@ -78,7 +85,9 @@ public static class StringListExtensions
         return difference;
     }
 
-    public static bool ContainsCaseInvariant(this IList<string> list, string value)
+    public static bool ContainsCaseInvariant(
+        this IList<string> list, 
+        string value)
     {
         var lowercaseList = (from string x in list
                              select x.ToLower()).ToList();

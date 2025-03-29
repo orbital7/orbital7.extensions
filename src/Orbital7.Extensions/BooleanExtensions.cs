@@ -2,7 +2,8 @@
 
 public static class BooleanExtensions
 {
-    public static string ToTrueFalse(this bool value)
+    public static string ToTrueFalse(
+        this bool value)
     {
         if (value)
             return "True";
@@ -10,12 +11,14 @@ public static class BooleanExtensions
             return "False";
     }
 
-    public static string Totruefalse(this bool value)
+    public static string Totruefalse(
+        this bool value)
     {
         return value.ToString().ToLower();
     }
 
-    public static string ToYesNo(this bool value)
+    public static string ToYesNo(
+        this bool value)
     {
         if (value)
             return "Yes";
@@ -23,7 +26,8 @@ public static class BooleanExtensions
             return "No";
     }
 
-    public static string ToOnOff(this bool value)
+    public static string ToOnOff(
+        this bool value)
     {
         if (value)
             return "On";
@@ -31,7 +35,10 @@ public static class BooleanExtensions
             return "Off";
     }
 
-    public static string ToText(this bool value, string textTrue, string textFalse)
+    public static string ToText(
+        this bool value, 
+        string textTrue, 
+        string textFalse)
     {
         if (value)
             return textTrue;
