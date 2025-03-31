@@ -1,4 +1,6 @@
-﻿namespace System.Text.Json.Serialization;
+﻿using System.Text.Json;
+
+namespace Orbital7.Extensions;
 
 public static class JsonSerializationHelper
 {

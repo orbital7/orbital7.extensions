@@ -2,7 +2,7 @@
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddSlackApi(
+    public static IServiceCollection AddDiscordApi(
         this IServiceCollection services,
         string botToken)
     {

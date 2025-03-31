@@ -1,4 +1,4 @@
-﻿namespace System.Diagnostics;
+﻿namespace Orbital7.Extensions.ProcessExecution;
 
 public class ProcessExecutionResult
 {

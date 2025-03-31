@@ -1,4 +1,4 @@
-﻿//namespace Microsoft.AspNetCore.Identity;
+﻿//namespace Orbital7.Extensions.EntityFrameworkCore;
 
 ///// <summary>
 ///// Helper functions for configuring identity services.

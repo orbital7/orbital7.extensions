@@ -1,4 +1,4 @@
-﻿namespace Microsoft.EntityFrameworkCore;
+﻿namespace Orbital7.Extensions.EntityFrameworkCore;
 
 public abstract class AtomicDbContextBase :
     DbContext

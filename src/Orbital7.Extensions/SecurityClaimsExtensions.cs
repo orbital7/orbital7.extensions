@@ -1,4 +1,6 @@
-﻿namespace System.Security.Claims;
+﻿using System.Security.Claims;
+
+namespace Orbital7.Extensions;
 
 public static class SecurityClaimsExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace System;
+﻿namespace Orbital7.Extensions;
 
 // TODO: These methods are super old. We can problem remove them as I believe
 // there is now built-in LINQ methods for these operations.

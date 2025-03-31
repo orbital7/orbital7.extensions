@@ -1,4 +1,6 @@
-﻿namespace System;
+﻿using Orbital7.Extensions.Data;
+
+namespace Orbital7.Extensions;
 
 public static class EnumHelper
 {

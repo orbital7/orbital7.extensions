@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Data;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Orbital7.Extensions;
 
 public static class DependencyInjectionExtensions
 {
@@ -60,6 +61,25 @@ public static class DependencyInjectionExtensions
             args);
 
         services.AddSingleton<IConfiguration>(builder.Build());
+
+        return services;
+    }
+
+    public static IServiceCollection Remove<T>(
+        this IServiceCollection services)
+    {
+        if (services.IsReadOnly)
+        {
+            throw new ReadOnlyException($"{nameof(services)} is read only");
+        }
+
+        var serviceDescriptor = services
+            .FirstOrDefault(descriptor => descriptor.ServiceType == typeof(T));
+
+        if (serviceDescriptor != null)
+        {
+            services.Remove(serviceDescriptor);
+        }
 
         return services;
     }

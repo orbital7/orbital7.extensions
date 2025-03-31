@@ -1,6 +1,6 @@
 ﻿using Orbital7.Extensions.ScriptJobs;
 
-namespace Microsoft.EntityFrameworkCore;
+namespace Orbital7.Extensions.EntityFrameworkCore;
 
 public abstract class DbContextMigrationScriptJobBase<TDbContext> :
     ScriptJobBase

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace System;
+﻿namespace Orbital7.Extensions;
 
 public static class ObjectExtensions
 {

@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration.UserSecrets;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Dynamic;
 
-namespace Microsoft.Extensions.Configuration;
+namespace Orbital7.Extensions;
 
 public static class ConfigurationHelper
 {

@@ -1,4 +1,4 @@
-﻿namespace System.Collections.Generic;
+﻿namespace Orbital7.Extensions;
 
 public static class DictionaryExtensions
 {

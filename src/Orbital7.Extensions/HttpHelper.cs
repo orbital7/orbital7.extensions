@@ -1,4 +1,6 @@
-﻿namespace System.Net.Http;
+﻿using System.Net;
+
+namespace Orbital7.Extensions;
 
 // TODO: These are legacy methods; are they still useful?
 

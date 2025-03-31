@@ -1,6 +1,8 @@
-﻿namespace System;
+﻿namespace Orbital7.Extensions.Formatters;
 
-public class FileSizeFormatProvider : IFormatProvider, ICustomFormatter
+public class FileSizeFormatProvider : 
+    IFormatProvider, 
+    ICustomFormatter
 {
     public object GetFormat(Type formatType)
     {

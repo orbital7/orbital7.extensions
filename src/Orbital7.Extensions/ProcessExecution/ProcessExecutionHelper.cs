@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Diagnostics;
-using System.Threading;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace System.Diagnostics;
+namespace Orbital7.Extensions.ProcessExecution;
 
 public static class ProcessExecutionHelper
 {
@@ -186,7 +179,7 @@ public static class ProcessExecutionHelper
             thread = new Thread(new ThreadStart(processThread.Start));
 
         thread.Start();
-
+        
         return processThread;
     }
 

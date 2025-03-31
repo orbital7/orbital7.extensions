@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace System;
+namespace Orbital7.Extensions;
 
 public static class StringExtensions
 {

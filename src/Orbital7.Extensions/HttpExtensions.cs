@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace System.Net.Http;
+namespace Orbital7.Extensions;
 
 public static class HttpExtensions
 {

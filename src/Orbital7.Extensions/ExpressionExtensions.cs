@@ -1,4 +1,4 @@
-﻿namespace System.Linq.Expressions;
+﻿namespace Orbital7.Extensions;
 
 public static class ExpressionExtensions
 {

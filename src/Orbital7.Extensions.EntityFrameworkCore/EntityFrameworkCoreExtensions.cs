@@ -1,7 +1,7 @@
-﻿using Orbital7.Extensions.Entities;
+﻿using Orbital7.Extensions.Data;
 using System.Linq.Expressions;
 
-namespace Microsoft.EntityFrameworkCore;
+namespace Orbital7.Extensions.EntityFrameworkCore;
 
 public static class EntityFrameworkCoreExtensions
 {

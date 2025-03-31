@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Orbital7.Extensions.Integrations.BetterStackApi;
-using System.Text.Json.Serialization;
+﻿using Orbital7.Extensions.Integrations.BetterStackApi;
 
 namespace Orbital7.Extensions.Tests;
 
@@ -102,14 +100,14 @@ public class BetterStackApiTests
     }
 
     [SkippableFact]
-    public async Task TestLogsUploadApi()
+    public async Task TestTelemetryLoggingApi()
     {
         // Skip this test unless we have the necessary configuration data.
         Skip.IfNot(this.BetterStackLogsSourceToken.HasText());
 
         // Create the client and service.
         var client = new BetterStackApiClient(this.HttpClientFactory);
-        var logsUploadApi = new LogsUploadApi(client);
+        var logsUploadApi = new TelemetryLoggingApi(client);
 
         // Create an event.
         var logEvent = new LogEvent()

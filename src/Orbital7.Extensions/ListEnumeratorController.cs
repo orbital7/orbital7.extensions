@@ -1,4 +1,4 @@
-﻿namespace System.Collections;
+﻿namespace Orbital7.Extensions;
 
 public class ListEnumeratorController<T>
 {

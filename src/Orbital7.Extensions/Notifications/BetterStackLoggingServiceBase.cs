@@ -10,7 +10,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     private const string METADATA_EXCEPTION = "Exception";
     private const string METADATA_CALLERMEMBERNAME = "CallerMemberName";
 
-    private readonly ILogsUploadApi _logsUploadApi;
+    private readonly ITelemetryLoggingApi _telementryLoggingApi;
     private readonly IExternalNotificationService _externalNotificationService;
 
     protected abstract string BetterStackLogsSourceToken { get; }
@@ -18,10 +18,10 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     protected abstract string BetterStackLogsIngestingHost { get; }
 
     protected BetterStackLoggingServiceBase(
-        ILogsUploadApi logsUploadApi,
+        ITelemetryLoggingApi telementryLoggingApi,
         IExternalNotificationService externalNotificationService = null)
     {
-        _logsUploadApi = logsUploadApi;
+        _telementryLoggingApi = telementryLoggingApi;
         _externalNotificationService = externalNotificationService;
     }
 
@@ -80,8 +80,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                     Metadata = logMetadata,
                 };
 
-                // Upload.
-                await _logsUploadApi.LogEventAsync(
+                // Log the event.
+                await _telementryLoggingApi.LogEventAsync(
                     this.BetterStackLogsSourceToken,
                     this.BetterStackLogsIngestingHost,
                     logEvent);

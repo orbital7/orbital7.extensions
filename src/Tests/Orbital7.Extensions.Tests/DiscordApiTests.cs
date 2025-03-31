@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Orbital7.Extensions.Integrations.DiscordApi;
+﻿using Orbital7.Extensions.Integrations.DiscordApi;
 
 namespace Orbital7.Extensions.Tests;
 

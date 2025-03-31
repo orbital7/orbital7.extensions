@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.CompilerServices;
-
-namespace System;
+﻿namespace Orbital7.Extensions;
 
 public static class EnumExtensions
 {

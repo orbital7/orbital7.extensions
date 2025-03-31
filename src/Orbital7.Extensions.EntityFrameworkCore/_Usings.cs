@@ -9,3 +9,5 @@ global using System.Threading.Tasks;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata;
 global using Microsoft.Extensions.DependencyInjection;
+global using Orbital7.Extensions;
+global using Orbital7.Extensions.Data;

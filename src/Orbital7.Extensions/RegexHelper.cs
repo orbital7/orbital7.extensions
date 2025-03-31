@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Text.RegularExpressions;
 
-namespace System.Text.RegularExpressions;
+namespace Orbital7.Extensions;
 
 public class RegexHelper
 {

@@ -1,4 +1,7 @@
-﻿namespace Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+namespace Orbital7.Extensions.EntityFrameworkCore;
 
 public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
     IdentityDbContext<TUser, TRole, TKey>

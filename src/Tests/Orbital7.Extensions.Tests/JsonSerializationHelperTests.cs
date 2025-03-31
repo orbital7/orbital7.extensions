@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Text.Json.Serialization;
-
-namespace Orbital7.Extensions.Tests;
+﻿namespace Orbital7.Extensions.Tests;
 
 public class JsonSerializationHelperTests
 {

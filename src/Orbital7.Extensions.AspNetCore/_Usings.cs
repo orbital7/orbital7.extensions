@@ -11,3 +11,5 @@ global using Microsoft.Extensions.DependencyInjection;
 global using CommunityToolkit.Mvvm.Messaging;
 global using CommunityToolkit.Mvvm.Messaging.Messages;
 global using Blazored.Modal;
+global using Orbital7.Extensions;
+global using Orbital7.Extensions.Data;

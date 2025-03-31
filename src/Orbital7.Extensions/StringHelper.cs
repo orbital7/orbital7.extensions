@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace System;
+namespace Orbital7.Extensions;
 
 public class StringHelper
 {

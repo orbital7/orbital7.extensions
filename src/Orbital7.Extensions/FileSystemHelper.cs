@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace System.IO;
+﻿namespace Orbital7.Extensions;
 
 public static class FileSystemHelper
 {

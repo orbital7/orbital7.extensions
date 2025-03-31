@@ -1,4 +1,4 @@
-﻿namespace System.Threading.Tasks;
+﻿namespace Orbital7.Extensions;
 
 // Source: https://github.com/brminnick/AsyncAwaitBestPractices
 /// <summary>

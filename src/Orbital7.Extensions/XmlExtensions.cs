@@ -1,4 +1,6 @@
-﻿namespace System.Xml;
+﻿using System.Xml;
+
+namespace Orbital7.Extensions;
 
 public static class XmlExtensions
 {

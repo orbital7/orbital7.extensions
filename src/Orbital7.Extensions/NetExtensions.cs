@@ -1,4 +1,6 @@
-﻿namespace System.Net;
+﻿using System.Net;
+
+namespace Orbital7.Extensions;
 
 public static class NetExtensions
 {

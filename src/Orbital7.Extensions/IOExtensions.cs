@@ -1,4 +1,4 @@
-﻿namespace System.IO;
+﻿namespace Orbital7.Extensions;
 
 public static class IOExtensions
 {

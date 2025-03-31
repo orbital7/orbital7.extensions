@@ -2,7 +2,7 @@
 using MassTransit;
 using MassTransit.NewIdProviders;
 
-namespace System;
+namespace Orbital7.Extensions;
 
 public static class GuidFactory
 {

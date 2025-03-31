@@ -1,4 +1,7 @@
-﻿namespace System.Xml.Serialization;
+﻿using System.Xml;
+using System.Xml.Serialization;
+
+namespace Orbital7.Extensions;
 
 public static class XmlSerializationHelper
 {
@@ -50,7 +53,7 @@ public static class XmlSerializationHelper
         object objectToSerialize, 
         string filePath)
     {
-        using (TextWriter writer = new StreamWriter(filePath, false))
+        using (TextWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
         {
             SerializeToTextWriter(objectToSerialize, writer);
         }

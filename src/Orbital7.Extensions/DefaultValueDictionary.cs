@@ -1,4 +1,4 @@
-﻿namespace System.Collections.Generic;
+﻿namespace Orbital7.Extensions;
 
 public class DefaultValueDictionary<TKey, TValue> :
     Dictionary<TKey, TValue>

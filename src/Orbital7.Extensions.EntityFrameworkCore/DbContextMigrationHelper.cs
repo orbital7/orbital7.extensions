@@ -1,4 +1,4 @@
-﻿namespace Microsoft.EntityFrameworkCore;
+﻿namespace Orbital7.Extensions.EntityFrameworkCore;
 
 public static class DbContextMigrationHelper<TDbContext>
     where TDbContext : DbContext

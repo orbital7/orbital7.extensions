@@ -1,4 +1,4 @@
-﻿namespace System;
+﻿namespace Orbital7.Extensions;
 
 public static class DateTimeHelper
 {
