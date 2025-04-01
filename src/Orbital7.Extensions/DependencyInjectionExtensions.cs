@@ -7,8 +7,8 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddConfiguration(
         this IServiceCollection services,
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
     {
         var builder = ConfigurationHelper.CreateConfigurationBuilder(
             environmentVariableName, 
@@ -21,8 +21,8 @@ public static class DependencyInjectionExtensions
 
     public static IServiceCollection AddConfigurationWithUserSecrets<TAssemblyClass>(
         this IServiceCollection services,
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TAssemblyClass : class
     {
         var builder = ConfigurationHelper.CreateConfigurationBuilderWithUserSecrets<TAssemblyClass>(
@@ -36,23 +36,26 @@ public static class DependencyInjectionExtensions
 
     public static IServiceCollection AddConfiguration<TConfiguration>(
         this IServiceCollection services,
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TConfiguration : class
     {
         var configuration = ConfigurationHelper.GetConfiguration<TConfiguration>(
             environmentVariableName,
             args);
 
-        services.AddSingleton<TConfiguration>(configuration);
+        if (configuration != null)
+        {
+            services.AddSingleton<TConfiguration>(configuration);
+        }
 
         return services;
     }
 
     public static IServiceCollection AddConfiguration<TConfiguration, TAssemblyClass>(
         this IServiceCollection services,
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TConfiguration : class
         where TAssemblyClass : class
     {

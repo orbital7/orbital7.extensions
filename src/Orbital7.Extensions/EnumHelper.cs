@@ -5,6 +5,7 @@ namespace Orbital7.Extensions;
 public static class EnumHelper
 {
     public static List<TEnum> ToValueList<TEnum>()
+        where TEnum : struct, Enum
     {
         Type enumType = typeof(TEnum).GetBaseType();
 
@@ -15,18 +16,23 @@ public static class EnumHelper
         Array enumValArray = Enum.GetValues(enumType);
         List<TEnum> enumValList = new List<TEnum>(enumValArray.Length);
         foreach (int val in enumValArray)
-            enumValList.Add((TEnum)Enum.Parse(enumType, val.ToString()));
+            enumValList.Add(Enum.Parse<TEnum>(val.ToString()));
 
         return enumValList;
     }
 
     public static List<NamedValue<TEnum>> ToNamedValueList<TEnum>()
+        where TEnum : struct, Enum
     {
         var list = new List<NamedValue<TEnum>>();
 
         foreach (var item in ToValueList<TEnum>())
         {
-            list.Add(new NamedValue<TEnum>((item as Enum).ToDisplayString(), item));
+            list.Add(new NamedValue<TEnum>()
+            {
+                Name = item.ToDisplayString(),
+                Value = item,
+            });
         }
 
         return list;
@@ -34,7 +40,8 @@ public static class EnumHelper
 
     public static TEnum Parse<TEnum>(
         string value)
+        where TEnum : struct, Enum
     {
-        return (TEnum)Enum.Parse(typeof(TEnum), value);
+        return Enum.Parse<TEnum>(value);
     }
 }

@@ -4,14 +4,14 @@ namespace Orbital7.Extensions;
 
 public static class JsonSerializationHelper
 {
-    public static async Task<T> CloneObjectAsync<T>(
+    public static async Task<T?> CloneObjectAsync<T>(
         object objectToClone)
     {
         return await DeserializeFromJsonAsync<T>(
             await SerializeToJsonAsync(objectToClone));
     }
 
-    public static T CloneObject<T>(
+    public static T? CloneObject<T>(
         object objectToClone)
     {
         return DeserializeFromJson<T>(
@@ -45,19 +45,26 @@ public static class JsonSerializationHelper
         return options;
     }
 
-    public static async Task<T> DeserializeFromJsonAsync<T>(
-        string json,
+    public static async Task<T?> DeserializeFromJsonAsync<T>(
+        string? json,
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
-        using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+        if (json.HasText())
         {
-            return await DeserializeAsync<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+            {
+                return await DeserializeAsync<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            }
+        }
+        else
+        {
+            return default;
         }
     }
 
-    public static T DeserializeFromJson<T>(
-        string json,
+    public static T? DeserializeFromJson<T>(
+        string? json,
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
@@ -70,13 +77,13 @@ public static class JsonSerializationHelper
         }
         else
         {
-            return default(T);
+            return default;
         }
     }
 
-    public static async Task<object> DeserializeFromJsonAsync(
+    public static async Task<object?> DeserializeFromJsonAsync(
         Type type,
-        string json,
+        string? json,
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
@@ -93,9 +100,9 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static object DeserializeFromJson(
+    public static object? DeserializeFromJson(
         Type type,
-        string json,
+        string? json,
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
     {
@@ -112,7 +119,7 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static async Task<T> DeserializeFromJsonFileAsync<T>(
+    public static async Task<T?> DeserializeFromJsonFileAsync<T>(
         string filePath,
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
@@ -123,7 +130,7 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static T DeserializeFromJsonFile<T>(
+    public static T? DeserializeFromJsonFile<T>(
         string filePath,
         bool propertyNameCaseInsensitive = false,
         bool convertEnumsToStrings = true)
@@ -134,7 +141,7 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static async Task<object> DeserializeFromJsonFileAsync(
+    public static async Task<object?> DeserializeFromJsonFileAsync(
         Type type,
         string filePath,
         bool propertyNameCaseInsensitive = false,
@@ -146,7 +153,7 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static object DeserializeFromJsonFile(
+    public static object? DeserializeFromJsonFile(
         Type type,
         string filePath,
         bool propertyNameCaseInsensitive = false,
@@ -158,8 +165,8 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static async Task<string> SerializeToJsonAsync(
-        object objectToSerialize,
+    public static async Task<string?> SerializeToJsonAsync(
+        object? objectToSerialize,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
         bool convertEnumsToStrings = true)
@@ -178,8 +185,8 @@ public static class JsonSerializationHelper
         }
     }
 
-    public static string SerializeToJson(
-        object objectToSerialize,
+    public static string? SerializeToJson(
+        object? objectToSerialize,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
         bool convertEnumsToStrings = true)
@@ -199,7 +206,7 @@ public static class JsonSerializationHelper
     }
 
     public static async Task SerializeToJsonFileAsync(
-        object objectToSerialize,
+        object? objectToSerialize,
         string filePath,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
@@ -212,7 +219,7 @@ public static class JsonSerializationHelper
     }
 
     public static void SerializeToJsonFile(
-        object objectToSerialize,
+        object? objectToSerialize,
         string filePath,
         bool ignoreNullValues = true,
         bool indentFormatting = false,
@@ -225,7 +232,7 @@ public static class JsonSerializationHelper
     }
 
     private static async Task SerializeAsync(
-        object objectToSerialize,
+        object? objectToSerialize,
         Stream stream,
         bool ignoreNullValues,
         bool indentFormatting,
@@ -245,7 +252,7 @@ public static class JsonSerializationHelper
     }
 
     private static void Serialize(
-        object objectToSerialize,
+        object? objectToSerialize,
         Stream stream,
         bool ignoreNullValues,
         bool indentFormatting,
@@ -264,7 +271,7 @@ public static class JsonSerializationHelper
         }
     }
 
-    private static async Task<T> DeserializeAsync<T>(
+    private static async Task<T?> DeserializeAsync<T>(
         Stream stream,
         bool propertyNameCaseInsensitive,
         bool convertEnumsToStrings)
@@ -276,7 +283,7 @@ public static class JsonSerializationHelper
                 convertEnumsToStrings));
     }
 
-    private static T Deserialize<T>(
+    private static T? Deserialize<T>(
         Stream stream,
         bool propertyNameCaseInsensitive,
         bool convertEnumsToStrings)
@@ -288,7 +295,7 @@ public static class JsonSerializationHelper
                 convertEnumsToStrings));
     }
 
-    private static async Task<object> DeserializeAsync(
+    private static async Task<object?> DeserializeAsync(
         Type type,
         Stream stream,
         bool propertyNameCaseInsensitive,
@@ -309,7 +316,7 @@ public static class JsonSerializationHelper
         }
     }
 
-    private static object Deserialize(
+    private static object? Deserialize(
         Type type,
         Stream stream,
         bool propertyNameCaseInsensitive,

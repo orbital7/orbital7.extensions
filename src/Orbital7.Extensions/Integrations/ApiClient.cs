@@ -11,7 +11,7 @@ public class ApiClient :
 
     protected virtual bool DeserializeEnumsFromStrings => true;
 
-    protected virtual string HttpClientName => null;
+    protected virtual string? HttpClientName => null;
 
     protected virtual string CharSet => "utf-8";
 
@@ -21,7 +21,7 @@ public class ApiClient :
         this.HttpClientFactory = httpClientFactory;
     }
 
-    public async Task<TResponse> SendGetRequestAsync<TResponse>(
+    public async Task<TResponse?> SendGetRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -30,7 +30,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse> SendDeleteRequestAsync<TResponse>(
+    public async Task<TResponse?> SendDeleteRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -39,9 +39,9 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
+    public async Task<TResponse?> SendPostRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request)
+        TRequest? request)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Post,
@@ -49,7 +49,7 @@ public class ApiClient :
             request);
     }
 
-    public async Task<TResponse> SendPostRequestAsync<TResponse>(
+    public async Task<TResponse?> SendPostRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -58,9 +58,9 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
+    public async Task<TResponse?> SendPatchRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request)
+        TRequest? request)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Patch,
@@ -68,7 +68,7 @@ public class ApiClient :
             request);
     }
 
-    public async Task<TResponse> SendPatchRequestAsync<TResponse>(
+    public async Task<TResponse?> SendPatchRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -77,9 +77,9 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
+    public async Task<TResponse?> SendPutRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request)
+        TRequest? request)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Put,
@@ -87,7 +87,7 @@ public class ApiClient :
             request);
     }
 
-    public async Task<TResponse> SendPutRequestAsync<TResponse>(
+    public async Task<TResponse?> SendPutRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -96,7 +96,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
+    public async Task<TResponse?> SendPostRequestUrlEncodedAsync<TResponse>(
         string url,
         List<KeyValuePair<string, string>> request)
     {
@@ -106,18 +106,18 @@ public class ApiClient :
             new FormUrlEncodedContent(request));
     }
 
-    private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(
+    private async Task<TResponse?> SendRequestAsync<TRequest, TResponse>(
         HttpMethod method,
         string url,
-        TRequest request)
+        TRequest? request)
     {
         // Serialize the request body.
-        string requestBody = request != null ?
+        string? requestBody = request != null ?
             ExecuteSerializeRequestBody(request) :
             null;
 
         // Create request body content.
-        HttpContent content = requestBody.HasText() ?
+        HttpContent? content = requestBody.HasText() ?
             new StringContent(requestBody)
             {
                 Headers =
@@ -130,10 +130,10 @@ public class ApiClient :
     }
 
     // TODO: Add retry logic using Polly.
-    private async Task<TResponse> ExecuteSendRequestAsync<TResponse>(
+    private async Task<TResponse?> ExecuteSendRequestAsync<TResponse>(
         HttpMethod method,
         string url,
-        HttpContent content)
+        HttpContent? content)
     {
         var uri = new Uri(url);
 
@@ -200,15 +200,15 @@ public class ApiClient :
         return new Exception(responseBody);
     }
 
-    private string ExecuteSerializeRequestBody<TRequest>(
-        TRequest request)
+    private string? ExecuteSerializeRequestBody<TRequest>(
+        TRequest? request)
     {
         var requestType = typeof(TRequest);
 
         // If we're serializing a string request, just return the request body.
         if (requestType == typeof(string))
         {
-            return request.ToString();
+            return request?.ToString();
         }
         // Else serialize to json.
         else
@@ -217,15 +217,15 @@ public class ApiClient :
         }
     }
 
-    protected virtual string SerializeRequestBody<TRequest>(
-        TRequest request)
+    protected virtual string? SerializeRequestBody<TRequest>(
+        TRequest? request)
     {
         return JsonSerializationHelper.SerializeToJson(
             request,
             convertEnumsToStrings: this.SerializeEnumsToStrings);
     }
 
-    private TResponse ExecuteDeserializeResponseBody<TResponse>(
+    private TResponse? ExecuteDeserializeResponseBody<TResponse>(
         HttpResponseMessage httpResponse,
         string responseBody)
     {
@@ -243,9 +243,9 @@ public class ApiClient :
         }
     }
 
-    protected virtual TResponse DeserializeResponseBody<TResponse>(
+    protected virtual TResponse? DeserializeResponseBody<TResponse>(
         HttpResponseMessage httpResponse,
-        string responseBody)
+        string? responseBody)
     {
         return JsonSerializationHelper.DeserializeFromJson<TResponse>(
             responseBody,

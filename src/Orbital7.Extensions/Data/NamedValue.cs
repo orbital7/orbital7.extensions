@@ -2,22 +2,9 @@
 
 public class NamedValue<TValue>
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public TValue Value { get; set; }
-
-    public NamedValue()
-    {
-
-    }
-
-    public NamedValue(
-        string name,
-        TValue value)
-    {
-        this.Name = name;
-        this.Value = value;
-    }
+    public TValue? Value { get; set; }
 
     public override string ToString()
     {

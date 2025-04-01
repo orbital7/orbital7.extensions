@@ -11,52 +11,52 @@ public static class ConfigurationHelper
     public const string ASPNET_CORE_ENVIRONMENT_VARIABLE = "ASPNETCORE_ENVIRONMENT";
 
     public static IConfiguration GetConfiguration(
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
     {
         return CreateConfigurationBuilder(environmentVariableName, args)
             .Build();
     }
 
     public static IConfiguration GetConfigurationWithUserSecrets<TAssemblyClass>(
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TAssemblyClass : class
     {
         return CreateConfigurationBuilderWithUserSecrets<TAssemblyClass>(environmentVariableName, args)
             .Build();
     }
 
-    public static TConfiguration GetConfiguration<TConfiguration>(
-        string environmentVariableName = null,
-        string[] args = null)
+    public static TConfiguration? GetConfiguration<TConfiguration>(
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TConfiguration : class
     {
-        return GetConfiguration(environmentVariableName, args)
+        return GetConfiguration(environmentVariableName, args)?
             .Get<TConfiguration>();
     }
 
-    public static TConfiguration GetConfigurationWithUserSecrets<TConfiguration, TAssemblyClass>(
-        string environmentVariableName = null,
-        string[] args = null)
+    public static TConfiguration? GetConfigurationWithUserSecrets<TConfiguration, TAssemblyClass>(
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TConfiguration : class
         where TAssemblyClass : class
     {
-        return GetConfigurationWithUserSecrets<TAssemblyClass>(environmentVariableName, args)
+        return GetConfigurationWithUserSecrets<TAssemblyClass>(environmentVariableName, args)?
             .Get<TConfiguration>();
     }
 
     public static IConfigurationBuilder CreateConfigurationBuilder(
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
     {
         var builder = StartBuilder(environmentVariableName);
         return FinishBuilder(builder, true, args);
     }
 
     public static IConfigurationBuilder CreateConfigurationBuilderWithUserSecrets<TAssemblyClass>(
-        string environmentVariableName = null,
-        string[] args = null)
+        string? environmentVariableName = null,
+        string[]? args = null)
         where TAssemblyClass : class
     {
         var builder = StartBuilder(environmentVariableName);
@@ -64,11 +64,21 @@ public static class ConfigurationHelper
         return FinishBuilder(builder, true, args);
     }
 
-    public static TConfiguration ReadUserSecrets<TConfiguration, TAssemblyClass>()
+    public static TConfiguration? ReadUserSecrets<TConfiguration, TAssemblyClass>()
         where TAssemblyClass : class
     {
-        var secretsFilePath = GetUserSecretsFilePath<TAssemblyClass>();
-        return JsonSerializationHelper.DeserializeFromJsonFile<TConfiguration>(secretsFilePath);
+        var secretsId = GetVerifiedSecretsId<TAssemblyClass>();
+
+        var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(secretsId);
+        if (Path.Exists(secretsFilePath))
+        {
+            return JsonSerializationHelper.DeserializeFromJsonFile<TConfiguration>(
+                secretsFilePath);
+        }
+        else
+        {
+            return ReflectionHelper.CreateInstance<TConfiguration>();
+        }
     }
 
     public static TConfiguration WriteUserSecrets<TConfiguration, TAssemblyClass>(
@@ -76,10 +86,12 @@ public static class ConfigurationHelper
         where TConfiguration : class
         where TAssemblyClass : class
     {
-        var secretsFilePath = GetUserSecretsFilePath<TAssemblyClass>();
+        var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(
+            GetVerifiedSecretsId<TAssemblyClass>());
+
         JsonSerializationHelper.SerializeToJsonFile(
-            userSecrets, 
-            secretsFilePath, 
+            userSecrets,
+            secretsFilePath,
             ignoreNullValues: false,
             indentFormatting: true);
 
@@ -91,36 +103,55 @@ public static class ConfigurationHelper
         where TAssemblyClass : class
     {
         // Read the existing secrets file.
-        var secretsFilePath = GetUserSecretsFilePath<TAssemblyClass>();
-        dynamic secrets = JsonSerializationHelper.DeserializeFromJsonFile<ExpandoObject>(
-            secretsFilePath);
+        var secretsId = GetVerifiedSecretsId<TAssemblyClass>();
 
-        // Execute the provided update action.
-        updateAction?.Invoke(secrets);
+        // Ensure secrets path exists.
+        var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(secretsId);
+        if (Path.Exists(secretsFilePath))
+        {
+            dynamic secrets = JsonSerializationHelper.DeserializeFromJsonFile<ExpandoObject>(
+                secretsFilePath);
 
-        // Overwrite the file with changes.
-        JsonSerializationHelper.SerializeToJsonFile(
-            secrets,
-            secretsFilePath,
-            ignoreNullValues: false,
-            indentFormatting: true);
+            // Execute the provided update action.
+            updateAction?.Invoke(secrets);
 
-        return secrets;
+            // Overwrite the file with changes.
+            JsonSerializationHelper.SerializeToJsonFile(
+                secrets,
+                secretsFilePath,
+                ignoreNullValues: false,
+                indentFormatting: true);
+
+            return secrets;
+        }
+        else
+        {
+            throw new Exception($"Secrets file '{secretsFilePath}' does not exist");
+        }
     }
 
-    public static string GetUserSecretsFilePath<TAssemblyClass>()
+    public static string? GetUserSecretsId<TAssemblyClass>()
     {
-        var secretsId = Assembly.GetAssembly(typeof(TAssemblyClass))
-            .GetCustomAttribute<UserSecretsIdAttribute>()
+        return Assembly.GetAssembly(typeof(TAssemblyClass))?
+            .GetCustomAttribute<UserSecretsIdAttribute>()?
             .UserSecretsId;
+    }
 
-        var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(secretsId);
-
-        return secretsFilePath;
+    private static string GetVerifiedSecretsId<TAssemblyClass>()
+    {
+        var secretsId = GetUserSecretsId<TAssemblyClass>();
+        if (secretsId.HasText())
+        {
+            return secretsId;
+        }
+        else
+        {
+            throw new Exception($"The specified assembly class '{typeof(TAssemblyClass).Name}' does not contain a UserSecretsId.");
+        }
     }
 
     private static IConfigurationBuilder StartBuilder(
-        string environmentVariableName)
+        string? environmentVariableName)
     {
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -138,7 +169,7 @@ public static class ConfigurationHelper
     private static IConfigurationBuilder FinishBuilder(
         IConfigurationBuilder builder,
         bool addEnvironmentVariables,
-        string[] args)
+        string[]? args)
     {
         if (addEnvironmentVariables)
         {

@@ -2,8 +2,9 @@
 
 public class DefaultValueDictionary<TKey, TValue> :
     Dictionary<TKey, TValue>
+    where TKey : notnull
 {
-    public new TValue this[TKey key]
+    public new TValue? this[TKey key]
     {
         get
         {
@@ -15,11 +16,14 @@ public class DefaultValueDictionary<TKey, TValue> :
         }
         set
         {
-            base[key] = value;
+            if (value != null)
+            {
+                base[key] = value;
+            }
         }
     }
 
-    public DefaultValueDictionary() : 
+    public DefaultValueDictionary() :
         base()
     {
 

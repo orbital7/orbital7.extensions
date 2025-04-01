@@ -30,6 +30,7 @@ public static class DictionaryExtensions
 
     public static IDictionary<T1, T2> ShallowClone<T1, T2>(
         this IDictionary<T1, T2> dictionary)
+        where T1 : notnull
     {
         var clonedDictionary = new Dictionary<T1, T2>();
         clonedDictionary.AddRange(dictionary);
@@ -37,10 +38,11 @@ public static class DictionaryExtensions
         return clonedDictionary;
     }
 
-    public static T2 TryGetValue<T1, T2>(
+    public static T2? TryGetValue<T1, T2>(
         this IDictionary<T1, T2> dictionary,
         T1 key)
+        where T1 : notnull
     {
-        return dictionary.TryGetValue(key, out T2 value) ? value : default;
+        return dictionary.TryGetValue(key, out T2? value) ? value : default;
     }
 }

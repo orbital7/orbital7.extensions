@@ -27,8 +27,8 @@ public abstract class ConditionalValidationAttributeBase : ValidationAttribute
         return base.IsValid(value);
     }
 
-    protected override ValidationResult IsValid(
-        object value, 
+    protected override ValidationResult? IsValid(
+        object? value, 
         ValidationContext validationContext)
     {
         // get a reference to the property this validation depends upon
@@ -45,7 +45,10 @@ public abstract class ConditionalValidationAttributeBase : ValidationAttribute
                 // match => means we should try validating this field.
                 var innerAttributeValidation = InnerAttribute.GetValidationResult(value, validationContext);
                 if (innerAttributeValidation != null && innerAttributeValidation != ValidationResult.Success)
-                    return new ValidationResult(string.Format(ErrorMessage, validationContext.DisplayName), new[] { validationContext.MemberName });
+                {
+                    return new ValidationResult(
+                        string.Format(this.ErrorMessage, validationContext.DisplayName), new[] { validationContext.MemberName });
+                }
             }
         }
         return ValidationResult.Success;

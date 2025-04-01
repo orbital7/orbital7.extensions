@@ -2,34 +2,34 @@
 
 public interface IApiClient
 {
-    Task<TResponse> SendGetRequestAsync<TResponse>(
+    Task<TResponse?> SendGetRequestAsync<TResponse>(
         string url);
 
-    Task<TResponse> SendDeleteRequestAsync<TResponse>(
+    Task<TResponse?> SendDeleteRequestAsync<TResponse>(
         string url);
 
-    Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
+    Task<TResponse?> SendPostRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request);
+        TRequest? request);
 
-    Task<TResponse> SendPostRequestAsync<TResponse>(
+    Task<TResponse?> SendPostRequestAsync<TResponse>(
         string url);
 
-    Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
+    Task<TResponse?> SendPatchRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request);
+        TRequest? request);
 
-    Task<TResponse> SendPatchRequestAsync<TResponse>(
+    Task<TResponse?> SendPatchRequestAsync<TResponse>(
         string url);
 
-    Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
+    Task<TResponse?> SendPutRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request);
+        TRequest? request);
 
-    Task<TResponse> SendPutRequestAsync<TResponse>(
+    Task<TResponse?> SendPutRequestAsync<TResponse>(
         string url);
 
-    Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
+    Task<TResponse?> SendPostRequestUrlEncodedAsync<TResponse>(
         string url,
         List<KeyValuePair<string, string>> request);
 }

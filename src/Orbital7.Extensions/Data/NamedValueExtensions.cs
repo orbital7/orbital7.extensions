@@ -5,7 +5,11 @@ public static class NamedValueExtensions
     public static NamedValue<TId> ToNamedValue<TId>(
         this NamedId<TId> namedId)
     {
-        return new NamedValue<TId>(namedId.Name, namedId.Id);
+        return new NamedValue<TId>
+        {
+            Name = namedId.Name,
+            Value = namedId.Id,
+        };
     }
 
     public static List<NamedValue<TId>> ToNamedValueList<TId>(
@@ -20,7 +24,12 @@ public static class NamedValueExtensions
         this List<T> list)
     {
         return list
-            .Select(x => new NamedValue<T>(x.ToString(), x))
+            .Where(x => x != null)
+            .Select(x => new NamedValue<T> 
+            { 
+                Name = x?.ToString() ?? string.Empty, 
+                Value = x 
+            })
             .ToList();
     }
 }

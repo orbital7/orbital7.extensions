@@ -2,11 +2,11 @@
 
 public class PropertyValueChange
 {
-    public string PropertyName { get; set; }
+    public required string PropertyName { get; init; }
 
-    public string PropertyDisplayName { get; set; }
+    public required string PropertyDisplayName { get; init; }
 
-    public string OldValue { get; set; }
+    public string? OldValue { get; set; }
 
-    public string NewValue { get; set; }
+    public string? NewValue { get; set; }
 }
