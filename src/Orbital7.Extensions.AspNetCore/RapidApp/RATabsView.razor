@@ -25,21 +25,21 @@
 @code {
 
     private List<TabPage> _tabs = new List<TabPage>();
-    private TabPage _activeTab { get; set; }
+    private TabPage? _activeTab { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public RATabsViewRenderMode RenderMode { get; set; } = RATabsViewRenderMode.Dynamic;
 
     [Parameter]
-    public string HeaderClass { get; set; }
+    public string? HeaderClass { get; set; }
 
     [Parameter]
-    public string Class { get; set; }
+    public string? Class { get; set; }
 
-    public TabPage ActiveTab => _activeTab;
+    public TabPage? ActiveTab => _activeTab;
 
     private List<TabPage> VisibleTabs => _tabs.Where(x => x.IsVisible).ToList();
 

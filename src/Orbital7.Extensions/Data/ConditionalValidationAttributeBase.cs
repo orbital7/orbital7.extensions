@@ -22,7 +22,8 @@ public abstract class ConditionalValidationAttributeBase : ValidationAttribute
         ShouldMatch = true;
     }
 
-    public override bool IsValid(object value)
+    public override bool IsValid(
+        object? value)
     {
         return base.IsValid(value);
     }
@@ -47,7 +48,10 @@ public abstract class ConditionalValidationAttributeBase : ValidationAttribute
                 if (innerAttributeValidation != null && innerAttributeValidation != ValidationResult.Success)
                 {
                     return new ValidationResult(
-                        string.Format(this.ErrorMessage, validationContext.DisplayName), new[] { validationContext.MemberName });
+                        FormatErrorMessage(validationContext.DisplayName),
+                        validationContext.MemberName.HasText() ?
+                            [validationContext.MemberName] :
+                            null);
                 }
             }
         }

@@ -68,18 +68,18 @@ public static class TypeExtensions
         this Type type,
         string propertyName)
     {
-        object displayName = GetPropertyAttributeValue(
+        object? displayName = GetPropertyAttributeValue(
             type,
             propertyName,
             typeof(DisplayAttribute), "Name");
 
         if (displayName != null)
-            return displayName.ToString();
+            return displayName.ToString() ?? propertyName;
         else
             return propertyName;
     }
 
-    public static (PropertyInfo, TAttribute) GetPropertyAttribute<TAttribute>(
+    public static (PropertyInfo?, TAttribute?) GetPropertyAttribute<TAttribute>(
         this Type type,
         string propertyName)
         where TAttribute : Attribute
@@ -93,7 +93,7 @@ public static class TypeExtensions
         return (null, null);
     }
 
-    public static object GetPropertyAttributeValue(
+    public static object? GetPropertyAttributeValue(
         this Type objectType,
         string propertyName,
         Type attributeType,

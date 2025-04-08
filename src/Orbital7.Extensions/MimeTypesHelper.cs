@@ -47,7 +47,7 @@ public static class MimeTypesHelper
     public const string FILE_EXT_WMF = ".wmf";
     public const string MIME_TYPE_WMF = "application/x-msmetafile";
 
-    public static string FileExtensionToMimeType(
+    public static string? FileExtensionToMimeType(
         string fileExtension)
     {
         switch (fileExtension.ToLower())
@@ -102,7 +102,7 @@ public static class MimeTypesHelper
         }
     }
 
-    public static string MimeTypeToFileExtension(
+    public static string? MimeTypeToFileExtension(
         string mimeType)
     {
         switch (mimeType.ToLower())

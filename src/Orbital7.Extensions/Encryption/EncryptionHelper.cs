@@ -184,16 +184,14 @@ public static class EncryptionHelper
     private static IEncryptionEngine GetEncryptionEngine(
         EncryptionMethod encryptionMethod)
     {
-        IEncryptionEngine engine = null;
-
         switch (encryptionMethod)
         {
             case EncryptionMethod.TripleDES:
-                engine = new TripleDESEncryptionEngine();
-                break;
-        }
+                return new TripleDESEncryptionEngine();
 
-        return engine;
+            default:
+                throw new Exception($"Encryption method '{encryptionMethod}' is not supported.");
+        }
     }
 
     private static Encoding GetDefaultEncoding()

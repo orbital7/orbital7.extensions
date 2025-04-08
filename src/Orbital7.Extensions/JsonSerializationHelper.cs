@@ -4,18 +4,19 @@ namespace Orbital7.Extensions;
 
 public static class JsonSerializationHelper
 {
-    public static async Task<T?> CloneObjectAsync<T>(
+    public static async Task<T> CloneObjectAsync<T>(
         object objectToClone)
     {
-        return await DeserializeFromJsonAsync<T>(
-            await SerializeToJsonAsync(objectToClone));
+        // TODO: Figure out why BOTH of these methods require the ignore null operator.
+        string json = (await SerializeToJsonAsync(objectToClone))!;
+        return (await DeserializeFromJsonAsync<T>(json))!;
     }
 
-    public static T? CloneObject<T>(
+    public static T CloneObject<T>(
         object objectToClone)
     {
-        return DeserializeFromJson<T>(
-            SerializeToJson(objectToClone));
+        string json = SerializeToJson(objectToClone);
+        return DeserializeFromJson<T>(json);
     }
 
     public static JsonSerializerOptions SetSerializerOptions(
@@ -45,6 +46,7 @@ public static class JsonSerializationHelper
         return options;
     }
 
+    [return: NotNullIfNotNull(nameof(json))]
     public static async Task<T?> DeserializeFromJsonAsync<T>(
         string? json,
         bool propertyNameCaseInsensitive = false,
@@ -63,6 +65,7 @@ public static class JsonSerializationHelper
         }
     }
 
+    [return: NotNullIfNotNull(nameof(json))]
     public static T? DeserializeFromJson<T>(
         string? json,
         bool propertyNameCaseInsensitive = false,
@@ -72,7 +75,8 @@ public static class JsonSerializationHelper
         {
             using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
             {
-                return Deserialize<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+                // TODO: Figure out why this requires the ignore null operator.
+                return Deserialize<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings)!;
             }
         }
         else
@@ -165,6 +169,7 @@ public static class JsonSerializationHelper
         }
     }
 
+    [return: NotNullIfNotNull(nameof(objectToSerialize))]
     public static async Task<string?> SerializeToJsonAsync(
         object? objectToSerialize,
         bool ignoreNullValues = true,
@@ -185,6 +190,7 @@ public static class JsonSerializationHelper
         }
     }
 
+    [return: NotNullIfNotNull(nameof(objectToSerialize))]
     public static string? SerializeToJson(
         object? objectToSerialize,
         bool ignoreNullValues = true,
@@ -289,7 +295,7 @@ public static class JsonSerializationHelper
         bool convertEnumsToStrings)
     {
         return JsonSerializer.Deserialize<T>(
-            stream, 
+            stream,
             CreateDeserializationOptions(
                 propertyNameCaseInsensitive,
                 convertEnumsToStrings));

@@ -10,8 +10,8 @@
 @code {
 
     [Parameter]
-    public Expression<Func<TValue>> For { get; set; }
+    public Expression<Func<TValue>>? For { get; set; }
 
     [CascadingParameter]
-    public EditContext EditContext { get; set; }
+    public EditContext? EditContext { get; set; }
 }

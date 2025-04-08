@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
 
-namespace Microsoft.AspNetCore.Builder;
+namespace Orbital7.Extensions.AspNetCore;
 
 public static class BuilderExtensions
 {

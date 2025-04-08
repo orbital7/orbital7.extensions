@@ -116,9 +116,9 @@ public static class DateTimeExtensions
         return date.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
     }
 
-    public static string ToDefaultDateString(
+    public static string? ToDefaultDateString(
         this DateOnly? date,
-        string nullValue = null)
+        string? nullValue = null)
     {
         if (date.HasValue)
             return date.Value.ToDefaultDateString();
@@ -132,9 +132,9 @@ public static class DateTimeExtensions
         return dateTime.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
     }
 
-    public static string ToDefaultDateString(
+    public static string? ToDefaultDateString(
         this DateTime? dateTime, 
-        string nullValue = null)
+        string? nullValue = null)
     {
         if (dateTime.HasValue)
             return dateTime.Value.ToDefaultDateString();
@@ -162,9 +162,9 @@ public static class DateTimeExtensions
         return dateTime.ToString(format); //, fi);
     }
 
-    public static string ToDefaultTimeString(
+    public static string? ToDefaultTimeString(
         this DateTime? dateTime, 
-        string nullValue = null)
+        string? nullValue = null)
     {
         if (dateTime.HasValue)
             return dateTime.Value.ToDefaultTimeString();
@@ -178,9 +178,9 @@ public static class DateTimeExtensions
         return dateTime.ToDefaultDateString() + " " + dateTime.ToDefaultTimeString();
     }
 
-    public static string ToDefaultDateTimeString(
+    public static string? ToDefaultDateTimeString(
         this DateTime? dateTime, 
-        string nullValue = null)
+        string? nullValue = null)
     {
         if (dateTime.HasValue)
             return dateTime.Value.ToDefaultDateTimeString();
@@ -444,9 +444,9 @@ public static class DateTimeExtensions
         return dateTime.ToString("dddd, MMM d");
     }
 
-    public static string ToDayOfWeekDateString(
+    public static string? ToDayOfWeekDateString(
         this DateTime? dateTime,
-        string nullValue = null)
+        string? nullValue = null)
     {
         if (dateTime.HasValue)
         {

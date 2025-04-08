@@ -24,9 +24,9 @@ public static class EntityExtensions
     public static List<PropertyValueChange> CalculateChanges<T>(
         this T oldEntity,
         T newEntity,
-        List<string> entityPropertyNamesToIgnore = null,
-        List<(string, string)> entityPropertyDisplayNameOverrides = null,
-        List<(string, Func<object, string>)> entityPropertyDisplayValueFormatters = null)
+        List<string>? entityPropertyNamesToIgnore = null,
+        List<(string, string)>? entityPropertyDisplayNameOverrides = null,
+        List<(string, Func<object, string>)>? entityPropertyDisplayValueFormatters = null)
         where T : class, IEntity, new()
     {
         // Get the property values for both the old and new entities, ignoring
@@ -40,7 +40,8 @@ public static class EntityExtensions
         foreach (var property in oldEntityProperties)
         {
             // Ignore baseline entity properties.
-            if (property.Name != "Id" && //nameof(IEntity.Id) &&
+            if (property.Name.HasText() &&
+                property.Name != "Id" && //nameof(IEntity.Id) &&
                 property.Name != nameof(IEntity.CreatedDateTimeUtc) &&
                 property.Name != nameof(IEntity.LastModifiedDateTimeUtc) &&
                 (entityPropertyNamesToIgnore == null ||
@@ -71,10 +72,10 @@ public static class EntityExtensions
                     {
                         PropertyName = property.Name,
                         PropertyDisplayName = displayNameOverride ?? property.DisplayName,
-                        OldValue = displayValueFormatter != null ?
+                        OldValue = displayValueFormatter != null && property.Value != null ?
                             displayValueFormatter.Invoke(property.Value) :
                             property.Value?.ToString(),
-                        NewValue = displayValueFormatter != null ?
+                        NewValue = displayValueFormatter != null && newPropertyValue != null ?
                             displayValueFormatter.Invoke(newPropertyValue) :
                             newPropertyValue?.ToString(),
                     });

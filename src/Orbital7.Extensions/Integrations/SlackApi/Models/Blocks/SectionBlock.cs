@@ -4,8 +4,8 @@ public class SectionBlock
 {
     [JsonInclude]
     [JsonPropertyName("type")]
-    public string Type { get; } = "section";
+    public string? Type { get; } = "section";
 
     [JsonPropertyName("text")]
-    public object Text { get; set; }
+    public object? Text { get; set; }
 }

@@ -4,7 +4,8 @@ public class FileSizeFormatProvider :
     IFormatProvider, 
     ICustomFormatter
 {
-    public object GetFormat(Type formatType)
+    public object? GetFormat(
+        Type? formatType)
     {
         if (formatType == typeof(ICustomFormatter)) return this;
         return null;
@@ -15,7 +16,10 @@ public class FileSizeFormatProvider :
     private const Decimal OneMegaByte = OneKiloByte * 1024M;
     private const Decimal OneGigaByte = OneMegaByte * 1024M;
 
-    public string Format(string format, object arg, IFormatProvider formatProvider)
+    public string Format(
+        string? format, 
+        object? arg, 
+        IFormatProvider? formatProvider)
     {
         if (format == null || !format.StartsWith(fileSizeFormat))
         {
@@ -64,13 +68,17 @@ public class FileSizeFormatProvider :
         return string.Format("{0:N" + precision + "}{1}", size, suffix);
     }
 
-    private static string DefaultFormat(string format, object arg, IFormatProvider formatProvider)
+    private static string DefaultFormat(
+        string? format, 
+        object? arg, 
+        IFormatProvider? formatProvider)
     {
-        IFormattable formattableArg = arg as IFormattable;
+        var formattableArg = arg as IFormattable;
         if (formattableArg != null)
         {
             return formattableArg.ToString(format, formatProvider);
         }
-        return arg.ToString();
+
+        return arg?.ToString() ?? string.Empty;
     }
 }

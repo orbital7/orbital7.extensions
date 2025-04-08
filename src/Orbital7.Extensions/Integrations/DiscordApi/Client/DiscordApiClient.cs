@@ -4,11 +4,11 @@ namespace Orbital7.Extensions.Integrations.DiscordApi;
 public class DiscordApiClient :
     ApiClient, IDiscordApiClient
 {
-    public string BotToken { private get; set; }
+    public string? BotToken { private get; set; }
 
     public DiscordApiClient(
         IHttpClientFactory httpClientFactory,
-        string botToken = null) :
+        string? botToken = null) :
         base(httpClientFactory)
     {
         this.BotToken = botToken;
@@ -17,10 +17,14 @@ public class DiscordApiClient :
     protected override void AddRequestHeaders(
         HttpRequestMessage httpRequest)
     {
-        httpRequest.AddAuthorizationHeader("Bot", this.BotToken);
+        httpRequest.AddAuthorizationHeader(
+            "Bot", 
+            this.BotToken);
     }
 
-    protected override Exception CreateUnsuccessfulResponseException(HttpResponseMessage httpResponse, string responseBody)
+    protected override Exception CreateUnsuccessfulResponseException(
+        HttpResponseMessage httpResponse, 
+        string responseBody)
     {
         var response = JsonSerializationHelper.DeserializeFromJson<ErrorResponse>(responseBody);
         return new Exception(response.ToString());

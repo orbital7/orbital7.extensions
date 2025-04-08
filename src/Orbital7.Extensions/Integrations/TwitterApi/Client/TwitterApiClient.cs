@@ -51,6 +51,11 @@ public class TwitterApiClient :
 
     protected override List<KeyValuePair<string, string>> GetRefreshTokenRequest()
     {
+        if (!this.TokenInfo.RefreshToken.HasText())
+        {
+            throw new Exception("Refresh token is not set.");
+        }
+
         return new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("grant_type", "refresh_token"),
@@ -64,6 +69,6 @@ public class TwitterApiClient :
         string responseBody)
     {
         var errorResponse = JsonSerializationHelper.DeserializeFromJson<ErrorResponse>(responseBody);
-        return new Exception(errorResponse.ToString());
+        return new Exception(errorResponse?.ToString());
     }
 }

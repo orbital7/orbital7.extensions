@@ -2,7 +2,7 @@
 
 public static class TypeHelper
 {
-    public static string GetClassNameFromAssemblyQualifiedTypeName(
+    public static string? GetClassNameFromAssemblyQualifiedTypeName(
         string assemblyQualifiedTypeName)
     {
         if (assemblyQualifiedTypeName.HasText())

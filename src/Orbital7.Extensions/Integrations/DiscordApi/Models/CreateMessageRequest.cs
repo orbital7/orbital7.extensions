@@ -3,5 +3,5 @@
 public class CreateMessageRequest
 {
     [JsonPropertyName("content")]
-    public string Content { get; set; }
+    public string? Content { get; set; }
 }

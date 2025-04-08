@@ -21,7 +21,7 @@ public class ApiClient :
         this.HttpClientFactory = httpClientFactory;
     }
 
-    public async Task<TResponse?> SendGetRequestAsync<TResponse>(
+    public async Task<TResponse> SendGetRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -30,7 +30,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse?> SendDeleteRequestAsync<TResponse>(
+    public async Task<TResponse> SendDeleteRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -39,7 +39,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse?> SendPostRequestAsync<TRequest, TResponse>(
+    public async Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
         string url,
         TRequest? request)
     {
@@ -49,7 +49,7 @@ public class ApiClient :
             request);
     }
 
-    public async Task<TResponse?> SendPostRequestAsync<TResponse>(
+    public async Task<TResponse> SendPostRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -58,7 +58,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse?> SendPatchRequestAsync<TRequest, TResponse>(
+    public async Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
         string url,
         TRequest? request)
     {
@@ -68,7 +68,7 @@ public class ApiClient :
             request);
     }
 
-    public async Task<TResponse?> SendPatchRequestAsync<TResponse>(
+    public async Task<TResponse> SendPatchRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -77,7 +77,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse?> SendPutRequestAsync<TRequest, TResponse>(
+    public async Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
         string url,
         TRequest? request)
     {
@@ -87,7 +87,7 @@ public class ApiClient :
             request);
     }
 
-    public async Task<TResponse?> SendPutRequestAsync<TResponse>(
+    public async Task<TResponse> SendPutRequestAsync<TResponse>(
         string url)
     {
         return await SendRequestAsync<object, TResponse>(
@@ -96,7 +96,7 @@ public class ApiClient :
             null);
     }
 
-    public async Task<TResponse?> SendPostRequestUrlEncodedAsync<TResponse>(
+    public async Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
         string url,
         List<KeyValuePair<string, string>> request)
     {
@@ -106,7 +106,7 @@ public class ApiClient :
             new FormUrlEncodedContent(request));
     }
 
-    private async Task<TResponse?> SendRequestAsync<TRequest, TResponse>(
+    private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(
         HttpMethod method,
         string url,
         TRequest? request)
@@ -130,7 +130,7 @@ public class ApiClient :
     }
 
     // TODO: Add retry logic using Polly.
-    private async Task<TResponse?> ExecuteSendRequestAsync<TResponse>(
+    private async Task<TResponse> ExecuteSendRequestAsync<TResponse>(
         HttpMethod method,
         string url,
         HttpContent? content)
@@ -160,16 +160,7 @@ public class ApiClient :
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
-                    var ex =  CreateUnsuccessfulResponseException(httpResponse, responseBody);
-
-                    if (ex != null)
-                    {
-                        throw ex;
-                    }
-                    else
-                    {
-                        return default;
-                    }
+                    throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
                 }
                 else
                 {
@@ -225,7 +216,7 @@ public class ApiClient :
             convertEnumsToStrings: this.SerializeEnumsToStrings);
     }
 
-    private TResponse? ExecuteDeserializeResponseBody<TResponse>(
+    private TResponse ExecuteDeserializeResponseBody<TResponse>(
         HttpResponseMessage httpResponse,
         string responseBody)
     {
@@ -243,9 +234,9 @@ public class ApiClient :
         }
     }
 
-    protected virtual TResponse? DeserializeResponseBody<TResponse>(
+    protected virtual TResponse DeserializeResponseBody<TResponse>(
         HttpResponseMessage httpResponse,
-        string? responseBody)
+        string responseBody)
     {
         return JsonSerializationHelper.DeserializeFromJson<TResponse>(
             responseBody,

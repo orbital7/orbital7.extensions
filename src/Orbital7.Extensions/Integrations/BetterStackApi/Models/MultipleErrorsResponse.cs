@@ -3,5 +3,5 @@
 public class MultipleErrorsResponse
 {
     [JsonPropertyName("errors")]
-    public IDictionary<string, string[]> Errors { get; set; }
+    public IDictionary<string, string[]>? Errors { get; set; }
 }

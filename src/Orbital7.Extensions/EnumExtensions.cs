@@ -14,8 +14,7 @@ public static class EnumExtensions
         }
 
         return attributeName ??
-            value.ToString().PascalCaseToPhrase() ??
-            value.ToString();
+            value.ToString().PascalCaseToPhrase();
     }
 
     public static TAttribute[] GetAttributes<TAttribute>(

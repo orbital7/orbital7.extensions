@@ -11,7 +11,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     private const string METADATA_CALLERMEMBERNAME = "CallerMemberName";
 
     private readonly ITelemetryLoggingApi _telementryLoggingApi;
-    private readonly IExternalNotificationService _externalNotificationService;
+    private readonly IExternalNotificationService? _externalNotificationService;
 
     protected abstract string BetterStackLogsSourceToken { get; }
 
@@ -19,7 +19,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
 
     protected BetterStackLoggingServiceBase(
         ITelemetryLoggingApi telementryLoggingApi,
-        IExternalNotificationService externalNotificationService = null)
+        IExternalNotificationService? externalNotificationService = null)
     {
         _telementryLoggingApi = telementryLoggingApi;
         _externalNotificationService = externalNotificationService;
@@ -28,9 +28,9 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     public virtual async Task LogAsync(
         LogLevel logLevel,
         string message,
-        Exception exception = null,
-        IDictionary<string, object> metadata = null,
-        [CallerMemberName] string callerMemberName = null,
+        Exception? exception = null,
+        IDictionary<string, object?>? metadata = null,
+        [CallerMemberName] string? callerMemberName = null,
         bool sendExternalNotification = false)
     {
         // Validate token configuration and log level.
@@ -38,8 +38,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
             this.BetterStackLogsSourceToken.HasText() &&
             this.BetterStackLogsIngestingHost.HasText())
         {
-            var logger = typeof(TCategoryName).FullName;
-            string externalNotificationMessage = null;
+            var logger = typeof(TCategoryName).FullName ?? typeof(TCategoryName).Name;
+            string externalNotificationMessage = string.Empty;
 
             try
             {
@@ -67,7 +67,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                             exception,
                             logMetadata,
                             logger,
-                            callerMemberName)?
+                            callerMemberName)
                         .NormalizeLineTerminators(
                             IExternalNotificationService.MSG_LINE_TERM);
                 }
@@ -88,10 +88,13 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
             }
             catch (Exception ex)
             {
-                await _externalNotificationService?.SendAsync(
-                    LogLevel.Error,
-                    $"BetterStackLoggingService Error: {ex.Message?.PruneEnd(".")}. " +
-                    $"[{logLevel.ToString().ToUpper()}] {logger} {message}");
+                if (_externalNotificationService != null)
+                {
+                    await _externalNotificationService.SendAsync(
+                        LogLevel.Error,
+                        $"BetterStackLoggingService Error: {ex.Message.PruneEnd(".")}. " +
+                            $"[{logLevel.ToString().ToUpper()}] {logger} {message}");
+                }
             }
 
             // Send the external notification if requested.
@@ -108,10 +111,10 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     protected virtual IDictionary<string, object> GetLogMetadata(
         LogLevel logLevel,
         string message,
-        Exception exception,
-        IDictionary<string, object> metadata,
+        Exception? exception,
+        IDictionary<string, object?>? metadata,
         string logger,
-        string callerMemberName)
+        string? callerMemberName)
     {
         var logMetadata = new Dictionary<string, object>
         {
@@ -157,10 +160,10 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     protected virtual string GetExternalNotificationMessage(
         LogLevel logLevel,
         string message,
-        Exception exception,
+        Exception? exception,
         IDictionary<string, object> metadata,
         string logger,
-        string callerMemberName)
+        string? callerMemberName)
     {
         var sb = new StringBuilder();
 
@@ -196,13 +199,13 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         return sb.ToString();
     }
 
-    protected virtual List<string> GetAdditionalExternalNotificationMessageBulletLines(
+    protected virtual List<string>? GetAdditionalExternalNotificationMessageBulletLines(
         LogLevel logLevel,
         string message,
-        Exception exception,
+        Exception? exception,
         IDictionary<string, object> metadata,
         string logger,
-        string callerMemberName)
+        string? callerMemberName)
     {
         return null;
     }

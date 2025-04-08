@@ -15,29 +15,29 @@
 @code {
 
     [Parameter]
-    public string Value { get; set; }
+    public string? Value { get; set; }
 
     [Parameter]
-    public Expression<Func<TValue>> For { get; set; }
+    public Expression<Func<TValue>>? For { get; set; }
 
     [Parameter]
-    public string ForId { get; set; }
+    public string? ForId { get; set; }
 
     [Parameter]
-    public string Class { get; set; }
+    public string? Class { get; set; }
 
     [Parameter]
-    public string Style { get; set; }
+    public string? Style { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     protected override void OnParametersSet()
     {
         if (this.For != null && !this.Value.HasText())
         {
             var memberInfo = this.For.Body.GetMemberInfo();
-            this.Value = memberInfo?.GetDisplayName() ?? memberInfo?.Name;
+            this.Value = memberInfo?.GetDisplayName();
         }
     }
 }

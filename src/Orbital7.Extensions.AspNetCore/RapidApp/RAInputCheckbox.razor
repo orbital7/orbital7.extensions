@@ -6,6 +6,9 @@
 
     // Source: https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web/src/Forms/InputCheckbox.cs
 
-    protected override bool TryParseValueFromString(string value, out TValue result, [System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out string validationErrorMessage)
+    protected override bool TryParseValueFromString(
+        string? value, 
+        out TValue result, 
+        [NotNullWhen(false)] out string? validationErrorMessage)
         => throw new NotSupportedException($"This component does not parse string inputs. Bind to the '{nameof(CurrentValue)}' property, not '{nameof(CurrentValueAsString)}'.");
 }

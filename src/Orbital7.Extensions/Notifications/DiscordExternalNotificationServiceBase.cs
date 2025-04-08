@@ -75,7 +75,7 @@ public abstract class DiscordExternalNotificationServiceBase :
                     channelId,
                     request);
 
-                return result?.Id.HasText() ?? false;
+                return result.Id.HasText();
             }
         }
         catch (Exception)

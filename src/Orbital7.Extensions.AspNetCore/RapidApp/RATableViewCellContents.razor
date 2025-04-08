@@ -1,7 +1,9 @@
 ﻿@typeparam TEntity
 @inject TimeConverter TimeConverter
 
-@if (this.Column != null)
+@if (this.Column != null &&
+     this.Segment != null &&
+     this.Item != null)
 {
     if (this.Column.GetCellContent != null)
     {
@@ -17,9 +19,9 @@
         if (value != null && IsDateTime(value.GetType()))
         {
             <LocalDateTime Value="@((DateTime?)value)"
-                           DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
-                           TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
-                           DefaultValue="@this.Column.DefaultValue" />
+            DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
+            TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
+            DefaultValue="@this.Column.DefaultValue" />
         }
         else
         {
@@ -31,9 +33,9 @@
         if (IsDateTime(this.Column.GetForType()))
         {
             <LocalDateTime Value="@((DateTime?)this.Column.GetForValue(this.Item))"
-                           DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
-                           TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
-                           DefaultValue="@this.Column.DefaultValue" />
+            DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
+            TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
+            DefaultValue="@this.Column.DefaultValue" />
         }
         else
         {
@@ -45,16 +47,16 @@
 @code {
 
     [Parameter]
-    public RATableTemplate<TEntity>.Column<TEntity> Column { get; set; }
+    public RATableTemplate<TEntity>.Column<TEntity>? Column { get; set; }
 
     [Parameter]
-    public RATableViewSegment<TEntity> Segment { get; set; }
+    public RATableViewSegment<TEntity>? Segment { get; set; }
 
     [Parameter]
-    public TEntity Item { get; set; }
+    public TEntity? Item { get; set; }
 
     private bool IsDateTime(
-        Type type)
+        Type? type)
     {
         return type != null && 
             (type == typeof(DateTime) || 

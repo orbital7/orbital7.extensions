@@ -2,15 +2,9 @@
 
 public class ProcessExecutionResult
 {
-    public int ExitCode { get; set; }
-    public string Output { get; set; }
-    public string Error { get; set; }
+    public int? ExitCode { get; set; }
 
-    public ProcessExecutionResult() { }
+    public string? Output { get; set; }
 
-    public ProcessExecutionResult(int exitCode, string output, string error)
-    {
-        this.Output = output;
-        this.Error = error;
-    }
+    public string? Error { get; set; }
 }

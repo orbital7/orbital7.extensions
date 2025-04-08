@@ -10,9 +10,9 @@ public abstract class CompositeLoggingServiceBase :
     public virtual async Task LogAsync(
         LogLevel logLevel, 
         string message, 
-        Exception exception = null, 
-        IDictionary<string, object> metadata = null, 
-        [CallerMemberName] string callerMemberName = null, 
+        Exception? exception = null, 
+        IDictionary<string, object?>? metadata = null, 
+        [CallerMemberName] string? callerMemberName = null, 
         bool sendExternalNotification = false)
     {
         foreach (var loggingService in _loggingServices)
@@ -52,9 +52,9 @@ public abstract class CompositeLoggingServiceBase :
         ILoggingService loggingService,
         LogLevel logLevel,
         string message,
-        Exception exception,
-        IDictionary<string, object> metadata,
-        string callerMemberName,
+        Exception? exception,
+        IDictionary<string, object?>? metadata,
+        string? callerMemberName,
         bool sendExternalNotification)
     {
         return true;

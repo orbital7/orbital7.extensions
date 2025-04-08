@@ -10,8 +10,8 @@ public class MustNotEqualOtherPropertyAttribute : ValidationAttribute
         OtherProperty = otherProperty;
     }
 
-    protected override ValidationResult IsValid(
-        object value, 
+    protected override ValidationResult? IsValid(
+        object? value, 
         ValidationContext validationContext)
     {
         var property = validationContext.ObjectType.GetRuntimeProperty(OtherProperty);
@@ -28,7 +28,11 @@ public class MustNotEqualOtherPropertyAttribute : ValidationAttribute
         var otherValue = property.GetValue(validationContext.ObjectInstance, null);
         if (Equals(value, otherValue))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), new[] { validationContext.MemberName });
+            return new ValidationResult(
+                FormatErrorMessage(validationContext.DisplayName), 
+                validationContext.MemberName.HasText() ? 
+                    [validationContext.MemberName] : 
+                    null);
         }
         return null;
     }

@@ -22,7 +22,7 @@ public static class SecurityClaimsExtensions
         }
     }
 
-    public static string GetUsername(
+    public static string? GetUsername(
         this ClaimsPrincipal principal)
     {
         if (principal == null)

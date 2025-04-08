@@ -4,24 +4,24 @@ public class PostMessageRequest
 {
     [Required]
     [JsonPropertyName("channel")]
-    public string Channel { get; set; }
+    public string? Channel { get; set; }
 
     [Required]
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     [JsonPropertyName("blocks")]
-    public List<object> Blocks { get; set; }
+    public List<object>? Blocks { get; set; }
 
     [JsonPropertyName("thread_ts")]
-    public string ThreadTs { get; set; }
+    public string? ThreadTs { get; set; }
 
     [JsonPropertyName("username")]
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     [JsonPropertyName("icon_url")]
-    public string IconUrl { get; set; }
+    public string? IconUrl { get; set; }
 
     [JsonPropertyName("icon_emoji")]
-    public string IconEmoji { get; set; }
+    public string? IconEmoji { get; set; }
 }

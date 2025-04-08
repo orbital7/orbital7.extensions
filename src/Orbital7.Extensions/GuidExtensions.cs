@@ -2,7 +2,7 @@
 
 public static class GuidExtensions
 {
-    public static string ToShortString(
+    public static string? ToShortString(
         this Guid guid)
     {
         if (guid == Guid.Empty)
@@ -15,7 +15,7 @@ public static class GuidExtensions
         }
     }
 
-    public static string ToShortString(
+    public static string? ToShortString(
         this Guid? guid)
     {
         if (guid == null)

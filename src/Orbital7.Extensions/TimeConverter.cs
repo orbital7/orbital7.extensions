@@ -2,9 +2,9 @@
 
 public class TimeConverter
 {
-    private TimeZoneInfo _customLocalTimeZone;
+    private TimeZoneInfo? _customLocalTimeZone;
 
-    public event EventHandler LocalTimeZoneChanged;
+    public event EventHandler? LocalTimeZoneChanged;
 
     public bool IsCustomLocalTimeZoneSet => _customLocalTimeZone != null;
 
@@ -13,7 +13,7 @@ public class TimeConverter
     public virtual void SetCustomLocalTimeZone(
         string timeZoneId)
     {
-        TimeZoneInfo timeZone = null;
+        TimeZoneInfo? timeZone = null;
 
         if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZoneId, out timeZone))
         {

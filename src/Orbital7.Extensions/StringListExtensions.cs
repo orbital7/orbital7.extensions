@@ -42,8 +42,8 @@ public static class StringListExtensions
 
         // Determine which set should be searched on the basis of length; you want
         // to loop through the smaller set to limit the number of comparisons.
-        List<string> listToSearch = null;
-        List<string> listToCompare = null;
+        List<string>? listToSearch = null;
+        List<string>? listToCompare = null;
         if (list1.Count > list2.Count)
         {
             listToSearch = list2;

@@ -23,7 +23,7 @@ public class RAInputTextArea<TValue> :
         AddAttributeIfNotNullOrEmpty(builder, 2, "name", NameAttributeValue);
         AddAttributeIfNotNullOrEmpty(builder, 3, "class", CssClass);
         builder.AddAttribute(4, "value", CurrentValueAsString);
-        builder.AddAttribute(5, "onchange", EventCallback.Factory.CreateBinder<string>(this, __value => CurrentValueAsString = __value, CurrentValueAsString));
+        builder.AddAttribute(5, "onchange", EventCallback.Factory.CreateBinder<string?>(this, __value => CurrentValueAsString = __value, CurrentValueAsString));
         builder.SetUpdatesAttributeName("value");
         builder.AddElementReferenceCapture(6, __inputReference => Element = __inputReference);
         builder.CloseElement();
@@ -44,19 +44,20 @@ public class RAInputTextArea<TValue> :
     }
 
     protected override bool TryParseValueFromString(
-        string value,
-        out TValue result,
-        out string validationErrorMessage)
+        string? value, 
+        [MaybeNullWhen(false)] out TValue result, 
+        [NotNullWhen(false)] out string? validationErrorMessage)
     {
         validationErrorMessage = null;
 
-        if (typeof(TValue) == typeof(string))
+        if (typeof(TValue) == typeof(string) &&
+            value != null)
         {
             result = (TValue)(object)value;
             return true;
         }
 
-        result = default;
+        result = default!;
         return true;
     }
 }

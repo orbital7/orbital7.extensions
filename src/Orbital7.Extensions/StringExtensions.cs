@@ -56,8 +56,9 @@ public static class StringExtensions
         return null;
     }
 
+    [return: NotNullIfNotNull(nameof(value))]
     public static string? PascalCaseToPhrase(
-        this string? value)
+         this string? value)
     {
         if (value != null)
         {
@@ -303,7 +304,8 @@ public static class StringExtensions
         return firstLetter.ToUpper() + value.PruneStart(1);
     }
 
-    public static string ToSeparatedWords(
+    [return: NotNullIfNotNull(nameof(value))]
+    public static string? ToSeparatedWords(
         this string value)
     {
         if (value != null)
@@ -355,7 +357,7 @@ public static class StringExtensions
     public static string EnsureMaxStringLength(
         this string input, 
         int maxLength, 
-        string truncationSuffix = null)
+        string? truncationSuffix = null)
     {
         if (!string.IsNullOrEmpty(input) && input.Length > maxLength)
         {
@@ -474,7 +476,7 @@ public static class StringExtensions
     }
 
     public static string[] Parse(
-        this string input, 
+        this string? input, 
         bool byWhitespace, 
         bool byPunctuation, 
         bool includeDash, 
@@ -482,29 +484,41 @@ public static class StringExtensions
         bool includeDelimitersInResults, 
         bool removeEmptyEntries)
     {
-        string[] result = null;
+        string[]? result = null;
 
-        string chars = string.Empty;
-        if (byWhitespace) chars += WhitespaceChars;
-        if (byPunctuation) chars += GetPuncuationChars(includeDash, includeUnderscore);
-
-        if (includeDelimitersInResults)
+        if (input.HasText())
         {
-            var delimiters = chars.ToStringArray();
-            if (delimiters.Length > 0)
+            string chars = string.Empty;
+            if (byWhitespace) chars += WhitespaceChars;
+            if (byPunctuation) chars += GetPuncuationChars(includeDash, includeUnderscore);
+
+            if (includeDelimitersInResults)
             {
-                string pattern = "(" + string.Join("|", delimiters.Select(d => Regex.Escape(d)).ToArray()) + ")";
-                result = Regex.Split(input, pattern);
+                var delimiters = chars.ToStringArray();
+                if (delimiters.Length > 0)
+                {
+                    string pattern = "(" + string.Join("|", delimiters.Select(d => Regex.Escape(d)).ToArray()) + ")";
+                    result = Regex.Split(input, pattern);
+                }
             }
-        }
-        else
-        {
-            result = input.Split(chars.ToCharArray(), GetStringSplitOptions(removeEmptyEntries));
+            else
+            {
+                result = input.Split(chars.ToCharArray(), GetStringSplitOptions(removeEmptyEntries));
+            }
         }
 
         // Verify.
-        if (result.Length == 0)
-            result = new string[1] { input };
+        if (result == null || result.Length == 0)
+        {
+            if (input != null)
+            {
+                result = [input];
+            }
+            else
+            {
+                result = [];
+            }
+        }
 
         return result;
     }
@@ -517,18 +531,24 @@ public static class StringExtensions
     }
 
     public static string[] Parse(
-        this string value, 
+        this string? value, 
         string delimiter, 
         bool removeEmptyEntries = true)
     {
         if (value != null)
-            return value.Split(new string[] { delimiter }, GetStringSplitOptions(removeEmptyEntries));
+        {
+            return value.Split(
+                [delimiter],
+                GetStringSplitOptions(removeEmptyEntries));
+        }
         else
-            return new string[] { };
+        {
+            return [];
+        }
     }
 
     public static List<Guid> ParseGuids(
-        this string value, 
+        this string? value, 
         string delimiter, 
         bool allowDuplicates, 
         bool allowEmptyGuid)
@@ -557,34 +577,38 @@ public static class StringExtensions
     }
 
     public static List<string> ParseBetween(
-        this string value, 
+        this string? value, 
         string start, 
         string end, 
         bool removeEmptyEntries)
     {
-        List<string> output = new List<string>();
-        int startLength = start.Length;
-        int endLength = end.Length;
+        List<string> output = [];
 
-        // Find the first index.
-        int startIndex = value.IndexOf(start);
-        while (startIndex >= 0)
+        if (value != null)
         {
-            int endIndex = value.IndexOf(end, startIndex + startLength + 1);
-            if (endIndex >= 0)
-            {
-                // Add the item.
-                int itemIndex = startIndex + startLength;
-                string item = value.Substring(itemIndex, endIndex - itemIndex);
-                if (!removeEmptyEntries || !string.IsNullOrEmpty(item))
-                    output.Add(item);
+            int startLength = start.Length;
+            int endLength = end.Length;
 
-                // Find the start of the next item.
-                startIndex = value.IndexOf(start, endIndex + endLength);
-            }
-            else
+            // Find the first index.
+            int startIndex = value.IndexOf(start);
+            while (startIndex >= 0)
             {
-                break;
+                int endIndex = value.IndexOf(end, startIndex + startLength + 1);
+                if (endIndex >= 0)
+                {
+                    // Add the item.
+                    int itemIndex = startIndex + startLength;
+                    string item = value.Substring(itemIndex, endIndex - itemIndex);
+                    if (!removeEmptyEntries || !string.IsNullOrEmpty(item))
+                        output.Add(item);
+
+                    // Find the start of the next item.
+                    startIndex = value.IndexOf(start, endIndex + endLength);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 
@@ -607,7 +631,7 @@ public static class StringExtensions
     }
 
     public static string FindFirstBetween(
-        this string value, 
+        this string? value, 
         string start, 
         string end)
     {
@@ -615,32 +639,38 @@ public static class StringExtensions
     }
 
     public static string FindFirstBetween(
-        this string value, 
+        this string? value, 
         string start, 
         string end, 
         bool autoTrim)
     {
         string output = string.Empty;
 
-        // Determine lengths.
-        int startLength = start.Length;
-        int endLength = end.Length;
-
-        // Find the first index.
-        int startIndex = value.IndexOf(start);
-        if (startIndex >= 0)
+        if (value != null)
         {
-            int endIndex = value.IndexOf(end, startIndex + startLength + 1);
-            if (endIndex >= 0)
+            // Determine lengths.
+            int startLength = start.Length;
+            int endLength = end.Length;
+
+            // Find the first index.
+            int startIndex = value.IndexOf(start);
+            if (startIndex >= 0)
             {
-                // Add the item.
-                int itemIndex = startIndex + startLength;
-                output = value.Substring(itemIndex, endIndex - itemIndex);
+                int endIndex = value.IndexOf(end, startIndex + startLength + 1);
+                if (endIndex >= 0)
+                {
+                    // Add the item.
+                    int itemIndex = startIndex + startLength;
+                    output = value.Substring(itemIndex, endIndex - itemIndex);
+                }
+            }
+
+            // Trim as necessary.
+            if (autoTrim)
+            {
+                output = output.Trim();
             }
         }
-
-        // Trim as necessary.
-        if (autoTrim) output = output.Trim();
 
         return output;
     }
@@ -685,7 +715,7 @@ public static class StringExtensions
     }
 
     public static string EncloseInQuotes(
-        this string value)
+        this string? value)
     {
         return "\"" + value + "\"";
     }
@@ -852,17 +882,27 @@ public static class StringExtensions
     }
 
     public static int? ParseInt(
-        this string value,
+        this string? value,
         int? defaultValue = null)
     {
-        if (value != null && Int32.TryParse(value, out int parsedValue))
+        if (value != null && int.TryParse(value, out int parsedValue))
+            return parsedValue;
+        else
+            return defaultValue;
+    }
+
+    public static uint? ParseUInt(
+        this string? value,
+        uint? defaultValue = null)
+    {
+        if (value != null && uint.TryParse(value, out uint parsedValue))
             return parsedValue;
         else
             return defaultValue;
     }
 
     public static long? ParseLong(
-        this string value,
+        this string? value,
         long? defaultValue = null)
     {
         if (value != null && long.TryParse(value, out long parsedValue))
@@ -872,7 +912,7 @@ public static class StringExtensions
     }
 
     public static ulong? ParseULong(
-        this string value,
+        this string? value,
         ulong? defaultValue = null)
     {
         if (value != null && ulong.TryParse(value, out ulong parsedValue))
@@ -882,7 +922,7 @@ public static class StringExtensions
     }
 
     public static decimal? ParseDecimal(
-        this string value,
+        this string? value,
         decimal? defaultValue = null)
     {
         if (value != null && decimal.TryParse(value, out decimal parsedValue))
@@ -892,7 +932,7 @@ public static class StringExtensions
     }
 
     public static double? ParseDouble(
-        this string value,
+        this string? value,
         double? defaultValue = null)
     {
         if (value != null && double.TryParse(value, out double parsedValue))
@@ -902,7 +942,7 @@ public static class StringExtensions
     }
 
     public static DateTime? ParseDateTime(
-        this string value,
+        this string? value,
         DateTime? defaultValue = null)
     {
         if (value != null && DateTime.TryParse(value, out DateTime parsedValue))
@@ -912,7 +952,7 @@ public static class StringExtensions
     }
 
     public static bool? ParseBoolean(
-        this string value,
+        this string? value,
         bool? defaultValue = null)
     {
         if (value != null && bool.TryParse(value, out bool parsedValue))
@@ -922,7 +962,7 @@ public static class StringExtensions
     }
 
     public static Guid? ParseGuid(
-        this string value,
+        this string? value,
         Guid? defaultValue = null)
     {
         if (value != null && Guid.TryParse(value, out Guid parsedValue))

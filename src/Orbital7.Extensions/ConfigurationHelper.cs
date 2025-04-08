@@ -105,29 +105,28 @@ public static class ConfigurationHelper
         // Read the existing secrets file.
         var secretsId = GetVerifiedSecretsId<TAssemblyClass>();
 
+        // Initialize secrets.
+        dynamic secrets = new ExpandoObject();
+
         // Ensure secrets path exists.
         var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(secretsId);
         if (Path.Exists(secretsFilePath))
         {
-            dynamic secrets = JsonSerializationHelper.DeserializeFromJsonFile<ExpandoObject>(
-                secretsFilePath);
-
-            // Execute the provided update action.
-            updateAction?.Invoke(secrets);
-
-            // Overwrite the file with changes.
-            JsonSerializationHelper.SerializeToJsonFile(
-                secrets,
-                secretsFilePath,
-                ignoreNullValues: false,
-                indentFormatting: true);
-
-            return secrets;
+            secrets = JsonSerializationHelper.DeserializeFromJsonFile<ExpandoObject>(
+                secretsFilePath) ?? new ExpandoObject();
         }
-        else
-        {
-            throw new Exception($"Secrets file '{secretsFilePath}' does not exist");
-        }
+
+        // Execute the provided update action.
+        updateAction?.Invoke(secrets);
+
+        // Overwrite the file with changes.
+        JsonSerializationHelper.SerializeToJsonFile(
+            secrets,
+            secretsFilePath,
+            ignoreNullValues: false,
+            indentFormatting: true);
+
+        return secrets;
     }
 
     public static string? GetUserSecretsId<TAssemblyClass>()

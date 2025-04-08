@@ -3,10 +3,10 @@
 public abstract class PagedDataResponseBase<TData>
 {
     [JsonPropertyName("data")]
-    public TData[] Data { get; set; }
+    public TData[]? Data { get; set; }
 
     [JsonPropertyName("pagination")]
-    public Pagination Pagination { get; set; }
+    public Pagination? Pagination { get; set; }
 
     public int ParsePageIndex(
         string url)

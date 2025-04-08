@@ -4,10 +4,10 @@ namespace Orbital7.Extensions;
 
 public static class HttpExtensions
 {
-    public static AuthenticationHeaderValue AddAuthorizationHeader(
+    public static AuthenticationHeaderValue? AddAuthorizationHeader(
         this HttpRequestMessage httpRequest,
         string scheme,
-        string parameter)
+        string? parameter)
     {
         if (parameter.HasText())
         {
@@ -20,9 +20,9 @@ public static class HttpExtensions
         return null;
     }
 
-    public static AuthenticationHeaderValue AddBearerTokenAuthorizationHeader(
+    public static AuthenticationHeaderValue? AddBearerTokenAuthorizationHeader(
         this HttpRequestMessage httpRequest,
-        string bearerToken)
+        string? bearerToken)
     {
         return httpRequest.AddAuthorizationHeader("Bearer", bearerToken);
     }

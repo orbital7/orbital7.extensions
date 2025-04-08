@@ -78,7 +78,7 @@ public static class ReflectionHelper
             {
                 list.Add(new PropertyValue()
                 {
-                    Name = property.Item1.Name!,
+                    Name = property.Item1.Name,
 
                     DisplayName = property.Item2.HasText() ?
                         property.Item2 :
@@ -102,12 +102,31 @@ public static class ReflectionHelper
         return memberInfo?.GetDisplayName();
     }
 
-    public static string? GetExecutingAssemblyFolderPath()
+    // This method takes an object parameter so the type can be inferred.
+    public static string? GetPropertyDisplayName<T>(
+        T? obj,
+        Expression<Func<T, object>> property)
+        where T : class
+    {
+        return GetPropertyDisplayName(null, property);
+    }
+
+    public static string GetExecutingAssemblyFolderPath()
     {
         string location = Assembly.GetExecutingAssembly().Location;
         UriBuilder uri = new UriBuilder(location);
-        string path = Uri.UnescapeDataString(uri.Path);
-        return Path.GetDirectoryName(path);
+        var filePath = Uri.UnescapeDataString(uri.Path);
+
+        var folderPath = Path.GetDirectoryName(filePath);
+        if (folderPath.HasText())
+        {
+            return folderPath;
+        }
+        else
+        {
+            throw new Exception(
+                "Unable to determine the folder path of the executing assembly");
+        }
     }
 
     public static List<T> CreateExternalInstances<T>()

@@ -3,7 +3,7 @@
 public class HeartbeatRequest
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("period")]
     public int? Period { get; set; }
@@ -27,7 +27,7 @@ public class HeartbeatRequest
     public int? TeamWait { get; set; }
 
     [JsonPropertyName("heartbeat_group_id")]
-    public string HeartbeatGroupId { get; set; }
+    public string? HeartbeatGroupId { get; set; }
 
     [JsonPropertyName("sort_index")]
     public int? SortIndex { get; set; }
@@ -36,5 +36,5 @@ public class HeartbeatRequest
     public bool? Paused { get; set; }
 
     [JsonPropertyName("policy_id")]
-    public string PolicyId { get; set; }
+    public string? PolicyId { get; set; }
 }

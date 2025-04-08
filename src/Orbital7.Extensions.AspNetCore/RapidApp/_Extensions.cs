@@ -77,19 +77,21 @@ public static class Extensions
     }
 
     public static bool UsesInputTextEditor(
-        this RAEditorType editorType)
+        this RAEditorType? editorType)
     {
-        switch (editorType)
+        if (editorType.HasValue)
         {
-            case RAEditorType.Text:
-            case RAEditorType.PhoneNumber:
-            case RAEditorType.Email:
-            case RAEditorType.ZipCode:
-            case RAEditorType.Password:
-                return true;
-
-            default:
-                return false;
+            switch (editorType)
+            {
+                case RAEditorType.Text:
+                case RAEditorType.PhoneNumber:
+                case RAEditorType.Email:
+                case RAEditorType.ZipCode:
+                case RAEditorType.Password:
+                    return true;
+            }
         }
+
+        return false;
     }
 }

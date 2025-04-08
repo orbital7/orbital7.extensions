@@ -2,12 +2,12 @@
 
 public static class ExpressionExtensions
 {
-    public static TAttribute GetAttribute<TProperty, TAttribute>(
+    public static TAttribute? GetAttribute<TProperty, TAttribute>(
        this Expression<Func<TProperty>> expression)
        where TAttribute : Attribute
     {
         return expression.Body
-            .GetMemberInfo()
+            .GetMemberInfo()?
             .GetAttribute<TAttribute>(isRequired: false);
     }
 
@@ -32,17 +32,17 @@ public static class ExpressionExtensions
         return false;
     }
 
-    public static string GetDisplayName<TProperty>(
+    public static string? GetDisplayName<TProperty>(
         this Expression<Func<TProperty>> expression)
     {
         var memberInfo = expression.Body.GetMemberInfo();
-        return memberInfo.GetDisplayName();
+        return memberInfo?.GetDisplayName();
     }
 
-    public static DisplayAttribute GetDisplayAttribute<TProperty>(
+    public static DisplayAttribute? GetDisplayAttribute<TProperty>(
         this Expression<Func<TProperty>> expression)
     {
         var memberInfo = expression.Body.GetMemberInfo();
-        return memberInfo.GetDisplayAttribute();
+        return memberInfo?.GetDisplayAttribute();
     }
 }

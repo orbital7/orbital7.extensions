@@ -5,12 +5,12 @@ namespace Orbital7.Extensions.Data;
 public abstract class NotifyPropertyChangedBase 
     : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected bool SetProperty<T>(
-        ref T storage,
-        T value,
-        [CallerMemberName] string propertyName = null)
+        ref T? storage,
+        T? value,
+        [CallerMemberName] string? propertyName = null)
     {
         if (Object.Equals(storage, value))
             return false;
@@ -21,8 +21,10 @@ public abstract class NotifyPropertyChangedBase
     }
 
     protected virtual void OnPropertyChanged(
-        string propertyName)
+        string? propertyName)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        this.PropertyChanged?.Invoke(
+            this, 
+            new PropertyChangedEventArgs(propertyName));
     }
 }

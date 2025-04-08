@@ -25,12 +25,17 @@ public static class FileSystemHelper
 
     public static string GetParentFolderPath(string path)
     {
+        string? parentFolderPath = null;
+
         if (Directory.Exists(path))
-            return new DirectoryInfo(path).Parent.FullName;
+            parentFolderPath = new DirectoryInfo(path).Parent?.FullName;
         else if (File.Exists(path))
-            return new FileInfo(path).Directory.Parent.FullName;
-        else
-            throw new Exception("The specified path was not found");
+            parentFolderPath = new FileInfo(path).Directory?.Parent?.FullName;
+        
+        if (parentFolderPath.HasText())
+            return parentFolderPath;
+
+        throw new Exception("The specified path was not found");
     }
 
     public static void EnsureFileIsWritable(string filePath)

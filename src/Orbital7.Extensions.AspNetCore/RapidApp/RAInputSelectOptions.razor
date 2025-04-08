@@ -11,9 +11,9 @@
 @code {
 
     [Parameter]
-    public List<NamedValue<TValue>> SelectList { get; set; }
+    public List<NamedValue<TValue>>? SelectList { get; set; }
 
-    private string GetOptionValue(
+    private string? GetOptionValue(
         NamedValue<TValue> option)
     {
         if (option.Value != null)

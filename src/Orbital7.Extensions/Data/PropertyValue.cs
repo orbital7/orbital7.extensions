@@ -3,5 +3,5 @@
 public class PropertyValue :
     NamedValue<object>
 {
-    public required string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 }

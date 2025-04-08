@@ -3,10 +3,10 @@
 public class HeartbeatAttributes
 {
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("period")]
     public int? Period { get; set; }
@@ -30,7 +30,7 @@ public class HeartbeatAttributes
     public int? TeamWait { get; set; }
 
     [JsonPropertyName("heartbeat_group_id")]
-    public string HeartbeatGroupId { get; set; }
+    public string? HeartbeatGroupId { get; set; }
 
     [JsonPropertyName("sort_index")]
     public int? SortIndex { get; set; }

@@ -27,7 +27,7 @@ public static class NamedValueExtensions
             .Where(x => x != null)
             .Select(x => new NamedValue<T> 
             { 
-                Name = x?.ToString() ?? string.Empty, 
+                Name = x?.ToString(), 
                 Value = x 
             })
             .ToList();

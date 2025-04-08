@@ -2,9 +2,9 @@
 
 public class NamedId<TId>
 {
-    public TId Id { get; set; }
+    public TId? Id { get; init; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     public NamedId()
     {
@@ -19,7 +19,7 @@ public class NamedId<TId>
         this.Name = name;
     }
 
-    public override string ToString()
+    public override string? ToString()
     {
         return this.Name;
     }

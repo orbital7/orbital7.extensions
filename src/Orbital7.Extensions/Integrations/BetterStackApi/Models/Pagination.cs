@@ -3,14 +3,14 @@
 public class Pagination
 {
     [JsonPropertyName("first")]
-    public string First { get; set; }
+    public string? First { get; set; }
 
     [JsonPropertyName("last")]
-    public string Last { get; set; }
+    public string? Last { get; set; }
 
     [JsonPropertyName("prev")]
-    public string Prev { get; set; }
+    public string? Prev { get; set; }
 
     [JsonPropertyName("next")]
-    public string Next { get; set; }
+    public string? Next { get; set; }
 }

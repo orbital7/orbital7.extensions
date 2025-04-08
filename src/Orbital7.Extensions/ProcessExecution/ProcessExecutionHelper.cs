@@ -28,9 +28,9 @@ public static class ProcessExecutionHelper
             return false;
     }
 
-    public static Process IsProcessAlreadyRunning()
+    public static Process? IsProcessAlreadyRunning()
     {
-        Process alreadyRunningProcess = null;
+        Process? alreadyRunningProcess = null;
         Process thisProcess = Process.GetCurrentProcess();
 
         foreach (Process process in Process.GetProcessesByName(thisProcess.ProcessName))
@@ -136,43 +136,84 @@ public static class ProcessExecutionHelper
         return ExecuteProcess(fileName, commandLineArgs, workingFolder, 0, windowVisible);
     }
 
-    public static int ExecuteProcess(string fileName, string commandLineArgs, string workingFolder, int secondsToTimeout)
+    public static int ExecuteProcess(
+        string fileName, 
+        string commandLineArgs, 
+        string workingFolder, 
+        int secondsToTimeout)
     {
-        return CreateProcess(fileName, commandLineArgs, workingFolder, null, secondsToTimeout, false);
+        return CreateProcess(
+            fileName, 
+            commandLineArgs, 
+            workingFolder, 
+            null, 
+            secondsToTimeout, 
+            false);
     }
 
-    public static int ExecuteProcess(string fileName, string commandLineArgs, string workingFolder, int secondsToTimeout, bool windowVisible)
+    public static int ExecuteProcess(
+        string fileName, 
+        string commandLineArgs, 
+        string workingFolder, 
+        int secondsToTimeout, 
+        bool windowVisible)
     {
-        return CreateProcess(fileName, commandLineArgs, workingFolder, null, secondsToTimeout, windowVisible);
+        return CreateProcess(
+            fileName, 
+            commandLineArgs, 
+            workingFolder, 
+            null, 
+            secondsToTimeout, 
+            windowVisible);
     }
 
-    public static int ExecuteProcess(string fileName, string commandLineArgs, string workingFolder, ProcessThreadCompleteHandler completeHandler, bool windowVisible)
+    public static int ExecuteProcess(
+        string fileName, 
+        string commandLineArgs, 
+        string workingFolder, 
+        ProcessThreadCompleteHandler? completeHandler, 
+        bool windowVisible)
     {
-        return CreateProcess(fileName, commandLineArgs, workingFolder, completeHandler, 0, windowVisible);
+        return CreateProcess(
+            fileName, 
+            commandLineArgs, 
+            workingFolder, 
+            completeHandler, 
+            0, 
+            windowVisible);
     }
 
-    public static void ExecuteProcessInSeparateThread(string fileName, string commandLineArgs, ProcessThreadCompleteHandler completeHandler)
+    public static void ExecuteProcessInSeparateThread(
+        string fileName, 
+        string commandLineArgs, 
+        ProcessThreadCompleteHandler? completeHandler)
     {
         ExecuteProcessInSeparateThread(new ProcessStartInfo(fileName, commandLineArgs), completeHandler);
     }
 
-    public static void ExecuteProcessInSeparateThread(ProcessStartInfo processStartInfo, ProcessThreadCompleteHandler completeHandler)
+    public static void ExecuteProcessInSeparateThread(
+        ProcessStartInfo processStartInfo, 
+        ProcessThreadCompleteHandler? completeHandler)
     {
         ExecuteProcessInSeparateThread(processStartInfo, 0, null, completeHandler);
     }
 
     public static void ExecuteProcessInSeparateThread(ProcessStartInfo processStartInfo, 
-        ProcessWriteLineRedirectDelegate processWriteLineRedirectDelegate, ProcessThreadCompleteHandler completeHandler)
+        ProcessWriteLineRedirectDelegate processWriteLineRedirectDelegate, 
+        ProcessThreadCompleteHandler? completeHandler)
     {
         ExecuteProcessInSeparateThread(processStartInfo, 0, processWriteLineRedirectDelegate, completeHandler);
     }
 
-    public static ProcessExecutionThread ExecuteProcessInSeparateThread(ProcessStartInfo processStartInfo, int maxStackSizeInMB, 
-        ProcessWriteLineRedirectDelegate processWriteLineRedirectDelegate, ProcessThreadCompleteHandler completeHandler)
+    public static ProcessExecutionThread ExecuteProcessInSeparateThread(
+        ProcessStartInfo processStartInfo, 
+        int maxStackSizeInMB, 
+        ProcessWriteLineRedirectDelegate? processWriteLineRedirectDelegate, 
+        ProcessThreadCompleteHandler? completeHandler)
     {
         var processThread = new ProcessExecutionThread(processStartInfo, completeHandler, processWriteLineRedirectDelegate);
 
-        Thread thread = null;
+        Thread? thread = null;
         if (maxStackSizeInMB > 0)
             thread = new Thread(new ThreadStart(processThread.Start), maxStackSizeInMB * 1024 * 1024);
         else
@@ -183,7 +224,13 @@ public static class ProcessExecutionHelper
         return processThread;
     }
 
-    private static int CreateProcess(string fileName, string commandLineArgs, string workingFolder, ProcessThreadCompleteHandler completeHandler, int secondsToTimeout, bool windowVisible)
+    private static int CreateProcess(
+        string fileName, 
+        string commandLineArgs, 
+        string workingFolder, 
+        ProcessThreadCompleteHandler? completeHandler, 
+        int secondsToTimeout, 
+        bool windowVisible)
     {
         // Create the process.
         var processStartInfo = new ProcessStartInfo();
