@@ -2,20 +2,30 @@
 
 public static class DictionaryExtensions
 {
-    public static IDictionary<T1, T2> AddSingle<T1, T2>(
-        this IDictionary<T1, T2> dictionary, 
-        T1 key, 
-        T2 value)
+    public static IDictionary<TKey, TValue> AddSingle<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary, 
+        TKey key, 
+        TValue value)
     {
         dictionary.Add(key, value);
 
         return dictionary;
     }
 
+    public static IDictionary<TKey, string> AddSingleOrDefault<TKey>(
+        this IDictionary<TKey, string> dictionary,
+        TKey key,
+        string? value)
+    {
+        dictionary.Add(key, value ?? string.Empty);
 
-    public static IDictionary<T1, T2> AddRange<T1, T2>(
-        this IDictionary<T1, T2> dictionary,
-        IDictionary<T1, T2> dictionaryToAdd)
+        return dictionary;
+    }
+
+
+    public static IDictionary<TKey, TValue> AddRange<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary,
+        IDictionary<TKey, TValue> dictionaryToAdd)
     {
         if (dictionaryToAdd != null && dictionaryToAdd.Any())
         {
@@ -28,19 +38,33 @@ public static class DictionaryExtensions
         return dictionary;
     }
 
-    public static IDictionary<T1, T2> ShallowClone<T1, T2>(
-        this IDictionary<T1, T2> dictionary)
+    public static IDictionary<TKey, TValue> ShallowClone<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary)
+        where TKey : notnull
     {
-        var clonedDictionary = new Dictionary<T1, T2>();
+        var clonedDictionary = new Dictionary<TKey, TValue>();
         clonedDictionary.AddRange(dictionary);
 
         return clonedDictionary;
     }
 
-    public static T2 TryGetValue<T1, T2>(
-        this IDictionary<T1, T2> dictionary,
-        T1 key)
+    public static TValue? TryGetValue<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary,
+        TKey key)
+        where TKey : notnull
     {
-        return dictionary.TryGetValue(key, out T2 value) ? value : default;
+        return dictionary.TryGetValue(key, out TValue? value) ? 
+            value : 
+            default;
+    }
+
+    public static string TryGetValueOrDefault<TKey>(
+        this IDictionary<TKey, string> dictionary,
+        TKey key)
+        where TKey : notnull
+    {
+        return dictionary.TryGetValue(key, out string? value) ? 
+            value :
+            string.Empty;
     }
 }

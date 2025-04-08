@@ -8,7 +8,7 @@ public abstract class DbContextMigrationScriptJobBase<TDbContext> :
 {
     public const string ARG_INITIALIZE = "-Initialize";
 
-    protected string[] Args { get; private set; }
+    protected string[]? Args { get; private set; }
 
     protected bool Initialize { get; private set; }
 
@@ -16,7 +16,7 @@ public abstract class DbContextMigrationScriptJobBase<TDbContext> :
 
     protected IServiceProviderInitializer Initializer { get; private set; }
 
-    protected string InitializingParam =>
+    protected string? InitializingParam =>
         this.Initialize ? " and *INITIALIZE*" : null;
 
     protected DbContextMigrationScriptJobBase(

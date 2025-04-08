@@ -5,9 +5,9 @@ namespace Orbital7.Extensions.Tests;
 
 public class SlackApiTests
 {
-    private string SlackApiToken { get; set; }
+    private string? SlackApiToken { get; set; }
 
-    private string SlackApiTestChannel { get; set; }
+    private string? SlackApiTestChannel { get; set; }
 
     private IHttpClientFactory HttpClientFactory { get; set; }
 
@@ -39,6 +39,7 @@ public class SlackApiTests
         });
 
         // Validate.
+        Assert.NotNull(result);
         Assert.True(result.Ok);
         Assert.Null(result.Error);
         Assert.True(result.Ts.HasText());
@@ -66,6 +67,7 @@ public class SlackApiTests
         });
 
         // Validate.
+        Assert.NotNull(result);
         Assert.False(result.Ok);
         Assert.True(result.Error.HasText());
     }

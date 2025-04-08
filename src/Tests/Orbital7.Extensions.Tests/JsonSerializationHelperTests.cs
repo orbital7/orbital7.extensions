@@ -16,7 +16,7 @@ public class JsonSerializationHelperTests
         var serializedList = JsonSerializationHelper.SerializeToJson(list);
 
         var deserializedList = JsonSerializationHelper.DeserializeFromJson<List<(int i, string s)>>(serializedList);
-
+        Assert.NotNull(deserializedList);
         Assert.Equal(list.Count, deserializedList.Count);
 
         for (int i = 0; i < list.Count; i++)
@@ -40,7 +40,7 @@ public class JsonSerializationHelperTests
         var serializedList = JsonSerializationHelper.SerializeToJson(list);
 
         var deserializedList = JsonSerializationHelper.DeserializeFromJson<List<Tuple<int, string>>>(serializedList);
-
+        Assert.NotNull(deserializedList);
         Assert.Equal(list.Count, deserializedList.Count);
 
         for (int i = 0; i < list.Count; i++)
@@ -53,7 +53,7 @@ public class JsonSerializationHelperTests
     [Fact]
     public void EmptySerialization()
     {
-        Tuple<int, string> tuple = null;
+        Tuple<int, string>? tuple = null;
 
         var serialized = JsonSerializationHelper.SerializeToJson(tuple);
         Assert.Null(serialized);
@@ -69,6 +69,7 @@ public class JsonSerializationHelperTests
         var serialized = JsonSerializationHelper.SerializeToJson(namedId);
         var deserialized = JsonSerializationHelper.DeserializeFromJson<NamedId<Guid>>(serialized);
 
+        Assert.NotNull(deserialized);
         Assert.Equal(namedId.Id, deserialized.Id);
         Assert.Equal(namedId.Name, deserialized.Name);
     }

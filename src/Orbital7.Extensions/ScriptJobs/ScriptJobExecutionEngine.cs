@@ -7,7 +7,7 @@ public static class ScriptJobExecutionEngine
     public static async Task ExecuteAsync(
         ScriptJobBase scriptJob,
         bool unattendedExecution = false,
-        string workingFolderPath = null)
+        string? workingFolderPath = null)
     {
         // Validate.
         if (scriptJob != null)
@@ -61,7 +61,7 @@ public static class ScriptJobExecutionEngine
 
     public static async Task ExecuteAsync<TScriptJob>(
         bool unattendedExecution = false,
-        string workingFolderPath = null)
+        string? workingFolderPath = null)
         where TScriptJob : ScriptJobBase, new()
     {
         var scriptJob = new TScriptJob();

@@ -1,6 +1,6 @@
 ﻿@typeparam TInput where TInput : class
 
-@if (this.Input != null)
+@if (this.Input != null && _validationState != null)
 {
     <EditForm EditContext="@_editContext"
               OnSubmit="@SubmitAsync"
@@ -44,16 +44,16 @@
     public const string DEFAULT_INVALID_INPUT_MSG = "WHOOPS! Please see issue(s) below.";
     public const string CONTROLS_SECTION_NAME = "RAForm-Controls";
 
-    private EditContext _editContext;
-    private RAFormValidationState _validationState;
+    private EditContext? _editContext;
+    private RAFormValidationState? _validationState;
 
     public bool IsProcessing { get; private set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
-    public TInput Input { get; set; }
+    public TInput? Input { get; set; }
 
     [Parameter]
     public bool ValidateInput { get; set; } = true;
@@ -65,22 +65,22 @@
     public string InvalidInputMessage { get; set; } = DEFAULT_INVALID_INPUT_MSG;
 
     [Parameter]
-    public Func<TInput, RAFormValidationState, Task> OnValidateInputBeforeSubmit { get; set; }
+    public Func<TInput, RAFormValidationState, Task>? OnValidateInputBeforeSubmit { get; set; }
 
     [Parameter]
-    public Func<Task> OnBeforeSubmit { get; set; }
+    public Func<Task>? OnBeforeSubmit { get; set; }
 
     [Parameter]
-    public Func<Task<object>> OnSubmit { get; set; }
+    public Func<Task<object>>? OnSubmit { get; set; }
 
     [Parameter]
-    public Func<RAFormSubmissionResult, Task> OnAfterSubmit { get; set; }
+    public Func<RAFormSubmissionResult, Task>? OnAfterSubmit { get; set; }
 
     [Parameter]
-    public string Class { get; set; }
+    public string? Class { get; set; }
 
     [Parameter]
-    public string FormName { get; set; }
+    public string? FormName { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -95,6 +95,17 @@
 
     public async Task<RAFormSubmissionResult> SubmitAsync()
     {
+        // Validate state.
+        if (_validationState == null || this.Input == null)
+        {
+            throw new InvalidOperationException("Form has no input / validation state");
+        }
+        else if (this.OnSubmit == null)
+        {
+            throw new InvalidOperationException("Form has no submit handler");
+        }
+
+        // Form the result.
         var result = new RAFormSubmissionResult()
         {
             ValidationState = _validationState,

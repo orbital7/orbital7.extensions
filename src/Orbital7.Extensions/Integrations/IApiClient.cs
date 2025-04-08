@@ -10,21 +10,21 @@ public interface IApiClient
 
     Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request);
+        TRequest? request);
 
     Task<TResponse> SendPostRequestAsync<TResponse>(
         string url);
 
     Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request);
+        TRequest? request);
 
     Task<TResponse> SendPatchRequestAsync<TResponse>(
         string url);
 
     Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request);
+        TRequest? request);
 
     Task<TResponse> SendPutRequestAsync<TResponse>(
         string url);

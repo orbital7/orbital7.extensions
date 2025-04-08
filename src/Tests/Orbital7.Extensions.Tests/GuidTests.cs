@@ -7,11 +7,12 @@ public class GuidTests
     {
         var guid = GuidFactory.NextSequential();
         var encodedGuid = guid.ToShortString();
-        var decodedGuid = GuidFactory.FromString(encodedGuid);
-
         Assert.NotNull(encodedGuid);
         Assert.Equal(GuidFactory.SHORT_GUID_LENGTH, encodedGuid.Length);
+
+        var decodedGuid = GuidFactory.FromString(encodedGuid);
         Assert.Equal(guid, decodedGuid);
+
         Assert.Null(Guid.Empty.ToShortString());
         Assert.Null(((Guid?)null).ToShortString());
     }

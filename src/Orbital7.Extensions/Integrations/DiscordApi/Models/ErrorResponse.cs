@@ -3,10 +3,10 @@
 public class ErrorResponse
 {
     [JsonPropertyName("code")]
-    public long Code { get; set; }
+    public long? Code { get; set; }
 
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
     public override string ToString()
     {

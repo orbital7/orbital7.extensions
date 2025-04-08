@@ -79,12 +79,12 @@ else
 
 @code {
 
-    private string _inputCreationErrorMessage;
+    private string? _inputCreationErrorMessage;
 
-    private RAForm<TInput> _form;
+    private RAForm<TInput> _form = default!;
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public string ActionButtonClass { get; set; } = "btn-primary";
@@ -105,7 +105,7 @@ else
     public bool ShowCancelButton { get; set; } = true;
 
     [Parameter]
-    public TInput Input { get; set; }
+    public TInput? Input { get; set; }
 
     [Parameter]
     public bool ValidateInput { get; set; } = true;
@@ -114,13 +114,13 @@ else
     public string InvalidInputMessage { get; set; } = RAForm<TInput>.DEFAULT_INVALID_INPUT_MSG;
 
     [Parameter]
-    public Func<Task<TInput>> CreateInput { get; set; }
+    public Func<Task<TInput>>? CreateInput { get; set; }
 
     [Parameter]
-    public Func<TInput, RAFormValidationState, Task> OnValidateInputBeforeSubmit { get; set; }
+    public Func<TInput, RAFormValidationState, Task>? OnValidateInputBeforeSubmit { get; set; }
 
     [Parameter]
-    public Func<Task<object>> OnSubmit { get; set; }
+    public Func<Task<object>>? OnSubmit { get; set; }
 
     [CascadingParameter] 
     protected BlazoredModalInstance ModalInstance { get; set; } = default!;

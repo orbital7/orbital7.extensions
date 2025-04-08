@@ -2,9 +2,9 @@
 
 public class NamedValue<TValue>
 {
-    public string Name { get; set; }
+    public string? Name { get; init; }
 
-    public TValue Value { get; set; }
+    public TValue? Value { get; set; }
 
     public NamedValue()
     {
@@ -13,7 +13,7 @@ public class NamedValue<TValue>
 
     public NamedValue(
         string name,
-        TValue value)
+        TValue? value)
     {
         this.Name = name;
         this.Value = value;

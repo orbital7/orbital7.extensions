@@ -123,7 +123,7 @@ public static class EntityFrameworkCoreExtensions
         return entry.Entity;
     }
 
-    public static async Task<TEntity> GetAsync<TEntity, TKey>(
+    public static async Task<TEntity?> GetAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
         TKey id,
         params string[] includePaths)
@@ -133,7 +133,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(entitySet, id, true, null, includePaths);
     }
 
-    public static async Task<TEntity> GetAsync<TEntity, TKey>(
+    public static async Task<TEntity?> GetAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
         TKey id,
         CancellationToken cancellationToken,
@@ -144,7 +144,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(entitySet, id, true, cancellationToken, includePaths);
     }
 
-    public static async Task<TOutput> GetAsync<TEntity, TKey, TOutput>(
+    public static async Task<TOutput?> GetAsync<TEntity, TKey, TOutput>(
         this DbSet<TEntity> entitySet,
         TKey id,
         Expression<Func<TEntity, TOutput>> select,
@@ -158,7 +158,7 @@ public static class EntityFrameworkCoreExtensions
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public static async Task<TEntity> GetWithTrackingAsync<TEntity, TKey>(
+    public static async Task<TEntity?> GetWithTrackingAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
         TKey id,
         params string[] includePaths)
@@ -168,7 +168,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(entitySet, id, false, null, includePaths);
     }
 
-    public static async Task<TEntity> GetWithTrackingAsync<TEntity, TKey>(
+    public static async Task<TEntity?> GetWithTrackingAsync<TEntity, TKey>(
         this DbSet<TEntity> entitySet,
         TKey id,
         CancellationToken cancellationToken,
@@ -179,7 +179,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(entitySet, id, false, cancellationToken, includePaths);
     }
 
-    public static async Task<TEntity> GetAsync<TEntity>(
+    public static async Task<TEntity?> GetAsync<TEntity>(
         this IQueryable<TEntity> query,
         params string[] includePaths)
         where TEntity : class
@@ -187,7 +187,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(query, true, null, includePaths);
     }
 
-    public static async Task<TEntity> GetAsync<TEntity>(
+    public static async Task<TEntity?> GetAsync<TEntity>(
         this IQueryable<TEntity> query,
         CancellationToken cancellationToken,
         params string[] includePaths)
@@ -196,7 +196,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(query, true, cancellationToken, includePaths);
     }
 
-    public static async Task<TEntity> GetWithTrackingAsync<TEntity>(
+    public static async Task<TEntity?> GetWithTrackingAsync<TEntity>(
         this IQueryable<TEntity> query,
         params string[] includePaths)
         where TEntity : class
@@ -204,7 +204,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(query, false, null, includePaths);
     }
 
-    public static async Task<TEntity> GetWithTrackingAsync<TEntity>(
+    public static async Task<TEntity?> GetWithTrackingAsync<TEntity>(
         this IQueryable<TEntity> query,
         CancellationToken cancellationToken,
         params string[] includePaths)
@@ -213,7 +213,7 @@ public static class EntityFrameworkCoreExtensions
         return await ExecuteGetAsync(query, false, cancellationToken, includePaths);
     }
 
-    public static async Task<TOutput> GetAsync<TEntity, TOutput>(
+    public static async Task<TOutput?> GetAsync<TEntity, TOutput>(
         this IQueryable<TEntity> query,
         Expression<Func<TEntity, TOutput>> select,
         CancellationToken cancellationToken = default)
@@ -269,7 +269,7 @@ public static class EntityFrameworkCoreExtensions
             .ToListAsync(cancellationToken);
     }
 
-    private static async Task<TEntity> ExecuteGetAsync<TEntity, TKey>(
+    private static async Task<TEntity?> ExecuteGetAsync<TEntity, TKey>(
         DbSet<TEntity> entitySet,
         TKey id,
         bool untracked,
@@ -286,7 +286,7 @@ public static class EntityFrameworkCoreExtensions
             includePaths);
     }
 
-    private static async Task<TEntity> ExecuteGetAsync<TEntity>(
+    private static async Task<TEntity?> ExecuteGetAsync<TEntity>(
         IQueryable<TEntity> query,
         bool untracked,
         CancellationToken? cancellationToken,

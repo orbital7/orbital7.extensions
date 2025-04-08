@@ -15,28 +15,28 @@ namespace Orbital7.Extensions.AspNetCore.RapidApp;
 /// </summary>
 public class RAValidationMessage<TValue> : ComponentBase, IDisposable
 {
-    private EditContext _previousEditContext;
-    private Expression<Func<TValue>> _previousFieldAccessor;
-    private readonly EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+    private EditContext? _previousEditContext;
+    private Expression<Func<TValue>>? _previousFieldAccessor;
+    private readonly EventHandler<ValidationStateChangedEventArgs>? _validationStateChangedHandler;
     private FieldIdentifier _fieldIdentifier;
 
     /// <summary>
     /// Gets or sets a collection of additional attributes that will be applied to the created <c>div</c> element.
     /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
     [CascadingParameter] EditContext CurrentEditContext { get; set; } = default!;
 
     // JVE: Added cascading RAFormInput parameter.
-    [CascadingParameter(Name = RAFormValidationState.CASCADING_PARAMETER_RAFormInput)] public object RAFormInput { get; set; }
+    [CascadingParameter(Name = RAFormValidationState.CASCADING_PARAMETER_RAFormInput)] public object? RAFormInput { get; set; }
 
     // JVE: Added cascading RAFormInputForToString parameter.
-    [CascadingParameter(Name = RAFormValidationState.CASCADING_PARAMETER_RAChildInputValidationFacilitatorForToString)] public string RAChildInputValidationFacilitatorForToString { get; set; }
+    [CascadingParameter(Name = RAFormValidationState.CASCADING_PARAMETER_RAChildInputValidationFacilitatorForToString)] public string? RAChildInputValidationFacilitatorForToString { get; set; }
 
     /// <summary>
     /// Specifies the field for which validation messages should be displayed.
     /// </summary>
-    [Parameter] public Expression<Func<TValue>> For { get; set; }
+    [Parameter] public Expression<Func<TValue>>? For { get; set; }
 
     /// <summary>`
     /// Constructs an instance of <see cref="ValidationMessage{TValue}"/>.
@@ -61,7 +61,7 @@ public class RAValidationMessage<TValue> : ComponentBase, IDisposable
             throw new InvalidOperationException($"{GetType()} requires a value for the " +
                 $"{nameof(For)} parameter.");
         }
-        else if (For != _previousFieldAccessor)
+        else if (For != _previousFieldAccessor && this.RAFormInput != null)
         {
             // JVE: Here's the change we're making: use the input as the
             // model and parse out the full field name (including nested
@@ -91,14 +91,18 @@ public class RAValidationMessage<TValue> : ComponentBase, IDisposable
 
     private string ParseRAFieldName()
     {
-        var expressionToString = this.For.ToString();
-        var propertyPath = expressionToString.Parse(").")[1];
-        var propertyFrags = propertyPath.Parse(".");
-
         var fieldName = String.Empty;
-        for (int i = 1; i < propertyFrags.Length; i++)
+
+        if (this.For != null)
         {
-            fieldName += propertyFrags[i] + ".";
+            var expressionToString = this.For.ToString();
+            var propertyPath = expressionToString.Parse(").")[1];
+            var propertyFrags = propertyPath.Parse(".");
+
+            for (int i = 1; i < propertyFrags.Length; i++)
+            {
+                fieldName += propertyFrags[i] + ".";
+            }
         }
 
         return fieldName.PruneEnd(".");

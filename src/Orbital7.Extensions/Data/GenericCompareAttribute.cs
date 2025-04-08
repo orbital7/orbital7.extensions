@@ -11,26 +11,20 @@ public enum GenericCompareOperator
 public sealed class GenericCompareAttribute : 
     ValidationAttribute
 {
-    private GenericCompareOperator operatorname = GenericCompareOperator.GreaterThanOrEqual;
+    private string CompareToPropertyName { get; set; }
 
-    public string CompareToPropertyName { get; set; }
+    private GenericCompareOperator OperatorName { get; set; }
 
-    public GenericCompareOperator OperatorName 
-    { 
-        get 
-        { 
-            return operatorname; 
-        } 
-        set 
-        { 
-            operatorname = value; 
-        } 
+    public GenericCompareAttribute(
+        string compareToPropertyName,
+        GenericCompareOperator operatorName)
+    {
+        this.CompareToPropertyName = compareToPropertyName;
+        this.OperatorName = operatorName;
     }
 
-    public GenericCompareAttribute() : base() { }
-
-    protected override ValidationResult IsValid(
-        object value, 
+    protected override ValidationResult? IsValid(
+        object? value, 
         ValidationContext validationContext)
     {
         string operstring = OperatorName == GenericCompareOperator.GreaterThan ?
@@ -40,15 +34,29 @@ public sealed class GenericCompareAttribute :
         OperatorName == GenericCompareOperator.LessThanOrEqual ? "less than or equal to " : "";
         var basePropertyInfo = validationContext.ObjectType.GetRuntimeProperty(CompareToPropertyName);
 
-        var valOther = (IComparable)basePropertyInfo.GetValue(validationContext.ObjectInstance, null);
+        var valOther = basePropertyInfo?.GetValue(validationContext.ObjectInstance, null) as IComparable;
+        var valThis = value as IComparable;
 
-        var valThis = (IComparable)value;
+        if (valThis == null || valOther == null)
+        {
+            return new ValidationResult("Comparison values must implement IComparable.");
+        }
 
-        if (operatorname == GenericCompareOperator.GreaterThan && valThis.CompareTo(valOther) <= 0 ||
-            operatorname == GenericCompareOperator.GreaterThanOrEqual && valThis.CompareTo(valOther) < 0 ||
-            operatorname == GenericCompareOperator.LessThan && valThis.CompareTo(valOther) >= 0 ||
-            operatorname == GenericCompareOperator.LessThanOrEqual && valThis.CompareTo(valOther) > 0)
-            return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName });
-        return null;
+        bool isValid = OperatorName switch
+        {
+            GenericCompareOperator.GreaterThan => valThis.CompareTo(valOther) > 0,
+            GenericCompareOperator.GreaterThanOrEqual => valThis.CompareTo(valOther) >= 0,
+            GenericCompareOperator.LessThan => valThis.CompareTo(valOther) < 0,
+            GenericCompareOperator.LessThanOrEqual => valThis.CompareTo(valOther) <= 0,
+            _ => false
+        };
+
+        return isValid ? 
+            ValidationResult.Success :
+            new ValidationResult(
+                FormatErrorMessage(validationContext.DisplayName),
+                validationContext.MemberName.HasText() ?
+                    [validationContext.MemberName] :
+                    null);
     }
 }

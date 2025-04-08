@@ -13,14 +13,14 @@ public abstract class OAuthApiClientBase :
 
     protected virtual int OAuthAccessTokenPreExpirationCutoffInMinutes => 10;
 
-    private Func<IServiceProvider, TokenInfo, Task> OnTokenInfoUpdated { get; set; }
+    private Func<IServiceProvider, TokenInfo, Task>? OnTokenInfoUpdated { get; set; }
 
     protected OAuthApiClientBase(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
         string clientId,
         TokenInfo tokenInfo,
-        Func<IServiceProvider, TokenInfo, Task> onTokenInfoUpdated = null) :
+        Func<IServiceProvider, TokenInfo, Task>? onTokenInfoUpdated = null) :
         base(httpClientFactory)
     {
         this.ServiceProvider = serviceProvider;
@@ -59,14 +59,25 @@ public abstract class OAuthApiClientBase :
     private async Task UpdateTokenInfoAsync(
         OAuthTokenResponse response)
     {
+        // Validate abnd record access token info.
+        if (response.AccessToken.HasText() &&
+            response.ExpiresIn.HasValue)
+        {
+            this.TokenInfo.AccessToken = response.AccessToken;
+            this.TokenInfo.AccessTokenExpirationDateTimeUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn.Value);
+        }
+        else
+        {
+            throw new Exception("Response does not contain access token and/or expiration time");
+        }
+
+        // Sometimes we get a null refresh token, so only overwrite if we were returned one.
         if (response.RefreshToken.HasText())
         {
             this.TokenInfo.RefreshToken = response.RefreshToken;
         }
 
-        this.TokenInfo.AccessToken = response.AccessToken;
-        this.TokenInfo.AccessTokenExpirationDateTimeUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
-
+        // Handle the token info updated event.
         if (this.OnTokenInfoUpdated != null)
         {
             await this.OnTokenInfoUpdated.Invoke(this.ServiceProvider, this.TokenInfo);
@@ -115,9 +126,10 @@ public abstract class OAuthApiClientBase :
     }
 
     protected virtual bool IsAuthorizationRequired(
-        Uri uri)
+        Uri? uri)
     {
-        if (uri.ToString().Equals(this.OAuthTokenEndpointUrl, StringComparison.CurrentCultureIgnoreCase))
+        if (uri == null || 
+            uri.ToString().Equals(this.OAuthTokenEndpointUrl, StringComparison.CurrentCultureIgnoreCase))
         {
             return false;
         }

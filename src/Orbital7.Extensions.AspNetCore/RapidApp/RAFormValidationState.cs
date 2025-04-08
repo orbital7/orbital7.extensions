@@ -56,32 +56,38 @@ public class RAFormValidationState
     }
 
     public void AddPropertyError(
-        string propertyName,
-        string error)
+        string? propertyName,
+        string? error)
     {
-        if (propertyName.HasText())
+        if (error.HasText())
         {
-            // TODO: Need to setup cascading parameter for Model in RAForm that get into RAValidationMessage, then use that
-            // as the model to create the FieldIdentifier.
-            _validationMessageStore.Add(
-                new FieldIdentifier(_editContext.Model, propertyName), //this.EditContext.Field(propertyName), 
-                error);
+            if (propertyName.HasText())
+            {
+                // TODO: Need to setup cascading parameter for Model in RAForm that get into RAValidationMessage, then use that
+                // as the model to create the FieldIdentifier.
+                _validationMessageStore.Add(
+                    new FieldIdentifier(_editContext.Model, propertyName), //this.EditContext.Field(propertyName), 
+                    error);
 
-            this.FieldErrors.Add((propertyName, error));
-        }
-        else
-        {
-            AddGeneralError(error);
+                this.FieldErrors.Add((propertyName, error));
+            }
+            else
+            {
+                AddGeneralError(error);
+            }
         }
     }
 
     public void AddGeneralError(
-        string error)
+        string? error)
     {
-        _validationMessageStore.Add(
-            new FieldIdentifier(_editContext.Model, fieldName: string.Empty), 
-            error);
+        if (error.HasText())
+        {
+            _validationMessageStore.Add(
+                new FieldIdentifier(_editContext.Model, fieldName: string.Empty),
+                error);
 
-        this.GeneralErrors.Add(error);
+            this.GeneralErrors.Add(error);
+        }
     }
 }

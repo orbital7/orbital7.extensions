@@ -4,13 +4,16 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddDiscordApi(
         this IServiceCollection services,
-        string botToken)
+        string? botToken)
     {
-        services.AddScoped<IChannelsApi, ChannelsApi>(
-            (serviceProvider) => new ChannelsApi(
-                new DiscordApiClient(
-                    serviceProvider.GetRequiredService<IHttpClientFactory>(),
-                    botToken)));
+        if (botToken.HasText())
+        {
+            services.AddScoped<IChannelsApi, ChannelsApi>(
+                (serviceProvider) => new ChannelsApi(
+                    new DiscordApiClient(
+                        serviceProvider.GetRequiredService<IHttpClientFactory>(),
+                        botToken)));
+        }
 
         return services;
     }

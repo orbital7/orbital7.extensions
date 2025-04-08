@@ -32,16 +32,16 @@ else
 
     private bool _isLoading = true;
 
-    private string _loadingErrorMessage;
+    private string? _loadingErrorMessage;
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public string CancelButtonText { get; set; } = "Close";
 
     [Parameter]
-    public Func<Task> OnLoad { get; set; }
+    public Func<Task>? OnLoad { get; set; }
 
     [CascadingParameter]
     protected BlazoredModalInstance ModalInstance { get; set; } = default!;

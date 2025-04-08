@@ -1,37 +1,61 @@
 ﻿namespace Orbital7.Extensions.ProcessExecution;
 
-public delegate void ProcessThreadCompleteHandler(int exitCode);
-public delegate void ProcessWriteLineRedirectDelegate(string line);
+public delegate void ProcessThreadCompleteHandler(int? exitCode);
+public delegate void ProcessWriteLineRedirectDelegate(string? line);
 
 public class ProcessExecutionThread
 {
-    private ProcessThreadCompleteHandler CompleteHandler { get; set; }
-    private ProcessWriteLineRedirectDelegate WriteLineRedirect { get; set; }
+    private ProcessThreadCompleteHandler? CompleteHandler { get; set; }
+    private ProcessWriteLineRedirectDelegate? WriteLineRedirect { get; set; }
     private ProcessStartInfo StartInfo { get; set; }
-    private Process Process { get; set; }
+    private Process? Process { get; set; }
     private int TimeoutInSeconds { get; set; }
 
-    public ProcessExecutionThread(ProcessStartInfo startInfo, ProcessThreadCompleteHandler completeHandler)
+    public ProcessExecutionThread(
+        ProcessStartInfo startInfo, 
+        ProcessThreadCompleteHandler? completeHandler)
     {
         this.StartInfo = startInfo;
         this.CompleteHandler = completeHandler;
         this.TimeoutInSeconds = 0;
     }
 
-    public ProcessExecutionThread(ProcessStartInfo startInfo, ProcessThreadCompleteHandler completeHandler, int secondsToTimeout)
-        : this(startInfo, completeHandler)
+    public ProcessExecutionThread(
+        ProcessStartInfo startInfo, 
+        ProcessThreadCompleteHandler? completeHandler, 
+        int secondsToTimeout) :
+        this(
+              startInfo, 
+              completeHandler)
     {
         this.TimeoutInSeconds = secondsToTimeout;
     }
 
-    public ProcessExecutionThread(ProcessStartInfo startInfo, ProcessThreadCompleteHandler completeHandler, int secondsToTimeout, ProcessWriteLineRedirectDelegate processWriteLineRedirectDelegate)
-        : this(startInfo, completeHandler, secondsToTimeout)
+    public ProcessExecutionThread(
+        ProcessStartInfo startInfo, 
+        ProcessThreadCompleteHandler? completeHandler, 
+        int secondsToTimeout, 
+        ProcessWriteLineRedirectDelegate? processWriteLineRedirectDelegate) :
+        this(
+            startInfo, 
+            completeHandler, 
+            secondsToTimeout)
     {
         this.WriteLineRedirect = processWriteLineRedirectDelegate;
     }
 
-    public ProcessExecutionThread(ProcessStartInfo startInfo, ProcessThreadCompleteHandler completeHandler, ProcessWriteLineRedirectDelegate processWriteLineRedirectDelegate)
-        : this(startInfo, completeHandler, 0, processWriteLineRedirectDelegate) { }
+    public ProcessExecutionThread(
+        ProcessStartInfo startInfo, 
+        ProcessThreadCompleteHandler? completeHandler, 
+        ProcessWriteLineRedirectDelegate? processWriteLineRedirectDelegate) :
+        this(
+            startInfo, 
+            completeHandler, 
+            0, 
+            processWriteLineRedirectDelegate)
+    {
+
+    }
 
     public void Start()
     {
@@ -78,13 +102,13 @@ public class ProcessExecutionThread
 
     void Process_DataReceived(object sender, DataReceivedEventArgs e)
     {
-        this.WriteLineRedirect(e.Data);
+        this.WriteLineRedirect?.Invoke(e.Data);
     }
 
     public void Kill()
     {
         // Kill.
-        this.Process.Kill();
+        this.Process?.Kill();
 
         // Notify complete.
         NotifyCompletion();
@@ -93,6 +117,6 @@ public class ProcessExecutionThread
     private void NotifyCompletion()
     {
         if (this.CompleteHandler != null)
-            this.CompleteHandler(this.Process.ExitCode);
+            this.CompleteHandler(this.Process?.ExitCode);
     }
 }

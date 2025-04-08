@@ -1,12 +1,20 @@
-﻿namespace Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-public class TrimmedFormValueProviderFactory
-    : IValueProviderFactory
+namespace Orbital7.Extensions.AspNetCore.Mvc;
+
+public class TrimmedFormValueProviderFactory :
+    IValueProviderFactory
 {
-    public Task CreateValueProviderAsync(ValueProviderFactoryContext context)
+    public Task CreateValueProviderAsync(
+        ValueProviderFactoryContext context)
     {
         if (context.ActionContext.HttpContext.Request.HasFormContentType)
-            context.ValueProviders.Add(new TrimmedFormValueProvider(context.ActionContext.HttpContext.Request.Form));
+        {
+            context.ValueProviders.Add(
+                new TrimmedFormValueProvider(
+                    context.ActionContext.HttpContext.Request.Form));
+        }
+
         return Task.CompletedTask;
     }
 }

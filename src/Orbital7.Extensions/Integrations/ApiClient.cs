@@ -11,7 +11,7 @@ public class ApiClient :
 
     protected virtual bool DeserializeEnumsFromStrings => true;
 
-    protected virtual string HttpClientName => null;
+    protected virtual string? HttpClientName => null;
 
     protected virtual string CharSet => "utf-8";
 
@@ -41,7 +41,7 @@ public class ApiClient :
 
     public async Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request)
+        TRequest? request)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Post,
@@ -60,7 +60,7 @@ public class ApiClient :
 
     public async Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request)
+        TRequest? request)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Patch,
@@ -79,7 +79,7 @@ public class ApiClient :
 
     public async Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest request)
+        TRequest? request)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Put,
@@ -109,15 +109,15 @@ public class ApiClient :
     private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(
         HttpMethod method,
         string url,
-        TRequest request)
+        TRequest? request)
     {
         // Serialize the request body.
-        string requestBody = request != null ?
+        string? requestBody = request != null ?
             ExecuteSerializeRequestBody(request) :
             null;
 
         // Create request body content.
-        HttpContent content = requestBody.HasText() ?
+        HttpContent? content = requestBody.HasText() ?
             new StringContent(requestBody)
             {
                 Headers =
@@ -133,7 +133,7 @@ public class ApiClient :
     private async Task<TResponse> ExecuteSendRequestAsync<TResponse>(
         HttpMethod method,
         string url,
-        HttpContent content)
+        HttpContent? content)
     {
         var uri = new Uri(url);
 
@@ -160,16 +160,7 @@ public class ApiClient :
 
                 if (!httpResponse.IsSuccessStatusCode)
                 {
-                    var ex =  CreateUnsuccessfulResponseException(httpResponse, responseBody);
-
-                    if (ex != null)
-                    {
-                        throw ex;
-                    }
-                    else
-                    {
-                        return default;
-                    }
+                    throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
                 }
                 else
                 {
@@ -200,15 +191,15 @@ public class ApiClient :
         return new Exception(responseBody);
     }
 
-    private string ExecuteSerializeRequestBody<TRequest>(
-        TRequest request)
+    private string? ExecuteSerializeRequestBody<TRequest>(
+        TRequest? request)
     {
         var requestType = typeof(TRequest);
 
         // If we're serializing a string request, just return the request body.
         if (requestType == typeof(string))
         {
-            return request.ToString();
+            return request?.ToString();
         }
         // Else serialize to json.
         else
@@ -217,8 +208,8 @@ public class ApiClient :
         }
     }
 
-    protected virtual string SerializeRequestBody<TRequest>(
-        TRequest request)
+    protected virtual string? SerializeRequestBody<TRequest>(
+        TRequest? request)
     {
         return JsonSerializationHelper.SerializeToJson(
             request,

@@ -14,11 +14,11 @@ public static class ListExtensions
         return new DateTime((long)temp);
     }
 
-    public static string ToCommaAndString(
+    public static string? ToCommaAndString(
         this IList list, 
         string nullValue = "")
     {
-        if (list != null || list.Count == 0)
+        if (list != null && list.Count > 0)
         {
             if (list.Count == 1)
             {
@@ -74,7 +74,7 @@ public static class ListExtensions
                     sb.Append(delim);
 
                 // Get the item text.
-                string value = GetItemValue(item, nullValue);
+                var value = GetItemValue(item, nullValue);
                 if (encloseInQuotes)
                     value = value.EncloseInQuotes();
 
@@ -90,11 +90,12 @@ public static class ListExtensions
         return sb.ToString();
     }
 
-    private static string GetItemValue(
-        object listItem, 
-        string nullValue)
+    private static string? GetItemValue(
+        object? listItem, 
+        string? nullValue)
     {
-        string value = nullValue;
+        var value = nullValue;
+
         if (listItem != null)
             value = listItem.ToString();
 
@@ -129,7 +130,7 @@ public static class ListExtensions
         List<List<T>> lists = new List<List<T>>();
 
         // Loop.
-        List<T> currentList = null;
+        List<T>? currentList = null;
         for (int i = 0; i < list.Count; i++)
         {
             if ((currentList == null) || (currentList.Count == maxSize))
@@ -193,9 +194,9 @@ public static class ListExtensions
     public static bool CanMoveItemUp(
         this IList list, 
         object listItem, 
-        int? listItemIndex)
+        [NotNullWhen(true)] int? listItemIndex)
     {
-        return (listItem != null) && (listItemIndex != null) && (listItemIndex > 0);
+        return (listItem != null) && (listItemIndex.HasValue) && (listItemIndex > 0);
     }
 
     public static bool CanMoveItemDown(
@@ -207,10 +208,10 @@ public static class ListExtensions
 
     public static bool CanMoveItemDown(
         this IList list, 
-        object listItem, 
-        int? listItemIndex)
+        object listItem,
+        [NotNullWhen(true)] int? listItemIndex)
     {
-        return (listItem != null) && (listItemIndex != null) && (listItemIndex < list.Count - 1);
+        return (listItem != null) && (listItemIndex.HasValue) && (listItemIndex < list.Count - 1);
     }
 
     public static bool MoveItemUp(
@@ -229,7 +230,7 @@ public static class ListExtensions
 
         if (CanMoveItemUp(list, listItem, listItemIndex))
         {
-            int insertIndex = (int)listItemIndex - 1;
+            int insertIndex = listItemIndex.Value - 1;
             MoveItem(list, listItem, insertIndex);
             success = true;
         }
@@ -253,7 +254,7 @@ public static class ListExtensions
 
         if (CanMoveItemDown(list, listItem, listItemIndex))
         {
-            int insertIndex = (int)listItemIndex + 1;
+            int insertIndex = listItemIndex.Value + 1;
             MoveItem(list, listItem, insertIndex);
             success = true;
         }

@@ -1,4 +1,6 @@
-﻿namespace Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Orbital7.Extensions.AspNetCore;
 
 public static class HttpExtensions
 {
@@ -21,13 +23,15 @@ public static class HttpExtensions
         return string.Format("{0}://{1}/", request.Scheme, request.Host);
     }
 
-    public static string GetIPAddress(
+    public static string? GetIPAddress(
         this HttpRequest request)
     {
-        var ipAddress = request.HttpContext.Connection.RemoteIpAddress.ToString();
+        var ipAddress = request.HttpContext.Connection.RemoteIpAddress?.ToString();
 
         if (ipAddress == "::1")
+        {
             ipAddress = "127.0.0.1";
+        }
 
         return ipAddress;
     }

@@ -4,7 +4,7 @@ namespace Orbital7.Extensions.Tests;
 
 public class DiscordApiTests
 {
-    private string DiscordApiBotToken { get; set; }
+    private string? DiscordApiBotToken { get; set; }
 
     private ulong? DiscordApiTestChannelId { get; set; }
 
@@ -39,6 +39,7 @@ public class DiscordApiTests
             });
 
         // Validate.
+        Assert.NotNull(result);
         Assert.True(result.Id.HasText());
         Assert.True(result.ChannelId.HasText());
         Assert.True(result.Content.HasText());

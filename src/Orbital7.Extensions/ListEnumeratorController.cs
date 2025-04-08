@@ -16,7 +16,7 @@ public class ListEnumeratorController<T>
         this.LockObject = new object();
     }
 
-    public T GetNextItem()
+    public T? GetNextItem()
     {
         lock (this.LockObject)
         {
@@ -27,7 +27,7 @@ public class ListEnumeratorController<T>
             else
             {
                 this.IsDone = true;
-                return default(T);
+                return default;
             }
         }
     }

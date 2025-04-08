@@ -6,7 +6,7 @@ public static class NumericExtensions
 {
     public static string ToCurrencyString(
         this double number, 
-        DisplayValueOptions options = null)
+        DisplayValueOptions? options = null)
     {
         var displayOptions = options ?? new DisplayValueOptions();
 
@@ -29,10 +29,10 @@ public static class NumericExtensions
         return value;
     }
 
-    public static string ToCurrencyString(
+    public static string? ToCurrencyString(
         this double? number,
-        DisplayValueOptions options = null,
-        string nullValue = null)
+        DisplayValueOptions? options = null,
+        string? nullValue = null)
     {
         if (number.HasValue)
         {
@@ -44,15 +44,15 @@ public static class NumericExtensions
 
     public static string ToCurrencyString(
         this decimal number,
-        DisplayValueOptions options = null)
+        DisplayValueOptions? options = null)
     {
         return ToCurrencyString(Convert.ToDouble(number), options);
     }
 
-    public static string ToCurrencyString(
+    public static string? ToCurrencyString(
         this decimal? number,
-        DisplayValueOptions options = null,
-        string nullValue = null)
+        DisplayValueOptions? options = null,
+        string? nullValue = null)
     {
         if (number.HasValue)
         {
@@ -105,9 +105,9 @@ public static class NumericExtensions
         return new DateTime(2000, 1, 1, iPart, (int)Math.Round(60 * dPart, 2), 0).ToString(format);
     }
 
-    public static string ToString(
+    public static string? ToString(
         this int? value, 
-        string nullValue)
+        string? nullValue)
     {
         if (value.HasValue)
             return value.ToString();
@@ -115,9 +115,9 @@ public static class NumericExtensions
             return nullValue;
     }
 
-    public static string ToString(
+    public static string? ToString(
         this decimal? value, 
-        string nullValue)
+        string? nullValue)
     {
         if (value.HasValue)
             return value.ToString();
@@ -125,9 +125,9 @@ public static class NumericExtensions
             return nullValue;
     }
 
-    public static string ToString(
+    public static string? ToString(
         this double? value, 
-        string nullValue)
+        string? nullValue)
     {
         if (value.HasValue)
             return value.ToString();

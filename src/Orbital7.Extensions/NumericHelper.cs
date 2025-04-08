@@ -5,7 +5,7 @@
 public static class NumericHelper
 {
     public static short? ParseNullableShort(
-        string input)
+        string? input)
     {
         if (short.TryParse(input, out short result))
         {
@@ -16,7 +16,7 @@ public static class NumericHelper
     }
 
     public static ushort? ParseNullableUShort(
-        string input)
+        string? input)
     {
         if (ushort.TryParse(input, out ushort result))
         {
@@ -26,8 +26,19 @@ public static class NumericHelper
         return null;
     }
 
+    public static int? ParseNullableInt(
+        string? input)
+    {
+        if (int.TryParse(input, out int result))
+        {
+            return result;
+        }
+
+        return null;
+    }
+
     public static uint? ParseNullableUInt(
-        string input)
+        string? input)
     {
         if (uint.TryParse(input, out uint result))
         {
@@ -38,7 +49,7 @@ public static class NumericHelper
     }
 
     public static long? ParseNullableLong(
-        string input)
+        string? input)
     {
         if (long.TryParse(input, out long result))
         {
@@ -49,7 +60,7 @@ public static class NumericHelper
     }
 
     public static ulong? ParseNullableUlong(
-        string input)
+        string? input)
     {
         if (ulong.TryParse(input, out ulong result))
         {
@@ -60,7 +71,7 @@ public static class NumericHelper
     }
 
     public static decimal? ParseNullableDecimal(
-        string input)
+        string? input)
     {
         if (decimal.TryParse(input, out decimal result))
         {
@@ -71,7 +82,7 @@ public static class NumericHelper
     }
 
     public static float? ParseNullableFloat(
-        string input)
+        string? input)
     {
         if (float.TryParse(input, out float result))
         {
@@ -82,7 +93,7 @@ public static class NumericHelper
     }
 
     public static double? ParseNullableDouble(
-        string input)
+        string? input)
     {
         if (double.TryParse(input, out double result))
         {
@@ -93,7 +104,7 @@ public static class NumericHelper
     }
 
     public static short ParseShort(
-        string input)
+        string? input)
     {
         if (short.TryParse(input, out short result))
         {
@@ -104,7 +115,7 @@ public static class NumericHelper
     }
 
     public static ushort ParseUShort(
-        string input)
+        string? input)
     {
         if (ushort.TryParse(input, out ushort result))
         {
@@ -114,8 +125,19 @@ public static class NumericHelper
         return default;
     }
 
+    public static int ParseInt(
+        string? input)
+    {
+        if (int.TryParse(input, out int result))
+        {
+            return result;
+        }
+
+        return default;
+    }
+
     public static uint ParseUInt(
-        string input)
+        string? input)
     {
         if (uint.TryParse(input, out uint result))
         {
@@ -126,7 +148,7 @@ public static class NumericHelper
     }
 
     public static long ParseLong(
-        string input)
+        string? input)
     {
         if (long.TryParse(input, out long result))
         {
@@ -137,7 +159,7 @@ public static class NumericHelper
     }
 
     public static ulong ParseUlong(
-        string input)
+        string? input)
     {
         if (ulong.TryParse(input, out ulong result))
         {
@@ -148,7 +170,7 @@ public static class NumericHelper
     }
 
     public static decimal ParseDecimal(
-        string input)
+        string? input)
     {
         if (decimal.TryParse(input, out decimal result))
         {
@@ -159,7 +181,7 @@ public static class NumericHelper
     }
 
     public static float ParseFloat(
-        string input)
+        string? input)
     {
         if (float.TryParse(input, out float result))
         {
@@ -170,7 +192,7 @@ public static class NumericHelper
     }
 
     public static double ParseDouble(
-        string input)
+        string? input)
     {
         if (double.TryParse(input, out double result))
         {

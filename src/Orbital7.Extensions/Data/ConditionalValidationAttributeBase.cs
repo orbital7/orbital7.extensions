@@ -22,13 +22,14 @@ public abstract class ConditionalValidationAttributeBase : ValidationAttribute
         ShouldMatch = true;
     }
 
-    public override bool IsValid(object value)
+    public override bool IsValid(
+        object? value)
     {
         return base.IsValid(value);
     }
 
-    protected override ValidationResult IsValid(
-        object value, 
+    protected override ValidationResult? IsValid(
+        object? value, 
         ValidationContext validationContext)
     {
         // get a reference to the property this validation depends upon
@@ -45,7 +46,13 @@ public abstract class ConditionalValidationAttributeBase : ValidationAttribute
                 // match => means we should try validating this field.
                 var innerAttributeValidation = InnerAttribute.GetValidationResult(value, validationContext);
                 if (innerAttributeValidation != null && innerAttributeValidation != ValidationResult.Success)
-                    return new ValidationResult(string.Format(ErrorMessage, validationContext.DisplayName), new[] { validationContext.MemberName });
+                {
+                    return new ValidationResult(
+                        FormatErrorMessage(validationContext.DisplayName),
+                        validationContext.MemberName.HasText() ?
+                            [validationContext.MemberName] :
+                            null);
+                }
             }
         }
         return ValidationResult.Success;

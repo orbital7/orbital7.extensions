@@ -58,19 +58,27 @@ public static class IOExtensions
         return stream.ReadAll(-1);
     }
 
-    public static string ReadText(
+    public static string? ReadText(
         this Stream stream)
     {
         return stream.ReadAll().DecodeToString();
     }
 
-    public static string ReadXML
+    public static string? ReadXML
         (this Stream stream)
     {
-        string xml = stream.ReadAll().DecodeToString();
-        int index = xml.IndexOf("<");
-        xml = xml.Substring(index, xml.Length - index);
+        var text = stream.ReadAll().DecodeToString();
+        int? index = text?.IndexOf("<");
 
-        return xml;
+        if (text != null && 
+            index.HasValue && 
+            index.Value >= 0)
+        {
+            return text.Substring(
+                index.Value, 
+                text.Length - index.Value);
+        }
+
+        return null;
     }
 }

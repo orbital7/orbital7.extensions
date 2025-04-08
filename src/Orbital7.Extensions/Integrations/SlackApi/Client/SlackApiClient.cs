@@ -3,11 +3,11 @@
 public class SlackApiClient :
     ApiClient, ISlackApiClient
 {
-    public string BearerToken { private get; set; }
+    public string? BearerToken { private get; set; }
 
     public SlackApiClient(
         IHttpClientFactory httpClientFactory,
-        string bearerToken = null) :
+        string? bearerToken = null) :
         base(httpClientFactory)
     {
         this.BearerToken = bearerToken;

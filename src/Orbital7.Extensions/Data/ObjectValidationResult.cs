@@ -2,7 +2,7 @@
 
 public class ObjectValidationResult
 {
-    public List<ValidationResult> Results { get; set; }
+    public List<ValidationResult> Results { get; set; } = new();
 
     public bool IsValid { get; set; }
 
@@ -11,7 +11,7 @@ public class ObjectValidationResult
             Results
                 .Where(x => x.ErrorMessage.HasText())
                 .ToList() :
-            null;
+            new();
 
     public override string ToString()
     {

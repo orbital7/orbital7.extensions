@@ -17,25 +17,25 @@ public class ValidationTests
     public class TestComposite
     {
         [Required]
-        public TestClass TestClassA { get; set; } = new();
+        public TestClass? TestClassA { get; set; } = new();
 
         [Required]
-        public TestClass TestClassB { get; set; }
+        public TestClass? TestClassB { get; set; }
 
         [Required]
-        public TestRecord TestRecordA { get; set; } = new();
+        public TestRecord? TestRecordA { get; set; } = new();
 
         [Required]
-        public TestRecord TestRecordB { get; set; }
+        public TestRecord? TestRecordB { get; set; }
 
         [Required]
         public TestStruct? TestStructA { get; set; }
 
         [Required]
-        public TestStruct TestStructB { get; set; }
+        public TestStruct? TestStructB { get; set; }
 
         [Required]
-        public string TestString { get; set; }
+        public string? TestString { get; set; }
 
         [Required]
         public int? TestInt { get; set; }
@@ -47,34 +47,34 @@ public class ValidationTests
     public class TestClass
     {
         [Required]
-        public string Value1 { get; set; }
+        public string? Value1 { get; set; }
 
         [Required]
-        public string Value2 { get; set; }
+        public string? Value2 { get; set; }
 
         [Required]
-        public TestRecord TestRecord1 { get; set; } = new();
+        public TestRecord? TestRecord1 { get; set; } = new();
 
         [Required]
-        public TestRecord TestRecord2 { get; set; }
+        public TestRecord? TestRecord2 { get; set; }
     }
 
     public record TestRecord
     {
         [Required]
-        public string Value1 { get; set; }
+        public string? Value1 { get; set; }
 
         [Required]
-        public string Value2 { get; set; }
+        public string? Value2 { get; set; }
     }
 
     // NOTE: Struct validation doesn't currently work.
     public struct TestStruct
     {
         [Required]
-        public string Value1 { get; set; }
+        public string? Value1 { get; set; }
 
         [Required]
-        public string Value2 { get; set; }
+        public string? Value2 { get; set; }
     }
 }

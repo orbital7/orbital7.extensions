@@ -6,12 +6,7 @@ public static class EnumHelper
 {
     public static List<TEnum> ToValueList<TEnum>()
     {
-        Type enumType = typeof(TEnum).GetBaseType();
-
-        // Can't use generic type constraints on value types,    
-        // so have to do check like this    
-        if (!enumType.IsBaseOrNullableEnumType())
-            throw new ArgumentException("TEnum must be of type System.Enum");
+        var enumType = EnsureEnumType<TEnum>();
         Array enumValArray = Enum.GetValues(enumType);
         List<TEnum> enumValList = new List<TEnum>(enumValArray.Length);
         foreach (int val in enumValArray)
@@ -23,10 +18,13 @@ public static class EnumHelper
     public static List<NamedValue<TEnum>> ToNamedValueList<TEnum>()
     {
         var list = new List<NamedValue<TEnum>>();
-
-        foreach (var item in ToValueList<TEnum>())
+        foreach (TEnum item in ToValueList<TEnum>())
         {
-            list.Add(new NamedValue<TEnum>((item as Enum).ToDisplayString(), item));
+            list.Add(new NamedValue<TEnum>()
+            {
+                Name = (item as Enum)!.ToDisplayString(),
+                Value = item,
+            });
         }
 
         return list;
@@ -36,5 +34,17 @@ public static class EnumHelper
         string value)
     {
         return (TEnum)Enum.Parse(typeof(TEnum), value);
+    }
+
+    private static Type EnsureEnumType<TEnum>()
+    {
+        Type enumType = typeof(TEnum).GetBaseType();
+
+        // Can't use generic type constraints on value types,    
+        // so have to do check like this    .
+        if (!enumType.IsBaseOrNullableEnumType())
+            throw new ArgumentException("TEnum must be of type System.Enum");
+
+        return enumType;
     }
 }

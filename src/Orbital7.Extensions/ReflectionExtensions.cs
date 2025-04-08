@@ -2,7 +2,7 @@
 
 public static class ReflectionExtensions
 {
-    public static DisplayAttribute GetDisplayAttribute(
+    public static DisplayAttribute? GetDisplayAttribute(
         this MemberInfo memberInfo)
     {
         if (memberInfo == null)
@@ -19,27 +19,26 @@ public static class ReflectionExtensions
         this MemberInfo memberInfo)
     {
         return memberInfo.GetDisplayAttribute()?.Name ??
-            memberInfo.Name?.PascalCaseToPhrase();
+            memberInfo.Name.PascalCaseToPhrase() ??
+            memberInfo.Name;
     }
 
-    public static T GetAttribute<T>(
+    public static T? GetAttribute<T>(
         this MemberInfo member,
         bool isRequired)
         where T : Attribute
     {
-        var attribute = member.GetCustomAttributes(typeof(T), false).SingleOrDefault();
+        var attribute = (T?)member
+            .GetCustomAttributes(typeof(T), false)
+            .SingleOrDefault();
 
         if (attribute == null && isRequired)
         {
             throw new ArgumentException(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "The {0} attribute must be defined on member {1}",
-                    typeof(T).Name,
-                    member.Name));
+                $"The {typeof(T).Name} attribute must be defined on member {member.Name}");
         }
 
-        return (T)attribute;
+        return attribute;
     }
 
     public static bool HasAttribute<T>(
@@ -85,13 +84,13 @@ public static class ReflectionExtensions
                 select (x, a)).ToList();
     }
 
-    public static MemberInfo GetMemberInfo(
+    public static MemberInfo? GetMemberInfo(
         this Expression propertyExpression)
     {
-        MemberExpression memberExpr = propertyExpression as MemberExpression;
+        MemberExpression? memberExpr = propertyExpression as MemberExpression;
         if (memberExpr == null)
         {
-            UnaryExpression unaryExpr = propertyExpression as UnaryExpression;
+            UnaryExpression? unaryExpr = propertyExpression as UnaryExpression;
             if (unaryExpr != null && unaryExpr.NodeType == ExpressionType.Convert)
             {
                 memberExpr = unaryExpr.Operand as MemberExpression;
@@ -131,19 +130,20 @@ public static class ReflectionExtensions
         return types;
     }
 
-    public static T CreateInstance<T>(
+    public static T? CreateInstance<T>(
         this Type type)
     {
-        return (T)Activator.CreateInstance(type);
+        return (T?)Activator.CreateInstance(type);
     }
 
-    public static T CreateInstance<T>(
+    public static T? CreateInstance<T>(
         this Type type, 
-        object[] parameters)
+        object[]? parameters)
     {
-        return (T)Activator.CreateInstance(type, parameters);
+        return (T?)Activator.CreateInstance(type, parameters);
     }
 
+    
     public static List<T> CreateInstances<T>(
         this List<Type> types)
     {
@@ -153,8 +153,11 @@ public static class ReflectionExtensions
         {
             try
             {
-                T instance = typeItem.CreateInstance<T>();
-                instances.Add(instance);
+                T? instance = typeItem.CreateInstance<T>();
+                if (instance != null)
+                {
+                    instances.Add(instance);
+                }
             }
             catch { }
         }
@@ -165,14 +168,18 @@ public static class ReflectionExtensions
     public static List<T> CreateInstances<T>(
         this Assembly assembly)
     {
-        return assembly.GetTypes<T>().CreateInstances<T>();
+        return assembly
+            .GetTypes<T>()
+            .CreateInstances<T>();
     }
 
     public static List<T> CreateInstances<T>(
         this Assembly assembly, 
         Type baseType)
     {
-        return assembly.GetTypes(baseType).CreateInstances<T>();
+        return assembly
+            .GetTypes(baseType)
+            .CreateInstances<T>();
     }
 
     public static List<Type> GetExternalTypes(
@@ -200,11 +207,11 @@ public static class ReflectionExtensions
         return types;
     }
 
-    public static string GetDisplayValue<TValue>(
+    public static string? GetDisplayValue<TValue>(
         this MemberInfo memberInfo,
-        TValue value,
-        TimeConverter timeConverter,
-        DisplayValueOptions options = null)
+        TValue? value,
+        TimeConverter? timeConverter,
+        DisplayValueOptions? options = null)
     {
         return CalculateDisplayValue(
             value,
@@ -214,11 +221,11 @@ public static class ReflectionExtensions
             options);
     }
 
-    public static string GetDisplayValue<TValue>(
-        this TValue value,
-        TimeConverter timeConverter,
-        string propertyName = null,
-        DisplayValueOptions options = null)
+    public static string? GetDisplayValue<TValue>(
+        this TValue? value,
+        TimeConverter? timeConverter,
+        string? propertyName = null,
+        DisplayValueOptions? options = null)
     {
         return CalculateDisplayValue(
             value,
@@ -228,12 +235,12 @@ public static class ReflectionExtensions
             options);
     }
 
-    private static string CalculateDisplayValue<TValue>(
-        TValue value,
-        string propertyName,
-        MemberInfo memberInfo,
-        TimeConverter timeConverter,
-        DisplayValueOptions displayValueOptions)
+    private static string? CalculateDisplayValue<TValue>(
+        TValue? value,
+        string? propertyName,
+        MemberInfo? memberInfo,
+        TimeConverter? timeConverter,
+        DisplayValueOptions? displayValueOptions)
     {
         if (value != null)
         {
@@ -243,7 +250,7 @@ public static class ReflectionExtensions
 
             if (type.IsBaseOrNullableEnumType())
             {
-                return (value as Enum).ToDisplayString();
+                return (value as Enum)?.ToDisplayString();
             }
             else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
             {
@@ -330,9 +337,9 @@ public static class ReflectionExtensions
 
     private static DateTime ToDateTime(
         DateTime dateTime,
-        string propertyName,
-        TimeConverter timeConverter,
-        DisplayValueOptions displayValueOptions)
+        string? propertyName,
+        TimeConverter? timeConverter,
+        DisplayValueOptions? displayValueOptions)
     {
         DateTime value;
 
@@ -344,7 +351,7 @@ public static class ReflectionExtensions
 
         if (timeConverter != null)
         {
-            if (displayValueOptions.TimeZoneId.HasText())
+            if (displayValueOptions != null && displayValueOptions.TimeZoneId.HasText())
             {
                 value = timeConverter.ToDateTime(dateTime, displayValueOptions.TimeZoneId);
             }
@@ -355,7 +362,7 @@ public static class ReflectionExtensions
         }
         else
         {
-            if (displayValueOptions.TimeZoneId.HasText())
+            if (displayValueOptions != null && displayValueOptions.TimeZoneId.HasText())
             {
                 value = dateTime.UtcToTimeZone(
                     TimeZoneInfo.FindSystemTimeZoneById(displayValueOptions.TimeZoneId));

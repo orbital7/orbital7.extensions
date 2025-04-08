@@ -50,7 +50,7 @@ public class RATableTemplate<TEntity> :
 {
     public List<Column<TEntity>> Columns { get; private set; }
 
-    public Action<RATableViewSegment<TEntity>, TEntity> OnRowSelected { get; init; }
+    public Action<RATableViewSegment<TEntity>, TEntity>? OnRowSelected { get; init; }
 
     public bool IsSortable { get; init; }
 
@@ -60,7 +60,7 @@ public class RATableTemplate<TEntity> :
 
     public RATableTemplate(
         List<Column<TEntity>> columns,
-        Action<RATableViewSegment<TEntity>, TEntity> onRowSelected = null,
+        Action<RATableViewSegment<TEntity>, TEntity>? onRowSelected = null,
         bool isSortable = true)
     {
         this.Columns = columns;
@@ -68,7 +68,7 @@ public class RATableTemplate<TEntity> :
         this.IsSortable = isSortable;
     }
 
-    public ICollection<TEntity> GetSortedItems(
+    public ICollection<TEntity>? GetSortedItems(
         RATableViewSegment<TEntity> segment)
     {
         if (segment.Items != null)
@@ -89,7 +89,7 @@ public class RATableTemplate<TEntity> :
                 }
 
                 // Sort if we have a column to sort by.
-                if (sortColumn != null)
+                if (sortColumn != null && sortColumn.For != null)
                 {
                     var sortedItems = sortColumn.SortDescending ?
                         segment.Items.AsQueryable().OrderByDescending(sortColumn.For).ToList() :
@@ -122,7 +122,7 @@ public class RATableTemplate<TEntity> :
         column.SortDescending = sortDescending;
     }
 
-    private Column<TEntity> GetCurrentSortColumn()
+    private Column<TEntity>? GetCurrentSortColumn()
     {
         return this.Columns
             .Where(x => 
@@ -134,9 +134,9 @@ public class RATableTemplate<TEntity> :
 
     public class Column<TItem>
     {
-        private Func<TItem, object> _compiledFor;
+        private Func<TItem, object?>? _compiledFor;
 
-        public string HeaderText { get; set; }
+        public string? HeaderText { get; set; }
 
         public bool IsSortable { get; set; }
 
@@ -144,56 +144,60 @@ public class RATableTemplate<TEntity> :
 
         public bool SortBy { get; set; } = false;
 
-        public string CellClass { get; set; }
+        public string? CellClass { get; set; }
 
         public int? FixedWidth { get; set; }
 
-        public Expression<Func<TItem, object>> For { get; set; }
+        public Expression<Func<TItem, object?>>? For { get; set; }
 
-        public Action<Column<TItem>, RATableViewSegment<TItem>, TItem> OnCellUrlClicked { get; set; }
+        public Action<Column<TItem>, RATableViewSegment<TItem>, TItem>? OnCellUrlClicked { get; set; }
 
-        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string> GetCellUrl { get; set; }
+        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string>? GetCellUrl { get; set; }
 
-        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string> GetCellClass { get; set; }
+        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string>? GetCellClass { get; set; }
 
-        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string> GetCellStyle { get; set; }
+        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, string>? GetCellStyle { get; set; }
 
-        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, object> GetCellValue { get; set; }
+        public Func<Column<TItem>, RATableViewSegment<TItem>, TItem, object>? GetCellValue { get; set; }
 
-        public RenderFragment<TItem> GetCellContent { get; set; }
+        public RenderFragment<TItem>? GetCellContent { get; set; }
 
-        public RenderFragment<List<RATableViewSegment<TEntity>>> GetHeaderCellContent { get; set; }
+        public RenderFragment<List<RATableViewSegment<TEntity>>>? GetHeaderCellContent { get; set; }
 
-        public RenderFragment<RATableViewFooterData<TItem>> GetFooterCellContent { get; set; }
+        public RenderFragment<RATableViewFooterData<TItem>>? GetFooterCellContent { get; set; }
 
-        public Func<RATableViewFooterData<TItem>, object> GetFooterCellValue { get; set; }
+        public Func<RATableViewFooterData<TItem>, object>? GetFooterCellValue { get; set; }
 
-        public Func<RATableViewFooterData<TItem>, string> GetFooterCellClass { get; set; }
+        public Func<RATableViewFooterData<TItem>, string>? GetFooterCellClass { get; set; }
 
         public DisplayValueOptions DisplayValueOptions { get; set; }
 
-        public Action<Column<TItem>, DisplayValueOptions> ConfigureDisplayValueOptions { get; set; }
+        public Action<Column<TItem>, DisplayValueOptions>? ConfigureDisplayValueOptions { get; set; }
 
-        public string DefaultValue { get; set; } = "-";
+        public string? DefaultValue { get; set; } = "-";
 
         public RATableViewCellHorizontalAlignment CellHorizontalAlignment { get; set; }
 
         public RATableViewCellHorizontalAlignment HeaderCellHorizontalAlignment { get; set; }
 
         public Column(
-            Expression<Func<TItem, object>> forValue,
-            string headerText = null,
+            Expression<Func<TItem, object?>>? forValue,
+            string? headerText = null,
             bool? sortBy = null,
             bool? isSortable = null,
             bool? sortDescending = null,
             RATableViewCellHorizontalAlignment? cellHorizontalAlignment = null,
             RATableViewCellHorizontalAlignment? headerCellHorizontalAlignment = null,
-            string cellClass = null)
+            string? cellClass = null)
         {
             var memberInfo = forValue?.Body.GetMemberInfo();
             this.IsSortable = isSortable ?? memberInfo != null;
 
-            this.For = forValue;
+            if (forValue != null)
+            {
+                this.For = forValue;
+            }
+
             if (this.For != null)
             {
                 _compiledFor = this.For.Compile();
@@ -222,7 +226,7 @@ public class RATableTemplate<TEntity> :
             this.CellClass = cellClass;
         }
 
-        internal string GetItemDisplayValue(
+        internal string? GetItemDisplayValue(
             TItem item,
             TimeConverter timeConverter)
         {
@@ -230,8 +234,8 @@ public class RATableTemplate<TEntity> :
             return GetDisplayValue(value, timeConverter);
         }
 
-        internal string GetDisplayValue(
-            object value,
+        internal string? GetDisplayValue(
+            object? value,
             TimeConverter timeConverter)
         {
             var displayValue = value.GetDisplayValue(
@@ -247,12 +251,12 @@ public class RATableTemplate<TEntity> :
             return displayValue;
         }
 
-        internal Type GetForType()
+        internal Type? GetForType()
         {
             if (this.For?.Body is ConditionalExpression)
             {
                 var conditionalExpression = this.For.Body as ConditionalExpression;
-                var ifTrueExpression = conditionalExpression.IfTrue as UnaryExpression;
+                var ifTrueExpression = conditionalExpression?.IfTrue as UnaryExpression;
                 if (ifTrueExpression != null)
                 {
                     return ifTrueExpression.Operand.Type;
@@ -264,14 +268,14 @@ public class RATableTemplate<TEntity> :
                 .GetType();
         }
 
-        internal object GetForValue(
+        internal object? GetForValue(
             TItem item)
         {
             return _compiledFor?.Invoke(item);
         }
 
         private RATableViewCellHorizontalAlignment GetCellHorizontalAlignment(
-            MemberInfo memberInfo)
+            MemberInfo? memberInfo)
         {
             if (memberInfo != null)
             {

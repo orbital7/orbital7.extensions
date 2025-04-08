@@ -4,7 +4,7 @@ public class RAFormSubmissionResult
 {
     public bool Succeeded { get; set; }
 
-    public object ReturnedResult { get; set; }
+    public object? ReturnedResult { get; set; }
 
-    public RAFormValidationState ValidationState { get; set; }
+    public RAFormValidationState? ValidationState { get; set; }
 }

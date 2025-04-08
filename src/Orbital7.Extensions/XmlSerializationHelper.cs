@@ -5,31 +5,36 @@ namespace Orbital7.Extensions;
 
 public static class XmlSerializationHelper
 {
-    public static T CloneObject<T>(
-        T objectToClone)
+    public static T? CloneObject<T>(
+        T? objectToClone)
     {
         return DeserializeFromXml<T>(SerializeToXml(objectToClone));
     }
 
-    public static T DeserializeFromXml<T>(
-        string xml)
+    public static T? DeserializeFromXml<T>(
+        string? xml)
     {
-        using (var reader = new StringReader(xml))
+        if (xml != null)
         {
-            return (T)DeserializeFromTextReader(typeof(T), reader);
+            using (var reader = new StringReader(xml))
+            {
+                return (T?)DeserializeFromTextReader(typeof(T), reader);
+            }
         }
+
+        return default;
     }
 
-    public static T DeserializeFromXmlFile<T>(
+    public static T? DeserializeFromXmlFile<T>(
         string filePath)
     {
         using (var reader = new StreamReader(filePath, false))
         {
-            return (T)DeserializeFromTextReader(typeof(T), reader);
+            return (T?)DeserializeFromTextReader(typeof(T), reader);
         }
     }
     
-    public static object DeserializeFromXml(
+    public static object? DeserializeFromXml(
         Type type, 
         string xml)
     {
@@ -39,7 +44,7 @@ public static class XmlSerializationHelper
         }
     }
 
-    public static object DeserializeFromXmlFile(
+    public static object? DeserializeFromXmlFile(
         Type type, 
         string filePath)
     {
@@ -59,17 +64,22 @@ public static class XmlSerializationHelper
         }
     }
 
-    public static string SerializeToXml(
-        object objectToSerialize)
+    public static string? SerializeToXml(
+        object? objectToSerialize)
     {
-        using (StringWriter stringWriter = new StringWriterWithEncoding(Encoding.UTF8))
+        if (objectToSerialize != null)
         {
-            SerializeToTextWriter(objectToSerialize, stringWriter);
-            return stringWriter.ToString();
+            using (StringWriter stringWriter = new StringWriterWithEncoding(Encoding.UTF8))
+            {
+                SerializeToTextWriter(objectToSerialize, stringWriter);
+                return stringWriter.ToString();
+            }
         }
+
+        return null;
     }
 
-    private static object DeserializeFromTextReader(
+    private static object? DeserializeFromTextReader(
         Type type, 
         TextReader textReader)
     {

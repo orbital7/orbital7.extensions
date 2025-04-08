@@ -2,7 +2,7 @@
 
 public static class ValueTupleExtensions
 {
-    public static T2 GetItem2<T1, T2>(
+    public static T2? GetItem2<T1, T2>(
         this List<(T1, T2)> list,
         T1 item1)
     {
@@ -20,7 +20,7 @@ public static class ValueTupleExtensions
                 select x.Item2).ToList();
     }
 
-    public static T1 GetItem1<T1, T2>(
+    public static T1? GetItem1<T1, T2>(
         this List<(T1, T2)> list,
         T2 item2)
     {

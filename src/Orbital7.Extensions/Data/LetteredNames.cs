@@ -4,28 +4,25 @@ public class LetteredNames
 {
     public class NamesLetter
     {
-        public string Letter { get; set; }
-        public List<object> Names { get; set; }
+        public required string Letter { get; set; }
+
+        public List<object> Names { get; set; } = new();
 
         public bool HasNames
         {
-            get { return Names.Count > 0; }
+            get { return this.Names.Count > 0; }
         }
 
-        public NamesLetter()
+        [SetsRequiredMembers]
+        public NamesLetter(
+            string letter)
         {
-            Names = new List<object>();
-        }
-
-        public NamesLetter(string letter)
-            : this()
-        {
-            Letter = letter;
+            this.Letter = letter;
         }
 
         public override string ToString()
         {
-            return Letter + " (" + Names.Count + ")";
+            return this.Letter + " (" + Names.Count + ")";
         }
     }
 
@@ -71,16 +68,17 @@ public class LetteredNames
             Find(item).Names.Add(item);
     }
 
-    private NamesLetter Find(object item)
+    private NamesLetter Find(
+        object? item)
     {
-        NamesLetter target = null;
+        NamesLetter? target = null;
 
         // Search.
-        string name = item.ToString();
-        if (!string.IsNullOrEmpty(name))
+        var name = item?.ToString();
+        if (name.HasText())
         {
             string firstLetter = name.Substring(0, 1).ToUpper();
-            foreach (NamesLetter namesLetter in NamesLetterCollection)
+            foreach (NamesLetter namesLetter in this.NamesLetterCollection)
             {
                 if (namesLetter.Letter.Equals(firstLetter))
                 {

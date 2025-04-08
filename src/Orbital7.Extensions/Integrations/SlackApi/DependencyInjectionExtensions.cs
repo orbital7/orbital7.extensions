@@ -4,13 +4,16 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddSlackApi(
         this IServiceCollection services,
-        string apiToken)
+        string? apiToken)
     {
-        services.AddScoped<IChatApi, ChatApi>(
-            (serviceProvider) => new ChatApi(
-                new SlackApiClient(
-                    serviceProvider.GetRequiredService<IHttpClientFactory>(),
-                    apiToken)));
+        if (apiToken.HasText())
+        {
+            services.AddScoped<IChatApi, ChatApi>(
+                (serviceProvider) => new ChatApi(
+                    new SlackApiClient(
+                        serviceProvider.GetRequiredService<IHttpClientFactory>(),
+                        apiToken)));
+        }
 
         return services;
     }

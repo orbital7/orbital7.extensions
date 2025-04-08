@@ -2,40 +2,43 @@
 
 @if (_isLoaded)
 {
-    @if (this.EditorType.Value == RAEditorType.SelectList)
+    @if (this.EditorType == RAEditorType.SelectList)
     {
         <InputSelect id="@this.Id"
-                     Value="@this.Value"
-                     ValueChanged="@this.ValueChanged"
-                     ValueExpression="@this.ValueExpression"
-                     disabled="@(!this.IsEnabled)"
-                     class="@($"form-select {this.VisibilityClass} {this.Class}")"
-                     style="@this.Style">
+        Value="@this.Value"
+        ValueChanged="@this.ValueChanged"
+        ValueExpression="@this.ValueExpression"
+        disabled="@(!this.IsEnabled)"
+        class="@($"form-select {this.VisibilityClass} {this.Class}")"
+        style="@this.Style">
             <RAInputSelectOptions SelectList="@_selectList" />
         </InputSelect>
     }
     else if (this.EditorType == RAEditorType.RadioButton)
     {
         <InputRadioGroup id="@this.Id"
-                         Name="@this.Id"
-                         Value="@this.Value"
-                         ValueChanged="@this.ValueChanged"
-                         ValueExpression="@this.ValueExpression">
-            @foreach (var item in _selectList)
+        Name="@this.Id"
+        Value="@this.Value"
+        ValueChanged="@this.ValueChanged"
+        ValueExpression="@this.ValueExpression">
+            @if (_selectList != null)
             {
-                var itemId = GuidFactory.ToShortString(Guid.NewGuid());
-                <div class="form-check @this.VisibilityClass @this.Class"
-                     style="@this.Style">
-                    <InputRadio id="@itemId"
-                                Name="@this.Id"
-                                Value="@item.Value"
-                                disabled="@(!this.IsEnabled)"
-                                class="form-check-input" />
-                    <label class="form-check-label"
-                           for="@itemId">
-                        @item.Name
-                    </label>
-                </div>
+                foreach (var item in _selectList)
+                {
+                    var itemId = GuidFactory.ToShortString(Guid.NewGuid());
+                    <div class="form-check @this.VisibilityClass @this.Class"
+                    style="@this.Style">
+                        <InputRadio id="@itemId"
+                        Name="@this.Id"
+                        Value="@item.Value"
+                        disabled="@(!this.IsEnabled)"
+                        class="form-check-input" />
+                        <label class="form-check-label"
+                        for="@itemId">
+                            @item.Name
+                        </label>
+                    </div>
+                }
             }
         </InputRadioGroup>
     }
@@ -53,20 +56,20 @@
                              class="form-check-input" />
             <label class="form-check-label user-select-none"
                    for="@this.Id">
-                
+
             </label>
         </div> *@
 
         <div class="form-check form-switch @this.VisibilityClass @this.Class"
-             style="@this.Style">
+        style="@this.Style">
             <label class="form-check-label user-select-none">  @* for="@this.Id" *@
                 <RAInputCheckbox id="@this.Id"
-                                 Value="@this.Value"
-                                 ValueChanged="this.ValueChanged"
-                                 ValueExpression="@this.ValueExpression"
-                                 role="switch"
-                                 disabled="@(!this.IsEnabled)"
-                                 class="form-check-input" />
+                Value="@this.Value"
+                ValueChanged="this.ValueChanged"
+                ValueExpression="@this.ValueExpression"
+                role="switch"
+                disabled="@(!this.IsEnabled)"
+                class="form-check-input" />
                 @this.SwitchText
             </label>
         </div>
@@ -94,86 +97,86 @@
         </div> *@
 
         <div class="form-check @this.VisibilityClass @this.Class"
-             style="@this.Style">
+        style="@this.Style">
             <label class="form-check-label user-select-none">  @* for="@this.Id" *@
                 <RAInputCheckbox id="@this.Id"
-                                 Value="@this.Value"
-                                 ValueChanged="this.ValueChanged"
-                                 ValueExpression="@this.ValueExpression"
-                                 disabled="@(!this.IsEnabled)"
-                                 class="form-check-input" />
+                Value="@this.Value"
+                ValueChanged="this.ValueChanged"
+                ValueExpression="@this.ValueExpression"
+                disabled="@(!this.IsEnabled)"
+                class="form-check-input" />
                 @this.ChildContent
             </label>
         </div>
     }
-    else if (this.EditorType.Value == RAEditorType.Number)
+    else if (this.EditorType == RAEditorType.Number)
     {
         <InputNumber id="@this.Id"
-                     Value="@this.Value"
-                     ValueChanged="@this.ValueChanged"
-                     ValueExpression="@this.ValueExpression"
-                     disabled="@(!this.IsEnabled)"
-                     readonly="@this.IsReadOnly"
-                     placeholder="@this.Placeholder"
-                     class="@($"form-control {this.VisibilityClass} {this.Class}")"
-                     style="@this.Style" />
+        Value="@this.Value"
+        ValueChanged="@this.ValueChanged"
+        ValueExpression="@this.ValueExpression"
+        disabled="@(!this.IsEnabled)"
+        readonly="@this.IsReadOnly"
+        placeholder="@this.Placeholder"
+        class="@($"form-control {this.VisibilityClass} {this.Class}")"
+        style="@this.Style" />
     }
-    else if (this.EditorType.Value == RAEditorType.Date)
+    else if (this.EditorType == RAEditorType.Date)
     {
         <InputDate id="@this.Id"
-                   Value="@this.Value"
-                   ValueChanged="@this.ValueChanged"
-                   ValueExpression="@this.ValueExpression"
-                   disabled="@(!this.IsEnabled)"
-                   readonly="@this.IsReadOnly"
-                   class="@($"form-control {this.VisibilityClass} {this.Class}")"
-                   style="@this.Style" />
+        Value="@this.Value"
+        ValueChanged="@this.ValueChanged"
+        ValueExpression="@this.ValueExpression"
+        disabled="@(!this.IsEnabled)"
+        readonly="@this.IsReadOnly"
+        class="@($"form-control {this.VisibilityClass} {this.Class}")"
+        style="@this.Style" />
     }
-    else if (this.EditorType.Value == RAEditorType.TextMultiLine)
+    else if (this.EditorType == RAEditorType.TextMultiLine)
     {
         <RAInputTextArea id="@this.Id"
-                         Value="@this.Value"
-                         ValueChanged="@this.ValueChanged"
-                         ValueExpression="@this.ValueExpression"
-                         disabled="@(!this.IsEnabled)"
-                         readonly="@this.IsReadOnly"
-                         placeholder="@this.Placeholder"
-                         class="@($"form-control {this.VisibilityClass} {this.Class}")"
-                         style="@this.Style" />
+        Value="@this.Value"
+        ValueChanged="@this.ValueChanged"
+        ValueExpression="@this.ValueExpression"
+        disabled="@(!this.IsEnabled)"
+        readonly="@this.IsReadOnly"
+        placeholder="@this.Placeholder"
+        class="@($"form-control {this.VisibilityClass} {this.Class}")"
+        style="@this.Style" />
     }
 
-    else if (this.EditorType.Value.UsesInputTextEditor())
+    else if (this.EditorType.UsesInputTextEditor())
     {
         @if (this.ButtonText.HasText() && this.OnButtonClick != null)
         {
             <div class="input-group">
                 <RAInputText id="@this.Id"
-                             type="@(this.EditorType.Value == RAEditorType.Password ? "password" : "text")"
-                             Value="@this.Value"
-                             ValueChanged="@this.ValueChanged"
-                             ValueExpression="@this.ValueExpression"
-                             disabled="@(!this.IsEnabled)"
-                             readonly="@this.IsReadOnly"
-                             placeholder="@this.Placeholder"
-                             class="@($"form-control {this.VisibilityClass} {this.Class}")"
-                             style="@this.Style" />
+                type="@(this.EditorType == RAEditorType.Password ? "password" : "text")"
+                Value="@this.Value"
+                ValueChanged="@this.ValueChanged"
+                ValueExpression="@this.ValueExpression"
+                disabled="@(!this.IsEnabled)"
+                readonly="@this.IsReadOnly"
+                placeholder="@this.Placeholder"
+                class="@($"form-control {this.VisibilityClass} {this.Class}")"
+                style="@this.Style" />
                 <button type="button" 
-                        class="btn @this.ButtonClass"
-                        @onclick="@this.OnButtonClick">@this.ButtonText</button>
+                class="btn @this.ButtonClass"
+                @onclick="@this.OnButtonClick">@this.ButtonText</button>
             </div>
         }
         else
         {
             <RAInputText id="@this.Id"
-                         type="@(this.EditorType.Value == RAEditorType.Password ? "password" : "text")"
-                         Value="@this.Value"
-                         ValueChanged="@this.ValueChanged"
-                         ValueExpression="@this.ValueExpression"
-                         disabled="@(!this.IsEnabled)"
-                         readonly="@this.IsReadOnly"
-                         placeholder="@this.Placeholder"
-                         class="@($"form-control {this.VisibilityClass} {this.Class}")"
-                         style="@this.Style" />
+            type="@(this.EditorType == RAEditorType.Password ? "password" : "text")"
+            Value="@this.Value"
+            ValueChanged="@this.ValueChanged"
+            ValueExpression="@this.ValueExpression"
+            disabled="@(!this.IsEnabled)"
+            readonly="@this.IsReadOnly"
+            placeholder="@this.Placeholder"
+            class="@($"form-control {this.VisibilityClass} {this.Class}")"
+            style="@this.Style" />
         }
     }
 }
@@ -181,19 +184,19 @@
 @code {
 
     protected bool _isLoaded = false;
-    private List<NamedValue<TValue>> _selectList;
+    private List<NamedValue<TValue>>? _selectList;
 
     [Parameter]
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     [Parameter]
-    public string Class { get; set; }
+    public string? Class { get; set; }
 
     [Parameter]
-    public string Style { get; set; }
+    public string? Style { get; set; }
 
     [Parameter]
-    public string Placeholder { get; set; }
+    public string? Placeholder { get; set; }
 
     [Parameter]
     public bool SortSelectList { get; set; } = true;
@@ -205,37 +208,37 @@
     public string SwitchTextValueFalse { get; set; } = false.ToYesNo();
 
     [Parameter]
-    public List<NamedValue<TValue>> SelectList { get; set; }
+    public List<NamedValue<TValue>>? SelectList { get; set; }
 
     [Parameter]
-    public string SelectListOptionLabel { get; set; } = "(Select)";
+    public string? SelectListOptionLabel { get; set; } = "(Select)";
 
     [Parameter]
-    public Func<Task<List<NamedValue<TValue>>>> LoadSelectList { get; set; }
+    public Func<Task<List<NamedValue<TValue>>>>? LoadSelectList { get; set; }
 
     [Parameter]
-    public Func<Task> OnButtonClick { get; set; }
+    public Func<Task>? OnButtonClick { get; set; }
 
     [Parameter]
-    public string ButtonText { get; set; }
+    public string? ButtonText { get; set; }
 
     [Parameter]
-    public string ButtonClass { get; set; } = "btn-outline-secondary";
+    public string? ButtonClass { get; set; } = "btn-outline-secondary";
 
     [Parameter]
     public RAEditorType? EditorType { get; set; }
 
     [Parameter]
-    public TValue Value { get; set; }
+    public TValue? Value { get; set; }
 
     [Parameter]
     public EventCallback<TValue> ValueChanged { get; set; }
 
     [Parameter]
-    public Expression<Func<TValue>> ValueExpression { get; set; }
+    public Expression<Func<TValue?>>? ValueExpression { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public bool IsVisible { get; set; } = true;
@@ -246,7 +249,7 @@
     [Parameter]
     public bool IsReadOnly { get; set; } = false;
 
-    private string SwitchText => ((bool)(object)this.Value) ?
+    private string SwitchText => this.Value is bool boolValue && boolValue ?
         this.SwitchTextValueTrue :
         this.SwitchTextValueFalse;
 
@@ -290,7 +293,7 @@
         }
 
         // Determine the editor type.
-        if (!this.EditorType.HasValue)
+        if (!this.EditorType.HasValue && this.ValueExpression != null)
         {
             this.EditorType = this.ValueExpression.GetEditorType();
         }
@@ -307,7 +310,7 @@
 
         var previousValue = this.Value;
         bool previousValueExists = selectList
-            .Where(x => x.Value.Equals(previousValue))
+            .Where(x => x.Value != null && x.Value.Equals(previousValue))
             .Count() > 0;
 
         // Clear out the old value.
@@ -333,8 +336,7 @@
         {
             if (this.SelectList != null)
             {
-                // TODO: Use CloneIgnoringReferenceProperties() after Orbital7.Extensions 8.0.16 is available.
-                _selectList = JsonSerializationHelper.CloneObject<List<NamedValue<TValue>>>(this.SelectList);
+                _selectList = this.SelectList.CloneIgnoringReferenceProperties();
             }
             else if (type.IsBaseOrNullableEnumType())
             {
@@ -348,12 +350,16 @@
                 }
                 catch
                 {
+                    _selectList = new();
                     _selectList.Add(new NamedValue<TValue>("ERROR: LoadSelectList()", default(TValue)));
                 }
             }
         }
 
-        UpdateSelectList(_selectList);
+        if (_selectList != null)
+        {
+            UpdateSelectList(_selectList);
+        }
     }
 
     private void UpdateSelectList(
@@ -365,7 +371,7 @@
         if (this.SelectListOptionLabel.HasText())
         {
             var optionLabel = _selectList
-                .Where(x => x.Value.Equals(default(TValue)))
+                .Where(x => x.Value != null && x.Value.Equals(default(TValue)))
                 .FirstOrDefault();
             if (optionLabel != null)
             {

@@ -4,11 +4,11 @@ namespace Orbital7.Extensions.Tests;
 
 public class BetterStackApiTests
 {
-    private string BetterStackUptimeApiToken { get; set; }
+    private string? BetterStackUptimeApiToken { get; set; }
 
-    private string BetterStackLogsSourceToken { get; set; }
+    private string? BetterStackLogsSourceToken { get; set; }
 
-    private string BetterStackLogsIngestingHost { get; set; }
+    private string? BetterStackLogsIngestingHost { get; set; }
 
     private IHttpClientFactory HttpClientFactory { get; set; }
 
@@ -52,7 +52,9 @@ public class BetterStackApiTests
 
         // Validate the heartbeat creation.
         var heartbeat = createHeartbeatResponse.Data;
+        Assert.NotNull(heartbeat);
         Assert.True(heartbeat.Id.HasText());
+        Assert.NotNull(heartbeat.Attributes);
         Assert.Equal(CREATE_HEARTBEAT_NAME, heartbeat.Attributes.Name);
         Assert.True(heartbeat.Attributes.Status == HeartbeatStatus.Pending ||
             heartbeat.Attributes.Status == HeartbeatStatus.Up);
@@ -60,14 +62,21 @@ public class BetterStackApiTests
 
         // Test listing heartbeats.
         var heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync();
+        Assert.NotNull(heartbeatsResponse);
+        Assert.NotNull(heartbeatsResponse.Data);
         Assert.NotNull(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
 
         // Send the heartbeat.
+        Assert.NotNull(heartbeat.Attributes.Url);
         await uptimeHeartbeatsApi.SendAsync(heartbeat.Attributes.Url);
 
         // Get the heartbeat.
         var getHeartbeatResponse = await uptimeHeartbeatsApi.GetAsync(heartbeat.Id);
+        Assert.NotNull(getHeartbeatResponse);
         heartbeat = getHeartbeatResponse.Data;
+        Assert.NotNull(heartbeat);
+        Assert.NotNull(heartbeat.Attributes);
+        Assert.True(heartbeat.Id.HasText());
         Assert.True(heartbeat.Attributes.Status == HeartbeatStatus.Pending ||
             heartbeat.Attributes.Status == HeartbeatStatus.Up);
         Assert.False(heartbeat.Attributes.Paused);
@@ -85,6 +94,9 @@ public class BetterStackApiTests
 
         // Validate the heartbeat update.
         heartbeat = updateHeartbeatResponse.Data;
+        Assert.NotNull(heartbeat);
+        Assert.NotNull(heartbeat.Attributes);
+        Assert.True(heartbeat.Id.HasText());
         Assert.Equal(UPDATE_HEARTBEAT_NAME, heartbeat.Attributes.Name);
         Assert.Equal(HeartbeatStatus.Paused, heartbeat.Attributes.Status);
         Assert.True(heartbeat.Attributes.Paused);
@@ -92,7 +104,11 @@ public class BetterStackApiTests
         // Delete the heartbeat.
         await uptimeHeartbeatsApi.DeleteAsync(heartbeat.Id);
         heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync();
+        Assert.NotNull(heartbeatsResponse);
+        Assert.NotNull(heartbeatsResponse.Data);
+        Assert.NotNull(heartbeatsResponse.Pagination);
         Assert.Null(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
+        Assert.True(heartbeatsResponse.Pagination.First.HasText());
 
         // Test parsing page index.
         var pageIndex = heartbeatsResponse.ParsePageIndex(heartbeatsResponse.Pagination.First);
@@ -103,7 +119,7 @@ public class BetterStackApiTests
     public async Task TestTelemetryLoggingApi()
     {
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.BetterStackLogsSourceToken.HasText());
+        Skip.IfNot(this.BetterStackLogsSourceToken.HasText() && this.BetterStackLogsIngestingHost.HasText());
 
         // Create the client and service.
         var client = new BetterStackApiClient(this.HttpClientFactory);
@@ -216,9 +232,9 @@ public class BetterStackApiTests
 
     private class TestEntity1
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public TestEntity2 ChildEntity { get; set; }
+        public TestEntity2? ChildEntity { get; set; }
 
         public TestEnumType TestEnum { get; set; }
     }
@@ -229,14 +245,14 @@ public class BetterStackApiTests
 
         public TestEnumType TestEnum { get; set; }
 
-        public List<TestEntity3> ChildEntities { get; set; }
+        public List<TestEntity3>? ChildEntities { get; set; }
     }
 
     private class TestEntity3
     {
         public Guid TestValue1 { get; set; }
 
-        public string TestValue2 { get; set; }
+        public string? TestValue2 { get; set; }
 
         public bool? TestValue3 { get; set; }
 

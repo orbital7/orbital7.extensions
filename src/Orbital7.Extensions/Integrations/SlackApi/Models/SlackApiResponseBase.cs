@@ -6,10 +6,10 @@ public abstract class SlackApiResponseBase
     public bool Ok { get; set; }
 
     [JsonPropertyName("error")]
-    public string Error { get; set; }
+    public string? Error { get; set; }
 
     [JsonPropertyName("warning")]
-    public string Warning { get; set; }
+    public string? Warning { get; set; }
 
     public void AssertOk()
     {

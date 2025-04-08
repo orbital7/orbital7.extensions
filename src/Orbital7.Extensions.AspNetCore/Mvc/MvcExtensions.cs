@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.AspNetCore.Mvc;
+namespace Orbital7.Extensions.AspNetCore.Mvc;
 
 public static class MvcExtensions
 {
@@ -14,7 +14,7 @@ public static class MvcExtensions
         Expression<Func<TModel, TProperty>> expression)
     {
         ModelExpressionProvider modelExpressionProvider = 
-            (ModelExpressionProvider)htmlHelper.ViewContext.HttpContext.RequestServices.GetService(
+            (ModelExpressionProvider)htmlHelper.ViewContext.HttpContext.RequestServices.GetRequiredService(
                 typeof(IModelExpressionProvider));
         return modelExpressionProvider.CreateModelExpression(htmlHelper.ViewData, expression).ModelExplorer;
     }
@@ -52,10 +52,10 @@ public static class MvcExtensions
             attributes.Add(key, value);
     }
 
-    public static string GetPropertyDisplayName(
+    public static string? GetPropertyDisplayName(
         this ModelExplorer modelExplorer)
     {
-        string displayName = null;
+        string? displayName = null;
         
         if (modelExplorer.Metadata != null)
             displayName = modelExplorer.Metadata.DisplayName ?? modelExplorer.Metadata.PropertyName;
@@ -63,10 +63,13 @@ public static class MvcExtensions
         return displayName;
     }
 
-    public static string GetPropertyDisplayName<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper,
+    public static string? GetPropertyDisplayName<TModel, TProperty>(
+        this IHtmlHelper<TModel> htmlHelper,
         Expression<Func<TModel, TProperty>> expression)
     {
-        return htmlHelper.GetModelExplorer(expression).GetPropertyDisplayName();
+        return htmlHelper
+            .GetModelExplorer(expression)
+            .GetPropertyDisplayName();
     }
 
     public static IHtmlContent EncodedReplace(

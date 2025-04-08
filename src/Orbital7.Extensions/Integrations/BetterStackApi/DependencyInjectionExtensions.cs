@@ -15,13 +15,16 @@ public static class DependencyInjectionExtensions
 
     public static IServiceCollection AddBetterStackUptimeApi(
         this IServiceCollection services,
-        string apiToken)
+        string? apiToken)
     {
-        services.AddScoped<IUptimeHeartbeatsApi, UptimeHeartbeatsApi>(
-            (serviceProvider) => new UptimeHeartbeatsApi(
-                new BetterStackApiClient(
-                    serviceProvider.GetRequiredService<IHttpClientFactory>(),
-                    apiToken)));
+        if (apiToken.HasText())
+        {
+            services.AddScoped<IUptimeHeartbeatsApi, UptimeHeartbeatsApi>(
+                (serviceProvider) => new UptimeHeartbeatsApi(
+                    new BetterStackApiClient(
+                        serviceProvider.GetRequiredService<IHttpClientFactory>(),
+                        apiToken)));
+        }
 
         return services;
     }

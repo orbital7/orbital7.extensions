@@ -3,23 +3,23 @@
 public class Message
 {
     [JsonPropertyName("user")]
-    public string User { get; set; }
+    public string? User { get; set; }
 
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     [JsonPropertyName("ts")]
-    public string Ts { get; set; }
+    public string? Ts { get; set; }
 
     [JsonPropertyName("bot_id")]
-    public string BotId { get; set; }
+    public string? BotId { get; set; }
 
     [JsonPropertyName("app_id")]
-    public string AppId { get; set; }
+    public string? AppId { get; set; }
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     [JsonPropertyName("team")]
-    public string Team { get; set; }
+    public string? Team { get; set; }
 }

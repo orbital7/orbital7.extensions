@@ -19,7 +19,7 @@ public static class ValidationHelper
 
     private static ObjectValidationResult ValidateRecur(
         object model,
-        string memberNamePrefix)
+        string? memberNamePrefix)
     {
         // NOTE: This method currently fails to validate Structs.
 
@@ -66,7 +66,7 @@ public static class ValidationHelper
                     if (enumerableType.IsAssignableFrom(property.PropertyType))
                     {
                         int i = 0;
-                        foreach (var item in propertyValue as IEnumerable)
+                        foreach (var item in (IEnumerable)propertyValue)
                         {
                             var propertyName = $"{property.Name}[{i}]";
 

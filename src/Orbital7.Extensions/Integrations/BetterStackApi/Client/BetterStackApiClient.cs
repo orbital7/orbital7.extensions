@@ -3,11 +3,11 @@
 public class BetterStackApiClient :
     ApiClient, IBetterStackApiClient
 {
-    public string BearerToken { private get; set; }
+    public string? BearerToken { private get; set; }
 
     public BetterStackApiClient(
         IHttpClientFactory httpClientFactory,
-        string bearerToken = null) :
+        string? bearerToken = null) :
         base(httpClientFactory)
     {
         this.BearerToken = bearerToken;
@@ -23,7 +23,7 @@ public class BetterStackApiClient :
         HttpResponseMessage httpResponse, 
         string responseBody)
     {
-        string message = responseBody;
+        string? message = null;
 
         if (responseBody.StartsWith("{\"errors\":\""))
         {
@@ -33,12 +33,12 @@ public class BetterStackApiClient :
         else if (responseBody.StartsWith("{\"errors\":{\""))
         {
             var response = JsonSerializationHelper.DeserializeFromJson<MultipleErrorsResponse>(responseBody);
-            message = response.Errors
+            message = response.Errors?
                 .Select(x => $"{x.Key}: {x.Value.ToList().ToString(", ")}")
                 .ToList()
                 .ToString("; ");
         }
 
-        return new Exception(message);
+        return new Exception(message ?? responseBody);
     }
 }

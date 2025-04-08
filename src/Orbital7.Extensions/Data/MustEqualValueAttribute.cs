@@ -12,7 +12,7 @@ public class MustEqualValueAttribute :
     }
 
     public override bool IsValid(
-        object value)
+        object? value)
     {
         return Equals(value, Value);
     }

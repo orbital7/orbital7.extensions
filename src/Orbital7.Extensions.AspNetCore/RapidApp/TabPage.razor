@@ -1,35 +1,38 @@
-﻿@if (this.Parent.RenderMode == RATabsViewRenderMode.Dynamic)
-{ 
-    if (this.Parent.ActiveTab == this)
+﻿@if (this.Parent != null)
+{
+    @if (this.Parent.RenderMode == RATabsViewRenderMode.Dynamic)
+    { 
+        if (this.Parent.ActiveTab == this)
+        {
+            <div class="ra-flex-container">
+                @ChildContent
+            </div>
+        }
+    }
+    else if (this.Parent.RenderMode == RATabsViewRenderMode.Static)
     {
-        <div class="ra-flex-container">
+        <div class="ra-flex-container" style="@GetVisibilityStyle(this.Parent);">
             @ChildContent
         </div>
     }
-}
-else if (this.Parent.RenderMode == RATabsViewRenderMode.Static)
-{
-    <div class="ra-flex-container" style="@GetVisibilityStyle();">
-        @ChildContent
-    </div>
 }
 
 @code {
 
     [CascadingParameter]
-    private RATabsView Parent { get; set; }
+    private RATabsView? Parent { get; set; }
 
     [Parameter]
-    public string ID { get; set; }
+    public string? ID { get; set; }
 
     [Parameter]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     [Parameter]
     public bool IsVisible { get; set; } = true;
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     protected override void OnInitialized()
     {
@@ -43,9 +46,10 @@ else if (this.Parent.RenderMode == RATabsViewRenderMode.Static)
         base.OnInitialized();
     }
 
-    private string GetVisibilityStyle()
+    private string GetVisibilityStyle(
+        RATabsView parent)
     {
-        if (this.Parent.ActiveTab == this)
+        if (parent.ActiveTab == this)
         {
             return "";
         }

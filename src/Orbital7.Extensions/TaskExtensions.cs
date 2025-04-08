@@ -16,7 +16,7 @@ public static class TaskExtensions
     public static async void SafeFireAndForget(
         this Task task, 
         bool continueOnCapturedContext = true, 
-        Action<Exception> onException = null)
+        Action<Exception>? onException = null)
         #pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
     {
         try
@@ -39,7 +39,7 @@ public static class TaskExtensions
     public static async void SafeFireAndForget(
         this Task task, 
         bool continueOnCapturedContext = true, 
-        Func<Exception, Task> onException = null)
+        Func<Exception, Task>? onException = null)
         #pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
     {
         try

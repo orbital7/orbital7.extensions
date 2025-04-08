@@ -3,7 +3,7 @@
 public class StringWriterWithEncoding : 
     StringWriter
 {
-    private Encoding _encoding;
+    private Encoding? _encoding;
 
     public override Encoding Encoding => _encoding ?? base.Encoding;
 
