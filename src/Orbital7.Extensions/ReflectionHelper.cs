@@ -108,7 +108,7 @@ public static class ReflectionHelper
         Expression<Func<T, object>> property)
         where T : class
     {
-        return GetPropertyDisplayName(null, property);
+        return GetPropertyDisplayName(property);
     }
 
     public static string GetExecutingAssemblyFolderPath()
