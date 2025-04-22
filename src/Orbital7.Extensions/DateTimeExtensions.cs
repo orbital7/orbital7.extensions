@@ -96,11 +96,11 @@ public static class DateTimeExtensions
         return ((dateTime.Year - dateToCompare.Year) * 12) + dateTime.Month - dateToCompare.Month;
     }
 
-    public static int CalculateQuartersDifference(
+    public static int CalculateStandardFiscalQuartersDifference(
         this DateTime dateTime, 
         DateTime dateToCompare)
     {
-        return ((dateTime.Year - dateToCompare.Year) * 4) + dateTime.ToQuarter() - dateToCompare.ToQuarter();
+        return ((dateTime.Year - dateToCompare.Year) * 4) + dateTime.GetStandardFiscalQuarter() - dateToCompare.GetStandardFiscalQuarter();
     }
 
     public static double CalculateAverageMonthsDifference(
@@ -108,22 +108,6 @@ public static class DateTimeExtensions
         DateTime dateToCompare)
     {
         return dateTime.Subtract(dateToCompare).Days / (365.25 / 12);
-    }
-
-    public static string ToDefaultDateString(
-        this DateOnly date)
-    {
-        return date.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
-    }
-
-    public static string? ToDefaultDateString(
-        this DateOnly? date,
-        string? nullValue = null)
-    {
-        if (date.HasValue)
-            return date.Value.ToDefaultDateString();
-        else
-            return nullValue;
     }
 
     public static string ToDefaultDateString(
@@ -225,7 +209,7 @@ public static class DateTimeExtensions
         return dateTimeUtc;
     }
 
-    public static DateTime RoundToStartOfBusinessDay(
+    public static DateTime RoundUpToStartOfBusinessDay(
         this DateTime dateTime)
     {
         if (dateTime.DayOfWeek == DayOfWeek.Saturday)
@@ -233,85 +217,85 @@ public static class DateTimeExtensions
         else if (dateTime.DayOfWeek == DayOfWeek.Sunday)
             dateTime = dateTime.AddDays(1);
 
-        return dateTime.RoundToStartOfDay();
+        return dateTime.RoundDownToStartOfDay();
     }
 
-    public static DateTime RoundToStartOfNextBusinessDay(
+    public static DateTime RoundUpToStartOfNextBusinessDay(
         this DateTime dateTime)
     {
-        return dateTime.AddDays(1).RoundToStartOfBusinessDay();
+        return dateTime.AddDays(1).RoundUpToStartOfBusinessDay();
     }
 
-    public static DateTime RoundToStartOfMinute(
+    public static DateTime RoundDownToStartOfMinute(
         this DateTime dateTime)
     {
         return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
     }
 
-    public static DateTime RoundToEndOfMinute(
+    public static DateTime RoundUpToEndOfMinute(
         this DateTime dateTime)
     {
-        return dateTime.RoundToStartOfMinute().AddMinutes(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+        return dateTime.RoundDownToStartOfMinute().AddMinutes(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
     }
 
-    public static DateTime RoundToStartOfHour(
+    public static DateTime RoundDownToStartOfHour(
         this DateTime dateTime)
     {
         return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, dateTime.Kind);
     }
 
-    public static DateTime RoundToEndOfHour(
+    public static DateTime RoundUpToEndOfHour(
         this DateTime dateTime)
     {
-        return dateTime.RoundToStartOfHour().AddHours(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+        return dateTime.RoundDownToStartOfHour().AddHours(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
     }
 
-    public static DateTime RoundToStartOfDay(
+    public static DateTime RoundDownToStartOfDay(
         this DateTime dateTime)
     {
         return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
     }
 
-    public static DateTime RoundToEndOfDay(
+    public static DateTime RoundUpToEndOfDay(
         this DateTime dateTime)
     {
-        return dateTime.RoundToStartOfDay().AddDays(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+        return dateTime.RoundDownToStartOfDay().AddDays(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
     }
 
-    public static DateTime RoundToStartOfWeek(
+    public static DateTime RoundDownToStartOfWeek(
         this DateTime dateTime)
     {
         while (dateTime.DayOfWeek != DayOfWeek.Sunday)
             dateTime = dateTime.AddDays(-1);
 
-        return dateTime.RoundToStartOfDay();
+        return dateTime.RoundDownToStartOfDay();
     }
 
-    public static DateTime RoundToEndOfWeek(
+    public static DateTime RoundUpToEndOfWeek(
         this DateTime dateTime)
     {
         while (dateTime.DayOfWeek != DayOfWeek.Saturday)
             dateTime = dateTime.AddDays(1);
 
-        return dateTime.RoundToEndOfDay();
+        return dateTime.RoundUpToEndOfDay();
     }
 
-    public static DateTime RoundToStartOfMonth(
+    public static DateTime RoundDownToStartOfMonth(
         this DateTime dateTime)
     {
-        return new DateTime(dateTime.Year, dateTime.Month, 1).RoundToStartOfDay();
+        return new DateTime(dateTime.Year, dateTime.Month, 1).RoundDownToStartOfDay();
     }
 
-    public static DateTime RoundToEndOfMonth(
+    public static DateTime RoundUpToEndOfMonth(
         this DateTime dateTime)
     {
         if (dateTime.Month == 12)
-            return dateTime.RoundToEndOfYear();
+            return dateTime.RoundUpToEndOfYear();
         else
-            return new DateTime(dateTime.Year, dateTime.Month + 1, 1).AddDays(-1).RoundToEndOfDay();
+            return new DateTime(dateTime.Year, dateTime.Month + 1, 1).AddDays(-1).RoundUpToEndOfDay();
     }
 
-    public static int ToQuarter(
+    public static int GetStandardFiscalQuarter(
         this DateTime dateTime)
     {
         if (dateTime.Month <= 3)
@@ -323,7 +307,7 @@ public static class DateTimeExtensions
         return 4;
     }
 
-    public static DateTime RoundToStartOfQuarter(
+    public static DateTime RoundDownToStartOfStandardFiscalQuarter(
         this DateTime dateTime)
     {
         if (dateTime.Month <= 3)
@@ -335,7 +319,7 @@ public static class DateTimeExtensions
         return new DateTime(dateTime.Year, 10, 1);
     }
 
-    public static DateTime RoundToEndOfQuarter(
+    public static DateTime RoundUpToEndOfStandardFiscalQuarter(
         this DateTime dateTime)
     {
         if (dateTime.Month <= 3)
@@ -347,19 +331,19 @@ public static class DateTimeExtensions
         return new DateTime(dateTime.Year + 1, 1, 1).AddDays(-1);
     }
 
-    public static DateTime RoundToStartOfYear(
+    public static DateTime RoundDownToStartOfYear(
         this DateTime dateTime)
     {
-        return new DateTime(dateTime.Year, 1, 1).RoundToStartOfDay();
+        return new DateTime(dateTime.Year, 1, 1).RoundDownToStartOfDay();
     }
 
-    public static DateTime RoundToEndOfYear(
+    public static DateTime RoundUpToEndOfYear(
         this DateTime dateTime)
     {
-        return new DateTime(dateTime.Year, 12, 31).RoundToEndOfDay();
+        return new DateTime(dateTime.Year, 12, 31).RoundUpToEndOfDay();
     }
 
-    public static DateTime RoundToEndOfQuarterHour(
+    public static DateTime RoundUpToEndOfQuarterHour(
         this DateTime dateTime)
     {
         var minutes = 0;
@@ -372,10 +356,10 @@ public static class DateTimeExtensions
         else if (dateTime.Minute > 0 && dateTime.Minute <= 15)
             minutes = 15;
 
-        return dateTime.RoundToStartOfHour().AddMinutes(minutes);
+        return dateTime.RoundDownToStartOfHour().AddMinutes(minutes);
     }
 
-    public static DateTime RoundForwardToDayOfWeek(
+    public static DateTime RoundUpToDayOfWeek(
             this DateTime dateTime,
             DayOfWeek dayOfWeek)
     {
@@ -386,7 +370,7 @@ public static class DateTimeExtensions
         return value;
     }
 
-    public static DateTime RoundBackwardToDayOfWeek(
+    public static DateTime RoundDownToDayOfWeek(
         this DateTime dateTime,
         DayOfWeek dayOfWeek)
     {
@@ -434,7 +418,7 @@ public static class DateTimeExtensions
     public static string ToAbbrevString(
         this DayOfWeek dayOfWeek)
     {
-        return DateTime.Now.RoundForwardToDayOfWeek(dayOfWeek).ToString("ddd");
+        return DateTime.Now.RoundUpToDayOfWeek(dayOfWeek).ToString("ddd");
     }
 
 

@@ -38,7 +38,7 @@ public static class DependencyInjectionExtensions
         this IServiceCollection services,
         string? environmentVariableName = null,
         string[]? args = null)
-        where TConfiguration : class
+        where TConfiguration : class, new()
     {
         var configuration = ConfigurationHelper.GetConfiguration<TConfiguration>(
             environmentVariableName,

@@ -11,4 +11,20 @@ public static class StringBuilderExtensions
         sb.Append(lineTerminator);
         return sb;
     }
+
+    public static StringBuilder AppendCommaSeparatedValuesLine(
+        this StringBuilder sb,
+        params string[] values)
+    {
+        sb.AppendLine(string.Join(",", values));
+        return sb;
+    }
+
+    public static StringBuilder AppendTabSeparatedValuesLine(
+        this StringBuilder sb,
+        params string[] values)
+    {
+        sb.AppendLine(string.Join("\t", values));
+        return sb;
+    }
 }

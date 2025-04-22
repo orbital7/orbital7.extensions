@@ -27,23 +27,23 @@ public static class ConfigurationHelper
             .Build();
     }
 
-    public static TConfiguration? GetConfiguration<TConfiguration>(
+    public static TConfiguration GetConfiguration<TConfiguration>(
         string? environmentVariableName = null,
         string[]? args = null)
-        where TConfiguration : class
+        where TConfiguration : class, new()
     {
         return GetConfiguration(environmentVariableName, args)?
-            .Get<TConfiguration>();
+            .Get<TConfiguration>() ?? new();
     }
 
-    public static TConfiguration? GetConfigurationWithUserSecrets<TConfiguration, TAssemblyClass>(
+    public static TConfiguration GetConfigurationWithUserSecrets<TConfiguration, TAssemblyClass>(
         string? environmentVariableName = null,
         string[]? args = null)
-        where TConfiguration : class
+        where TConfiguration : class, new()
         where TAssemblyClass : class
     {
         return GetConfigurationWithUserSecrets<TAssemblyClass>(environmentVariableName, args)?
-            .Get<TConfiguration>();
+            .Get<TConfiguration>() ?? new();
     }
 
     public static IConfigurationBuilder CreateConfigurationBuilder(
@@ -64,21 +64,21 @@ public static class ConfigurationHelper
         return FinishBuilder(builder, true, args);
     }
 
-    public static TConfiguration? ReadUserSecrets<TConfiguration, TAssemblyClass>()
+    public static TConfiguration ReadUserSecrets<TConfiguration, TAssemblyClass>()
+        where TConfiguration : class, new()
         where TAssemblyClass : class
     {
+        TConfiguration? configuration = default!;
         var secretsId = GetVerifiedSecretsId<TAssemblyClass>();
 
         var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(secretsId);
         if (Path.Exists(secretsFilePath))
         {
-            return JsonSerializationHelper.DeserializeFromJsonFile<TConfiguration>(
+            configuration = JsonSerializationHelper.DeserializeFromJsonFile<TConfiguration>(
                 secretsFilePath);
         }
-        else
-        {
-            return ReflectionHelper.CreateInstance<TConfiguration>();
-        }
+        
+        return configuration ?? new();
     }
 
     public static TConfiguration WriteUserSecrets<TConfiguration, TAssemblyClass>(
