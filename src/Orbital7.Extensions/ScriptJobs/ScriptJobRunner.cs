@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
+﻿namespace Orbital7.Extensions.ScriptJobs;
 
-namespace Orbital7.Extensions.ScriptJobs;
-
-public static class ScriptJobExecutionEngine
+public static class ScriptJobRunner
 {
     public static async Task ExecuteAsync(
         ScriptJobBase scriptJob,
@@ -12,8 +10,13 @@ public static class ScriptJobExecutionEngine
         // Validate.
         if (scriptJob != null)
         {
+            // Set the working folder if specified.
+            if (workingFolderPath.HasText())
+            {
+                scriptJob.WorkingFolderPath = workingFolderPath;
+            }
+
             // Load the script.
-            scriptJob.WorkingFolderPath = workingFolderPath;
             await scriptJob.OnLoadAsync();
             Console.WriteLine("LOADED SCRIPT: " + scriptJob.Name);
 
@@ -35,21 +38,46 @@ public static class ScriptJobExecutionEngine
                 Console.WriteLine("RUNNING SCRIPT...");
                 Console.WriteLine();
 
+                // Ensure the working folder exists.
+                if (scriptJob.WorkingFolderPath.HasText())
+                {
+                    FileSystemHelper.EnsureFolderExists(scriptJob.WorkingFolderPath);
+                }
+
+                // Execute.
                 await scriptJob.ExecuteAsync();
             }
             catch (Exception ex)
             {
-                ConsoleHelper.WriteExceptionLine(ex, "UNHANDLED EXECUTION ERROR: ");
+                if (!unattendedExecution)
+                {
+                    ConsoleHelper.WriteExceptionLine(ex, "UNHANDLED EXECUTION ERROR: ");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            finally
+            {
+                stopwatch.Stop();
             }
 
             // Display elapsed time.
-            stopwatch.Stop();
             Console.WriteLine();
             Console.WriteLine("RUN TIME: " + stopwatch.Elapsed.ToString());
         }
         else
         {
-            Console.WriteLine("ERROR: No Script Job has been loaded for execution");
+            var errorMessage = "ERROR: No Script Job has been loaded for execution";
+            if (!unattendedExecution)
+            {
+                Console.WriteLine(errorMessage);
+            }
+            else
+            {
+                throw new Exception(errorMessage);
+            }
         }
 
         // Present exit confirmation.

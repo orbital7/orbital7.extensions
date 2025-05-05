@@ -9,6 +9,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     private const string METADATA_LOGGER = "Logger";
     private const string METADATA_EXCEPTION = "Exception";
     private const string METADATA_CALLERMEMBERNAME = "CallerMemberName";
+    public const string PLATFORM = "BetterStack";
 
     private readonly ITelemetryLoggingApi _telementryLoggingApi;
     private readonly IExternalNotificationService? _externalNotificationService;
@@ -92,7 +93,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                 {
                     await _externalNotificationService.SendAsync(
                         LogLevel.Error,
-                        $"BetterStackLoggingService Error: {ex.Message.PruneEnd(".")}. " +
+                        $"BetterStack Logging Error: {ex.Message.PruneEnd(".")}. " +
                             $"[{logLevel.ToString().ToUpper()}] {logger} {message}");
                 }
             }

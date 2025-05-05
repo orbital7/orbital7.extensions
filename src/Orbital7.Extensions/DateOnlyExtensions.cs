@@ -99,7 +99,7 @@ public static class DateOnlyExtensions
             date.DayOfWeek == DayOfWeek.Sunday ||
             (includeFixedDateFederalHolidays && date.Month == 1 && date.Day == 1) ||
             (includeFixedDateFederalHolidays && date.Month == 6 && date.Day == 4) ||
-            (includeFixedDateFederalHolidays && date.Month == 6 && date.Day == 19 && date.Year >= 2021) ||
+            (includeFixedDateFederalHolidays && date.Month == 6 && date.Day == 19 && date.Year > 2021) ||   // TODO: This actually isn't a fixed date holiday.
             (includeFixedDateFederalHolidays && date.Month == 11 && date.Day == 11) ||
             (includeFixedDateFederalHolidays && date.Month == 12 && date.Day == 25));
     }

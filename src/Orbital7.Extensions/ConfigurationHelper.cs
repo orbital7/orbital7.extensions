@@ -69,7 +69,7 @@ public static class ConfigurationHelper
         where TAssemblyClass : class
     {
         TConfiguration? configuration = default!;
-        var secretsId = GetVerifiedSecretsId<TAssemblyClass>();
+        var secretsId = GetSecretsId<TAssemblyClass>();
 
         var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(secretsId);
         if (Path.Exists(secretsFilePath))
@@ -87,7 +87,7 @@ public static class ConfigurationHelper
         where TAssemblyClass : class
     {
         var secretsFilePath = PathHelper.GetSecretsPathFromSecretsId(
-            GetVerifiedSecretsId<TAssemblyClass>());
+            GetSecretsId<TAssemblyClass>());
 
         JsonSerializationHelper.SerializeToJsonFile(
             userSecrets,
@@ -103,7 +103,7 @@ public static class ConfigurationHelper
         where TAssemblyClass : class
     {
         // Read the existing secrets file.
-        var secretsId = GetVerifiedSecretsId<TAssemblyClass>();
+        var secretsId = GetSecretsId<TAssemblyClass>();
 
         // Initialize secrets.
         dynamic secrets = new ExpandoObject();
@@ -129,16 +129,16 @@ public static class ConfigurationHelper
         return secrets;
     }
 
-    public static string? GetUserSecretsId<TAssemblyClass>()
+    public static string? TryGetUserSecretsId<TAssemblyClass>()
     {
         return Assembly.GetAssembly(typeof(TAssemblyClass))?
             .GetCustomAttribute<UserSecretsIdAttribute>()?
             .UserSecretsId;
     }
 
-    private static string GetVerifiedSecretsId<TAssemblyClass>()
+    private static string GetSecretsId<TAssemblyClass>()
     {
-        var secretsId = GetUserSecretsId<TAssemblyClass>();
+        var secretsId = TryGetUserSecretsId<TAssemblyClass>();
         if (secretsId.HasText())
         {
             return secretsId;

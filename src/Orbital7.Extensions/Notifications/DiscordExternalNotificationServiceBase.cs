@@ -5,6 +5,8 @@ namespace Orbital7.Extensions.Notifications;
 public abstract class DiscordExternalNotificationServiceBase :
     IExternalNotificationService
 {
+    public const string PLATFORM = "Discord";
+
     private readonly IChannelsApi _channelsApi;
 
     protected abstract ulong TraceChannelId { get; }

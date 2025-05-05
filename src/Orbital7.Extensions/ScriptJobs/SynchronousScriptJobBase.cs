@@ -1,6 +1,7 @@
 ﻿namespace Orbital7.Extensions.ScriptJobs;
 
-public abstract class SynchronousScriptJobBase : ScriptJobBase
+public abstract class SynchronousScriptJobBase : 
+    ScriptJobBase
 {
     protected abstract void Execute();
 

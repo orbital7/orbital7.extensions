@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Orbital7.Extensions.EntityFrameworkCore;
+namespace Orbital7.Extensions.EntityFrameworkCore.AspNetCoreIdentity;
 
 public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
     IdentityDbContext<TUser, TRole, TKey>
@@ -17,9 +17,9 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
         DbContextOptions options) : 
         base(options)
     {
-        if (this.Database.IsRelational())
+        if (Database.IsRelational())
         {
-            this.Database.SetCommandTimeout(3600);
+            Database.SetCommandTimeout(3600);
         }
     }
 
@@ -64,7 +64,7 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
     private int HandlePostSave(
         int result)
     {
-        if (this.ClearChangeTrackerOnSave)
+        if (ClearChangeTrackerOnSave)
         {
             base.ChangeTracker.Clear();
         }
@@ -74,7 +74,7 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
 
     private void ValidateSave()
     {
-        if (this.IsReadOnly)
+        if (IsReadOnly)
         {
             throw new Exception("Saving is not permitted on a read-only context");
         }

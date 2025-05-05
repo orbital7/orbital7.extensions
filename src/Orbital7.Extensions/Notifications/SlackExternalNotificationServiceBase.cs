@@ -5,6 +5,8 @@ namespace Orbital7.Extensions.Notifications;
 public abstract class SlackExternalNotificationServiceBase :
     IExternalNotificationService
 {
+    public const string PLATFORM = "Slack";
+
     private readonly IChatApi _chatApi;
 
     protected abstract string TraceChannel { get; }
