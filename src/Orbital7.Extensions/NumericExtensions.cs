@@ -10,18 +10,21 @@ public static class NumericExtensions
     {
         var displayOptions = options ?? new DisplayValueOptions();
 
-        var format = displayOptions.ForCurrencyAddCommas ? "#,##0.00" : "0.00";
+        var decimalFormat = displayOptions.CurrencyDecimalPlaces > 0 ?
+            "." + new string('0', (int)displayOptions.CurrencyDecimalPlaces) : string.Empty;
 
-        var roundedNumber = Math.Round(number, 2);
+        var format = displayOptions.CurrencyAddCommas ? $"#,##0{decimalFormat}" : $"0{decimalFormat}";
+
+        var roundedNumber = Math.Round(number, displayOptions.CurrencyDecimalPlaces);
         var isNegative = roundedNumber < 0;
         var value = string.Empty;
 
         if (isNegative)
             value += "-";
-        else if (displayOptions.ForCurrencyAddPlusIfPositive && roundedNumber > 0)
+        else if (displayOptions.CurrencyAddPlusIfPositive && roundedNumber > 0)
             value += "+";
 
-        if (displayOptions.ForCurrencyAddSymbol)
+        if (displayOptions.CurrencyAddSymbol)
             value += "$";
 
         value += Math.Abs(roundedNumber).ToString(format);

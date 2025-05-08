@@ -27,7 +27,8 @@ public static class DateOnlyExtensions
     public static DateOnly AddBusinessDays(
         this DateOnly date,
         int days,
-        bool includeFixedDateFederalHolidays = true)
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
     {
         var totalDays = Math.Abs(days);
         var delta = days < 0 ? -1 : 1;
@@ -37,7 +38,7 @@ public static class DateOnlyExtensions
         while (businessDays < totalDays)
         {
             value = value.AddDays(delta);
-            if (value.IsBusinessDay(includeFixedDateFederalHolidays))
+            if (value.IsBusinessDay(nonBusinessDaysOfWeekOverride, holidayDatesOverride))
             {
                 businessDays++;
             }
@@ -48,10 +49,11 @@ public static class DateOnlyExtensions
 
     public static DateOnly RoundUpToBusinessDay(
         this DateOnly date,
-        bool includeFixedDateFederalHolidays = true)
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
     {
         var value = date;
-        while (!value.IsBusinessDay(includeFixedDateFederalHolidays))
+        while (!value.IsBusinessDay(nonBusinessDaysOfWeekOverride, holidayDatesOverride))
         {
             value = value.AddDays(1);
         }
@@ -60,10 +62,11 @@ public static class DateOnlyExtensions
 
     public static DateOnly RoundDownToBusinessDay(
         this DateOnly date,
-        bool includeFixedDateFederalHolidays = true)
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
     {
         var value = date;
-        while (!value.IsBusinessDay(includeFixedDateFederalHolidays))
+        while (!value.IsBusinessDay(nonBusinessDaysOfWeekOverride, holidayDatesOverride))
         {
             value = value.AddDays(-1);
         }
@@ -72,36 +75,43 @@ public static class DateOnlyExtensions
 
     public static DateOnly RoundUpToNextBusinessDay(
         this DateOnly date,
-        bool includeFixedDateFederalHolidays = true)
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
     {
         return date
             .AddDays(1)
-            .RoundUpToBusinessDay(includeFixedDateFederalHolidays);
+            .RoundUpToBusinessDay(
+                nonBusinessDaysOfWeekOverride, 
+                holidayDatesOverride);
     }
 
     public static DateOnly RoundDownToPreviousBusinessDay(
         this DateOnly date,
-        bool includeFixedDateFederalHolidays = true)
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
     {
         return date
             .AddDays(-1)
-            .RoundDownToBusinessDay(includeFixedDateFederalHolidays);
+            .RoundDownToBusinessDay(
+                nonBusinessDaysOfWeekOverride, 
+                holidayDatesOverride);
     }
 
     public static bool IsBusinessDay(
         this DateOnly date,
-        bool includeFixedDateFederalHolidays = true)
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
     {
-        // Take into account weekends and optionally holidays
-        // that happen on the same day every year.
-        return !(
-            date.DayOfWeek == DayOfWeek.Saturday ||
-            date.DayOfWeek == DayOfWeek.Sunday ||
-            (includeFixedDateFederalHolidays && date.Month == 1 && date.Day == 1) ||
-            (includeFixedDateFederalHolidays && date.Month == 6 && date.Day == 4) ||
-            (includeFixedDateFederalHolidays && date.Month == 6 && date.Day == 19 && date.Year > 2021) ||   // TODO: This actually isn't a fixed date holiday.
-            (includeFixedDateFederalHolidays && date.Month == 11 && date.Day == 11) ||
-            (includeFixedDateFederalHolidays && date.Month == 12 && date.Day == 25));
+        // Ensure we have values.
+        holidayDatesOverride ??= DateTimeHelper.GetFederalHolidayDates(date.Year);
+        nonBusinessDaysOfWeekOverride ??= new List<DayOfWeek>
+        {
+            DayOfWeek.Saturday,
+            DayOfWeek.Sunday
+        };
+
+        return !nonBusinessDaysOfWeekOverride.Contains(date.DayOfWeek) &&
+               !holidayDatesOverride.Contains(date);
     }
 
     public static DateOnly RoundUpToDayOfWeek(
@@ -153,34 +163,13 @@ public static class DateOnlyExtensions
     public static DateOnly RoundToNthDayOfWeekOfMonth(
         this DateOnly date,
         DayOfWeek dayOfWeek,
-        int n)
+        int occurance)
     {
-        var count = 0;
-        var value = date.RoundDownToStartOfMonth();
-
-        while (count < n)
-        {
-            if (value.DayOfWeek == dayOfWeek)
-            {
-                count++;
-            }
-
-            if (count == n)
-            {
-                return value;
-            }
-            else if (count < n)
-            {
-                value = value.AddDays(1);
-            }
-
-            if (value.Month > date.Month)
-            {
-                throw new Exception("Unable to find Nth day of week for the specified date");
-            }
-        }
-
-        return value;
+        return DateTimeHelper.GetNthDayOfWeekInMonth(
+            date.Year, 
+            date.Month, 
+            dayOfWeek, 
+            occurance);
     }
 
     public static DateOnly RoundDownToStartOfMonth(

@@ -5,11 +5,13 @@ public class DisplayValueOptions
     // Currency options.
     public bool UseCurrencyForDecimals { get; set; } = true;
 
-    public bool ForCurrencyAddSymbol { get; set; } = true;
+    public bool CurrencyAddSymbol { get; set; } = true;
 
-    public bool ForCurrencyAddCommas { get; set; } = true;
+    public bool CurrencyAddCommas { get; set; } = true;
 
-    public bool ForCurrencyAddPlusIfPositive { get; set; } = false;
+    public bool CurrencyAddPlusIfPositive { get; set; } = false;
+
+    public int CurrencyDecimalPlaces { get; set; } = 2;
 
 
     // Number options.
