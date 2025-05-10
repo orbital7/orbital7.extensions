@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Csv;
+﻿namespace Orbital7.Extensions;
 
 public class CsvModelClassBuilder
 {

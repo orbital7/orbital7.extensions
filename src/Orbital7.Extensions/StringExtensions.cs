@@ -15,6 +15,19 @@ public static class StringExtensions
     public const string AlphanumericChars = NumberChars + LetterChars;
     public const string WhitespaceChars = " \r\n\t\v\f";
 
+    public static T? ToTypedValue<T>(
+        this string? value)
+    {
+        if (!value.HasText())
+            return default;
+        
+        var converter = TypeDescriptor.GetConverter(typeof(T));
+        if (converter == null || !converter.CanConvertFrom(typeof(string)))
+            throw new InvalidOperationException($"Cannot convert from string to {typeof(T).Name}.");
+
+        return (T?)converter.ConvertFromInvariantString(value);
+    }
+
     public static string? ShuffleCharacters(
         this string? value)
     {

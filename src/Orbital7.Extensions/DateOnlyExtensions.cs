@@ -97,6 +97,37 @@ public static class DateOnlyExtensions
                 holidayDatesOverride);
     }
 
+    public static DateOnly MinimallyShiftUpOrDownToBusinessDay(
+        this DateOnly date,
+        int daysToShift,
+        bool shiftUpIfEqual,
+        IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,
+        IList<DateOnly>? holidayDatesOverride = null)
+    {
+        var dateShiftedUp = date.AddBusinessDays(
+            Math.Abs(daysToShift),
+            nonBusinessDaysOfWeekOverride,
+            holidayDatesOverride);
+
+        var dateShiftedDown = date.AddBusinessDays(
+            -1 * Math.Abs(daysToShift),
+            nonBusinessDaysOfWeekOverride,
+            holidayDatesOverride);
+
+        var daysShiftedUp = dateShiftedUp.DayNumber - date.DayNumber;
+        var daysShiftedDown = date.DayNumber - dateShiftedDown.DayNumber;
+
+        if (daysShiftedUp < daysShiftedDown ||
+            (daysShiftedUp == daysShiftedDown && shiftUpIfEqual))
+        {
+            return dateShiftedUp;
+        }
+        else
+        {
+            return dateShiftedDown;
+        }
+    }
+
     public static bool IsBusinessDay(
         this DateOnly date,
         IList<DayOfWeek>? nonBusinessDaysOfWeekOverride = null,

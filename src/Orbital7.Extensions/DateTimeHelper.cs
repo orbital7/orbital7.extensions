@@ -1,25 +1,25 @@
 ﻿namespace Orbital7.Extensions;
 
+public enum Holiday
+{
+    NewYearsDay,
+    MartinLutherKingJrDay,
+    PresidentsDay,
+    GoodFriday,
+    Easter,
+    MemorialDay,
+    Juneteenth,
+    IndependenceDay,
+    LaborDay,
+    ColumbusDay,
+    VeteransDay,
+    ThanksgivingDay,
+    ChristmasDay,
+}
+
 public static class DateTimeHelper
 {
     public const string DEFAULT_DATE_FORMAT = "MM/dd/yyyy";
-
-    public enum Holiday
-    {
-        NewYearsDay,
-        MartinLutherKingJrDay,
-        PresidentsDay,
-        GoodFriday,
-        Easter,
-        MemorialDay,
-        Juneteenth,
-        IndependenceDay,
-        LaborDay,
-        ColumbusDay,
-        VeteransDay,
-        ThanksgivingDay,
-        ChristmasDay,
-    }
 
     public static TimeZoneInfo GetTimeZone(
         string timeZoneId)
@@ -41,7 +41,9 @@ public static class DateTimeHelper
         holidays.Add(GetHolidayDate(Holiday.MemorialDay, year));
 
         if (year >= 2021)
+        {
             holidays.Add(GetHolidayDate(Holiday.Juneteenth, year));
+        }
 
         holidays.Add(GetHolidayDate(Holiday.IndependenceDay, year));
         holidays.Add(GetHolidayDate(Holiday.LaborDay, year));
