@@ -268,4 +268,27 @@ public static class DateOnlyExtensions
     {
         return date.ToString("yyyy-MM-dd");
     }
+
+    public static int CalculateMonthsDifferenceFromStartOfMonth(
+        this DateOnly date,
+        DateOnly dateToCompare)
+    {
+        return ((date.Year - dateToCompare.Year) * 12) + date.Month - dateToCompare.Month;
+    }
+
+    public static double CalculateMonthsDifference(
+       this DateOnly date,
+       DateOnly dateToCompare)
+    {
+        return date
+            .ToDateTime()
+            .CalculateMonthsDifference(
+                dateToCompare.ToDateTime());
+    }
+
+    public static DateTime ToDateTime(
+        this DateOnly date)
+    {
+        return new DateTime(date, new TimeOnly());
+    }
 }

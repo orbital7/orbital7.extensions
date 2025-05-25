@@ -22,7 +22,7 @@ public class BetterStackApiTests
     }
 
     [SkippableFact]
-    public async Task TestUptimeHeartbeatsApi()
+    public async Task UptimeHeartbeatsApi()
     {
         // NOTE: This test is not very clean; we try all CRUD operations, but
         // there's no conditional clean up. This test was used moreso for 
@@ -116,14 +116,14 @@ public class BetterStackApiTests
     }
 
     [SkippableFact]
-    public async Task TestTelemetryLoggingApi()
+    public async Task TelemetryLoggingApi()
     {
         // Skip this test unless we have the necessary configuration data.
         Skip.IfNot(this.BetterStackLogsSourceToken.HasText() && this.BetterStackLogsIngestingHost.HasText());
 
         // Create the client and service.
         var client = new BetterStackApiClient(this.HttpClientFactory);
-        var logsUploadApi = new TelemetryLoggingApi(client);
+        var telemetryLoggingApi = new TelemetryLoggingApi(client);
 
         // Create an event.
         var logEvent = new LogEvent()
@@ -148,7 +148,7 @@ public class BetterStackApiTests
         };
 
         // Upload single log event.
-        await logsUploadApi.LogEventAsync(
+        await telemetryLoggingApi.LogEventAsync(
             this.BetterStackLogsSourceToken,
             this.BetterStackLogsIngestingHost,
             logEvent);
@@ -183,7 +183,7 @@ public class BetterStackApiTests
         };
 
         // Upload multiple log events.
-        await logsUploadApi.LogEventsAsync(
+        await telemetryLoggingApi.LogEventsAsync(
             this.BetterStackLogsSourceToken,
             this.BetterStackLogsIngestingHost,
             logEvents);

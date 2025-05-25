@@ -14,7 +14,7 @@ public class DiscordApiTests
     {
         var config = ConfigurationHelper.GetConfigurationWithUserSecrets<DiscordApiTests>();
         this.DiscordApiBotToken = config["DiscordApiBotToken"];
-        this.DiscordApiTestChannelId = NumericHelper.ParseNullableUlong(config["DiscordApiTestChannelId"]);
+        this.DiscordApiTestChannelId =  ParsingHelper.ParseNullableUlong(config["DiscordApiTestChannelId"]);
         this.HttpClientFactory = new BasicHttpClientFactory();
     }
 

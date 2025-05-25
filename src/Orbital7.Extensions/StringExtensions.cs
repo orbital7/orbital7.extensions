@@ -92,7 +92,7 @@ public static class StringExtensions
                 plural = value.PruneEnd(1) + "ies";
             else if (value.EndsWith("is"))
                 plural = value.PruneEnd(2) + "es";
-            else if (value.EndsWith("s"))
+            else if (value.EndsWith("s") || value.EndsWith("ch"))
                 plural = value + "es";
             else
                 plural = value + "s";
@@ -101,6 +101,18 @@ public static class StringExtensions
         }
 
         return null;
+    }
+
+    public static string? PluralizeIf(
+        this string? value,
+        bool condition)
+    {
+        if (condition)
+        {
+            return value.Pluralize();
+        }
+
+        return value;
     }
 
     public static string? Remove(
@@ -438,9 +450,9 @@ public static class StringExtensions
     }
 
     public static bool IsNumbers(
-        this string value)
+        this string? value)
     {
-        if (!string.IsNullOrEmpty(value))
+        if (value.HasText())
         {
             foreach (char c in value.ToCharArray())
                 if (!NumberChars.Contains(c.ToString()))
@@ -455,9 +467,9 @@ public static class StringExtensions
     }
 
     public static bool IsLetters(
-        this string value)
+        this string? value)
     {
-        if (!string.IsNullOrEmpty(value))
+        if (value.HasText())
         {
             foreach (char c in value.ToCharArray())
                 if (!LetterChars.Contains(c.ToString()))
@@ -472,9 +484,9 @@ public static class StringExtensions
     }
 
     public static bool IsAlphanumeric(
-        this string value)
+        this string? value)
     {
-        if (!string.IsNullOrEmpty(value))
+        if (value.HasText())
         {
             foreach (char c in value.ToCharArray())
                 if (!AlphanumericChars.Contains(c.ToString()))
@@ -959,6 +971,16 @@ public static class StringExtensions
         DateTime? defaultValue = null)
     {
         if (value != null && DateTime.TryParse(value, out DateTime parsedValue))
+            return parsedValue;
+        else
+            return defaultValue;
+    }
+
+    public static DateOnly? ParseDateOnly(
+        this string? value,
+        DateOnly? defaultValue = null)
+    {
+        if (value != null && DateOnly.TryParse(value, out DateOnly parsedValue))
             return parsedValue;
         else
             return defaultValue;

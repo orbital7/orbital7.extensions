@@ -6,10 +6,10 @@ public sealed class SetBrowserTimeConverter :
     ComponentBase
 {
     [Inject] 
-    public TimeConverter TimeConverter { get; set; } = default!;
+    private TimeConverter TimeConverter { get; init; } = default!;
 
     [Inject] 
-    public IJSRuntime JSRuntime { get; set; } = default!;
+    private IJSRuntime JSRuntime { get; init; } = default!;
 
     protected override async Task OnAfterRenderAsync(
         bool firstRender)

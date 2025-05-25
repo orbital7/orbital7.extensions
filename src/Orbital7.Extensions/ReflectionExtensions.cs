@@ -261,7 +261,7 @@ public static class ReflectionExtensions
                 }
                 else
                 {
-                    return new DateTime(date, new TimeOnly()).ToShortDateString();
+                    return date.ToDateTime().ToShortDateString();
                 }
             }
             else if (type == typeof(TimeOnly) || type == typeof(TimeOnly?))

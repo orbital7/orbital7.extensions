@@ -36,6 +36,18 @@ public static class EnumHelper
         return (TEnum)Enum.Parse(typeof(TEnum), value);
     }
 
+    public static TEnum? ParseNullable<TEnum>(
+        string? value,
+        TEnum? defaultValue = default)
+    {
+        if (value.HasText())
+        {
+            return (TEnum)Enum.Parse(typeof(TEnum), value);
+        }
+
+        return defaultValue;
+    }
+
     private static Type EnsureEnumType<TEnum>()
     {
         Type enumType = typeof(TEnum).GetBaseType();

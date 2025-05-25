@@ -89,13 +89,6 @@ public static class DateTimeExtensions
         return DateTimeSpan.CompareDates(dateTime, dateToCompare);
     }
 
-    public static int CalculateMonthsDifference(
-        this DateTime dateTime, 
-        DateTime dateToCompare)
-    {
-        return ((dateTime.Year - dateToCompare.Year) * 12) + dateTime.Month - dateToCompare.Month;
-    }
-
     public static int CalculateStandardFiscalQuartersDifference(
         this DateTime dateTime, 
         DateTime dateToCompare)
@@ -103,11 +96,11 @@ public static class DateTimeExtensions
         return ((dateTime.Year - dateToCompare.Year) * 4) + dateTime.GetStandardFiscalQuarter() - dateToCompare.GetStandardFiscalQuarter();
     }
 
-    public static double CalculateAverageMonthsDifference(
+    public static double CalculateMonthsDifference(
         this DateTime dateTime, 
-        DateTime dateToCompare)
+        DateTime dateTimeToCompare)
     {
-        return dateTime.Subtract(dateToCompare).Days / (365.25 / 12);
+        return dateTime.Subtract(dateTimeToCompare).TotalDays / DateTimeHelper.GetAverageDaysPerMonth();
     }
 
     public static string ToDefaultDateString(
@@ -159,7 +152,7 @@ public static class DateTimeExtensions
     public static string ToDefaultDateTimeString(
         this DateTime dateTime)
     {
-        return dateTime.ToDefaultDateString() + " " + dateTime.ToDefaultTimeString();
+        return $"{dateTime.ToDefaultDateString()} {dateTime.ToDefaultTimeString()}";
     }
 
     public static string? ToDefaultDateTimeString(
@@ -226,6 +219,18 @@ public static class DateTimeExtensions
         return dateTime.AddDays(1).RoundUpToStartOfBusinessDay();
     }
 
+    public static DateTime RoundDownToStartOfSecond(
+        this DateTime dateTime)
+    {
+        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Kind);
+    }
+
+    public static DateTime RoundUpToEndOfSecond(
+        this DateTime dateTime)
+    {
+        return dateTime.RoundDownToStartOfSecond().AddSeconds(1).Subtract(Get1Microsecond());
+    }
+
     public static DateTime RoundDownToStartOfMinute(
         this DateTime dateTime)
     {
@@ -235,7 +240,7 @@ public static class DateTimeExtensions
     public static DateTime RoundUpToEndOfMinute(
         this DateTime dateTime)
     {
-        return dateTime.RoundDownToStartOfMinute().AddMinutes(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+        return dateTime.RoundDownToStartOfMinute().AddMinutes(1).Subtract(Get1Microsecond());
     }
 
     public static DateTime RoundDownToStartOfHour(
@@ -247,7 +252,7 @@ public static class DateTimeExtensions
     public static DateTime RoundUpToEndOfHour(
         this DateTime dateTime)
     {
-        return dateTime.RoundDownToStartOfHour().AddHours(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+        return dateTime.RoundDownToStartOfHour().AddHours(1).Subtract(Get1Microsecond());
     }
 
     public static DateTime RoundDownToStartOfDay(
@@ -259,7 +264,7 @@ public static class DateTimeExtensions
     public static DateTime RoundUpToEndOfDay(
         this DateTime dateTime)
     {
-        return dateTime.RoundDownToStartOfDay().AddDays(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+        return dateTime.RoundDownToStartOfDay().AddDays(1).Subtract(Get1Microsecond());
     }
 
     public static DateTime RoundDownToStartOfWeek(
@@ -440,5 +445,22 @@ public static class DateTimeExtensions
         {
             return nullValue;
         }
+    }
+
+    public static long ToUnixEpochSeconds(
+        this DateTime dateTimeUtc)
+    {
+        // Ensure the DateTime is in UTC.
+        if (dateTimeUtc.Kind != DateTimeKind.Utc)
+        {
+            dateTimeUtc = dateTimeUtc.ToUniversalTime();
+        }
+
+        return (long)(dateTimeUtc - DateTime.UnixEpoch).TotalSeconds;
+    }
+
+    private static TimeSpan Get1Microsecond()
+    {
+        return new TimeSpan(0, 0, 0, 0, 0, 1);
     }
 }

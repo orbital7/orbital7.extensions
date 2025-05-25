@@ -5,15 +5,16 @@ namespace Orbital7.Extensions.Data;
 public class RecentFilesCollection :
     Collection<FileInfo>
 {
-    private const int LIMIT = 10;
+    private const int DEFAULT_LIMIT = 10;
 
     public FileInfo Add(
-        string filePath)
+        string filePath,
+        int limit = DEFAULT_LIMIT)
     {
         var file = new FileInfo(filePath);
 
         Remove(file);
-        EnsureLimit();
+        EnsureLimit(limit);
 
         this.Insert(0, file);
 
@@ -39,7 +40,8 @@ public class RecentFilesCollection :
     }
 
     public static RecentFilesCollection LoadFromJson(
-         string serializedFilePaths)
+         string serializedFilePaths,
+        int limit = DEFAULT_LIMIT)
     {
         var collection = new RecentFilesCollection();
 
@@ -56,15 +58,16 @@ public class RecentFilesCollection :
                 }
             }
 
-            collection.EnsureLimit();
+            collection.EnsureLimit(limit);
         }
 
         return collection;
     }
 
-    private void EnsureLimit()
+    private void EnsureLimit(
+        int limit)
     {
-        for (int i = this.Count - 1; i >= LIMIT; i--)
+        for (int i = this.Count - 1; i >= limit; i--)
         {
             this.RemoveAt(i);
         }

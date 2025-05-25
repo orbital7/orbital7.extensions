@@ -21,6 +21,11 @@ public static class DateTimeHelper
 {
     public const string DEFAULT_DATE_FORMAT = "MM/dd/yyyy";
 
+    public static double GetAverageDaysPerMonth()
+    {
+        return 365.25 / 12.0; // Average accounting for leap years.
+    }
+
     public static TimeZoneInfo GetTimeZone(
         string timeZoneId)
     {

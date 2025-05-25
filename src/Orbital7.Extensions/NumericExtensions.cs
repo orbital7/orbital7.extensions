@@ -221,6 +221,7 @@ public static class NumericExtensions
         return Math.Round(value, digits, MidpointRounding.ToEven);
     }
 
+    // NOTE: This should be the same as RoundUpToNearestStep() using step = 0.25m.
     public static decimal RoundUpToLargestQuarter(
         this decimal value)
     {
@@ -228,6 +229,7 @@ public static class NumericExtensions
         return Math.Ceiling(value / nearestOf) * nearestOf;
     }
 
+    // NOTE: This should be the same as RoundDownToNearestStep() using step = 0.25m.
     public static decimal RoundDownToSmallestQuarter(
         this decimal value)
     {
@@ -239,15 +241,30 @@ public static class NumericExtensions
         this decimal value,
         decimal step)
     {
-        if (value >= 0)
+        // If the value or step 0, return the value.
+        if (step == 0)
         {
-            if (value % step == 0) return value;
-            return (step - value % step) + value;
+            return value;
         }
         else
         {
-            if (value % step == 0) return value;
-            return (step + value % step) + value;
+            var remainder = value % step;
+
+            // If both the value and step have the same sign, 
+            // then we're rounding "up".
+            if ((value >= 0 && step >= 0) ||
+                (value < 0 && step < 0))
+            {
+                if (remainder == 0)
+                    return value;
+                else
+                    return value + (step - remainder);
+            }
+            // Otherwise, we're actually rounding "down" here.
+            else
+            {
+                return value - remainder;
+            }
         }
     }
 
@@ -255,13 +272,37 @@ public static class NumericExtensions
         this decimal value,
         decimal step)
     {
-        if (value >= 0)
+        // If the value or step 0, return the value.
+        if (step == 0)
         {
-            return value - value % step;
+            return value;
         }
         else
         {
-            return value + value % step;
+            var remainder = value % step;
+
+            // If both the value and step have the same sign, 
+            // then we're rounding "down".
+            if ((value >= 0 && step >= 0) ||
+                (value < 0 && step < 0))
+            {
+                return value - remainder;
+            }
+            // Otherwise, we're actually rounding "up" here.
+            else
+            {
+                if (remainder == 0)
+                    return value;
+                else
+                    return value - (step + remainder);
+            }
         }
+    }
+
+    public static DateTime FromUnixEpochSecondsToDateTimeUtc(
+        this long seconds)
+    {
+        // Returns a DateTime in UTC.
+        return DateTime.UnixEpoch.AddSeconds(seconds);
     }
 }
