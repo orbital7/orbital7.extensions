@@ -1,4 +1,6 @@
-﻿namespace Orbital7.Extensions;
+﻿using TimeZoneConverter;
+
+namespace Orbital7.Extensions;
 
 public enum Holiday
 {
@@ -19,7 +21,34 @@ public enum Holiday
 
 public static class DateTimeHelper
 {
-    public const string DEFAULT_DATE_FORMAT = "MM/dd/yyyy";
+    public const string DATE_FORMAT_DEFAULT = DATE_FORMAT_MONTH_DAY_YEAR_SLASHED;
+
+    public const string DATE_FORMAT_MONTH_DAY_YEAR_SLASHED = "MM/dd/yyyy";
+
+    public const string DATE_FORMAT_MONTH_DAY_YEAR_DASHED = "MM-dd-yyyy";
+
+    public const string DATE_FORMAT_MONTH_DAY_YEAR_LONG = "MMMM dd, yyyy";
+
+    public const string DATE_FORMAT_MONTH_YEAR_LONG = "MMMM yyyy";
+    
+    public const string DATE_FORMAT_WEEKDAY_MONTH_DAY_YEAR_LONG = "dddd, MMMM dd, yyyy";
+
+    public const string DATE_FORMAT_YEAR_MONTH_DAY_DASHED = "yyyy-MM-dd";
+
+
+    public const string TIME_FORMAT_DEFAULT = TIME_FORMAT_HOUR_MINUTE_12_HOUR;
+
+    public const string TIME_FORMAT_HOUR_MINUTE_12_HOUR = "h:mm tt";
+
+    public const string TIME_FORMAT_HOUR_MINUTE_12_HOUR_ZEROED = "hh:mm tt";
+
+    public const string TIME_FORMAT_HOUR_MINUTE_24_HOUR = "HH:mm";
+
+    public const string TIME_FORMAT_HOUR_MINUTE_SECOND_12_HOUR = "h:mm:ss tt";
+
+    public const string TIME_FORMAT_HOUR_MINUTE_SECOND_12_HOUR_ZEROED = "hh:mm:ss tt";
+
+    public const string TIME_FORMAT_HOUR_MINUTE_SECOND_24_HOUR = "HH:mm:ss";
 
     public static double GetAverageDaysPerMonth()
     {
@@ -27,12 +56,16 @@ public static class DateTimeHelper
     }
 
     public static TimeZoneInfo GetTimeZone(
-        string timeZoneId)
+        string? timeZoneId)
     {
-        if (!string.IsNullOrEmpty(timeZoneId))
-            return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        if (timeZoneId.HasText())
+        {
+            return TZConvert.GetTimeZoneInfo(timeZoneId);
+        }
         else
+        {
             return TimeZoneInfo.Utc;
+        }
     }
 
     public static List<DateOnly> GetFederalHolidayDates(

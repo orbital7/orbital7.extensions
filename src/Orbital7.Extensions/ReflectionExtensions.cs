@@ -5,14 +5,7 @@ public static class ReflectionExtensions
     public static DisplayAttribute? GetDisplayAttribute(
         this MemberInfo memberInfo)
     {
-        if (memberInfo == null)
-        {
-            throw new ArgumentException(
-                "No property reference expression was found.",
-                "propertyExpression");
-        }
-
-        return memberInfo.GetAttribute<DisplayAttribute>(false);
+        return memberInfo.GetAttribute<DisplayAttribute>();
     }
 
     public static string GetDisplayName(
@@ -24,15 +17,21 @@ public static class ReflectionExtensions
     }
 
     public static T? GetAttribute<T>(
-        this MemberInfo member,
-        bool isRequired)
+        this MemberInfo member)
         where T : Attribute
     {
-        var attribute = (T?)member
+        return (T?)member
             .GetCustomAttributes(typeof(T), false)
             .SingleOrDefault();
+    }
 
-        if (attribute == null && isRequired)
+    public static T GetRequiredAttribute<T>(
+        this MemberInfo member)
+        where T : Attribute
+    {
+        var attribute = GetAttribute<T>(member);
+
+        if (attribute == null)
         {
             throw new ArgumentException(
                 $"The {typeof(T).Name} attribute must be defined on member {member.Name}");
@@ -45,7 +44,7 @@ public static class ReflectionExtensions
         this MemberInfo member)
         where T : Attribute
     {
-        return member.GetAttribute<T>(false) != null;
+        return member.GetAttribute<T>() != null;
     }
 
     public static List<Type> GetTypesWithAttribute<TAttribute>(
@@ -85,21 +84,22 @@ public static class ReflectionExtensions
     }
 
     public static MemberInfo? GetMemberInfo(
-        this Expression propertyExpression)
+        this Expression expression)
     {
-        MemberExpression? memberExpr = propertyExpression as MemberExpression;
-        if (memberExpr == null)
+        MemberExpression? memberExpression = expression as MemberExpression;
+
+        if (memberExpression == null)
         {
-            UnaryExpression? unaryExpr = propertyExpression as UnaryExpression;
+            UnaryExpression? unaryExpr = expression as UnaryExpression;
             if (unaryExpr != null && unaryExpr.NodeType == ExpressionType.Convert)
             {
-                memberExpr = unaryExpr.Operand as MemberExpression;
+                memberExpression = unaryExpr.Operand as MemberExpression;
             }
         }
 
-        if (memberExpr != null && memberExpr.Member.MemberType == MemberTypes.Property)
+        if (memberExpression != null && memberExpression.Member.MemberType == MemberTypes.Property)
         {
-            return memberExpr.Member;
+            return memberExpression.Member;
         }
 
         return null;
@@ -246,7 +246,7 @@ public static class ReflectionExtensions
         {
             var type = value.GetType();
             var options = displayValueOptions ?? new DisplayValueOptions();
-            var dataTypeAttribute = memberInfo?.GetAttribute<DataTypeAttribute>(false);
+            var dataTypeAttribute = memberInfo?.GetAttribute<DataTypeAttribute>();
 
             if (type.IsBaseOrNullableEnumType())
             {

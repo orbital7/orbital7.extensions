@@ -1,21 +1,23 @@
 ﻿@inject TimeConverter TimeConverter
 @implements IDisposable
 
-@if (this.Value.HasValue)
-{
-    @if (!this.DateTimeFormat.HasText())
+<span class="text-nowrap">
+    @if (this.Value.HasValue)
     {
-        @GetDateTime(this.Value.Value).ToDefaultDateTimeString()
+        @if (!this.DateTimeFormat.HasText())
+        {
+            @GetDateTime(this.Value.Value).ToDefaultDateTimeString()
+        }
+        else
+        {
+            @GetDateTime(this.Value.Value).ToString(this.DateTimeFormat)
+        }
     }
     else
     {
-        @GetDateTime(this.Value.Value).ToString(this.DateTimeFormat)
+        @this.DefaultValue
     }
-}
-else
-{
-    @this.DefaultValue
-}
+</span>
 
 @code {
 

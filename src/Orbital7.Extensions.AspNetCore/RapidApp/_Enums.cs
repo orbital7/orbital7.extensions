@@ -44,3 +44,10 @@ public enum RATableViewCellHorizontalAlignment
 
     Right,
 }
+
+public enum RATableViewSegmentStyle
+{
+    Header,
+
+    Divider,
+}

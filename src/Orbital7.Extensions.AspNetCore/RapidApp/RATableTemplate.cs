@@ -1,4 +1,6 @@
-﻿namespace Orbital7.Extensions.AspNetCore.RapidApp;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Orbital7.Extensions.AspNetCore.RapidApp;
 
 public class RATableTemplate
 {
@@ -170,7 +172,7 @@ public class RATableTemplate<TEntity> :
 
         public Func<RATableViewFooterData<TItem>, string>? GetFooterCellClass { get; set; }
 
-        public DisplayValueOptions DisplayValueOptions { get; set; }
+        public DisplayValueOptions? DisplayValueOptions { get; set; }
 
         public Action<Column<TItem>, DisplayValueOptions>? ConfigureDisplayValueOptions { get; set; }
 
@@ -211,12 +213,6 @@ public class RATableTemplate<TEntity> :
                 this.SortDescending = sortDescending ?? false;
             }
 
-            if (this.DisplayValueOptions == null)
-            {
-                this.DisplayValueOptions = new();
-                this.ConfigureDisplayValueOptions?.Invoke(this, this.DisplayValueOptions);
-            }
-
             this.CellHorizontalAlignment = cellHorizontalAlignment ?? 
                 GetCellHorizontalAlignment(memberInfo);
 
@@ -224,6 +220,16 @@ public class RATableTemplate<TEntity> :
                 RATableViewCellHorizontalAlignment.Left;
 
             this.CellClass = cellClass;
+        }
+
+        [MemberNotNull(nameof(DisplayValueOptions))]
+        public void EnsureDisplayValueOptions()
+        {
+            if (this.DisplayValueOptions == null)
+            {
+                this.DisplayValueOptions = new DisplayValueOptions();
+                this.ConfigureDisplayValueOptions?.Invoke(this, this.DisplayValueOptions);
+            }
         }
 
         internal string? GetItemDisplayValue(
@@ -253,16 +259,16 @@ public class RATableTemplate<TEntity> :
 
         internal Type? GetForType()
         {
-            if (this.For?.Body is ConditionalExpression)
+            if (this.For?.Body is ConditionalExpression conditionalExpression &&
+                conditionalExpression.IfTrue is UnaryExpression uranyExpression)
             {
-                var conditionalExpression = this.For.Body as ConditionalExpression;
-                var ifTrueExpression = conditionalExpression?.IfTrue as UnaryExpression;
-                if (ifTrueExpression != null)
-                {
-                    return ifTrueExpression.Operand.Type;
-                }
+                return uranyExpression.Operand.Type;
             }
-            
+            else if (this.For?.Body is UnaryExpression unaryExpression)
+            {
+                return unaryExpression.Operand.Type;
+            }
+
             return this.For?.Body?
                 .GetMemberInfo()?
                 .GetType();

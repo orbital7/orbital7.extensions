@@ -5,6 +5,8 @@
      this.Segment != null &&
      this.Item != null)
 {
+    this.Column.EnsureDisplayValueOptions();
+
     if (this.Column.GetCellContent != null)
     {
         @this.Column.GetCellContent(this.Item)
@@ -19,9 +21,9 @@
         if (value != null && IsDateTime(value.GetType()))
         {
             <LocalDateTime Value="@((DateTime?)value)"
-            DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
-            TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
-            DefaultValue="@this.Column.DefaultValue" />
+                           DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
+                           TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
+                           DefaultValue="@this.Column.DefaultValue" />
         }
         else
         {
@@ -33,9 +35,9 @@
         if (IsDateTime(this.Column.GetForType()))
         {
             <LocalDateTime Value="@((DateTime?)this.Column.GetForValue(this.Item))"
-            DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
-            TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
-            DefaultValue="@this.Column.DefaultValue" />
+                           DateTimeFormat="@this.Column.DisplayValueOptions.DateTimeFormat"
+                           TimeZoneId="@this.Column.DisplayValueOptions.TimeZoneId"
+                           DefaultValue="@this.Column.DefaultValue" />
         }
         else
         {

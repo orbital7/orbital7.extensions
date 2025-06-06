@@ -5,7 +5,7 @@
     var segments = this.GetSegments();
 
     @if (!this.NoItemsMessage.HasText() ||
-       this.HasItems(segments))
+         this.HasItems(segments))
     {
         <div class="@GetTableWrapperClass()">
             <table class="@GetTableClass(this.Template)" style="@GetTableStyle()">
@@ -14,7 +14,7 @@
                         @foreach (var column in this.Template.Columns)
                         {
                             <th class="@GetHeaderCellClass(column)"
-                            style="@GetHeaderCellStyle(column)"
+                                style="@GetHeaderCellStyle(column)"
                             @onclick="this.Template.IsSortable && column.IsSortable ? () => HandleOnSortBy(column) : default!">
 
                                 @if (column.GetHeaderCellContent != null)
@@ -54,18 +54,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var segment in segments)
+                    @for (int s = 0; s < segments.Count; s++)
                     {
+                        var segment = segments[s];
+
                         var sortedItems = this.Template.GetSortedItems(segment);
                         if (sortedItems != null && sortedItems.Count > 0)
                         {
                             if (segments.Count > 1)
                             {
-                                <tr class="ra-tableview-segment-row">
-                                    <td colspan="@this.Template.Columns.Count">
-                                        @segment.Name
-                                    </td>
-                                </tr>
+                                if (this.SegmentStyle == RATableViewSegmentStyle.Header)
+                                {
+                                    <tr class="ra-tableview-segment-row-header">
+                                        <td colspan="@this.Template.Columns.Count">
+                                            @segment.HeaderText
+                                        </td>
+                                    </tr>
+                                }
+                                else if (this.SegmentStyle == RATableViewSegmentStyle.Divider && s > 0)
+                                {
+                                    <tr class="ra-tableview-segment-row-divider">
+                                        <td colspan="@this.Template.Columns.Count"></td>
+                                    </tr>
+                                }
                             }
 
                             for (int j = 0; j < this.DebugContentCount; j++) { 
@@ -77,36 +88,36 @@
                                     var item = sortedItems.ElementAt(i);
 
                                     <tr class="@GetRowClass(item)" 
-                                    @onclick="this.Template.OnRowSelected != null && !IsRowSelected(item) ? () => HandleOnRowSelected(segment, item) : default!">
+                                        @onclick="this.Template.OnRowSelected != null && !IsRowSelected(item) ? () => HandleOnRowSelected(segment, item) : default!">
 
                                         @foreach (var column in this.Template.Columns)
                                         {
                                             <td class="@GetCellClass(column, segment, item)"
-                                            style="@GetCellStyle(column, segment, item)">
+                                                style="@GetCellStyle(column, segment, item)">
 
                                                 @if (column.OnCellUrlClicked != null)
                                                 {
                                                     <a href=""
-                                                    @onclick="() => column.OnCellUrlClicked(column, segment, item)"
-                                                    @onclick:preventDefault="true">
+                                                       @onclick="() => column.OnCellUrlClicked(column, segment, item)"
+                                                       @onclick:preventDefault="true">
                                                         <RATableViewCellContents Column="column" 
-                                                        Segment="segment"
-                                                        Item="item" />
+                                                                                 Segment="segment"
+                                                                                 Item="item" />
                                                     </a>
                                                 }
                                                 else if (column.GetCellUrl != null)
                                                 {
                                                     <a href="@column.GetCellUrl(column, segment, item)">
                                                         <RATableViewCellContents Column="column" 
-                                                        Segment="segment"
-                                                        Item="item" />
+                                                                                 Segment="segment"
+                                                                                 Item="item" />
                                                     </a>
                                                 }
                                                 else
                                                 {
                                                     <RATableViewCellContents Column="column" 
-                                                    Segment="segment"
-                                                    Item="item" />
+                                                                             Segment="segment"
+                                                                             Item="item" />
                                                 }
                                             </td>
                                         }
@@ -187,6 +198,9 @@
 
     [Parameter]
     public bool ShowSelectedRow { get; set; } = false;
+
+    [Parameter]
+    public RATableViewSegmentStyle SegmentStyle { get; set; } = RATableViewSegmentStyle.Header;
 
     private string GetTableWrapperClass()
     {
@@ -280,7 +294,7 @@
     private string GetRowClass(
         TEntity item)
     {
-        string classes = this.Segments?.Count > 1 ?
+        string classes = (this.Segments?.Count > 1 && this.SegmentStyle == RATableViewSegmentStyle.Header) ?
             "ra-tableview-indented-row" :
             String.Empty;
 

@@ -77,7 +77,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                 var logEvent = new LogEvent()
                 {
                     Message = message,
-                    Level = logLevel.ToString(),
+                    Level = GetLogLevelString(logLevel),
                     Metadata = logMetadata,
                 };
 
@@ -106,6 +106,19 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                     logLevel,
                     externalNotificationMessage);
             }
+        }
+    }
+
+    protected virtual string GetLogLevelString(
+        LogLevel logLevel)
+    {
+        if (logLevel == LogLevel.Information)
+        {
+            return "Info";
+        }
+        else
+        {
+            return logLevel.ToString();
         }
     }
 

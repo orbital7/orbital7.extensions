@@ -4,7 +4,7 @@ public static class StringBuilderExtensions
 {
     public static StringBuilder AppendLine(
         this StringBuilder sb, 
-        string value, 
+        string? value, 
         string lineTerminator)
     {
         sb.Append(value);
@@ -14,7 +14,7 @@ public static class StringBuilderExtensions
 
     public static StringBuilder AppendCommaSeparatedValuesLine(
         this StringBuilder sb,
-        params string[] values)
+        params string?[] values)
     {
         sb.AppendLine(string.Join(",", values));
         return sb;
@@ -22,7 +22,7 @@ public static class StringBuilderExtensions
 
     public static StringBuilder AppendTabSeparatedValuesLine(
         this StringBuilder sb,
-        params string[] values)
+        params string?[] values)
     {
         sb.AppendLine(string.Join("\t", values));
         return sb;

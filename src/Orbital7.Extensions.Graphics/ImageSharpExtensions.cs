@@ -1,38 +1,36 @@
-﻿using System;
-using SixLabors.ImageSharp.Processing;
+﻿using SixLabors.ImageSharp.Processing;
 
-namespace SixLabors.ImageSharp
+namespace Orbital7.Extensions.Graphics;
+
+public static class ImageSharpExtensions
 {
-    public static class ImageSharpExtensions
+    public static IImageProcessingContext EnsureMaximumSize(
+        this IImageProcessingContext source, 
+        int maxWidth, 
+        int maxHeight,
+        bool maintainAspectRatio = true)
     {
-        public static IImageProcessingContext EnsureMaximumSize(
-            this IImageProcessingContext source, 
-            int maxWidth, 
-            int maxHeight,
-            bool maintainAspectRatio = true)
-        {
-            var size = source.GetCurrentSize();
+        var size = source.GetCurrentSize();
 
-            if ((size.Width > maxWidth) || (size.Height > maxHeight))
+        if ((size.Width > maxWidth) || (size.Height > maxHeight))
+        {
+            if (maintainAspectRatio)
             {
-                if (maintainAspectRatio)
-                {
-                    // Handle if width is larger.
-                    if (size.Width > size.Height)
-                        return source.Resize(maxWidth, Convert.ToInt32(size.Height * maxWidth / size.Width));
-                    // Else height is larger.
-                    else
-                        return source.Resize(Convert.ToInt32(size.Width * maxHeight / size.Height), maxHeight);
-                }
+                // Handle if width is larger.
+                if (size.Width > size.Height)
+                    return source.Resize(maxWidth, Convert.ToInt32(size.Height * maxWidth / size.Width));
+                // Else height is larger.
                 else
-                {
-                    return source.Resize(maxWidth, maxHeight);
-                }
+                    return source.Resize(Convert.ToInt32(size.Width * maxHeight / size.Height), maxHeight);
             }
             else
             {
-                return source;
+                return source.Resize(maxWidth, maxHeight);
             }
+        }
+        else
+        {
+            return source;
         }
     }
 }

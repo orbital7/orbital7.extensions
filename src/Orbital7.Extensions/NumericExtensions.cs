@@ -4,6 +4,18 @@ namespace Orbital7.Extensions;
 
 public static class NumericExtensions
 {
+    public static bool IsOdd(
+        this int value)
+    {
+        return (value % 2) != 0;
+    }
+
+    public static bool IsEven(
+        this int value)
+    {
+        return (value % 2) == 0;
+    }
+
     public static string ToCurrencyString(
         this double number, 
         DisplayValueOptions? options = null)

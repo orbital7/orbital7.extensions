@@ -106,7 +106,7 @@ public static class DateTimeExtensions
     public static string ToDefaultDateString(
         this DateTime dateTime)
     {
-        return dateTime.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
+        return dateTime.ToString(DateTimeHelper.DATE_FORMAT_DEFAULT);
     }
 
     public static string? ToDefaultDateString(
@@ -125,18 +125,19 @@ public static class DateTimeExtensions
         // TODO: Not liking the am/pm without a space, and
         // the conditional seconds are a problem; go back
         // to default for now.
+        //
         //var fi = new DateTimeFormatInfo()
         //{
         //    AMDesignator = "am",
         //    PMDesignator = "pm"
         //};
-
+        //
         //var format = dateTime.Second == 0 ?
         //    "h:mmtt" :
         //    "h:mm:sstt";
-        var format = "h:mm tt";
+        //return dateTime.ToString(format, fi);
 
-        return dateTime.ToString(format); //, fi);
+        return dateTime.ToString(DateTimeHelper.TIME_FORMAT_DEFAULT);
     }
 
     public static string? ToDefaultTimeString(
@@ -165,10 +166,10 @@ public static class DateTimeExtensions
             return nullValue;
     }
 
-    public static string ToMonthDateString(
+    public static string ToLongMonthYearDateString(
         this DateTime dateTime)
     {
-        return dateTime.ToString("MMMM yyyy");
+        return dateTime.ToString(DateTimeHelper.DATE_FORMAT_MONTH_YEAR_LONG);
     }
 
     public static string ToNaiveDateTimeString(
@@ -186,7 +187,7 @@ public static class DateTimeExtensions
     public static string ToISO8601DateString(
         this DateTime dateTimeUtc)
     {
-        return string.Format("{0:yyyy-MM-dd}", dateTimeUtc);
+        return dateTimeUtc.ToString(DateTimeHelper.DATE_FORMAT_YEAR_MONTH_DAY_DASHED);
     }
 
     public static DateTime EnsureNotFutureDateTimeUtc(

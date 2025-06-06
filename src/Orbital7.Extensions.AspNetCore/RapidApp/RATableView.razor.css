@@ -46,7 +46,7 @@
     }
 
 table.ra-tableview-striped tbody tr:nth-child(odd) {
-    background-color: var(--bs-secondary-bg);
+    background-color: var(--bs-tertiary-bg);
 }
 
 table.ra-tableview-selectable tbody tr:hover {
@@ -58,12 +58,22 @@ table.ra-tableview tbody tr.ra-tableview-indented-row td:first-child {
     padding-left: 26px;
 }
 
-table.ra-tableview tbody tr.ra-tableview-segment-row {
+table.ra-tableview tbody tr.ra-tableview-segment-row-header {
+    background-color: var(--bs-border-color);
     font-weight: bold;
-    font-style: italic;
+    text-transform: uppercase;
 }
 
-    table.ra-tableview tbody tr.ra-tableview-segment-row:hover {
+    table.ra-tableview tbody tr.ra-tableview-segment-row-header:hover {
+        cursor: revert;
+    }
+
+table.ra-tableview tbody tr.ra-tableview-segment-row-divider {
+    background-color: var(--bs-border-color);
+    height: 1px;
+}
+
+    table.ra-tableview tbody tr.ra-tableview-segment-row-divider:hover {
         cursor: revert;
     }
 

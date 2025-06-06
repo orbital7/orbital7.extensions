@@ -5,7 +5,7 @@ public static class DateOnlyExtensions
     public static string ToDefaultDateString(
         this DateOnly date)
     {
-        return date.ToString(DateTimeHelper.DEFAULT_DATE_FORMAT);
+        return date.ToString(DateTimeHelper.DATE_FORMAT_DEFAULT);
     }
 
     public static string? ToDefaultDateString(

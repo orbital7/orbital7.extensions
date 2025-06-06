@@ -8,7 +8,7 @@ public static class ExpressionExtensions
     {
         return expression.Body
             .GetMemberInfo()?
-            .GetAttribute<TAttribute>(isRequired: false);
+            .GetAttribute<TAttribute>();
     }
 
     public static bool HasAttribute<TProperty, TAttribute>(

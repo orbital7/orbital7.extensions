@@ -2,7 +2,7 @@
 
 public class RATableViewSegment<TEntity>
 {
-    public string Name { get; set; }
+    public string? HeaderText { get; set; }
 
     public ICollection<TEntity> Items { get; set; }
 
@@ -11,10 +11,16 @@ public class RATableViewSegment<TEntity>
         this.Items.Count > 0;
 
     public RATableViewSegment(
-        string name, 
         ICollection<TEntity> items)
     {
-        this.Name = name;
         this.Items = items;
+    }
+
+    public RATableViewSegment(
+        string headerText, 
+        ICollection<TEntity> items) :
+        this(items)
+    {
+        this.HeaderText = headerText;
     }
 }

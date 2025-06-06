@@ -129,7 +129,7 @@ public class BetterStackApiTests
         var logEvent = new LogEvent()
         {
             Message = "Single-log-event from Orbital7.Extensions.Tests",
-            Level = "Information",
+            Level = "Info",
             Metadata = new Dictionary<string, object>()
             {
                 { 
@@ -159,7 +159,7 @@ public class BetterStackApiTests
             new LogEvent()
             {
                 Message = "Multi-log-event-1 from Orbital7.Extensions.Tests",
-                Level = "Information",
+                Level = "Info",
                 Metadata = new Dictionary<string, object>()
                 {
                     {
@@ -171,7 +171,7 @@ public class BetterStackApiTests
             new LogEvent()
             {
                 Message = "Multi-log-event-2 from Orbital7.Extensions.Tests",
-                Level = "Information",
+                Level = "Info",
                 Metadata = new Dictionary<string, object>()
                 {
                     {

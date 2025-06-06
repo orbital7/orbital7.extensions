@@ -73,22 +73,18 @@ public static class ReflectionHelper
 
         foreach (var property in propertiesAndDisplayNameOverrides)
         {
-            var memberInfo = property.Item1.Body.GetMemberInfo();
-            if (memberInfo != null)
+            list.Add(new PropertyValue()
             {
-                list.Add(new PropertyValue()
-                {
-                    Name = property.Item1.Name,
+                Name = property.Item1.Name,
 
-                    DisplayName = property.Item2.HasText() ?
-                        property.Item2 :
-                        memberInfo.GetDisplayName(),
+                DisplayName = property.Item2.HasText() ?
+                    property.Item2 :
+                    property.Item1.Body.GetMemberInfo()?.GetDisplayName(),
 
-                    Value = property.Item1
-                        .Compile()
-                        .Invoke(obj),
-                });
-            }
+                Value = property.Item1
+                    .Compile()
+                    .Invoke(obj),
+            });
         }
 
         return list;

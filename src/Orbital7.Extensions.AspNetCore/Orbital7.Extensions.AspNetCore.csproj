@@ -5,9 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>9.0.15</Version>
-	<AssemblyVersion>9.0.15.0</AssemblyVersion>
-    <FileVersion>9.0.15.0</FileVersion>
+    <Version>9.0.16</Version>
+	<AssemblyVersion>9.0.16.0</AssemblyVersion>
+    <FileVersion>9.0.16.0</FileVersion>
     <Description>ASP.NET Core 9 Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
     <Company>Orbital7</Company>
@@ -62,7 +62,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.5" />
     <!---->
-	<PackageReference Include="Orbital7.Extensions" Version="9.0.15" />
+	<PackageReference Include="Orbital7.Extensions" Version="9.0.16" />
   </ItemGroup>
 
   <!-- 
