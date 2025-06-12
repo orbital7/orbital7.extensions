@@ -15,7 +15,7 @@
                         {
                             <th class="@GetHeaderCellClass(column)"
                                 style="@GetHeaderCellStyle(column)"
-                            @onclick="this.Template.IsSortable && column.IsSortable ? () => HandleOnSortBy(column) : default!">
+                                @onclick="column.CanBeSorted(this.Template.IsSortableOverride) ? () => HandleOnSortBy(column) : default!">
 
                                 @if (column.GetHeaderCellContent != null)
                                 {
@@ -26,7 +26,7 @@
                                     @column.HeaderText
                                 }
 
-                                @if (this.Template.IsSortable && column.IsSortable)
+                                @if (column.CanBeSorted(this.Template.IsSortableOverride))
                                 {
                                     @if (column.SortBy)
                                     {
@@ -85,7 +85,9 @@
                                 // which errors out mid-enumeration.
                                 for (int i = 0; i < sortedItems.Count; i++)
                                 {
-                                    var item = sortedItems.ElementAt(i);
+                                    var itemPair = sortedItems.ElementAt(i);
+                                    var index = itemPair.Key;
+                                    var item = itemPair.Value;
 
                                     <tr class="@GetRowClass(item)" 
                                         @onclick="this.Template.OnRowSelected != null && !IsRowSelected(item) ? () => HandleOnRowSelected(segment, item) : default!">
@@ -102,21 +104,24 @@
                                                        @onclick:preventDefault="true">
                                                         <RATableViewCellContents Column="column" 
                                                                                  Segment="segment"
+                                                                                 Index="index"
                                                                                  Item="item" />
                                                     </a>
                                                 }
                                                 else if (column.GetCellUrl != null)
                                                 {
                                                     <a href="@column.GetCellUrl(column, segment, item)">
-                                                        <RATableViewCellContents Column="column" 
+                                                        <RATableViewCellContents Column="column"
                                                                                  Segment="segment"
+                                                                                 Index="index"
                                                                                  Item="item" />
                                                     </a>
                                                 }
                                                 else
                                                 {
-                                                    <RATableViewCellContents Column="column" 
+                                                    <RATableViewCellContents Column="column"
                                                                              Segment="segment"
+                                                                             Index="index"
                                                                              Item="item" />
                                                 }
                                             </td>
@@ -261,8 +266,7 @@
             column.HeaderCellHorizontalAlignment) + " ";
 
         if (this.Template != null &&
-            this.Template.IsSortable && 
-            column.IsSortable)
+            column.CanBeSorted(this.Template.IsSortableOverride))
         {
             classes += "ra-clickable ";
         }

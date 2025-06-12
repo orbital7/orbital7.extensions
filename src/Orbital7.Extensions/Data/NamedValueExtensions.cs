@@ -13,7 +13,7 @@ public static class NamedValueExtensions
     }
 
     public static List<NamedValue<TId>> ToNamedValueList<TId>(
-        this List<NamedId<TId>> list)
+        this IEnumerable<NamedId<TId>> list)
     {
         return list
             .Select(x => x.ToNamedValue())
@@ -21,7 +21,7 @@ public static class NamedValueExtensions
     }
 
     public static List<NamedValue<T>> ToNamedValueList<T>(
-        this List<T> list)
+        this IEnumerable<T> list)
     {
         return list
             .Where(x => x != null)

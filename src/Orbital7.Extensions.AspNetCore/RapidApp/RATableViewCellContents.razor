@@ -7,7 +7,11 @@
 {
     this.Column.EnsureDisplayValueOptions();
 
-    if (this.Column.GetCellContent != null)
+    if (this.Column.IsIndexColumn())
+    {
+        @this.Index
+    }
+    else if (this.Column.GetCellContent != null)
     {
         @this.Column.GetCellContent(this.Item)
     }
@@ -56,6 +60,9 @@
 
     [Parameter]
     public TEntity? Item { get; set; }
+
+    [Parameter]
+    public int Index { get; set; }
 
     private bool IsDateTime(
         Type? type)

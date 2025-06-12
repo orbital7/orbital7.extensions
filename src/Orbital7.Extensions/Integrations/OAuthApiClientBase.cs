@@ -30,24 +30,28 @@ public abstract class OAuthApiClientBase :
     }
 
     protected async Task<TokenInfo> SendObtainTokenRequestAsync(
-        List<KeyValuePair<string, string>> request)
+        List<KeyValuePair<string, string>> request,
+        CancellationToken cancellationToken = default)
     {
         var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
             this.OAuthTokenEndpointUrl,
-            request);
+            request,
+            cancellationToken);
 
         await UpdateTokenInfoAsync(response);
 
         return this.TokenInfo;
     }
 
-    private async Task<TokenInfo> RefreshTokenAsync()
+    private async Task<TokenInfo> RefreshTokenAsync(
+        CancellationToken cancellationToken)
     {
         var request = GetRefreshTokenRequest();
 
         var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
             this.OAuthTokenEndpointUrl,
-            request);
+            request,
+            cancellationToken);
 
         await UpdateTokenInfoAsync(response);
 
@@ -85,6 +89,7 @@ public abstract class OAuthApiClientBase :
     }
 
     protected async Task<TokenInfo> EnsureValidAccessTokenAsync(
+        CancellationToken cancellationToken,
         DateTime? nowUtc = null)
     {
         // Ensure we have a specified refresh token.
@@ -100,18 +105,20 @@ public abstract class OAuthApiClientBase :
             !this.TokenInfo.AccessTokenExpirationDateTimeUtc.HasValue ||
             this.TokenInfo.AccessTokenExpirationDateTimeUtc.Value < cutoffUtc)
         {
-            await RefreshTokenAsync();
+            await RefreshTokenAsync(cancellationToken);
         }
 
         return this.TokenInfo;
     }
 
     protected override async Task BeforeCreateRequestAsync(
-        Uri uri)
+        Uri uri,
+        CancellationToken cancellationToken)
     {
         if (IsAuthorizationRequired(uri))
         {
-            await EnsureValidAccessTokenAsync();
+            await EnsureValidAccessTokenAsync(
+                cancellationToken);
         }
     }
 
@@ -129,7 +136,7 @@ public abstract class OAuthApiClientBase :
         Uri? uri)
     {
         if (uri == null || 
-            uri.ToString().Equals(this.OAuthTokenEndpointUrl, StringComparison.CurrentCultureIgnoreCase))
+            uri.ToString().Equals(this.OAuthTokenEndpointUrl, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }

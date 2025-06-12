@@ -4,5 +4,6 @@ public interface IChannelsApi
 {
     Task<Message> CreateMessageAsync(
         ulong channelId,
-        CreateMessageRequest request);
+        CreateMessageRequest request,
+        CancellationToken cancellationToken = default);
 }

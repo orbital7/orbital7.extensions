@@ -5,10 +5,12 @@ public interface ITelemetryLoggingApi
     Task LogEventAsync(
         string sourceToken,
         string ingestingHost,
-        LogEvent logEvent);
+        LogEvent logEvent,
+        CancellationToken cancellationToken = default);
 
     Task LogEventsAsync(
         string sourceToken,
         string ingestingHost,
-        IEnumerable<LogEvent> logEvents);
+        IEnumerable<LogEvent> logEvents,
+        CancellationToken cancellationToken = default);
 }

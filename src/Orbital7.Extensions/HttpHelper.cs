@@ -38,8 +38,8 @@ public class HttpHelper
     public static bool IsOnlineFile(
         string filePath)
     {
-        return filePath.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) ||
-                 filePath.StartsWith("https://", StringComparison.CurrentCultureIgnoreCase);
+        return filePath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                 filePath.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool IsHtmlFile(

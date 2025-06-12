@@ -3,7 +3,7 @@
 public static class StringListExtensions
 {     
     public static List<T> ToTypedList<T>(
-        this IList<string> list)
+        this IEnumerable<string> list)
     {
         var typedList = new List<T>();
 
@@ -23,7 +23,7 @@ public static class StringListExtensions
     }
 
     public static List<T?> ToNullableTypedList<T>(
-        this IList<string> list)
+        this IEnumerable<string> list)
     {
         var typedList = new List<T?>();
 

@@ -3,7 +3,7 @@
 public static class Extensions
 {
     public static ModalParameters ToModalParameters(
-        this List<(string, object)> parameters)
+        this IEnumerable<(string, object)> parameters)
     {
         var modalParameters = new ModalParameters();
         

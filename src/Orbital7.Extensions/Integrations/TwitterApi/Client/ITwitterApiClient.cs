@@ -12,5 +12,6 @@ public interface ITwitterApiClient :
     Task<TokenInfo> ObtainTokenAsync(
         string authorizationCode,
         string redirectUri,
-        string codeVerifier);
+        string codeVerifier,
+        CancellationToken cancellationToken = default);
 }

@@ -145,7 +145,7 @@ public static class ReflectionExtensions
 
     
     public static List<T> CreateInstances<T>(
-        this List<Type> types)
+        this IEnumerable<Type> types)
     {
         var instances = new List<T>();
 
@@ -318,13 +318,19 @@ public static class ReflectionExtensions
             else if (options.UseCurrencyForDecimals &&
                 (type == typeof(decimal) || type == typeof(decimal?)))
             {
-                var currency = (decimal)(object)value;
-                return currency.ToCurrencyString(options);
+                return ((decimal)(object)value).ToCurrencyString(
+                    options: options);
             }
             else if (options.ForNumbersAddPlusIfPositive && 
                 type.IsBaseOrNullableNumericType())
             {
                 return "+" + value.ToString();
+            }
+            else if ((propertyName?.EndsWith("Percentage") ?? false) &&
+                (type == typeof(double) || type == typeof(double?)))
+            {
+                return ((double)(object)value).ToPercentString(
+                    options: options);
             }
             else if (dataTypeAttribute?.DataType == DataType.Password)
             {

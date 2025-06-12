@@ -3,7 +3,7 @@
 public static class ValueTupleExtensions
 {
     public static T2? GetItem2<T1, T2>(
-        this List<(T1, T2)> list,
+        this IEnumerable<(T1, T2)> list,
         T1 item1)
     {
         return (from x in list
@@ -12,7 +12,7 @@ public static class ValueTupleExtensions
     }
 
     public static List<T2> GatherItem2s<T1, T2>(
-        this List<(T1, T2)> list,
+        this IEnumerable<(T1, T2)> list,
         T1 item1)
     {
         return (from x in list
@@ -21,7 +21,7 @@ public static class ValueTupleExtensions
     }
 
     public static T1? GetItem1<T1, T2>(
-        this List<(T1, T2)> list,
+        this IEnumerable<(T1, T2)> list,
         T2 item2)
     {
         return (from x in list
@@ -30,7 +30,7 @@ public static class ValueTupleExtensions
     }
 
     public static List<T1> GatherItem1s<T1, T2>(
-        this List<(T1, T2)> list,
+        this IEnumerable<(T1, T2)> list,
         T2 item2)
     {
         return (from x in list
@@ -39,7 +39,7 @@ public static class ValueTupleExtensions
     }
 
     public static bool HasItem1<T1, T2>(
-        this List<(T1, T2)> list,
+        this IEnumerable<(T1, T2)> list,
         T1 item1)
     {
         return (from x in list
@@ -49,7 +49,7 @@ public static class ValueTupleExtensions
     }
 
     public static bool HasItem2<T1, T2>(
-        this List<(T1, T2)> list,
+        this IEnumerable<(T1, T2)> list,
         T2 item2)
     {
         return (from x in list

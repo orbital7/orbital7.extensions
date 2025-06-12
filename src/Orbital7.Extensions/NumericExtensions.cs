@@ -16,87 +16,100 @@ public static class NumericExtensions
         return (value % 2) == 0;
     }
 
+    public static string ToRoundedString(
+        this double value,
+        int decimalPlaces = 2,
+        MidpointRounding roundingMode = MidpointRounding.ToEven,
+        bool addCommas = true,
+        bool addPlusIfPositive = false,
+        string? baseNumberPrefix = null)
+    {
+        var output = baseNumberPrefix + Math
+            .Round(Math.Abs(value), decimalPlaces, roundingMode)
+            .ToString(GetDecimalStringFormat(decimalPlaces, addCommas));
+
+        if (value < 0)
+        {
+            return "-" + output;
+        }
+        else if (addPlusIfPositive && value > 0)
+        {
+            return "+" + output;
+        }
+        else
+        {
+            return output;
+        }
+    }
+
+    public static string ToRoundedString(
+        this decimal value,
+        int decimalPlaces = 2,
+        MidpointRounding roundingMode = MidpointRounding.ToEven,
+        bool addCommas = true,
+        bool addPlusIfPositive = false,
+        string? baseNumberPrefix = null)
+    {
+        return Convert.ToDouble(value).ToRoundedString(
+            decimalPlaces: decimalPlaces,
+            roundingMode: roundingMode,
+            addCommas: addCommas,
+            addPlusIfPositive: addPlusIfPositive);
+    }
+
     public static string ToCurrencyString(
         this double number, 
         DisplayValueOptions? options = null)
     {
         var displayOptions = options ?? new DisplayValueOptions();
 
-        var decimalFormat = displayOptions.CurrencyDecimalPlaces > 0 ?
-            "." + new string('0', (int)displayOptions.CurrencyDecimalPlaces) : string.Empty;
-
-        var format = displayOptions.CurrencyAddCommas ? $"#,##0{decimalFormat}" : $"0{decimalFormat}";
-
-        var roundedNumber = Math.Round(number, displayOptions.CurrencyDecimalPlaces);
-        var isNegative = roundedNumber < 0;
-        var value = string.Empty;
-
-        if (isNegative)
-            value += "-";
-        else if (displayOptions.CurrencyAddPlusIfPositive && roundedNumber > 0)
-            value += "+";
-
-        if (displayOptions.CurrencyAddSymbol)
-            value += "$";
-
-        value += Math.Abs(roundedNumber).ToString(format);
-
-        return value;
-    }
-
-    public static string? ToCurrencyString(
-        this double? number,
-        DisplayValueOptions? options = null,
-        string? nullValue = null)
-    {
-        if (number.HasValue)
-        {
-            return number.Value.ToCurrencyString(options);
-        }
-
-        return nullValue;
+        return number.ToRoundedString(
+            decimalPlaces: displayOptions.CurrencyDecimalPlaces,
+            roundingMode: displayOptions.CurrencyRoundingMode,
+            addCommas: displayOptions.CurrencyAddCommas,
+            addPlusIfPositive: displayOptions.CurrencyAddPlusIfPositive,
+            baseNumberPrefix: displayOptions.CurrencyAddSymbol ? "$" : null);
     }
 
     public static string ToCurrencyString(
         this decimal number,
         DisplayValueOptions? options = null)
     {
-        return ToCurrencyString(Convert.ToDouble(number), options);
+        return Convert.ToDouble(number).ToCurrencyString(
+            options: options);
     }
 
-    public static string? ToCurrencyString(
-        this decimal? number,
-        DisplayValueOptions? options = null,
-        string? nullValue = null)
+    public static string ToPercentString(
+        this double percent,
+        int decimalPlaces,
+        MidpointRounding roundingMode = MidpointRounding.ToEven,
+        bool addCommas = true,
+        bool addPlusIfPositive = false)
     {
-        if (number.HasValue)
-        {
-            return number.Value.ToCurrencyString(options);
-        }
+        return (percent * 100).ToRoundedString(
+            decimalPlaces: decimalPlaces,
+            roundingMode: roundingMode,
+            addCommas: addCommas,
+            addPlusIfPositive: addPlusIfPositive) + "%";
+    }
 
-        return nullValue;
+    public static string ToPercentString(
+        this double percent,
+        DisplayValueOptions? options = null)
+    {
+        var displayOptions = options ?? new DisplayValueOptions();
+
+        return percent.ToPercentString(
+            displayOptions.PercentageDecimalPlaces,
+            roundingMode: displayOptions.PercentageRoundingMode,
+            addCommas: displayOptions.PercentageAddCommas,
+            addPlusIfPositive: displayOptions.PercentageAddPlusIfPositive);
     }
 
     public static string ToFileSizeString(
         this long fileSizeInBytes)
     {
         return string.Format(new FileSizeFormatProvider(), "{0:fs}", fileSizeInBytes);
-    }
-
-    public static string ToPercentString(
-        this double percent)
-    {
-        return percent.ToString("0.00%");
-    }
-
-    public static double ToPercentString(
-        this double value, 
-        double total)
-    {
-        if (total != 0)
-            return value / total;
-        else
-            return 0;
     }
 
     public static string ToHourString(
@@ -118,36 +131,6 @@ public static class NumericExtensions
         var iPart = (int)value;
         var dPart = value - iPart;
         return new DateTime(2000, 1, 1, iPart, (int)Math.Round(60 * dPart, 2), 0).ToString(format);
-    }
-
-    public static string? ToString(
-        this int? value, 
-        string? nullValue)
-    {
-        if (value.HasValue)
-            return value.ToString();
-        else
-            return nullValue;
-    }
-
-    public static string? ToString(
-        this decimal? value, 
-        string? nullValue)
-    {
-        if (value.HasValue)
-            return value.ToString();
-        else
-            return nullValue;
-    }
-
-    public static string? ToString(
-        this double? value, 
-        string? nullValue)
-    {
-        if (value.HasValue)
-            return value.ToString();
-        else
-            return nullValue;
     }
 
     public static decimal SafeDivide(
@@ -220,17 +203,34 @@ public static class NumericExtensions
         return Math.Ceiling(value * 2) / 2;
     }
 
-    public static decimal RoundToTwoDigits(
-        this decimal value)
-    {
-        return Math.Round(value, 2, MidpointRounding.ToEven);
-    }
-
     public static decimal RoundToNDigits(
         this decimal value,
-        int digits)
+        int digits,
+        MidpointRounding roundingMode = MidpointRounding.ToEven)
     {
-        return Math.Round(value, digits, MidpointRounding.ToEven);
+        return Math.Round(value, digits, roundingMode);
+    }
+
+    public static decimal RoundToTwoDigits(
+        this decimal value,
+        MidpointRounding roundingMode = MidpointRounding.ToEven)
+    {
+        return value.RoundToNDigits(2, roundingMode);
+    }
+
+    public static double RoundToNDigits(
+        this double value,
+        int digits,
+        MidpointRounding roundingMode = MidpointRounding.ToEven)
+    {
+        return Math.Round(value, digits, roundingMode);
+    }
+
+    public static double RoundToTwoDigits(
+        this double value,
+        MidpointRounding roundingMode = MidpointRounding.ToEven)
+    {
+        return value.RoundToNDigits(2, roundingMode);
     }
 
     // NOTE: This should be the same as RoundUpToNearestStep() using step = 0.25m.
@@ -316,5 +316,16 @@ public static class NumericExtensions
     {
         // Returns a DateTime in UTC.
         return DateTime.UnixEpoch.AddSeconds(seconds);
+    }
+
+    private static string GetDecimalStringFormat(
+        int decimalPlaces,
+        bool addCommas)
+    {
+        var decimalPlacesFormat =  $"0{((decimalPlaces > 0) ? "." : "")}{new string('0', decimalPlaces)}";
+
+        return addCommas ? 
+            $"#,##{decimalPlacesFormat}" : 
+            decimalPlacesFormat;
     }
 }

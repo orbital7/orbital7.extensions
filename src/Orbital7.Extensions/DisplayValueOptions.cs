@@ -12,6 +12,17 @@ public class DisplayValueOptions
     public bool CurrencyAddPlusIfPositive { get; set; } = false;
 
     public int CurrencyDecimalPlaces { get; set; } = 2;
+    public MidpointRounding CurrencyRoundingMode { get; set; } = MidpointRounding.ToEven;
+
+
+    // Percentage options.
+    public bool PercentageAddCommas { get; set; } = true;
+
+    public bool PercentageAddPlusIfPositive { get; set; } = false;
+
+    public int PercentageDecimalPlaces { get; set; } = 2;
+
+    public MidpointRounding PercentageRoundingMode { get; set; } = MidpointRounding.ToEven;
 
 
     // Number options.

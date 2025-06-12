@@ -2,9 +2,9 @@
 
 public class RATableViewSegment<TEntity>
 {
-    public string? HeaderText { get; set; }
+    public string? HeaderText { get; init; }
 
-    public ICollection<TEntity> Items { get; set; }
+    public IDictionary<int, TEntity> Items { get; init; }
 
     public bool HasItems =>
         this.Items != null &&
@@ -13,7 +13,11 @@ public class RATableViewSegment<TEntity>
     public RATableViewSegment(
         ICollection<TEntity> items)
     {
-        this.Items = items;
+        var i = 0;
+
+        this.Items = items.ToDictionary(
+            x => ++i,
+            x => x);
     }
 
     public RATableViewSegment(

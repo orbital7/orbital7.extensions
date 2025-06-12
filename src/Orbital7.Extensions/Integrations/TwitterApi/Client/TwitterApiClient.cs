@@ -35,7 +35,8 @@ public class TwitterApiClient :
     public async Task<TokenInfo> ObtainTokenAsync(
         string authorizationCode,
         string redirectUri,
-        string codeVerifier)
+        string codeVerifier,
+        CancellationToken cancellationToken = default)
     {
         var request = new List<KeyValuePair<string, string>>()
         {
@@ -46,7 +47,7 @@ public class TwitterApiClient :
             new KeyValuePair<string, string>("code_verifier", codeVerifier),
         };
 
-        return await SendObtainTokenRequestAsync(request);
+        return await SendObtainTokenRequestAsync(request, cancellationToken);
     }
 
     protected override List<KeyValuePair<string, string>> GetRefreshTokenRequest()

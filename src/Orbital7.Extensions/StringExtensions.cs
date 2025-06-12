@@ -854,7 +854,7 @@ public static class StringExtensions
     {
         string output = value;
 
-        if (!string.IsNullOrEmpty(value) && value.StartsWith(start, StringComparison.CurrentCultureIgnoreCase))
+        if (!string.IsNullOrEmpty(value) && value.StartsWith(start, StringComparison.OrdinalIgnoreCase))
             output = value.Substring(start.Length, value.Length - start.Length);
 
         return output;

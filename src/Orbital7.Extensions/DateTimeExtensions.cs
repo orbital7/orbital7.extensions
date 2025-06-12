@@ -27,35 +27,11 @@ public static class DateTimeExtensions
         return TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(dateTimeUtc, DateTimeKind.Utc), timeZone);
     }
 
-    public static DateTime? UtcToTimeZone(
-        this DateTime? dateTimeUtc, 
-        TimeZoneInfo timeZone)
-    {
-        if (dateTimeUtc.HasValue)
-        {
-            return dateTimeUtc.Value.UtcToTimeZone(timeZone);
-        }
-        
-        return null;
-    }
-
     public static DateTime TimeZoneToUtc(
         this DateTime dateTimeInTimeZone,
         TimeZoneInfo timeZone)
     {
         return TimeZoneInfo.ConvertTime(dateTimeInTimeZone, timeZone, TimeZoneInfo.Utc);
-    }
-
-    public static DateTime? TimeZoneToUtc(
-        this DateTime? dateTimeInTimeZone,
-        TimeZoneInfo timeZone)
-    {
-        if (dateTimeInTimeZone.HasValue)
-        {
-            return dateTimeInTimeZone.Value.TimeZoneToUtc(timeZone);
-        }
-
-        return null;
     }
 
     public static string ToHoursMinutesString(
@@ -108,16 +84,6 @@ public static class DateTimeExtensions
     {
         return dateTime.ToString(DateTimeHelper.DATE_FORMAT_DEFAULT);
     }
-
-    public static string? ToDefaultDateString(
-        this DateTime? dateTime, 
-        string? nullValue = null)
-    {
-        if (dateTime.HasValue)
-            return dateTime.Value.ToDefaultDateString();
-        else
-            return nullValue;
-    }
     
     public static string ToDefaultTimeString(
         this DateTime dateTime)
@@ -140,30 +106,10 @@ public static class DateTimeExtensions
         return dateTime.ToString(DateTimeHelper.TIME_FORMAT_DEFAULT);
     }
 
-    public static string? ToDefaultTimeString(
-        this DateTime? dateTime, 
-        string? nullValue = null)
-    {
-        if (dateTime.HasValue)
-            return dateTime.Value.ToDefaultTimeString();
-        else
-            return nullValue;
-    }
-
     public static string ToDefaultDateTimeString(
         this DateTime dateTime)
     {
         return $"{dateTime.ToDefaultDateString()} {dateTime.ToDefaultTimeString()}";
-    }
-
-    public static string? ToDefaultDateTimeString(
-        this DateTime? dateTime, 
-        string? nullValue = null)
-    {
-        if (dateTime.HasValue)
-            return dateTime.Value.ToDefaultDateTimeString();
-        else
-            return nullValue;
     }
 
     public static string ToLongMonthYearDateString(
@@ -432,20 +378,6 @@ public static class DateTimeExtensions
         this DateTime dateTime)
     {
         return dateTime.ToString("dddd, MMM d");
-    }
-
-    public static string? ToDayOfWeekDateString(
-        this DateTime? dateTime,
-        string? nullValue = null)
-    {
-        if (dateTime.HasValue)
-        {
-            return dateTime.Value.ToDayOfWeekDateString();
-        }
-        else
-        {
-            return nullValue;
-        }
     }
 
     public static long ToUnixEpochSeconds(

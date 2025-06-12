@@ -97,6 +97,26 @@ public static class NumericListExtensions
             .MinOrDefault();
     }
 
+    public static decimal? AverageOrDefault(
+        this IEnumerable<decimal> values)
+    {
+        if (!values.Any())
+        {
+            return default;
+        }
+
+        return values.Average();
+    }
+
+    public static decimal? AverageOrDefault<T>(
+        this IEnumerable<T> items,
+        Func<T, decimal> valueSelector)
+    {
+        return items
+            .Select(valueSelector)
+            .AverageOrDefault();
+    }
+
     public static double? AverageOrDefault(
         this IEnumerable<double> values)
     {
@@ -117,8 +137,8 @@ public static class NumericListExtensions
             .AverageOrDefault();
     }
 
-    public static decimal? AverageOrDefault(
-        this IEnumerable<decimal> values)
+    public static double? AverageOrDefault(
+        this IEnumerable<int> values)
     {
         if (!values.Any())
         {
@@ -128,9 +148,9 @@ public static class NumericListExtensions
         return values.Average();
     }
 
-    public static decimal? AverageOrDefault<T>(
+    public static double? AverageOrDefault<T>(
         this IEnumerable<T> items,
-        Func<T, decimal> valueSelector)
+        Func<T, int> valueSelector)
     {
         return items
             .Select(valueSelector)

@@ -6,10 +6,12 @@ public class ChatApi(
     SlackApiBase(client), IChatApi
 {
     public async Task<PostMessageResponse> PostMessageAsync(
-        PostMessageRequest request)
+        PostMessageRequest request,
+        CancellationToken cancellationToken = default)
     {
         return await this.Client.SendPostRequestAsync<PostMessageRequest, PostMessageResponse>(
             this.BuildRequestUrl("chat.postMessage"),
-            request);
+            request,
+            cancellationToken);
     }
 }

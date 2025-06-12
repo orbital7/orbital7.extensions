@@ -3,33 +3,42 @@
 public interface IApiClient
 {
     Task<TResponse> SendGetRequestAsync<TResponse>(
-        string url);
+        string url,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendDeleteRequestAsync<TResponse>(
-        string url);
+        string url,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest? request);
+        TRequest? request,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPostRequestAsync<TResponse>(
-        string url);
+        string url,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest? request);
+        TRequest? request,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPatchRequestAsync<TResponse>(
-        string url);
+        string url,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
         string url,
-        TRequest? request);
+        TRequest? request,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPutRequestAsync<TResponse>(
-        string url);
+        string url,
+        CancellationToken cancellationToken = default);
 
     Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
         string url,
-        List<KeyValuePair<string, string>> request);
+        List<KeyValuePair<string, string>> request,
+        CancellationToken cancellationToken = default);
 }

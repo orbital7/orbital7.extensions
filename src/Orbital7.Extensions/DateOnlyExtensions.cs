@@ -291,4 +291,18 @@ public static class DateOnlyExtensions
     {
         return new DateTime(date, new TimeOnly());
     }
+
+    public static List<DateOnly> EachDayUntil(
+        this DateOnly startDate,
+        DateOnly endDate)
+    {
+        var days = new List<DateOnly>();
+
+        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        {
+            days.Add(date);
+        }
+
+        return days;
+    }
 }

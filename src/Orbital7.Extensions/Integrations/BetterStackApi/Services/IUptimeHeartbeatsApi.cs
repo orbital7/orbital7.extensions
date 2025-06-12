@@ -3,21 +3,27 @@
 public interface IUptimeHeartbeatsApi
 {
     Task<HeartbeatsResponse> ListAllExistingAsync(
-        int? page = null);
+        int? page = null,
+        CancellationToken cancellationToken = default);
 
     Task<HeartbeatResponse> GetAsync(
-        string id);
+        string id,
+        CancellationToken cancellationToken = default);
 
     Task<HeartbeatResponse> CreateAsync(
-        HeartbeatRequest request);
+        HeartbeatRequest request,
+        CancellationToken cancellationToken = default);
 
     Task<HeartbeatResponse> UpdateAsync(
         string id,
-        HeartbeatRequest request);
+        HeartbeatRequest request,
+        CancellationToken cancellationToken = default);
 
     Task DeleteAsync(
-        string id);
+        string id,
+        CancellationToken cancellationToken = default);
 
     Task SendAsync(
-        string url);
+        string url,
+        CancellationToken cancellationToken = default);
 }

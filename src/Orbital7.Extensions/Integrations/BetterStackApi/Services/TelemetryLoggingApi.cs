@@ -14,23 +14,27 @@ public class TelemetryLoggingApi :
     public async Task LogEventAsync(
         string sourceToken,
         string ingestingHost,
-        LogEvent logEvent)
+        LogEvent logEvent,
+        CancellationToken cancellationToken = default)
     {
         this.Client.BearerToken = sourceToken;
         await this.Client.SendPostRequestAsync<LogEvent, string>(
             GetUploadUrl(ingestingHost),
-            logEvent);
+            logEvent,
+            cancellationToken);
     }
 
     public async Task LogEventsAsync(
         string sourceToken,
         string ingestingHost,
-        IEnumerable<LogEvent> logEvents)
+        IEnumerable<LogEvent> logEvents,
+        CancellationToken cancellationToken = default)
     {
         this.Client.BearerToken = sourceToken;
         await this.Client.SendPostRequestAsync<IEnumerable<LogEvent>, string>(
             GetUploadUrl(ingestingHost),
-            logEvents);
+            logEvents,
+            cancellationToken);
     }
 
     private string GetUploadUrl(

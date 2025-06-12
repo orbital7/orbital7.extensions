@@ -61,7 +61,7 @@ public static class ConsoleHelper
             else if (found)
                 break;
 
-            if (arg.Equals(argDirective, StringComparison.CurrentCultureIgnoreCase))
+            if (arg.Equals(argDirective, StringComparison.OrdinalIgnoreCase))
                 found = true;
         }
 

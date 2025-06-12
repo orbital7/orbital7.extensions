@@ -16,7 +16,8 @@ public class UptimeHeartbeatsApi :
     }
 
     public async Task<HeartbeatsResponse> ListAllExistingAsync(
-        int? page = null)
+        int? page = null,
+        CancellationToken cancellationToken = default)
     {
         var url = BuildRequestUrl(BASE_ROUTE);
         if (page.HasValue)
@@ -25,43 +26,55 @@ public class UptimeHeartbeatsApi :
         }
 
         return await this.Client.SendGetRequestAsync<HeartbeatsResponse>(
-            url);
+            url,
+            cancellationToken);
     }
 
     public async Task<HeartbeatResponse> GetAsync(
-        string id)
+        string id,
+        CancellationToken cancellationToken = default)
     {
         return await this.Client.SendGetRequestAsync<HeartbeatResponse>(
-            BuildRequestUrl($"{BASE_ROUTE}/{id}"));
+            BuildRequestUrl($"{BASE_ROUTE}/{id}"),
+            cancellationToken);
     }
 
     public async Task<HeartbeatResponse> CreateAsync(
-        HeartbeatRequest request)
+        HeartbeatRequest request,
+        CancellationToken cancellationToken = default)
     {
         return await this.Client.SendPostRequestAsync<HeartbeatRequest, HeartbeatResponse>(
             BuildRequestUrl(BASE_ROUTE),
-            request);
+            request,
+            cancellationToken);
     }
 
     public async Task<HeartbeatResponse> UpdateAsync(
         string id,
-        HeartbeatRequest request)
+        HeartbeatRequest request,
+        CancellationToken cancellationToken = default)
     {
         return await this.Client.SendPatchRequestAsync<HeartbeatRequest, HeartbeatResponse>(
             BuildRequestUrl($"{BASE_ROUTE}/{id}"),
-            request);
+            request,
+            cancellationToken);
     }
 
     public async Task DeleteAsync(
-        string id)
+        string id,
+        CancellationToken cancellationToken = default)
     {
         await this.Client.SendDeleteRequestAsync<string>(
-            BuildRequestUrl($"{BASE_ROUTE}/{id}"));
+            BuildRequestUrl($"{BASE_ROUTE}/{id}"),
+            cancellationToken);
     }
 
     public async Task SendAsync(
-        string url)
+        string url,
+        CancellationToken cancellationToken = default)
     {
-        await this.Client.SendPostRequestAsync<string>(url);
+        await this.Client.SendPostRequestAsync<string>(
+            url, 
+            cancellationToken);
     }
 }

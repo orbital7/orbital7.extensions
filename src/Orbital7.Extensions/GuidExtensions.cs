@@ -29,7 +29,7 @@ public static class GuidExtensions
     }
 
     public static string ToString(
-        this List<Guid> list, 
+        this IEnumerable<Guid> list, 
         string delimiter, 
         bool order, 
         bool allowDuplicates, 

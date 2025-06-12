@@ -3,5 +3,6 @@
 public interface IChatApi
 {
     Task<PostMessageResponse> PostMessageAsync(
-        PostMessageRequest request);
+        PostMessageRequest request,
+        CancellationToken cancellationToken = default);
 }
