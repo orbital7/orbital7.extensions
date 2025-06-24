@@ -147,10 +147,18 @@ div.ra-navbar-item-text {
     
 }
 
-div.ra-tableview-badgecell div.badge {
+div.ra-tableview-badgecell {
+    text-wrap: nowrap;
+}
+
+div.ra-tableview-badgecell > div.badge {
     margin-top: 0px;
     margin-bottom: 3px;
 }
+
+    div.ra-tableview-badgecell > div.badge:not(:first-child) {
+        margin-left: 8px;
+    }
 
 /* Override Blazored Modal defaults and set additional values. This 
    must be done here and cannot be done in CSS isolation.

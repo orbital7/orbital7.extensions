@@ -4,52 +4,52 @@ namespace Orbital7.Extensions;
 
 public static class NumericListExtensions
 {
-    public static List<int> GetConsectutiveItemCounts<TModel>(
+    public static List<int> GetConsecutiveItemCounts<TModel>(
         this IEnumerable<TModel?> list,
         Func<TModel, bool> itemSelector)
     {
-        var consectutiveCounts = new List<int>();
+        var consecutiveCounts = new List<int>();
 
-        var consectutiveCount = 0;
+        var consecutiveCount = 0;
         foreach (var item in list)
         {
             if (item != null && itemSelector(item))
             {
-                consectutiveCount++;
+                consecutiveCount++;
             }
             else
             {
-                consectutiveCounts.Add(consectutiveCount);
-                consectutiveCount = 0;
+                consecutiveCounts.Add(consecutiveCount);
+                consecutiveCount = 0;
             }
         }
 
-        return consectutiveCounts;
+        return consecutiveCounts;
     }
 
-    public static List<TValue> GetConsectutiveItemValueSums<TModel, TValue>(
+    public static List<TValue> GetConsecutiveItemValueSums<TModel, TValue>(
         this IEnumerable<TModel?> list,
         Func<TModel, bool> itemSelector,
         Func<TModel, TValue> valueSelector)
         where TValue : INumber<TValue>
     {
-        var consectutiveValues = new List<TValue>();
+        var consecutiveValues = new List<TValue>();
 
-        var consectutiveValue = TValue.Zero;
+        var consecutiveValue = TValue.Zero;
         foreach (var item in list)
         {
             if (item != null && itemSelector(item))
             {
-                consectutiveValue += valueSelector(item);
+                consecutiveValue += valueSelector(item);
             }
             else
             {
-                consectutiveValues.Add(consectutiveValue);
-                consectutiveValue = TValue.Zero;
+                consecutiveValues.Add(consecutiveValue);
+                consecutiveValue = TValue.Zero;
             }
         }
 
-        return consectutiveValues;
+        return consecutiveValues;
     }
 
     public static TValue? MaxOrDefault<TValue>(

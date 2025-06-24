@@ -1,4 +1,5 @@
-﻿@typeparam TEntity
+﻿@typeparam TItem
+@inject TimeConverter TimeConverter
 
 @if (this.Template != null)
 {
@@ -7,7 +8,7 @@
     @if (!this.NoItemsMessage.HasText() ||
          this.HasItems(segments))
     {
-        <div class="@GetTableWrapperClass()">
+        <div class="@GetTableWrapperClass() @this.Class" style="@this.Style">
             <table class="@GetTableClass(this.Template)" style="@GetTableStyle()">
                 <thead>
                     <tr>
@@ -141,20 +142,25 @@
                         <tr>
                             @foreach (var column in this.Template.Columns)
                             {
-                                var footerCellData = new RATableViewFooterData<TEntity>()
+                                var footerCellData = new RATableViewFooterData<TItem>()
                                 {
                                     Column = column,
                                     Segments = segments,
+                                    AllItems = segments.AllItems(),
                                 };
 
                                 <td class="@GetFooterCellClass(footerCellData)">
-                                    @if (column.GetFooterCellValue != null)
+                                    @if (column.GetFooterCellContent != null)
                                     {
-                                        @column.GetFooterCellValue(footerCellData);
+                                        @column.GetFooterCellContent(footerCellData)
                                     }
-                                    else if (column.GetFooterCellContent != null)
+                                    else if (column.GetFooterCellValue != null)
                                     {
-                                        @column.GetFooterCellContent(footerCellData);
+                                        column.EnsureDisplayValueOptions();
+
+                                        @column.GetDisplayValue(
+                                            column.GetFooterCellValue(footerCellData), 
+                                            this.TimeConverter)
                                     }
                                 </td>
                             }
@@ -166,25 +172,27 @@
     }
     else if (this.NoItemsMessage.HasText())
     {
-        <div>@this.NoItemsMessage</div>
+        <div class="@this.Class" style="@this.Style">
+            @this.NoItemsMessage
+        </div>
     }
 }
 
 @code {
 
-    private TEntity? _selectedRowEntity;
+    private TItem? _selectedRowEntity;
 
     [Parameter]
-    public RATableTemplate<TEntity>? Template { get; set; }
+    public RATableTemplate<TItem>? Template { get; set; }
 
     [Parameter]
     public string? NoItemsMessage { get; set; }
 
     [Parameter]
-    public List<RATableViewSegment<TEntity>>? Segments { get; set; }
+    public List<RATableViewSegment<TItem>>? Segments { get; set; }
 
     [Parameter]
-    public ICollection<TEntity>? Items { get; set; }
+    public ICollection<TItem>? Items { get; set; }
 
     // [Parameter]
     // public bool IsScrollableHorizontally { get; set; } = true;
@@ -207,6 +215,12 @@
     [Parameter]
     public RATableViewSegmentStyle SegmentStyle { get; set; } = RATableViewSegmentStyle.Header;
 
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public string? Style { get; set; }
+
     private string GetTableWrapperClass()
     {
         var classes = "ra-scrollable-x ";
@@ -220,7 +234,7 @@
     }
 
     private string GetTableClass(
-        RATableTemplate<TEntity> template)
+        RATableTemplate<TItem> template)
     {
         var classes = "ra-tableview ";
 
@@ -260,7 +274,7 @@
     }
 
     private string GetHeaderCellClass(
-        RATableTemplate<TEntity>.Column<TEntity> column)
+        RATableTemplate<TItem>.Column<TItem> column)
     {
         string classes = GetCellHorizontalAlignmentClass(
             column.HeaderCellHorizontalAlignment) + " ";
@@ -275,7 +289,7 @@
     }
 
     private string GetHeaderCellStyle(
-        RATableTemplate<TEntity>.Column<TEntity> column)
+        RATableTemplate<TItem>.Column<TItem> column)
     {
         string style = String.Empty;
 
@@ -288,7 +302,7 @@
     }
 
     private bool IsRowSelected(
-        TEntity item)
+        TItem item)
     {
         return item != null &&
             _selectedRowEntity != null &&
@@ -296,7 +310,7 @@
     }
 
     private string GetRowClass(
-        TEntity item)
+        TItem item)
     {
         string classes = (this.Segments?.Count > 1 && this.SegmentStyle == RATableViewSegmentStyle.Header) ?
             "ra-tableview-indented-row" :
@@ -314,9 +328,9 @@
     }
 
     private string GetCellClass(
-        RATableTemplate<TEntity>.Column<TEntity> column,
-        RATableViewSegment<TEntity> segment,
-        TEntity item)
+        RATableTemplate<TItem>.Column<TItem> column,
+        RATableViewSegment<TItem> segment,
+        TItem item)
     {
         string classes = 
             column.CellClass + " " + 
@@ -331,9 +345,13 @@
     }
 
     private string GetFooterCellClass(
-        RATableViewFooterData<TEntity> footerData)
+        RATableViewFooterData<TItem> footerData)
     {
-        string classes = GetCellHorizontalAlignmentClass(footerData.Column?.CellHorizontalAlignment) + " ";
+        string classes = 
+            GetCellHorizontalAlignmentClass(
+                footerData.Column?.FooterCellHorizontalAlignment ?? 
+                footerData.Column?.CellHorizontalAlignment) + 
+            " ";
 
         if (footerData.Column?.GetFooterCellClass != null)
         {
@@ -362,9 +380,9 @@
     }
 
     private string GetCellStyle(
-        RATableTemplate<TEntity>.Column<TEntity> column,
-        RATableViewSegment<TEntity> segment,
-        TEntity item)
+        RATableTemplate<TItem>.Column<TItem> column,
+        RATableViewSegment<TItem> segment,
+        TItem item)
     {
         string style = String.Empty;
 
@@ -377,7 +395,7 @@
     }
 
     private void HandleOnSortBy(
-        RATableTemplate<TEntity>.Column<TEntity> column)
+        RATableTemplate<TItem>.Column<TItem> column)
     {
         if (column.SortBy)
         {
@@ -389,7 +407,7 @@
         }
     }
 
-    private List<RATableViewSegment<TEntity>> GetSegments()
+    private List<RATableViewSegment<TItem>> GetSegments()
     {
         if (this.Segments != null)
         {
@@ -402,7 +420,7 @@
     }
 
     private bool HasItems(
-        List<RATableViewSegment<TEntity>> segments)
+        List<RATableViewSegment<TItem>> segments)
     {
         return segments != null &&
             segments.Count > 0 &&
@@ -410,8 +428,8 @@
     }
 
     private void HandleOnRowSelected(
-        RATableViewSegment<TEntity> segment,
-        TEntity item)
+        RATableViewSegment<TItem> segment,
+        TItem item)
     {
         if (this.ShowSelectedRow)
         {

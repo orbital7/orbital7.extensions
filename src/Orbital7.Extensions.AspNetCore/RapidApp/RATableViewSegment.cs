@@ -1,17 +1,17 @@
 ﻿namespace Orbital7.Extensions.AspNetCore.RapidApp;
 
-public class RATableViewSegment<TEntity>
+public class RATableViewSegment<TItem>
 {
     public string? HeaderText { get; init; }
 
-    public IDictionary<int, TEntity> Items { get; init; }
+    public IDictionary<int, TItem> Items { get; init; }
 
     public bool HasItems =>
         this.Items != null &&
         this.Items.Count > 0;
 
     public RATableViewSegment(
-        ICollection<TEntity> items)
+        ICollection<TItem> items)
     {
         var i = 0;
 
@@ -22,7 +22,7 @@ public class RATableViewSegment<TEntity>
 
     public RATableViewSegment(
         string headerText, 
-        ICollection<TEntity> items) :
+        ICollection<TItem> items) :
         this(items)
     {
         this.HeaderText = headerText;

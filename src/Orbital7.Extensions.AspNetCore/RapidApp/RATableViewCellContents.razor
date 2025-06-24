@@ -1,4 +1,4 @@
-﻿@typeparam TEntity
+﻿@typeparam TItem
 @inject TimeConverter TimeConverter
 
 @if (this.Column != null &&
@@ -53,13 +53,13 @@
 @code {
 
     [Parameter]
-    public RATableTemplate<TEntity>.Column<TEntity>? Column { get; set; }
+    public RATableTemplate<TItem>.Column<TItem>? Column { get; set; }
 
     [Parameter]
-    public RATableViewSegment<TEntity>? Segment { get; set; }
+    public RATableViewSegment<TItem>? Segment { get; set; }
 
     [Parameter]
-    public TEntity? Item { get; set; }
+    public TItem? Item { get; set; }
 
     [Parameter]
     public int Index { get; set; }

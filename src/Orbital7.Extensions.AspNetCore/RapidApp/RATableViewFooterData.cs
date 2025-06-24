@@ -1,8 +1,10 @@
 ﻿namespace Orbital7.Extensions.AspNetCore.RapidApp;
 
-public class RATableViewFooterData<TItem>
+public record RATableViewFooterData<TItem>
 {
-    public RATableTemplate<TItem>.Column<TItem>? Column { get; set; }
+    public required RATableTemplate<TItem>.Column<TItem> Column { get; init; }
 
-    public List<RATableViewSegment<TItem>>? Segments { get; set; }
+    public required List<RATableViewSegment<TItem>> Segments { get; init; }
+
+    public required List<TItem> AllItems { get; init; }
 }

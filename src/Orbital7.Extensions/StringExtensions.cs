@@ -115,6 +115,13 @@ public static class StringExtensions
         return value;
     }
 
+    public static string? PluralizeIf(
+        this string? value,
+        int count)
+    {
+        return value.PluralizeIf(count != 1);
+    }
+
     public static string? Remove(
         this string? value, 
         string toRemove)

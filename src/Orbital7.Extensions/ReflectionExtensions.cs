@@ -12,8 +12,7 @@ public static class ReflectionExtensions
         this MemberInfo memberInfo)
     {
         return memberInfo.GetDisplayAttribute()?.Name ??
-            memberInfo.Name.PascalCaseToPhrase() ??
-            memberInfo.Name;
+            CleanPhrasedMemberInfoName(memberInfo.Name.PascalCaseToPhrase());
     }
 
     public static T? GetAttribute<T>(
@@ -215,6 +214,7 @@ public static class ReflectionExtensions
     {
         return CalculateDisplayValue(
             value,
+            //memberInfo.MemberType == MemberTypes.Property ? ((PropertyInfo)memberInfo).PropertyType : null, 
             memberInfo.Name,
             memberInfo,
             timeConverter,
@@ -380,5 +380,20 @@ public static class ReflectionExtensions
         }
 
         return value;
+    }
+
+    private static string CleanPhrasedMemberInfoName(
+        string memberInfoName)
+    {
+        if (memberInfoName.Equals("Id"))
+        {
+            return "ID";
+        }
+        else if (memberInfoName.EndsWith(" Id"))
+        {
+            return memberInfoName.Substring(0, memberInfoName.Length - 2) + " ID";
+        }
+
+        return memberInfoName;
     }
 }

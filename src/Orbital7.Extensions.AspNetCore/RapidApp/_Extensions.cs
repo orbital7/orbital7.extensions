@@ -94,4 +94,17 @@ public static class Extensions
 
         return false;
     }
+
+    public static List<TItem> AllItems<TItem>(
+        this List<RATableViewSegment<TItem>> segments)
+    {
+        var allItems = new List<TItem>();
+
+        foreach (var segment in segments)
+        {
+            allItems.AddRange(segment.Items.Values);
+        }
+
+        return allItems;
+    }
 }

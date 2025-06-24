@@ -38,14 +38,16 @@ public class RATableTemplate
                 new(
                     x => x.DisplayName,
                     headerText: namesHeader,
-                    sortBy: sortByNames,
+                    sortBy: isNamesSortable && sortByNames,
                     isSortable: isNamesSortable),
                 new(
                     x => x.Value,
+                    sortBy: !sortByNames && isValuesSortable,
                     isSortable: isValuesSortable,
                     cellHorizontalAlignment: RATableViewCellHorizontalAlignment.Right,
                     headerCellHorizontalAlignment: RATableViewCellHorizontalAlignment.Right),
-            ]);
+            ],
+            isSortable: isNamesSortable || isValuesSortable);
     }
 }
 
@@ -261,6 +263,8 @@ public class RATableTemplate<TEntity> :
 
         public RATableViewCellHorizontalAlignment HeaderCellHorizontalAlignment { get; set; }
 
+        public RATableViewCellHorizontalAlignment? FooterCellHorizontalAlignment { get; set; }
+
         public bool IsSortable => 
             this.For?.Body != null || 
             this.GetCellSortValue != null || 
@@ -314,7 +318,7 @@ public class RATableTemplate<TEntity> :
         }
 
         [MemberNotNull(nameof(DisplayValueOptions))]
-        public void EnsureDisplayValueOptions()
+        internal void EnsureDisplayValueOptions()
         {
             if (this.DisplayValueOptions == null)
             {

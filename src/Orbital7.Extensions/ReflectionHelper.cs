@@ -23,7 +23,7 @@ public static class ReflectionHelper
     }
 
     public static List<PropertyValue> GetPropertyValues<T>(
-        T obj)
+        T? obj)
     {
         PropertyInfo[] properties = typeof(T).GetProperties();
 
@@ -64,26 +64,40 @@ public static class ReflectionHelper
             .ToList();
     }
 
-    public static List<PropertyValue> GetPropertyValues<T>(
+    public static List<PropertyValue> GetFormattedPropertyValues<T>(
         T obj,
-        params (Expression<Func<T, object>>, string)[] propertiesAndDisplayNameOverrides)
+        TimeConverter? timeConverter,
+        params PropertyFormatter<T>[] propertyFormatters)
         where T : class
     {
         var list = new List<PropertyValue>();
 
-        foreach (var property in propertiesAndDisplayNameOverrides)
+        foreach (var propertyFormatter in propertyFormatters)
         {
+            var options = new DisplayValueOptions();
+            propertyFormatter.ConfigureDisplayValueOptions?.Invoke(options);
+
+            var value = propertyFormatter.Property.Compile().Invoke(obj);
+            var memberInfo = propertyFormatter.Property.Body.GetMemberInfo();
+
             list.Add(new PropertyValue()
             {
-                Name = property.Item1.Name,
+                Name = propertyFormatter.Property.Name,
 
-                DisplayName = property.Item2.HasText() ?
-                    property.Item2 :
-                    property.Item1.Body.GetMemberInfo()?.GetDisplayName(),
+                DisplayName = propertyFormatter.DisplayName.HasText() ?
+                    propertyFormatter.DisplayName :
+                    memberInfo?.GetDisplayName(),
 
-                Value = property.Item1
-                    .Compile()
-                    .Invoke(obj),
+                Value = propertyFormatter.GetDisplayValue != null ?
+                    propertyFormatter.GetDisplayValue.Invoke(obj, timeConverter, options) : 
+                    memberInfo != null ?
+                        memberInfo.GetDisplayValue(
+                            value,
+                            timeConverter,
+                            options: options) :
+                        value.GetDisplayValue(
+                            timeConverter,
+                            options: options),
             });
         }
 
