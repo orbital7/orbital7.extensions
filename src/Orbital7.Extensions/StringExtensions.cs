@@ -75,7 +75,14 @@ public static class StringExtensions
     {
         if (value != null)
         {
-            return Regex.Replace(value, "([A-Z])", " $1").Trim();
+            // Replace underscores and dashes with spaces.
+            var result = value.Replace("_", " ").Replace("-", " ");
+
+            // Insert space before capital letters and before numbers that follow letters.
+            result = Regex.Replace(result, "([A-Z])", " $1").Trim();
+            result = Regex.Replace(result, "(\\D)(\\d+)", "$1 $2");
+
+            return result;
         }
 
         return null;
@@ -209,7 +216,7 @@ public static class StringExtensions
         return true;
     }
 
-    public static string EnsureWindowsFileSystemSafe(
+    public static string EnsureIsWindowsFileSystemSafe(
         this string value, 
         string replacementChar = "")
     {
@@ -296,34 +303,6 @@ public static class StringExtensions
         {
             UTF8Encoding encoding = new UTF8Encoding();
             return encoding.GetBytes(value);
-        }
-
-        return null;
-    }
-
-    public static string? StripInvalidXMLCharacters(
-        this string? value)
-    {
-        if (value != null)
-        {
-            StringBuilder textOut = new StringBuilder(); // Used to hold the output.   
-            char current; // Used to reference the current character.   
-
-            if (value == null || value == string.Empty) return string.Empty; // vacancy test.   
-            for (int i = 0; i < value.Length; i++)
-            {
-                current = value[i];
-
-                if ((current == 0x9 || current == 0xA || current == 0xD) ||
-                    ((current >= 0x20) && (current <= 0xD7FF)) ||
-                    ((current >= 0xE000) && (current <= 0xFFFD)))// ||   
-                //((current >= 0x10000) && (current <= 0x10FFFF)))   
-                {
-                    textOut.Append(current);
-                }
-            }
-
-            return textOut.ToString();
         }
 
         return null;
@@ -526,7 +505,7 @@ public static class StringExtensions
 
             if (includeDelimitersInResults)
             {
-                var delimiters = chars.ToStringArray();
+                var delimiters = chars.ToCharStringArray();
                 if (delimiters.Length > 0)
                 {
                     string pattern = "(" + string.Join("|", delimiters.Select(d => Regex.Escape(d)).ToArray()) + ")";
@@ -579,27 +558,6 @@ public static class StringExtensions
         }
     }
 
-    public static List<Guid> ParseGuids(
-        this string? value, 
-        string delimiter, 
-        bool allowDuplicates, 
-        bool allowEmptyGuid)
-    {
-        var items = new List<Guid>();
-
-        if (value != null)
-        {
-            items = (from x in value.Parse(delimiter)
-                     let a = Guid.Parse(x)
-                     where allowEmptyGuid || a != Guid.Empty
-                     select a).ToList();
-            if (!allowDuplicates)
-                items = items.Distinct().ToList();
-        }
-
-        return items;
-    }
-
     public static List<string> ParseBetween(
         this string value, 
         string start, 
@@ -643,21 +601,6 @@ public static class StringExtensions
                 }
             }
         }
-
-        return output;
-    }
-
-    public static string GetSingleLine(
-        this string value)
-    {
-        string output = value;
-
-        // Parse by return and newline characters.
-        string separator = "\r\n";
-        string[] lines = value.Split(separator.ToCharArray(), StringSplitOptions.None);
-
-        // Return only the first line.
-        if (lines.Length > 0) output = lines[0];
 
         return output;
     }
@@ -707,7 +650,7 @@ public static class StringExtensions
         return output;
     }
 
-    public static string[] ToStringArray(
+    public static string[] ToCharStringArray(
         this string input)
     {
         string[] chars = new string[input.Length];
@@ -723,12 +666,6 @@ public static class StringExtensions
         string lineTerm = "\n")
     {
         return value.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", lineTerm);
-    }
-
-    public static string FormatLineTerminatorsAsHtml(
-        this string value)
-    {
-        return value.NormalizeLineTerminators().Replace("\n", "<br />");
     }
 
     public static string GetLineTerminator(
@@ -911,105 +848,5 @@ public static class StringExtensions
         if (includeUnderscore) chars += PunctuationUnderscore;
 
         return chars;
-    }
-
-    public static int? ParseInt(
-        this string? value,
-        int? defaultValue = null)
-    {
-        if (value != null && int.TryParse(value, out int parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static uint? ParseUInt(
-        this string? value,
-        uint? defaultValue = null)
-    {
-        if (value != null && uint.TryParse(value, out uint parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static long? ParseLong(
-        this string? value,
-        long? defaultValue = null)
-    {
-        if (value != null && long.TryParse(value, out long parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static ulong? ParseULong(
-        this string? value,
-        ulong? defaultValue = null)
-    {
-        if (value != null && ulong.TryParse(value, out ulong parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static decimal? ParseDecimal(
-        this string? value,
-        decimal? defaultValue = null)
-    {
-        if (value != null && decimal.TryParse(value, out decimal parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static double? ParseDouble(
-        this string? value,
-        double? defaultValue = null)
-    {
-        if (value != null && double.TryParse(value, out double parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static DateTime? ParseDateTime(
-        this string? value,
-        DateTime? defaultValue = null)
-    {
-        if (value != null && DateTime.TryParse(value, out DateTime parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static DateOnly? ParseDateOnly(
-        this string? value,
-        DateOnly? defaultValue = null)
-    {
-        if (value != null && DateOnly.TryParse(value, out DateOnly parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static bool? ParseBoolean(
-        this string? value,
-        bool? defaultValue = null)
-    {
-        if (value != null && bool.TryParse(value, out bool parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
-    }
-
-    public static Guid? ParseGuid(
-        this string? value,
-        Guid? defaultValue = null)
-    {
-        if (value != null && Guid.TryParse(value, out Guid parsedValue))
-            return parsedValue;
-        else
-            return defaultValue;
     }
 }

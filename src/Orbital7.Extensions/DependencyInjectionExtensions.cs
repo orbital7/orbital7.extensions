@@ -5,6 +5,26 @@ namespace Orbital7.Extensions;
 
 public static class DependencyInjectionExtensions
 {
+    public static IServiceCollection AddDisplayValueOptions(
+        this IServiceCollection services,
+        Action<DisplayValueOptionsBuilder>? configureBuilder = null)
+    {
+        services.AddTransient(provider =>
+        {
+            var builder = new DisplayValueOptionsBuilder();
+            configureBuilder?.Invoke(builder);
+            return builder;
+        });
+
+        services.AddTransient(provider =>
+        {
+            var builder = provider.GetRequiredService<DisplayValueOptionsBuilder>();
+            return builder.Build();
+        });
+
+        return services;
+    }
+
     public static IServiceCollection AddConfiguration(
         this IServiceCollection services,
         string? environmentVariableName = null,
@@ -46,7 +66,7 @@ public static class DependencyInjectionExtensions
 
         if (configuration != null)
         {
-            services.AddSingleton<TConfiguration>(configuration);
+            services.AddSingleton(configuration);
         }
 
         return services;

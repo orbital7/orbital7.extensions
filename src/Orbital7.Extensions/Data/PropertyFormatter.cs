@@ -7,7 +7,7 @@ public class PropertyFormatter<T>
 
     public string? DisplayName { get; init; }
 
-    public Action<DisplayValueOptions>? ConfigureDisplayValueOptions { get; init; }
+    public Action<DisplayValueOptionsBuilder>? ConfigureDisplayValueOptions { get; init; }
 
     public Func<T, TimeConverter?, DisplayValueOptions, object?>? GetDisplayValue { get; init; }
 
@@ -15,7 +15,7 @@ public class PropertyFormatter<T>
     public PropertyFormatter(
         Expression<Func<T, object>> property,
         string? displayName = null,
-        Action<DisplayValueOptions>? configureDisplayValueOptions = null,
+        Action<DisplayValueOptionsBuilder>? configureDisplayValueOptions = null,
         Func<T, TimeConverter?, DisplayValueOptions, object?>? getDisplayValue = null)
     {
         this.Property = property;

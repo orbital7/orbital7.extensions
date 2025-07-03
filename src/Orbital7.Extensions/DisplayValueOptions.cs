@@ -1,44 +1,51 @@
 ﻿namespace Orbital7.Extensions;
 
-public class DisplayValueOptions
+public sealed class DisplayValueOptions
 {
     // Currency options.
     public bool UseCurrencyForDecimals { get; set; } = true;
 
-    public bool CurrencyAddSymbol { get; set; } = true;
+    public bool ForCurrencyAddSymbol { get; set; } = true;
 
-    public bool CurrencyAddCommas { get; set; } = true;
+    public bool ForCurrencyAddCommas { get; set; } = true;
 
-    public bool CurrencyAddPlusIfPositive { get; set; } = false;
+    public bool ForCurrencyAddPlusIfPositive { get; set; } = false;
 
-    public int CurrencyDecimalPlaces { get; set; } = 2;
-    public MidpointRounding CurrencyRoundingMode { get; set; } = MidpointRounding.ToEven;
+    public int ForCurrencyRoundToDecimalPlaces { get; set; } = 2;
+
+    public MidpointRounding ForCurrencyUseRoundingMode { get; set; } = MidpointRounding.ToEven;
 
 
     // Percentage options.
-    public bool PercentageAddCommas { get; set; } = true;
+    public bool ForPercentageAddCommas { get; set; } = true;
 
-    public bool PercentageAddPlusIfPositive { get; set; } = false;
+    public bool ForPercentageAddPlusIfPositive { get; set; } = false;
 
-    public int PercentageDecimalPlaces { get; set; } = 2;
+    public int ForPercentageRoundToDecimalPlaces { get; set; } = 2;
 
-    public MidpointRounding PercentageRoundingMode { get; set; } = MidpointRounding.ToEven;
+    public MidpointRounding ForPercentageUseRoundingMode { get; set; } = MidpointRounding.ToEven;
 
 
     // Number options.
+    public bool ForNumbersAddCommas { get; set; } = false;
+
     public bool ForNumbersAddPlusIfPositive { get; set; } = false;
+
+    public int? ForNumbersRoundToDecimalPlaces { get; set; } = null;
+
+    public MidpointRounding ForNumbersUseRoundingMode { get; set; } = MidpointRounding.ToEven;
 
 
     // Date/time options.
-    public string? DateTimeFormat { get; set; }
+    public string? ForDateTimeUseFormat { get; set; }
 
-    public string? DateOnlyFormat { get; set; }
+    public string? ForDateOnlyUseFormat { get; set; }
 
-    public string? TimeOnlyFormat { get; set; }
+    public string? ForTimeOnlyUseFormat { get; set; }
 
-    public string? TimeSpanFormat { get; set; }
+    public string? ForTimeSpanUseFormat { get; set; }
 
-    public string? TimeZoneId { get; set; }
+    public string? ForDateTimeUseTimeZoneId { get; set; }
 
 
     public DisplayValueOptions()

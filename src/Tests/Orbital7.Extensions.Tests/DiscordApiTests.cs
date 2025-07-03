@@ -1,4 +1,4 @@
-﻿using Orbital7.Extensions.Integrations.DiscordApi;
+﻿using Orbital7.Extensions.Apis.DiscordApi;
 
 namespace Orbital7.Extensions.Tests;
 
@@ -14,7 +14,7 @@ public class DiscordApiTests
     {
         var config = ConfigurationHelper.GetConfigurationWithUserSecrets<DiscordApiTests>();
         this.DiscordApiBotToken = config["DiscordApiBotToken"];
-        this.DiscordApiTestChannelId =  ParsingHelper.ParseNullableUlong(config["DiscordApiTestChannelId"]);
+        this.DiscordApiTestChannelId = StringHelper.ParseNullableULong(config["DiscordApiTestChannelId"]);
         this.HttpClientFactory = new BasicHttpClientFactory();
     }
 

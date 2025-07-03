@@ -1,4 +1,4 @@
-﻿using Orbital7.Extensions.Integrations.SlackApi;
+﻿using Orbital7.Extensions.Apis.SlackApi;
 
 namespace Orbital7.Extensions.Tests;
 

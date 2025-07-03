@@ -1,4 +1,4 @@
-﻿using Orbital7.Extensions.Integrations.BetterStackApi;
+﻿using Orbital7.Extensions.Apis.BetterStackApi;
 
 namespace Orbital7.Extensions.Tests;
 

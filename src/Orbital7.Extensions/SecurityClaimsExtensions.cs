@@ -4,7 +4,7 @@ namespace Orbital7.Extensions;
 
 public static class SecurityClaimsExtensions
 {
-    public static Guid GetUserId(
+    public static TKey? GetUserId<TKey>(
         this ClaimsPrincipal principal)
     {
         if (principal == null)
@@ -14,11 +14,11 @@ public static class SecurityClaimsExtensions
 
         if (first != null)
         {
-            return Guid.Parse(first.Value);
+            return StringHelper.ParseToType<TKey>(first.Value);
         }
         else
         {
-            return Guid.Empty;
+            return default;
         }
     }
 

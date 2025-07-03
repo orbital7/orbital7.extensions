@@ -22,6 +22,36 @@ public static class DictionaryExtensions
         return dictionary;
     }
 
+    public static IDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary,
+        TKey key,
+        TValue value)
+    {
+        if (!dictionary.ContainsKey(key))
+        {
+            dictionary.Add(key, value);
+        }
+
+        return dictionary;
+    }
+
+    public static IDictionary<TKey, string> AddOrAppendToExisting<TKey>(
+        this IDictionary<TKey, string> dictionary,
+        TKey key,
+        string value,
+        string append = " ")
+    {
+        if (!dictionary.ContainsKey(key))
+        {
+            dictionary.Add(key, value);
+        }
+        else
+        {
+            dictionary[key] = dictionary[key] + append + value;
+        }
+
+        return dictionary;
+    }
 
     public static IDictionary<TKey, TValue> AddRange<TKey, TValue>(
         this IDictionary<TKey, TValue> dictionary,
@@ -48,7 +78,7 @@ public static class DictionaryExtensions
         return clonedDictionary;
     }
 
-    public static TValue? TryGetValue<TKey, TValue>(
+    public static TValue? GetValueOrDefault<TKey, TValue>(
         this IDictionary<TKey, TValue> dictionary,
         TKey key)
         where TKey : notnull
@@ -56,15 +86,5 @@ public static class DictionaryExtensions
         return dictionary.TryGetValue(key, out TValue? value) ? 
             value : 
             default;
-    }
-
-    public static string TryGetValueOrDefault<TKey>(
-        this IDictionary<TKey, string> dictionary,
-        TKey key)
-        where TKey : notnull
-    {
-        return dictionary.TryGetValue(key, out string? value) ? 
-            value :
-            string.Empty;
     }
 }

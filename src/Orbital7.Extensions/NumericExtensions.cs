@@ -26,7 +26,7 @@ public static class NumericExtensions
     {
         var output = baseNumberPrefix + Math
             .Round(Math.Abs(value), decimalPlaces, roundingMode)
-            .ToString(GetDecimalStringFormat(decimalPlaces, addCommas));
+            .ToString(StringHelper.GetNumericStringFormat(decimalPlaces, addCommas));
 
         if (value < 0)
         {
@@ -58,22 +58,52 @@ public static class NumericExtensions
     }
 
     public static string ToCurrencyString(
-        this double number, 
-        DisplayValueOptions? options = null)
+        this double number,
+        int decimalPlaces = 2,
+        MidpointRounding roundingMode = MidpointRounding.ToEven,
+        bool addCommas = true,
+        bool addPlusIfPositive = false,
+        bool addSymbol = true)
     {
-        var displayOptions = options ?? new DisplayValueOptions();
-
         return number.ToRoundedString(
-            decimalPlaces: displayOptions.CurrencyDecimalPlaces,
-            roundingMode: displayOptions.CurrencyRoundingMode,
-            addCommas: displayOptions.CurrencyAddCommas,
-            addPlusIfPositive: displayOptions.CurrencyAddPlusIfPositive,
-            baseNumberPrefix: displayOptions.CurrencyAddSymbol ? "$" : null);
+            decimalPlaces: decimalPlaces,
+            roundingMode: roundingMode,
+            addCommas: addCommas,
+            addPlusIfPositive: addPlusIfPositive,
+            baseNumberPrefix: addSymbol ? "$" : null);
     }
 
     public static string ToCurrencyString(
         this decimal number,
-        DisplayValueOptions? options = null)
+        int decimalPlaces = 2,
+        MidpointRounding roundingMode = MidpointRounding.ToEven,
+        bool addCommas = true,
+        bool addPlusIfPositive = false,
+        bool addSymbol = true)
+    {
+        return Convert.ToDouble(number).ToCurrencyString(
+            decimalPlaces: decimalPlaces,
+            roundingMode: roundingMode,
+            addCommas: addCommas,
+            addPlusIfPositive: addPlusIfPositive,
+            addSymbol: addSymbol);
+    }
+
+    public static string ToCurrencyString(
+        this double number, 
+        DisplayValueOptions options)
+    {
+        return number.ToCurrencyString(
+            decimalPlaces: options.ForCurrencyRoundToDecimalPlaces,
+            roundingMode: options.ForCurrencyUseRoundingMode,
+            addCommas: options.ForCurrencyAddCommas,
+            addPlusIfPositive: options.ForCurrencyAddPlusIfPositive,
+            addSymbol: options.ForCurrencyAddSymbol);
+    }
+
+    public static string ToCurrencyString(
+        this decimal number,
+        DisplayValueOptions options)
     {
         return Convert.ToDouble(number).ToCurrencyString(
             options: options);
@@ -81,7 +111,7 @@ public static class NumericExtensions
 
     public static string ToPercentString(
         this double percent,
-        int decimalPlaces,
+        int decimalPlaces = 2,
         MidpointRounding roundingMode = MidpointRounding.ToEven,
         bool addCommas = true,
         bool addPlusIfPositive = false)
@@ -95,15 +125,13 @@ public static class NumericExtensions
 
     public static string ToPercentString(
         this double percent,
-        DisplayValueOptions? options = null)
+        DisplayValueOptions options)
     {
-        var displayOptions = options ?? new DisplayValueOptions();
-
         return percent.ToPercentString(
-            displayOptions.PercentageDecimalPlaces,
-            roundingMode: displayOptions.PercentageRoundingMode,
-            addCommas: displayOptions.PercentageAddCommas,
-            addPlusIfPositive: displayOptions.PercentageAddPlusIfPositive);
+            options.ForPercentageRoundToDecimalPlaces,
+            roundingMode: options.ForPercentageUseRoundingMode,
+            addCommas: options.ForPercentageAddCommas,
+            addPlusIfPositive: options.ForPercentageAddPlusIfPositive);
     }
 
     public static string ToFileSizeString(
@@ -316,16 +344,5 @@ public static class NumericExtensions
     {
         // Returns a DateTime in UTC.
         return DateTime.UnixEpoch.AddSeconds(seconds);
-    }
-
-    private static string GetDecimalStringFormat(
-        int decimalPlaces,
-        bool addCommas)
-    {
-        var decimalPlacesFormat =  $"0{((decimalPlaces > 0) ? "." : "")}{new string('0', decimalPlaces)}";
-
-        return addCommas ? 
-            $"#,##{decimalPlacesFormat}" : 
-            decimalPlacesFormat;
     }
 }

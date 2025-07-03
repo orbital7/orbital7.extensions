@@ -5,6 +5,35 @@ namespace Orbital7.Extensions;
 
 public static class XmlSerializationHelper
 {
+
+    public static string? StripInvalidXMLCharacters(
+        string? value)
+    {
+        if (value != null)
+        {
+            StringBuilder textOut = new StringBuilder(); // Used to hold the output.   
+            char current; // Used to reference the current character.   
+
+            if (value == null || value == string.Empty) return string.Empty; // vacancy test.   
+            for (int i = 0; i < value.Length; i++)
+            {
+                current = value[i];
+
+                if ((current == 0x9 || current == 0xA || current == 0xD) ||
+                    ((current >= 0x20) && (current <= 0xD7FF)) ||
+                    ((current >= 0xE000) && (current <= 0xFFFD)))// ||   
+                //((current >= 0x10000) && (current <= 0x10FFFF)))   
+                {
+                    textOut.Append(current);
+                }
+            }
+
+            return textOut.ToString();
+        }
+
+        return null;
+    }
+
     public static T? CloneObject<T>(
         T? objectToClone)
     {

@@ -28,8 +28,8 @@ public class DateOnlyExtensionsTests
         string date2,
         int expectedMonths)
     {
-        var dateOnly1 = ParsingHelper.ParseDateOnly(date1);
-        var dateOnly2 = ParsingHelper.ParseDateOnly(date2);
+        var dateOnly1 = StringHelper.ParseDateOnly(date1);
+        var dateOnly2 = StringHelper.ParseDateOnly(date2);
 
         var months = dateOnly2.CalculateMonthsDifference(dateOnly1);
         var roundedMonths = Math.Round(months, 0);

@@ -1,4 +1,4 @@
-﻿using Orbital7.Extensions.Integrations.DiscordApi;
+﻿using Orbital7.Extensions.Apis.DiscordApi;
 
 namespace Orbital7.Extensions.Notifications;
 

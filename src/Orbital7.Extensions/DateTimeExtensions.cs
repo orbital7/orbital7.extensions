@@ -109,7 +109,13 @@ public static class DateTimeExtensions
     public static string ToDefaultDateTimeString(
         this DateTime dateTime)
     {
-        return $"{dateTime.ToDefaultDateString()} {dateTime.ToDefaultTimeString()}";
+        return dateTime.ToString(DateTimeHelper.DATE_TIME_FORMAT_DEFAULT);
+    }
+
+    public static string ToDefaultDateTime24HourString(
+        this DateTime dateTime)
+    {
+        return dateTime.ToString(DateTimeHelper.DATE_TIME_FORMAT_DEFAULT_24_HOUR);
     }
 
     public static string ToLongMonthYearDateString(

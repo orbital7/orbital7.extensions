@@ -38,6 +38,8 @@ public static class DateTimeHelper
 
     public const string TIME_FORMAT_DEFAULT = TIME_FORMAT_HOUR_MINUTE_12_HOUR;
 
+    public const string TIME_FORMAT_24_HOUR_DEFAULT = TIME_FORMAT_HOUR_MINUTE_24_HOUR;
+
     public const string TIME_FORMAT_HOUR_MINUTE_12_HOUR = "h:mm tt";
 
     public const string TIME_FORMAT_HOUR_MINUTE_12_HOUR_ZEROED = "hh:mm tt";
@@ -49,6 +51,11 @@ public static class DateTimeHelper
     public const string TIME_FORMAT_HOUR_MINUTE_SECOND_12_HOUR_ZEROED = "hh:mm:ss tt";
 
     public const string TIME_FORMAT_HOUR_MINUTE_SECOND_24_HOUR = "HH:mm:ss";
+
+
+    public const string DATE_TIME_FORMAT_DEFAULT = DATE_FORMAT_DEFAULT + " " + TIME_FORMAT_DEFAULT;
+
+    public const string DATE_TIME_FORMAT_DEFAULT_24_HOUR = DATE_FORMAT_DEFAULT + " " + TIME_FORMAT_HOUR_MINUTE_24_HOUR;
 
     public static double GetAverageDaysPerMonth()
     {

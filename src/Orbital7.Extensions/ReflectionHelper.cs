@@ -67,18 +67,22 @@ public static class ReflectionHelper
     public static List<PropertyValue> GetFormattedPropertyValues<T>(
         T obj,
         TimeConverter? timeConverter,
+        DisplayValueOptionsBuilder? displayValueOptionsBuilder,
         params PropertyFormatter<T>[] propertyFormatters)
         where T : class
     {
         var list = new List<PropertyValue>();
+        var optionsBuilder = displayValueOptionsBuilder ??
+            new DisplayValueOptionsBuilder();
 
         foreach (var propertyFormatter in propertyFormatters)
         {
-            var options = new DisplayValueOptions();
-            propertyFormatter.ConfigureDisplayValueOptions?.Invoke(options);
+            var builder = optionsBuilder.Clone();
+            propertyFormatter.ConfigureDisplayValueOptions?.Invoke(builder);
 
             var value = propertyFormatter.Property.Compile().Invoke(obj);
             var memberInfo = propertyFormatter.Property.Body.GetMemberInfo();
+            var options = builder.Build();
 
             list.Add(new PropertyValue()
             {

@@ -1,0 +1,16 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.ComponentModel.DataAnnotations;
+global using System.IO;
+global using System.Linq;
+global using System.Net;
+global using System.Text;
+global using System.Threading;
+global using System.Threading.Tasks;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata;
+global using Microsoft.Extensions.DependencyInjection;
+global using Orbital7.Extensions;
+global using Orbital7.Extensions.Apis;
+global using Orbital7.Extensions.Data;
+global using Orbital7.Extensions.EntityFrameworkCore;

@@ -255,21 +255,21 @@ public static class ReflectionExtensions
             else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
             {
                 var date = (DateOnly)(object)value;
-                if (options.DateOnlyFormat.HasText())
+                if (options.ForDateOnlyUseFormat.HasText())
                 {
-                    return date.ToString(options.DateOnlyFormat);
+                    return date.ToString(options.ForDateOnlyUseFormat);
                 }
                 else
                 {
-                    return date.ToDateTime().ToShortDateString();
+                    return date.ToDateTime().ToDefaultDateString();
                 }
             }
             else if (type == typeof(TimeOnly) || type == typeof(TimeOnly?))
             {
                 var time = (TimeOnly)(object)value;
-                if (options.TimeOnlyFormat.HasText())
+                if (options.ForTimeOnlyUseFormat.HasText())
                 {
-                    return time.ToString(options.TimeOnlyFormat);
+                    return time.ToString(options.ForTimeOnlyUseFormat);
                 }
                 else
                 {
@@ -279,7 +279,7 @@ public static class ReflectionExtensions
                         timeConverter,
                         options);
 
-                    return dateTime.ToShortTimeString();
+                    return dateTime.ToDefaultTimeString();
                 }
             }
             else if (type == typeof(DateTime) || type == typeof(DateTime?))
@@ -290,9 +290,9 @@ public static class ReflectionExtensions
                     timeConverter,
                     options);
 
-                if (options.DateTimeFormat.HasText())
+                if (options.ForDateTimeUseFormat.HasText())
                 {
-                    return dateTime.ToString(options.DateTimeFormat);
+                    return dateTime.ToString(options.ForDateTimeUseFormat);
                 }
                 else
                 {
@@ -302,9 +302,9 @@ public static class ReflectionExtensions
             else if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
             {
                 var timeSpan = (TimeSpan)(object)value;
-                if (options.TimeSpanFormat.HasText())
+                if (options.ForTimeSpanUseFormat.HasText())
                 {
-                    return timeSpan.ToString(options.TimeSpanFormat);
+                    return timeSpan.ToString(options.ForTimeSpanUseFormat);
                 }
                 else
                 {
@@ -321,10 +321,14 @@ public static class ReflectionExtensions
                 return ((decimal)(object)value).ToCurrencyString(
                     options: options);
             }
-            else if (options.ForNumbersAddPlusIfPositive && 
-                type.IsBaseOrNullableNumericType())
+            else if (type.IsBaseOrNullableNumericType() &&
+                options.ForNumbersRoundToDecimalPlaces.HasValue)
             {
-                return "+" + value.ToString();
+                return ((double)(object)value).ToRoundedString(
+                    addCommas: options.ForNumbersAddCommas,
+                    addPlusIfPositive: options.ForNumbersAddPlusIfPositive,
+                    decimalPlaces: options.ForNumbersRoundToDecimalPlaces.Value,
+                    roundingMode: options.ForNumbersUseRoundingMode);
             }
             else if ((propertyName?.EndsWith("Percentage") ?? false) &&
                 (type == typeof(double) || type == typeof(double?)))
@@ -349,7 +353,7 @@ public static class ReflectionExtensions
     {
         DateTime value;
 
-        // TODO: Should we just always do this and assuem the date/time is in UTC?
+        // TODO: Should we just always do this and assume the date/time is in UTC?
         if (propertyName?.EndsWith("Utc") ?? false)
         {
             DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
@@ -357,9 +361,9 @@ public static class ReflectionExtensions
 
         if (timeConverter != null)
         {
-            if (displayValueOptions != null && displayValueOptions.TimeZoneId.HasText())
+            if (displayValueOptions != null && displayValueOptions.ForDateTimeUseTimeZoneId.HasText())
             {
-                value = timeConverter.ToDateTime(dateTime, displayValueOptions.TimeZoneId);
+                value = timeConverter.ToDateTime(dateTime, displayValueOptions.ForDateTimeUseTimeZoneId);
             }
             else
             {
@@ -368,10 +372,10 @@ public static class ReflectionExtensions
         }
         else
         {
-            if (displayValueOptions != null && displayValueOptions.TimeZoneId.HasText())
+            if (displayValueOptions != null && displayValueOptions.ForDateTimeUseTimeZoneId.HasText())
             {
                 value = dateTime.UtcToTimeZone(
-                    TimeZoneInfo.FindSystemTimeZoneById(displayValueOptions.TimeZoneId));
+                    TimeZoneInfo.FindSystemTimeZoneById(displayValueOptions.ForDateTimeUseTimeZoneId));
             }
             else
             {
