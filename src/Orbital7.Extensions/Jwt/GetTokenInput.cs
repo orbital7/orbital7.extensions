@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Jwt;
 
-public class ObtainTokenInput
+public class GetTokenInput
 {
     [Required]
     public string? Username { get; set; }

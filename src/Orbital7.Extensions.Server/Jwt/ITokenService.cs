@@ -4,15 +4,24 @@ namespace Orbital7.Extensions.Jwt;
 
 public interface ITokenService
 {
-    Task<TokenInfo> ObtainTokenAsync(
-        ObtainTokenInput input);
+    Task<TokenInfo> GetTokenAsync(
+        GetTokenInput input);
 
     Task<TokenInfo> RefreshTokenAsync(
         RefreshTokenInput input);
 
-    Task<bool> RevokeTokenAsync(
-        string refreshToken);
+    Task<RevokedTokenInfo?> RevokeTokenAsync(
+        RevokeTokenInput input);
+
+    Task<List<RevokedTokenInfo>> RevokeExpiredTokensAsync(
+        DateTime? nowUtc = null);
+
+    Task<List<RevokedTokenInfo>> RevokeTokensLastRefreshedBeforeAsync(
+        DateTime minimumLastRefreshedDateTimeUtc);
 
     Task<bool> IsTokenGrantValidAsync(
         ClaimsPrincipal principal);
+
+    ClaimsPrincipal GetPrincipalFromAccessToken(
+        string accessToken);
 }

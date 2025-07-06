@@ -34,72 +34,72 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
 
     protected abstract TokenGrantConfig GetTokenGrantConfig();
 
-    protected abstract Task<bool> IsUserActiveAsync(
-        TUser user);
+    protected abstract Task<bool> IsUserAuthorizedAsync(
+        TUser user,
+        DateTime nowUtc);
 
-    public async Task<TokenInfo> ObtainTokenAsync(
-        ObtainTokenInput input)
+    public virtual async Task<TokenInfo> GetTokenAsync(
+        GetTokenInput input)
     {
         input.AssertIsComplete();
 
+        // Find the user by username.
         var user = await this.UserManager.FindByNameAsync(input.Username);
-        if (user != null && await IsUserActiveAsync(user))
+
+        // Ensure we have a user, authenticate the user, and validate if
+        // the user is authorized.
+        if (user != null &&
+            await IsUserAuthenticatedAsync(user, input) &&
+            await IsUserAuthorizedAsync(user, DateTime.UtcNow))
         {
-            // Verify password.
-            var passwordIsValid = await this.UserManager.CheckPasswordAsync(
-                user,
-                input.Password);
-            if (passwordIsValid)
+            var tokenGrantConfig = GetTokenGrantConfig();
+
+            // Create the grant.
+            var tokenGrant = new TTokenGrant()
             {
-                var tokenGrantConfig = GetTokenGrantConfig();
+                UserId = user.Id,
+                Description = input.Description,
+                RefreshToken = GenerateRefreshToken(),
+                ExpirationDateTimeUtc = GetExpirationDateTimeUtc(
+                    tokenGrantConfig.ExpiresAfter),
+                LastRefreshedDateTimeUtc = DateTime.UtcNow,
+            };
+            this.TokenGrants.AddEntity(tokenGrant);
 
-                // Create the grant.
-                var tokenGrant = new TTokenGrant()
-                {
-                    UserId = user.Id,
-                    Description = input.Description,
-                    RefreshToken = GenerateRefreshToken(),
-                    ExpirationDateTimeUtc = GetExpirationDateTimeUtc(
-                        tokenGrantConfig.ExpiresAfter),
-                    LastRefreshedDateTimeUtc = DateTime.UtcNow,
-                };
-                this.TokenGrants.AddEntity(tokenGrant);
+            // Create the token.
+            var tokenInfo = AssembleTokenInfo(
+                user,
+                tokenGrant,
+                tokenGrantConfig);
 
-                // Create the token.
-                var tokenInfo = CreateTokenInfo(
-                    user, 
-                    tokenGrant, 
-                    tokenGrantConfig);
+            // Save.
+            await this.Context.SaveChangesAsync();
 
-                // Save.
-                await this.Context.SaveChangesAsync();
-
-                return tokenInfo;
-            }
+            return tokenInfo;
         }
 
         throw new SecurityTokenException(this.InvalidTokenCredentialsMessage);
     }
 
-    public async Task<TokenInfo> RefreshTokenAsync(
+    public virtual async Task<TokenInfo> RefreshTokenAsync(
         RefreshTokenInput input)
     {
         input.AssertIsComplete();
 
         var tokenGrantConfig = GetTokenGrantConfig();
 
-        var principal = GetPrincipalFromExpiredToken(
-            input.AccessToken,
-            tokenGrantConfig);
+        var principal = GetPrincipalFromAccessToken(
+            input.AccessToken);
 
         if (principal != null)
         {
             var user = await this.UserManager.GetUserAsync(principal);
-            if (user != null && await IsUserActiveAsync(user))
+            if (user != null &&
+                await IsUserAuthorizedAsync(user, DateTime.UtcNow))
             {
                 var tokenGrant = await this.TokenGrants
                     .Where(x =>
-                        x.Id.Equals(user.Id) &&
+                        x.UserId.Equals(user.Id) &&
                         x.RefreshToken == input.RefreshToken)
                     .GetAsync();
 
@@ -113,7 +113,7 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
                     }
 
                     // Create the token.
-                    var tokenInfo = CreateTokenInfo(
+                    var tokenInfo = AssembleTokenInfo(
                         user, 
                         tokenGrant,
                         tokenGrantConfig);
@@ -135,7 +135,50 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         throw new SecurityTokenException(this.InvalidTokenMessage);
     }
 
-    public async Task<bool> IsTokenGrantValidAsync(
+    public virtual async Task<RevokedTokenInfo?> RevokeTokenAsync(
+        RevokeTokenInput input)
+    {
+        var tokenGrant = await this.TokenGrants
+            .Where(x => x.RefreshToken == input.RefreshToken)
+            .GetAsync();
+
+        if (tokenGrant != null)
+        {
+            this.TokenGrants.DeleteEntity(tokenGrant);
+            await this.Context.SaveChangesAsync();
+
+            return new RevokedTokenInfo
+            {
+                UserId = tokenGrant.UserId.ToString(),
+                Description = tokenGrant.Description,
+            };
+        }
+
+        return null;
+    }
+
+    public virtual async Task<List<RevokedTokenInfo>> RevokeExpiredTokensAsync(
+        DateTime? nowUtc = null)
+    {
+        var tokenGrants = await this.TokenGrants
+            .Where(x => x.ExpirationDateTimeUtc.HasValue &&
+                        x.ExpirationDateTimeUtc <= (nowUtc ?? DateTime.UtcNow))
+            .ToListAsync();
+
+        return await ExecuteRevokeTokensAsync(tokenGrants);
+    }
+
+    public virtual async Task<List<RevokedTokenInfo>> RevokeTokensLastRefreshedBeforeAsync(
+        DateTime minimumLastRefreshedDateTimeUtc)
+    {
+        var tokenGrants = await this.TokenGrants
+            .Where(x => x.LastRefreshedDateTimeUtc < minimumLastRefreshedDateTimeUtc)
+            .ToListAsync();
+
+        return await ExecuteRevokeTokensAsync(tokenGrants);
+    }
+
+    public virtual async Task<bool> IsTokenGrantValidAsync(
         ClaimsPrincipal principal)
     {
         if (principal == null)
@@ -163,38 +206,53 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
              tokenGrant.ExpirationDateTimeUtc > DateTime.UtcNow);
     }
 
-    public async Task<bool> RevokeTokenAsync(
-        string refreshToken)
+    public virtual ClaimsPrincipal GetPrincipalFromAccessToken(
+        string accessToken)
     {
-        var tokenGrant = await this.TokenGrants
-            .Where(x => x.RefreshToken == refreshToken)
-            .GetAsync();
+        var tokenGrantConfig = GetTokenGrantConfig();
+        tokenGrantConfig.AssertIsComplete();
 
-        if (tokenGrant != null)
+        var tokenValidationParameters = new TokenValidationParameters
         {
-            this.TokenGrants.DeleteEntity(tokenGrant);
-            await this.Context.SaveChangesAsync();
-            return true;
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = TokenServiceHelper.GetSigningKey(tokenGrantConfig.SigningKey),
+            ValidateLifetime = false
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(
+            accessToken,
+            tokenValidationParameters,
+            out SecurityToken securityToken);
+
+        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+            !jwtSecurityToken.Header.Alg.Equals(
+                SecurityAlgorithms.HmacSha256,
+                StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new SecurityTokenException(this.InvalidTokenMessage);
         }
 
-        return false;
+        return principal;
     }
 
-    private TokenInfo CreateTokenInfo(
+    protected virtual TokenInfo AssembleTokenInfo(
         TUser user,
         TTokenGrant tokenGrant,
         TokenGrantConfig tokenGrantConfig)
     {
-        var authClaims = CreateClaims(user, tokenGrant);
+        var authClaims = GetTokenClaims(user, tokenGrant);
         var accessTokenExpirationDateTimeUtc = GetExpirationDateTimeUtc(
             tokenGrantConfig.AccessTokenExpiresAfter);
 
-        var token = CreateToken(
+        var jwtAccessToken = CreateJwtSecurityToken(
             authClaims,
             accessTokenExpirationDateTimeUtc,
             tokenGrantConfig);
 
-        var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtAccessToken);
 
         return new TokenInfo()
         {
@@ -205,7 +263,18 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         };
     }
 
-    private DateTime? GetExpirationDateTimeUtc(
+    protected virtual async Task<bool> IsUserAuthenticatedAsync(
+        TUser user,
+        GetTokenInput input)
+    {
+        input.AssertIsComplete();
+
+        return await this.UserManager.CheckPasswordAsync(
+            user, 
+            input.Password);
+    }
+
+    protected DateTime? GetExpirationDateTimeUtc(
         TimeSpan? expiresAfter)
     {
         if (expiresAfter.HasValue)
@@ -218,7 +287,7 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         }
     }
 
-    private List<Claim> CreateClaims(
+    protected virtual List<Claim> GetTokenClaims(
         TUser user,
         TTokenGrant tokenGrant)
     {
@@ -244,28 +313,26 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         }
     }
 
-    // Source: https://www.c-sharpcorner.com/article/jwt-authentication-with-refresh-tokens-in-net-6-0/
-    private JwtSecurityToken CreateToken(
+    protected virtual JwtSecurityToken CreateJwtSecurityToken(
         List<Claim> authClaims,
         DateTime? accessTokenExpirationDateTimeUtc,
         TokenGrantConfig tokenGrantConfig)
     {
         tokenGrantConfig.AssertIsComplete();
 
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenGrantConfig.SigningKey));
-
         var token = new JwtSecurityToken(
             issuer: tokenGrantConfig.ValidIssuer,
             audience: tokenGrantConfig.ValidAudience,
             expires: accessTokenExpirationDateTimeUtc,
             claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
+            signingCredentials: new SigningCredentials(
+                TokenServiceHelper.GetSigningKey(tokenGrantConfig.SigningKey), 
+                SecurityAlgorithms.HmacSha256));
 
         return token;
     }
 
-    private string GenerateRefreshToken()
+    protected virtual string GenerateRefreshToken()
     {
         var randomNumber = new byte[64];
         using var rng = RandomNumberGenerator.Create();
@@ -273,36 +340,22 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         return Convert.ToBase64String(randomNumber);
     }
 
-    private ClaimsPrincipal GetPrincipalFromExpiredToken(
-        string token,
-        TokenGrantConfig tokenGrantConfig)
+    protected virtual async Task<List<RevokedTokenInfo>> ExecuteRevokeTokensAsync(
+        List<TTokenGrant> tokenGrants)
     {
-        tokenGrantConfig.AssertIsComplete();
-
-        var tokenValidationParameters = new TokenValidationParameters
+        foreach (var tokenGrant in tokenGrants)
         {
-            ValidateAudience = false,
-            ValidateIssuer = false,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(tokenGrantConfig.SigningKey)),
-            ValidateLifetime = false
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(
-            token, 
-            tokenValidationParameters, 
-            out SecurityToken securityToken);
-
-        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-            !jwtSecurityToken.Header.Alg.Equals(
-                SecurityAlgorithms.HmacSha256,
-                StringComparison.InvariantCultureIgnoreCase))
-        {
-            throw new SecurityTokenException(this.InvalidTokenMessage);
+            this.TokenGrants.DeleteEntity(tokenGrant);
         }
 
-        return principal;
+        await this.Context.SaveChangesAsync();
+
+        return tokenGrants
+            .Select(x => new RevokedTokenInfo
+            {
+                UserId = x.UserId.ToString(),
+                Description = x.Description,
+            })
+            .ToList();
     }
 }

@@ -37,19 +37,21 @@ public class StringHelper
 
     public static TEnum ParseEnum<TEnum>(
         string value)
+        where TEnum : struct
     {
         return (TEnum)Enum.Parse(typeof(TEnum), value);
     }
 
     public static TEnum? ParseNullableEnum<TEnum>(
-        string? value)
+        string? value) 
+        where TEnum : struct
     {
-        if (value.HasText())
+        if (Enum.TryParse(typeof(TEnum), value, out var result))
         {
-            return (TEnum)Enum.Parse(typeof(TEnum), value);
+            return (TEnum?)result;
         }
 
-        return default;
+        return null;
     }
 
     public static short ParseShort(
@@ -71,7 +73,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static ushort ParseUShort(
@@ -93,7 +95,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static int ParseInt(
@@ -115,7 +117,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static uint ParseUInt(
@@ -137,7 +139,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static long ParseLong(
@@ -159,7 +161,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static ulong ParseULong(
@@ -181,7 +183,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static decimal ParseDecimal(
@@ -203,7 +205,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static float ParseFloat(
@@ -225,7 +227,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static double ParseDouble(
@@ -247,7 +249,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static DateTime ParseDateTime(
@@ -269,7 +271,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static DateOnly ParseDateOnly(
@@ -291,7 +293,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static TimeOnly ParseTimeOnly(
@@ -313,7 +315,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static bool ParseBool(
@@ -335,7 +337,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static Guid ParseGuid(
@@ -357,7 +359,7 @@ public class StringHelper
             return result;
         }
 
-        return default;
+        return null;
     }
 
     public static List<Guid> ParseGuids(

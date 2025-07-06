@@ -29,7 +29,7 @@ public abstract class OAuthApiClientBase :
         this.OnTokenInfoUpdated = onTokenInfoUpdated;
     }
 
-    protected async Task<TokenInfo> SendObtainTokenRequestAsync(
+    protected async Task<TokenInfo> SendGetTokenRequestAsync(
         List<KeyValuePair<string, string>> request,
         CancellationToken cancellationToken = default)
     {
@@ -46,7 +46,7 @@ public abstract class OAuthApiClientBase :
     private async Task<TokenInfo> RefreshTokenAsync(
         CancellationToken cancellationToken)
     {
-        var request = GetRefreshTokenRequest();
+        var request = CreateRefreshTokenRequest();
 
         var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
             this.OAuthTokenEndpointUrl,
@@ -58,7 +58,7 @@ public abstract class OAuthApiClientBase :
         return this.TokenInfo;
     }
 
-    protected abstract List<KeyValuePair<string, string>> GetRefreshTokenRequest();
+    protected abstract List<KeyValuePair<string, string>> CreateRefreshTokenRequest();
 
     private async Task UpdateTokenInfoAsync(
         OAuthTokenResponse response)

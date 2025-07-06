@@ -47,10 +47,10 @@ public class TwitterApiClient :
             new KeyValuePair<string, string>("code_verifier", codeVerifier),
         };
 
-        return await SendObtainTokenRequestAsync(request, cancellationToken);
+        return await SendGetTokenRequestAsync(request, cancellationToken);
     }
 
-    protected override List<KeyValuePair<string, string>> GetRefreshTokenRequest()
+    protected override List<KeyValuePair<string, string>> CreateRefreshTokenRequest()
     {
         if (!this.TokenInfo.RefreshToken.HasText())
         {
