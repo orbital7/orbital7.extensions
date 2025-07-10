@@ -15,10 +15,13 @@ public static class TypeExtensions
     {
         return type == typeof(int) || type == typeof(int?) ||
                type == typeof(long) || type == typeof(long?) ||
+               type == typeof(uint) || type == typeof(uint?) ||
+               type == typeof(ulong) || type == typeof(ulong?) ||
                type == typeof(decimal) || type == typeof(decimal?) ||
                type == typeof(float) || type == typeof(float?) ||
                type == typeof(double) || type == typeof(double?) ||
-               type == typeof(short) || type == typeof(short?);
+               type == typeof(short) || type == typeof(short?) ||
+               type == typeof(ushort) || type == typeof(ushort?);
     }
 
     public static bool IsBaseOrNullableEnumType(

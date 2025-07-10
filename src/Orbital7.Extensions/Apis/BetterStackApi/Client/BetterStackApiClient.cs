@@ -5,6 +5,9 @@ public class BetterStackApiClient :
 {
     public string? BearerToken { private get; set; }
 
+    // Use 20s timeout.
+    protected override string? HttpClientName => HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S;
+
     public BetterStackApiClient(
         IHttpClientFactory httpClientFactory,
         string? bearerToken = null) :

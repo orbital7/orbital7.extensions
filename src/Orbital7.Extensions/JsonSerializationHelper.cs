@@ -44,8 +44,7 @@ public static class JsonSerializationHelper
         // Handle enum to string conversion.
         if (convertEnumsToStrings)
         {
-            options.Converters.Add(
-                new JsonStringEnumMemberConverter());
+            AddJsonStringEnumMemberConverter(options);
         }
 
         return options;
@@ -75,8 +74,7 @@ public static class JsonSerializationHelper
 
         if (convertEnumsToStrings)
         {
-            options.Converters.Add(
-                new JsonStringEnumMemberConverter());
+            AddJsonStringEnumMemberConverter(options);
         }
 
         return options;
@@ -376,6 +374,15 @@ public static class JsonSerializationHelper
         else
         {
             return null;
+        }
+    }
+
+    private static void AddJsonStringEnumMemberConverter(
+        JsonSerializerOptions options)
+    {
+        if (!options.Converters.Any(x => x is JsonStringEnumMemberConverter))
+        {
+            options.Converters.Add(new JsonStringEnumMemberConverter());
         }
     }
 }

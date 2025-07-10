@@ -39,7 +39,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
             this.BetterStackLogsSourceToken.HasText() &&
             this.BetterStackLogsIngestingHost.HasText())
         {
-            var logger = typeof(TCategoryName).FullName ?? typeof(TCategoryName).Name;
+            var logger = GetLoggerName();
             string externalNotificationMessage = string.Empty;
 
             try
@@ -107,6 +107,11 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                     externalNotificationMessage);
             }
         }
+    }
+
+    protected virtual string GetLoggerName()
+    {
+        return typeof(TCategoryName).FullName ?? typeof(TCategoryName).Name;
     }
 
     protected virtual string GetLogLevelString(

@@ -274,7 +274,7 @@ public static class ReflectionExtensions
                 else
                 {
                     var dateTime = ToDateTime(
-                            new DateTime(new DateOnly(), time),
+                        new DateTime(new DateOnly(), time),
                         propertyName,
                         timeConverter,
                         options);
@@ -324,7 +324,9 @@ public static class ReflectionExtensions
             else if (type.IsBaseOrNullableNumericType() &&
                 options.ForNumbersRoundToDecimalPlaces.HasValue)
             {
-                return ((double)(object)value).ToRoundedString(
+                // Use Convert.ToDouble() here as we can't necessarily
+                // cast the conversion.
+                return Convert.ToDouble(value).ToRoundedString(
                     addCommas: options.ForNumbersAddCommas,
                     addPlusIfPositive: options.ForNumbersAddPlusIfPositive,
                     decimalPlaces: options.ForNumbersRoundToDecimalPlaces.Value,

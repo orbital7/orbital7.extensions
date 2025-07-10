@@ -1,4 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using Polly;
+using Polly.Retry;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace Orbital7.Extensions.Apis;
 
@@ -14,6 +17,24 @@ public class ApiClient :
     protected virtual string? HttpClientName => null;
 
     protected virtual string CharSet => "utf-8";
+
+    protected virtual int RetryCount => 2;
+
+    protected virtual int SleepDurationBaseInSeconds => 2;
+
+    // Policy to retry 2x (for a total of 3 attempts) on transient errors.
+    protected virtual AsyncRetryPolicy<HttpResponseMessage> RetryPolicy => Policy
+        .Handle<HttpRequestException>()
+        .OrResult<HttpResponseMessage>(r =>
+            r.StatusCode == HttpStatusCode.RequestTimeout ||
+            r.StatusCode == HttpStatusCode.InternalServerError ||
+            r.StatusCode == HttpStatusCode.BadGateway ||
+            r.StatusCode == HttpStatusCode.ServiceUnavailable ||
+            r.StatusCode == HttpStatusCode.GatewayTimeout)
+        .WaitAndRetryAsync(
+            retryCount: this.RetryCount,
+            sleepDurationProvider: 
+                attempt => TimeSpan.FromSeconds(Math.Pow(this.SleepDurationBaseInSeconds, attempt)));
 
     public ApiClient(
         IHttpClientFactory httpClientFactory)
@@ -152,7 +173,6 @@ public class ApiClient :
             cancellationToken);
     }
 
-    // TODO: Add retry logic using Polly.
     private async Task<TResponse> ExecuteSendRequestAsync<TResponse>(
         HttpMethod method,
         string url,
@@ -180,8 +200,26 @@ public class ApiClient :
         // Send the request.
         using (var httpClient = this.HttpClientFactory.CreateClient(this.HttpClientName ?? string.Empty))
         {
-            using (var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken))
+            HttpResponseMessage httpResponse;
+
+            // Use retry policy to send the request.
+            if (this.RetryPolicy != null)
             {
+                httpResponse = await this.RetryPolicy.ExecuteAsync(
+                    async (x) => await httpClient.SendAsync(httpRequest, x),
+                    cancellationToken);
+            }
+            // Else send the request without retry policy.
+            else
+            {
+                httpResponse = await httpClient.SendAsync(
+                    httpRequest,
+                    cancellationToken);
+            }
+
+            // Read the response.
+            using (httpResponse)
+            { 
                 var responseBody = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!httpResponse.IsSuccessStatusCode)
@@ -196,12 +234,12 @@ public class ApiClient :
         }
     }
 
-    protected virtual async Task BeforeCreateRequestAsync(
+    protected virtual Task BeforeCreateRequestAsync(
         Uri uri,
         CancellationToken cancellationToken)
     {
         // Nothing to do here in the base implementation.
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     protected virtual void AddRequestHeaders(
@@ -210,12 +248,56 @@ public class ApiClient :
         // Nothing to do here in the base implementation.
     }
 
+    // Use ProblemDetailsResponse / ProblemDetailsExecption by default.
     protected virtual Exception CreateUnsuccessfulResponseException(
         HttpResponseMessage httpResponse,
         string responseBody)
-    { 
-        // Just return an exception with the response body in the base implementation.
-        return new Exception(responseBody);
+    {
+        ProblemDetailsResponse problemDetailsResponse;
+
+        if (responseBody.HasText())
+        {
+            if (responseBody.StartsWith("{"))
+            {
+                try
+                {
+                    problemDetailsResponse = JsonSerializationHelper.DeserializeFromJson<ProblemDetailsResponse>(responseBody);
+                }
+                catch (Exception ex)
+                {
+                    problemDetailsResponse = new ProblemDetailsResponse()
+                    {
+                        Title = "Unable to deserialize error response JSON.",
+                        Detail = ex.Message,
+                        Status = (int)httpResponse.StatusCode,
+                        Extensions = new Dictionary<string, object?>()
+                        {
+                            { "ResponseBody", responseBody },
+                        }
+                    };
+                }
+            }
+            else
+            {
+                problemDetailsResponse = new ProblemDetailsResponse()
+                {
+                    Title = "Error response is not JSON.",
+                    Detail = responseBody,
+                    Status = (int)httpResponse.StatusCode,
+                };
+            }
+        }
+        else
+        {
+            problemDetailsResponse = new ProblemDetailsResponse()
+            {
+                Title = "Error response is empty.",
+                Detail = httpResponse.ReasonPhrase,
+                Status = (int)httpResponse.StatusCode,
+            };
+        }
+
+        return new ProblemDetailsException(problemDetailsResponse);
     }
 
     private string? ExecuteSerializeRequestBody<TRequest>(

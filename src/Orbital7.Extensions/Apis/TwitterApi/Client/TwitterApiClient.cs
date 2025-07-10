@@ -6,6 +6,9 @@ public class TwitterApiClient :
 {
     protected override string OAuthTokenEndpointUrl => "https://api.twitter.com/2/oauth2/token";
 
+    // Use 20s timeout.
+    protected override string? HttpClientName => HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S;
+
     public TwitterApiClient(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,

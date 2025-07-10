@@ -106,6 +106,12 @@ public static class DateTimeExtensions
         return dateTime.ToString(DateTimeHelper.TIME_FORMAT_DEFAULT);
     }
 
+    public static string ToDefaultTime24HourString(
+        this DateTime dateTime)
+    {
+        return dateTime.ToString(DateTimeHelper.TIME_FORMAT_24_HOUR_DEFAULT);
+    }
+
     public static string ToDefaultDateTimeString(
         this DateTime dateTime)
     {
