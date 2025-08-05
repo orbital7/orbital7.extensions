@@ -27,6 +27,19 @@ public static class DateTimeExtensions
         return TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(dateTimeUtc, DateTimeKind.Utc), timeZone);
     }
 
+    public static DateTime UtcToTimeZone(
+        this DateTime dateTimeUtc,
+        string timeZoneId)
+    {
+        var timeZone = DateTimeHelper.GetTimeZone(timeZoneId);
+        if (timeZone == null)
+        {
+            throw new ArgumentException($"Invalid time zone ID: {timeZoneId}", nameof(timeZoneId));
+        }
+
+        return dateTimeUtc.UtcToTimeZone(timeZone);
+    }
+
     public static DateTime TimeZoneToUtc(
         this DateTime dateTimeInTimeZone,
         TimeZoneInfo timeZone)

@@ -12,7 +12,7 @@ public static class HttpClientFactoryHelper
 
     public const string HTTP_CLIENT_NAME_TIMEOUT_120S = "HttpClientTimeout120s";
 
-    public static IServiceCollection AddHttpClientsWithTimeout(
+    public static IServiceCollection AddNamedHttpClientsWithTimeouts(
         this IServiceCollection services)
     {
         services.AddHttpClient(
