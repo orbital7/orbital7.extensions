@@ -32,7 +32,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         Exception? exception = null,
         IDictionary<string, object?>? metadata = null,
         [CallerMemberName] string? callerMemberName = null,
-        bool sendExternalNotification = false)
+        bool sendExternalNotification = false,
+        bool includeExternalNotificationDetails = true)
     {
         // Validate token configuration and log level.
         if (logLevel != LogLevel.None &&
@@ -68,7 +69,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                             exception,
                             logMetadata,
                             logger,
-                            callerMemberName)
+                            callerMemberName,
+                            includeDetails: includeExternalNotificationDetails)
                         .NormalizeLineTerminators(
                             IExternalNotificationService.MSG_LINE_TERM);
                 }
@@ -182,34 +184,39 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         Exception? exception,
         IDictionary<string, object> metadata,
         string logger,
-        string? callerMemberName)
+        string? callerMemberName,
+        bool includeDetails)
     {
         var sb = new StringBuilder();
 
         sb.AppendLine($"**{message}**");
-        sb.AppendLine();
-        sb.AppendLine($"* Source: {logger}");
-        sb.AppendLine($"* Caller: {callerMemberName}()");
 
-        var externalNotificationBulletLines = GetAdditionalExternalNotificationMessageBulletLines(
-            logLevel,
-            message,
-            exception,
-            metadata,
-            logger,
-            callerMemberName);
-
-        if (externalNotificationBulletLines != null)
+        if (includeDetails || exception != null)
         {
-            foreach (var bulletLine in externalNotificationBulletLines)
+            sb.AppendLine();
+            sb.AppendLine($"* Source: {logger}");
+            sb.AppendLine($"* Caller: {callerMemberName}()");
+
+            var externalNotificationBulletLines = GetAdditionalExternalNotificationMessageDetails(
+                logLevel,
+                message,
+                exception,
+                metadata,
+                logger,
+                callerMemberName);
+
+            if (externalNotificationBulletLines != null)
             {
-                sb.AppendLine($"* {bulletLine}");
+                foreach (var bulletLine in externalNotificationBulletLines)
+                {
+                    sb.AppendLine($"* {bulletLine}");
+                }
             }
-        }
 
-        if (exception != null)
-        {
-            sb.AppendLine($"* Error: {exception.Message}");
+            if (exception != null)
+            {
+                sb.AppendLine($"* Error: {exception.Message}");
+            }
         }
 
         sb.AppendLine("--------------");
@@ -218,7 +225,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         return sb.ToString();
     }
 
-    protected virtual List<string>? GetAdditionalExternalNotificationMessageBulletLines(
+    protected virtual List<string>? GetAdditionalExternalNotificationMessageDetails(
         LogLevel logLevel,
         string message,
         Exception? exception,

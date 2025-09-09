@@ -1,6 +1,6 @@
-﻿namespace Orbital7.Extensions.Apis.TwitterApi;
+﻿namespace Orbital7.Extensions.Apis.XApi;
 
-public interface ITwitterApiClient :
+public interface IXApiClient :
     IApiClient
 {
     string GetAuthorizationUrl(

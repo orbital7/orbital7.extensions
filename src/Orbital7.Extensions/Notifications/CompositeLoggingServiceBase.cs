@@ -13,7 +13,8 @@ public abstract class CompositeLoggingServiceBase :
         Exception? exception = null, 
         IDictionary<string, object?>? metadata = null, 
         [CallerMemberName] string? callerMemberName = null, 
-        bool sendExternalNotification = false)
+        bool sendExternalNotification = false,
+        bool includeExternalNotificationDetails = true)
     {
         foreach (var loggingService in _loggingServices)
         {

@@ -34,4 +34,13 @@ public static class StringListExtensions
 
         return typedList;
     }
+
+    public static bool ContainsStartsWith(
+        this IEnumerable<string> list,
+        string value,
+        StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
+    {
+        return list != null && 
+            list.Any(x => x.StartsWith(value, stringComparison));
+    }
 }

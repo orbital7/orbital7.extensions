@@ -10,5 +10,6 @@ public interface ILoggingService
         Exception? exception = null,
         IDictionary<string, object?>? metadata = null,
         [CallerMemberName] string? callerMemberName = null,
-        bool sendExternalNotification = false);
+        bool sendExternalNotification = false,
+        bool includeExternalNotificationDetails = true);
 }

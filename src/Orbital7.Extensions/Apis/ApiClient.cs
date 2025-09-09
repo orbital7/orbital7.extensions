@@ -10,11 +10,11 @@ public class ApiClient :
 {
     protected IHttpClientFactory HttpClientFactory { get; private set; }
 
+    protected string? HttpClientName { get; private set; }
+
     protected virtual bool SerializeEnumsToStrings => true;
 
     protected virtual bool DeserializeEnumsFromStrings => true;
-
-    protected virtual string? HttpClientName => null;
 
     protected virtual string CharSet => "utf-8";
 
@@ -37,9 +37,11 @@ public class ApiClient :
                 attempt => TimeSpan.FromSeconds(Math.Pow(this.SleepDurationBaseInSeconds, attempt)));
 
     public ApiClient(
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        string? httpClientName = null)
     {
         this.HttpClientFactory = httpClientFactory;
+        this.HttpClientName = httpClientName;
     }
 
     public async Task<TResponse> SendGetRequestAsync<TResponse>(
@@ -197,41 +199,53 @@ public class ApiClient :
         // Add the request headers.
         AddRequestHeaders(httpRequest);
 
-        // Send the request.
-        using (var httpClient = this.HttpClientFactory.CreateClient(this.HttpClientName ?? string.Empty))
-        {
-            HttpResponseMessage httpResponse;
+        HttpResponseMessage httpResponse;
 
-            // Use retry policy to send the request.
-            if (this.RetryPolicy != null)
-            {
-                httpResponse = await this.RetryPolicy.ExecuteAsync(
-                    async (x) => await httpClient.SendAsync(httpRequest, x),
-                    cancellationToken);
-            }
-            // Else send the request without retry policy.
-            else
+        // Send the request.
+        //
+        // Use retry policy to send the request.
+        if (this.RetryPolicy != null)
+        {
+            httpResponse = await this.RetryPolicy.ExecuteAsync(
+                async (x) =>
+                {
+                    using (var httpClient = CreateHttpClient())
+                    {
+                        return await httpClient.SendAsync(httpRequest, x);
+                    }
+                },
+                cancellationToken);
+        }
+        // Else send the request without retry policy.
+        else
+        {
+            using (var httpClient = CreateHttpClient())
             {
                 httpResponse = await httpClient.SendAsync(
                     httpRequest,
                     cancellationToken);
             }
+        }
 
-            // Read the response.
-            using (httpResponse)
-            { 
-                var responseBody = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+        // Read the response.
+        using (httpResponse)
+        { 
+            var responseBody = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
 
-                if (!httpResponse.IsSuccessStatusCode)
-                {
-                    throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
-                }
-                else
-                {
-                    return ExecuteDeserializeResponseBody<TResponse>(httpResponse, responseBody);
-                }
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                throw CreateUnsuccessfulResponseException(httpResponse, responseBody);
+            }
+            else
+            {
+                return ExecuteDeserializeResponseBody<TResponse>(httpResponse, responseBody);
             }
         }
+    }
+
+    private HttpClient CreateHttpClient()
+    {
+        return this.HttpClientFactory.CreateClient(this.HttpClientName ?? string.Empty);
     }
 
     protected virtual Task BeforeCreateRequestAsync(

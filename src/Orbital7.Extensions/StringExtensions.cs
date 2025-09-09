@@ -95,7 +95,9 @@ public static class StringExtensions
         {
             var plural = value;
 
-            if (value.EndsWith("y"))
+            if (value.EndsWith("ey"))
+                plural = value + "s";
+            else if (value.EndsWith("y"))
                 plural = value.PruneEnd(1) + "ies";
             else if (value.EndsWith("is"))
                 plural = value.PruneEnd(2) + "es";

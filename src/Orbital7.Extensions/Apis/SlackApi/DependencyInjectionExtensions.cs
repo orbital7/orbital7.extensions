@@ -4,7 +4,8 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddSlackApi(
         this IServiceCollection services,
-        string? apiToken)
+        string? apiToken,
+        string? httpClientName = HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S)
     {
         if (apiToken.HasText())
         {
@@ -12,7 +13,8 @@ public static class DependencyInjectionExtensions
                 (serviceProvider) => new ChatApi(
                     new SlackApiClient(
                         serviceProvider.GetRequiredService<IHttpClientFactory>(),
-                        apiToken)));
+                        bearerToken: apiToken,
+                        httpClientName: httpClientName)));
         }
 
         return services;

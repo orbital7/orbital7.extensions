@@ -6,13 +6,11 @@ public class DiscordApiClient :
 {
     public string? BotToken { private get; set; }
 
-    // Use 20s timeout.
-    protected override string? HttpClientName => HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S;
-
     public DiscordApiClient(
         IHttpClientFactory httpClientFactory,
-        string? botToken = null) :
-        base(httpClientFactory)
+        string? botToken = null,
+        string? httpClientName = null) :
+        base(httpClientFactory, httpClientName)
     {
         this.BotToken = botToken;
     }

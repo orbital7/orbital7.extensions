@@ -20,8 +20,9 @@ public abstract class OAuthApiClientBase :
         IHttpClientFactory httpClientFactory,
         string clientId,
         TokenInfo tokenInfo,
-        Func<IServiceProvider, TokenInfo, Task>? onTokenInfoUpdated = null) :
-        base(httpClientFactory)
+        Func<IServiceProvider, TokenInfo, Task>? onTokenInfoUpdated = null,
+        string? httpClientName = null) :
+        base(httpClientFactory, httpClientName)
     {
         this.ServiceProvider = serviceProvider;
         this.ClientId = clientId;

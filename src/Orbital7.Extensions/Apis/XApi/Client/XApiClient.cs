@@ -1,20 +1,23 @@
-﻿namespace Orbital7.Extensions.Apis.TwitterApi;
+﻿namespace Orbital7.Extensions.Apis.XApi;
 
-// Authorization: https://developer.twitter.com/en/docs/authentication/oauth-2-0/user-access-token
-public class TwitterApiClient :
-    OAuthApiClientBase, ITwitterApiClient
+// Authorization: https://docs.x.com/fundamentals/authentication/oauth-2-0/user-access-token
+public class XApiClient :
+    OAuthApiClientBase, IXApiClient
 {
-    protected override string OAuthTokenEndpointUrl => "https://api.twitter.com/2/oauth2/token";
+    protected override string OAuthTokenEndpointUrl => "https://api.x.com/2/oauth2/token";
 
-    // Use 20s timeout.
-    protected override string? HttpClientName => HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S;
-
-    public TwitterApiClient(
+    public XApiClient(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
         string clientId,
-        TokenInfo tokenInfo) :
-        base(serviceProvider, httpClientFactory, clientId, tokenInfo)
+        TokenInfo tokenInfo,
+        string? httpClientName = null) :
+        base(
+            serviceProvider, 
+            httpClientFactory, 
+            clientId, 
+            tokenInfo, 
+            httpClientName: httpClientName)
     {
         
     }
@@ -25,7 +28,7 @@ public class TwitterApiClient :
         string state,
         string codeChallenge)
     {
-        return $"https://twitter.com/i/oauth2/authorize?" +
+        return $"https://x.com/i/oauth2/authorize?" +
             $"response_type=code&" +
             $"client_id={this.ClientId}&" +
             $"redirect_uri={redirectUri}&" +

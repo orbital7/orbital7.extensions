@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Apis.TwitterApi;
+﻿namespace Orbital7.Extensions.Apis.XApi;
 
 public class ErrorResponse
 {
