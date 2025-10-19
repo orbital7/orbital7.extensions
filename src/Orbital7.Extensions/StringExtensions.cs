@@ -15,6 +15,14 @@ public static class StringExtensions
     public const string AlphanumericChars = NumberChars + LetterChars;
     public const string WhitespaceChars = " \r\n\t\v\f";
 
+    public static bool StartsWithList(
+        this string value,
+        IEnumerable<string> list,
+        StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
+    {
+        return list != null && list.Any(x => value.StartsWith(x, stringComparison));
+    }
+
     public static T? ToTypedValue<T>(
         this string? value)
     {

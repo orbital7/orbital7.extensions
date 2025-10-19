@@ -181,50 +181,27 @@ public class ApiClient :
         HttpContent? content,
         CancellationToken cancellationToken)
     {
-        var uri = new Uri(url);
-
-        // Perform any pre-request creation logic.
-        await BeforeCreateRequestAsync(
-            uri, 
-            cancellationToken);
-
-        // Create the request.
-        var httpRequest = new HttpRequestMessage
-        {
-            Method = method,
-            RequestUri = uri,
-            Content = content,
-        };
-
-        // Add the request headers.
-        AddRequestHeaders(httpRequest);
-
         HttpResponseMessage httpResponse;
 
-        // Send the request.
-        //
         // Use retry policy to send the request.
         if (this.RetryPolicy != null)
         {
             httpResponse = await this.RetryPolicy.ExecuteAsync(
-                async (x) =>
-                {
-                    using (var httpClient = CreateHttpClient())
-                    {
-                        return await httpClient.SendAsync(httpRequest, x);
-                    }
-                },
+                async (x) => await CreateAndSendRequestAsync(
+                    method,
+                    url, 
+                    content, 
+                    cancellationToken),
                 cancellationToken);
         }
         // Else send the request without retry policy.
         else
         {
-            using (var httpClient = CreateHttpClient())
-            {
-                httpResponse = await httpClient.SendAsync(
-                    httpRequest,
-                    cancellationToken);
-            }
+            httpResponse = await CreateAndSendRequestAsync(
+                method,
+                url,
+                content,
+                cancellationToken);
         }
 
         // Read the response.
@@ -243,9 +220,35 @@ public class ApiClient :
         }
     }
 
-    private HttpClient CreateHttpClient()
+    private async Task<HttpResponseMessage> CreateAndSendRequestAsync(
+         HttpMethod method,
+         string url,
+         HttpContent? content,
+         CancellationToken cancellationToken)
     {
-        return this.HttpClientFactory.CreateClient(this.HttpClientName ?? string.Empty);
+        var uri = new Uri(url);
+
+        // Perform any pre-request creation logic.
+        await BeforeCreateRequestAsync(
+            uri,
+            cancellationToken);
+
+        // Create the request.
+        var httpRequest = new HttpRequestMessage()
+        {
+            Method = method,
+            RequestUri = uri,
+            Content = content,
+        };
+
+        // Add the request headers.
+        AddRequestHeaders(httpRequest);
+
+        // Send it.
+        using (var httpClient = this.HttpClientFactory.CreateClient(this.HttpClientName ?? string.Empty))
+        {
+            return await httpClient.SendAsync(httpRequest, cancellationToken);
+        }
     }
 
     protected virtual Task BeforeCreateRequestAsync(
