@@ -2,73 +2,58 @@
 
 // Authorization: https://docs.x.com/fundamentals/authentication/oauth-2-0/user-access-token
 public class XApiClient :
-    OAuthApiClientBase, IXApiClient
+    OAuthApiClientBase<TokenInfo>, IXApiClient
 {
+    private readonly XApiConfig _config;
     protected override string OAuthTokenEndpointUrl => "https://api.x.com/2/oauth2/token";
 
     public XApiClient(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
-        string clientId,
+        XApiConfig config,
         TokenInfo tokenInfo,
         string? httpClientName = null) :
         base(
             serviceProvider, 
             httpClientFactory, 
-            clientId, 
             tokenInfo, 
             httpClientName: httpClientName)
     {
-        
+        _config = config;
     }
 
-    public string GetAuthorizationUrl(
-        string redirectUri,
-        string scope,
-        string state,
-        string codeChallenge)
+    public override string GetAuthorizationUrl(
+        string? state = null)
     {
         return $"https://x.com/i/oauth2/authorize?" +
             $"response_type=code&" +
-            $"client_id={this.ClientId}&" +
-            $"redirect_uri={redirectUri}&" +
-            $"scope={scope.UrlEncode()}&" +
+            $"client_id={_config.ClientId}&" +
+            $"redirect_uri={_config.RedirectUri}&" +
+            $"scope={_config.Scope.UrlEncode()}&" +
             $"state={state}&" +
-            $"code_challenge={codeChallenge}&" +
+            $"code_challenge={_config.CodeVerifier}&" +
             $"code_challenge_method=plain";
     }
 
-    public async Task<TokenInfo> ObtainTokenAsync(
-        string authorizationCode,
-        string redirectUri,
-        string codeVerifier,
-        CancellationToken cancellationToken = default)
+    protected override List<KeyValuePair<string, string>> CreateGetTokenRequest()
     {
-        var request = new List<KeyValuePair<string, string>>()
-        {
-            new KeyValuePair<string, string>("code", authorizationCode),
+        return [
+            new KeyValuePair<string, string>("code", _config.AuthorizationCode),
             new KeyValuePair<string, string>("grant_type", "authorization_code"),
-            new KeyValuePair<string, string>("client_id", this.ClientId),
-            new KeyValuePair<string, string>("redirect_uri", redirectUri),
-            new KeyValuePair<string, string>("code_verifier", codeVerifier),
-        };
-
-        return await SendGetTokenRequestAsync(request, cancellationToken);
+            new KeyValuePair<string, string>("client_id", _config.ClientId),
+            new KeyValuePair<string, string>("redirect_uri", _config.RedirectUri),
+            new KeyValuePair<string, string>("code_verifier", _config.CodeVerifier),
+        ];
     }
 
-    protected override List<KeyValuePair<string, string>> CreateRefreshTokenRequest()
+    protected override List<KeyValuePair<string, string>> CreateRefreshTokenRequest(
+        string refreshToken)
     {
-        if (!this.TokenInfo.RefreshToken.HasText())
-        {
-            throw new Exception("Refresh token is not set.");
-        }
-
-        return new List<KeyValuePair<string, string>>()
-        {
+        return [
             new KeyValuePair<string, string>("grant_type", "refresh_token"),
-            new KeyValuePair<string, string>("client_id", this.ClientId),
-            new KeyValuePair<string, string>("refresh_token", this.TokenInfo.RefreshToken),
-        };
+            new KeyValuePair<string, string>("client_id", _config.ClientId),
+            new KeyValuePair<string, string>("refresh_token", refreshToken),
+        ];
     }
 
     protected override Exception CreateUnsuccessfulResponseException(

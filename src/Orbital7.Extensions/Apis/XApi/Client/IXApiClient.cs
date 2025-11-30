@@ -1,17 +1,7 @@
 ﻿namespace Orbital7.Extensions.Apis.XApi;
 
 public interface IXApiClient :
-    IApiClient
+    IOAuthApiClient
 {
-    string GetAuthorizationUrl(
-        string redirectUri,
-        string scope,
-        string state,
-        string codeChallenge);
-
-    Task<TokenInfo> ObtainTokenAsync(
-        string authorizationCode,
-        string redirectUri,
-        string codeVerifier,
-        CancellationToken cancellationToken = default);
+    
 }

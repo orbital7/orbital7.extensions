@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+	<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -12,9 +12,9 @@
     <Product>Orbital7.Extensions</Product>
     <PackageIcon>Orbital7.png</PackageIcon>
     <PackageIconUrl />
-	<Version>9.0.24</Version>
-	<AssemblyVersion>9.0.24.0</AssemblyVersion>
-	<FileVersion>9.0.24.0</FileVersion>
+	<Version>10.0.0</Version>
+	<AssemblyVersion>10.0.0.0</AssemblyVersion>
+	<FileVersion>10.0.0.0</FileVersion>
     <Description>.NET Graphics Extensions/Utilities</Description>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/orbital7/orbital7.extensions</RepositoryUrl>
@@ -32,7 +32,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
 	
   <ItemGroup>

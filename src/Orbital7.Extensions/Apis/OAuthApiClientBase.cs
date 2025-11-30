@@ -1,116 +1,72 @@
 ﻿namespace Orbital7.Extensions.Apis;
 
-public abstract class OAuthApiClientBase :
-    ApiClient
+public abstract class OAuthApiClientBase<TTokenInfo> :
+    ApiClient, IOAuthApiClient
+    where TTokenInfo : TokenInfo
 {
     private IServiceProvider ServiceProvider { get; set; }
 
-    protected string ClientId { get; private set; }
-
-    public TokenInfo TokenInfo { get; private set; }
+    public TTokenInfo TokenInfo { get; private set; }
 
     protected abstract string OAuthTokenEndpointUrl { get; }
 
-    protected virtual int OAuthAccessTokenPreExpirationCutoffInMinutes => 10;
+    protected virtual int OAuthAccessTokenPreExpirationBufferInMinutes => 10;
 
-    private Func<IServiceProvider, TokenInfo, Task>? OnTokenInfoUpdated { get; set; }
+    private Func<IServiceProvider, TTokenInfo, Task>? OnTokenInfoUpdated { get; set; }
 
     protected OAuthApiClientBase(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
-        string clientId,
-        TokenInfo tokenInfo,
-        Func<IServiceProvider, TokenInfo, Task>? onTokenInfoUpdated = null,
+        TTokenInfo tokenInfo,
+        Func<IServiceProvider, TTokenInfo, Task>? onTokenInfoUpdated = null,
         string? httpClientName = null) :
         base(httpClientFactory, httpClientName)
     {
         this.ServiceProvider = serviceProvider;
-        this.ClientId = clientId;
         this.TokenInfo = tokenInfo;
         this.OnTokenInfoUpdated = onTokenInfoUpdated;
     }
 
-    protected async Task<TokenInfo> SendGetTokenRequestAsync(
-        List<KeyValuePair<string, string>> request,
-        CancellationToken cancellationToken = default)
-    {
-        var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
-            this.OAuthTokenEndpointUrl,
-            request,
-            cancellationToken);
+    public abstract string GetAuthorizationUrl(
+        string? state = null);
 
-        await UpdateTokenInfoAsync(response);
-
-        return this.TokenInfo;
-    }
-
-    private async Task<TokenInfo> RefreshTokenAsync(
-        CancellationToken cancellationToken)
-    {
-        var request = CreateRefreshTokenRequest();
-
-        var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
-            this.OAuthTokenEndpointUrl,
-            request,
-            cancellationToken);
-
-        await UpdateTokenInfoAsync(response);
-
-        return this.TokenInfo;
-    }
-
-    protected abstract List<KeyValuePair<string, string>> CreateRefreshTokenRequest();
-
-    private async Task UpdateTokenInfoAsync(
-        OAuthTokenResponse response)
-    {
-        // Validate abnd record access token info.
-        if (response.AccessToken.HasText() &&
-            response.ExpiresIn.HasValue)
-        {
-            this.TokenInfo.AccessToken = response.AccessToken;
-            this.TokenInfo.AccessTokenExpirationDateTimeUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn.Value);
-        }
-        else
-        {
-            throw new Exception("Response does not contain access token and/or expiration time");
-        }
-
-        // Sometimes we get a null refresh token, so only overwrite if we were returned one.
-        if (response.RefreshToken.HasText())
-        {
-            this.TokenInfo.RefreshToken = response.RefreshToken;
-        }
-
-        // Handle the token info updated event.
-        if (this.OnTokenInfoUpdated != null)
-        {
-            await this.OnTokenInfoUpdated.Invoke(this.ServiceProvider, this.TokenInfo);
-        }
-    }
-
-    protected async Task<TokenInfo> EnsureValidAccessTokenAsync(
-        CancellationToken cancellationToken,
+    public async Task<bool> EnsureValidAccessTokenAsync(
+        CancellationToken cancellationToken = default,
         DateTime? nowUtc = null)
     {
-        // Ensure we have a specified refresh token.
-        if (!this.TokenInfo.RefreshToken.HasText())
-            throw new Exception($"Token info does not contain a specified refresh token");
-
-        // Calculate an expiration cutoff as the next X minutes.
-        var cutoffUtc = (nowUtc ?? DateTime.UtcNow)
-            .AddMinutes(this.OAuthAccessTokenPreExpirationCutoffInMinutes);
-
-        // Check for either a missing or expiring access token.
-        if (!this.TokenInfo.AccessToken.HasText() ||
-            !this.TokenInfo.AccessTokenExpirationDateTimeUtc.HasValue ||
-            this.TokenInfo.AccessTokenExpirationDateTimeUtc.Value < cutoffUtc)
+        // Check for an invalid access token.
+        if (!this.TokenInfo.IsAccessTokenValid(
+            this.OAuthAccessTokenPreExpirationBufferInMinutes,
+            nowUtc))
         {
-            await RefreshTokenAsync(cancellationToken);
+            var refreshTokenStatus = this.TokenInfo.GetRefreshTokenStatus(
+                this.OAuthAccessTokenPreExpirationBufferInMinutes,
+                nowUtc);
+
+            switch (refreshTokenStatus)
+            {
+                case TokenStatus.Valid:
+                    await RefreshTokenAsync(
+                        this.TokenInfo.RefreshToken!,
+                        cancellationToken);
+                    return true;
+
+                case TokenStatus.Empty:
+                    await GetTokenAsync(cancellationToken);
+                    return true;
+
+                case TokenStatus.Expired:
+                    throw new RefreshTokenExpiredException();
+            }
         }
 
-        return this.TokenInfo;
+        return false;
     }
+
+    protected abstract List<KeyValuePair<string, string>> CreateGetTokenRequest();
+
+    protected abstract List<KeyValuePair<string, string>> CreateRefreshTokenRequest(
+        string refreshToken);
 
     protected override async Task BeforeCreateRequestAsync(
         Uri uri,
@@ -145,5 +101,70 @@ public abstract class OAuthApiClientBase :
         {
             return true;
         }
+    }
+    protected virtual async Task UpdateTokenInfoAsync(
+        OAuthTokenResponse response)
+    {
+        // Validate and record access token info.
+        if (response.AccessToken.HasText())
+        {
+            this.TokenInfo.AccessToken = response.AccessToken;
+            this.TokenInfo.AccessTokenExpirationDateTimeUtc = response.ExpiresIn.HasValue ?
+                DateTime.UtcNow
+                    .RoundDownToStartOfSecond()
+                    .AddSeconds(response.ExpiresIn.Value) :
+                null;
+        }
+        else
+        {
+            throw new Exception("Response does not contain an access token");
+        }
+
+        // Sometimes we get a null refresh token, so only overwrite if we were returned one.
+        if (response.RefreshToken.HasText())
+        {
+            this.TokenInfo.RefreshToken = response.RefreshToken;
+        }
+
+        // Handle the token info updated event.
+        if (this.OnTokenInfoUpdated != null)
+        {
+            await this.OnTokenInfoUpdated.Invoke(this.ServiceProvider, this.TokenInfo);
+        }
+    }
+
+    private async Task<TTokenInfo> GetTokenAsync(
+        CancellationToken cancellationToken)
+    {
+        var request = CreateGetTokenRequest();
+
+        return await SendOAuthTokenRequestAsync(
+            request,
+            cancellationToken);
+    }
+
+    private async Task<TTokenInfo> RefreshTokenAsync(
+        string refreshToken,
+        CancellationToken cancellationToken)
+    {
+        var request = CreateRefreshTokenRequest(refreshToken);
+
+        return await SendOAuthTokenRequestAsync(
+            request,
+            cancellationToken);
+    }
+
+    private async Task<TTokenInfo> SendOAuthTokenRequestAsync(
+        List<KeyValuePair<string, string>> request,
+        CancellationToken cancellationToken)
+    {
+        var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
+            this.OAuthTokenEndpointUrl,
+            request,
+            cancellationToken);
+
+        await UpdateTokenInfoAsync(response);
+
+        return this.TokenInfo;
     }
 }
