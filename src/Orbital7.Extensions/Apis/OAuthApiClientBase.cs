@@ -4,43 +4,43 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
     ApiClient, IOAuthApiClient
     where TTokenInfo : TokenInfo
 {
-    private IServiceProvider ServiceProvider { get; set; }
+    private readonly IServiceProvider _serviceProvider;
+    private readonly Func<IServiceProvider, TTokenInfo, CancellationToken, Task>? _onTokenInfoUpdated;
 
     public TTokenInfo TokenInfo { get; private set; }
 
     protected abstract string OAuthTokenEndpointUrl { get; }
 
-    protected virtual int OAuthAccessTokenPreExpirationBufferInMinutes => 10;
-
-    private Func<IServiceProvider, TTokenInfo, Task>? OnTokenInfoUpdated { get; set; }
+    protected virtual int AccessTokenPreExpirationBufferInMinutes => 10;
 
     protected OAuthApiClientBase(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
         TTokenInfo tokenInfo,
-        Func<IServiceProvider, TTokenInfo, Task>? onTokenInfoUpdated = null,
+        Func<IServiceProvider, TTokenInfo, CancellationToken, Task>? onTokenInfoUpdated = null,
         string? httpClientName = null) :
         base(httpClientFactory, httpClientName)
     {
-        this.ServiceProvider = serviceProvider;
+        _serviceProvider = serviceProvider;
+        _onTokenInfoUpdated = onTokenInfoUpdated;
+
         this.TokenInfo = tokenInfo;
-        this.OnTokenInfoUpdated = onTokenInfoUpdated;
     }
 
     public abstract string GetAuthorizationUrl(
         string? state = null);
 
-    public async Task<bool> EnsureValidAccessTokenAsync(
+    public async Task<string> EnsureValidAccessTokenAsync(
         CancellationToken cancellationToken = default,
         DateTime? nowUtc = null)
     {
         // Check for an invalid access token.
         if (!this.TokenInfo.IsAccessTokenValid(
-            this.OAuthAccessTokenPreExpirationBufferInMinutes,
+            this.AccessTokenPreExpirationBufferInMinutes,
             nowUtc))
         {
             var refreshTokenStatus = this.TokenInfo.GetRefreshTokenStatus(
-                this.OAuthAccessTokenPreExpirationBufferInMinutes,
+                this.AccessTokenPreExpirationBufferInMinutes,
                 nowUtc);
 
             switch (refreshTokenStatus)
@@ -49,18 +49,23 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
                     await RefreshTokenAsync(
                         this.TokenInfo.RefreshToken!,
                         cancellationToken);
-                    return true;
+                    break;
 
                 case TokenStatus.Empty:
                     await GetTokenAsync(cancellationToken);
-                    return true;
+                    break;
 
                 case TokenStatus.Expired:
                     throw new RefreshTokenExpiredException();
             }
         }
 
-        return false;
+        // This should never happen, but final check to ensure access token is not null.
+        ArgumentNullException.ThrowIfNull(
+            this.TokenInfo.AccessToken, 
+            nameof(this.TokenInfo.AccessToken));
+
+        return this.TokenInfo.AccessToken;
     }
 
     protected abstract List<KeyValuePair<string, string>> CreateGetTokenRequest();
@@ -75,7 +80,7 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
         if (IsAuthorizationRequired(uri))
         {
             await EnsureValidAccessTokenAsync(
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
     }
 
@@ -102,7 +107,8 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
             return true;
         }
     }
-    protected virtual async Task UpdateTokenInfoAsync(
+
+    protected virtual void UpdateTokenInfo(
         OAuthTokenResponse response)
     {
         // Validate and record access token info.
@@ -124,12 +130,6 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
         if (response.RefreshToken.HasText())
         {
             this.TokenInfo.RefreshToken = response.RefreshToken;
-        }
-
-        // Handle the token info updated event.
-        if (this.OnTokenInfoUpdated != null)
-        {
-            await this.OnTokenInfoUpdated.Invoke(this.ServiceProvider, this.TokenInfo);
         }
     }
 
@@ -161,9 +161,19 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
         var response = await SendPostRequestUrlEncodedAsync<OAuthTokenResponse>(
             this.OAuthTokenEndpointUrl,
             request,
-            cancellationToken);
+            cancellationToken: cancellationToken);
 
-        await UpdateTokenInfoAsync(response);
+        // Update the token info.
+        UpdateTokenInfo(response);
+
+        // Handle the token info updated event.
+        if (_onTokenInfoUpdated != null)
+        {
+            await _onTokenInfoUpdated.Invoke(
+                _serviceProvider,
+                this.TokenInfo,
+                cancellationToken);
+        }
 
         return this.TokenInfo;
     }

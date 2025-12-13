@@ -3,8 +3,11 @@
 public class RefreshTokenExpiredException :
     Exception
 {
-    public RefreshTokenExpiredException()
-        : base("Refresh token is expired")
+    public const string MESSAGE = "Refresh token is expired";
+
+    public RefreshTokenExpiredException() :
+        base(MESSAGE)
     {
+
     }
 }

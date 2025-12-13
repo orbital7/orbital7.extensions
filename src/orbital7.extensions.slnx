@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Orbital7.Extensions.Tests/Orbital7.Extensions.Tests.csproj" />
+  </Folder>
+  <Project Path="Orbital7.Extensions.Graphics/Orbital7.Extensions.Graphics.csproj" />
+  <Project Path="Orbital7.Extensions.Server/Orbital7.Extensions.Server.csproj" />
+  <Project Path="Orbital7.Extensions/Orbital7.Extensions.csproj" />
+</Solution>

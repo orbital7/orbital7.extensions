@@ -6,7 +6,7 @@ public interface IOAuthApiClient :
     string GetAuthorizationUrl(
         string? state = null);
 
-    Task<bool> EnsureValidAccessTokenAsync(
+    Task<string> EnsureValidAccessTokenAsync(
         CancellationToken cancellationToken = default,
         DateTime? nowUtc = null);
 }

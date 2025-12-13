@@ -5,6 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<Version>10.0.1</Version>
+	<AssemblyVersion>10.0.1.0</AssemblyVersion>
+	<FileVersion>10.0.1.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Copyright © 2012-2025 Orbital7</Copyright>
     <Authors>Josh van Eikeren</Authors>
@@ -12,9 +15,6 @@
     <Product>Orbital7.Extensions</Product>
     <PackageIcon>Orbital7.png</PackageIcon>
     <PackageIconUrl />
-	<Version>10.0.0</Version>
-	<AssemblyVersion>10.0.0.0</AssemblyVersion>
-	<FileVersion>10.0.0.0</FileVersion>
     <Description>.NET Graphics Extensions/Utilities</Description>
     <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/orbital7/orbital7.extensions</RepositoryUrl>
