@@ -2,12 +2,13 @@
 
 namespace Orbital7.Extensions.Jwt;
 
-public interface ITokenService
+public interface ITokenService<TTokenInfo, TGetTokenInput>
+    where TTokenInfo : TokenInfo
 {
-    Task<TokenInfo> GetTokenAsync(
-        GetTokenInput input);
+    Task<TTokenInfo> GetTokenAsync(
+        TGetTokenInput input);
 
-    Task<TokenInfo> RefreshTokenAsync(
+    Task<TTokenInfo> RefreshTokenAsync(
         RefreshTokenInput input);
 
     Task<RevokedTokenInfo?> RevokeTokenAsync(

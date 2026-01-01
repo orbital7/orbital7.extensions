@@ -5,6 +5,8 @@ public class XApiClient :
     OAuthApiClientBase<TokenInfo>, IXApiClient
 {
     private readonly XApiConfig _config;
+    private readonly Func<IServiceProvider, XApiConfig, Task<string>> _getAuthorizationCodeAsync;
+
     protected override string OAuthTokenEndpointUrl => "https://api.x.com/2/oauth2/token";
 
     public XApiClient(
@@ -12,6 +14,7 @@ public class XApiClient :
         IHttpClientFactory httpClientFactory,
         XApiConfig config,
         TokenInfo tokenInfo,
+        Func<IServiceProvider, XApiConfig, Task<string>> getAuthorizationCodeAsync,
         string? httpClientName = null) :
         base(
             serviceProvider, 
@@ -20,6 +23,7 @@ public class XApiClient :
             httpClientName: httpClientName)
     {
         _config = config;
+        _getAuthorizationCodeAsync = getAuthorizationCodeAsync;
     }
 
     public override string GetAuthorizationUrl(
@@ -35,14 +39,19 @@ public class XApiClient :
             $"code_challenge_method=plain";
     }
 
-    protected override List<KeyValuePair<string, string>> CreateGetTokenRequest()
+    protected override async Task<List<KeyValuePair<string, string>>> CreateGetTokenRequestAsync()
     {
+        var authorizationCode = await _getAuthorizationCodeAsync(
+            this.ServiceProvider,
+            _config);
+        ArgumentNullException.ThrowIfNull(authorizationCode, nameof(authorizationCode));
+
         return [
-            new KeyValuePair<string, string>("code", _config.AuthorizationCode),
+            new KeyValuePair<string, string>("code", authorizationCode),
             new KeyValuePair<string, string>("grant_type", "authorization_code"),
             new KeyValuePair<string, string>("client_id", _config.ClientId),
             new KeyValuePair<string, string>("redirect_uri", _config.RedirectUri),
-            new KeyValuePair<string, string>("code_verifier", _config.CodeVerifier),
+            new KeyValuePair<string, string>("code_verifier", _config.CodeVerifier)
         ];
     }
 

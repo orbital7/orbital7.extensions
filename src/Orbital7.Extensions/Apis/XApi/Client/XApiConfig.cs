@@ -9,6 +9,4 @@ public record XApiConfig
     public required string Scope { get; init; }
 
     public required string CodeVerifier { get; init; }
-
-    public required string AuthorizationCode { get; init; }
 }

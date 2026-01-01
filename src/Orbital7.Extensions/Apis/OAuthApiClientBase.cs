@@ -4,10 +4,11 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
     ApiClient, IOAuthApiClient
     where TTokenInfo : TokenInfo
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly Func<IServiceProvider, TTokenInfo, CancellationToken, Task>? _onTokenInfoUpdated;
 
     public TTokenInfo TokenInfo { get; private set; }
+
+    protected IServiceProvider ServiceProvider { get; init; }
 
     protected abstract string OAuthTokenEndpointUrl { get; }
 
@@ -21,10 +22,15 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
         string? httpClientName = null) :
         base(httpClientFactory, httpClientName)
     {
-        _serviceProvider = serviceProvider;
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(httpClientFactory);
+        ArgumentNullException.ThrowIfNull(tokenInfo);
+
+        this.ServiceProvider = serviceProvider;
+        this.TokenInfo = tokenInfo;
+
         _onTokenInfoUpdated = onTokenInfoUpdated;
 
-        this.TokenInfo = tokenInfo;
     }
 
     public abstract string GetAuthorizationUrl(
@@ -68,7 +74,7 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
         return this.TokenInfo.AccessToken;
     }
 
-    protected abstract List<KeyValuePair<string, string>> CreateGetTokenRequest();
+    protected abstract Task<List<KeyValuePair<string, string>>> CreateGetTokenRequestAsync();
 
     protected abstract List<KeyValuePair<string, string>> CreateRefreshTokenRequest(
         string refreshToken);
@@ -136,7 +142,7 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
     private async Task<TTokenInfo> GetTokenAsync(
         CancellationToken cancellationToken)
     {
-        var request = CreateGetTokenRequest();
+        var request = await CreateGetTokenRequestAsync();
 
         return await SendOAuthTokenRequestAsync(
             request,
@@ -167,14 +173,21 @@ public abstract class OAuthApiClientBase<TTokenInfo> :
         UpdateTokenInfo(response);
 
         // Handle the token info updated event.
+        await NotifiyTokenInfoUpdatedAsync(
+            cancellationToken);
+
+        return this.TokenInfo;
+    }
+
+    private async Task NotifiyTokenInfoUpdatedAsync(
+        CancellationToken cancellationToken)
+    {
         if (_onTokenInfoUpdated != null)
         {
             await _onTokenInfoUpdated.Invoke(
-                _serviceProvider,
+                this.ServiceProvider,
                 this.TokenInfo,
                 cancellationToken);
         }
-
-        return this.TokenInfo;
     }
 }

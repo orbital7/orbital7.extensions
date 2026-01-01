@@ -10,7 +10,26 @@ public class TokenInfo
 
     public DateTime? AccessTokenExpirationDateTimeUtc { get; set; }
 
-    public TokenStatus GetRefreshTokenStatus(
+    public virtual void Clear()
+    {
+        this.RefreshToken = null;
+        this.RefreshTokenExpirationDateTimeUtc = null;
+        this.AccessToken = null;
+        this.AccessTokenExpirationDateTimeUtc = null;
+    }
+
+    public virtual void Import(
+        TokenInfo tokenInfo)
+    {
+        ArgumentNullException.ThrowIfNull(tokenInfo);
+
+        this.RefreshToken = tokenInfo.RefreshToken;
+        this.RefreshTokenExpirationDateTimeUtc = tokenInfo.RefreshTokenExpirationDateTimeUtc;
+        this.AccessToken = tokenInfo.AccessToken;
+        this.AccessTokenExpirationDateTimeUtc = tokenInfo.AccessTokenExpirationDateTimeUtc;
+    }
+
+    public virtual TokenStatus GetRefreshTokenStatus(
         int? preExpirationBufferInMinutes = null,
         DateTime? nowUtc = null)
     {
@@ -33,7 +52,7 @@ public class TokenInfo
         return tokenStatus == TokenStatus.Valid;
     }
 
-    public TokenStatus GetAccessTokenStatus(
+    public virtual TokenStatus GetAccessTokenStatus(
         int? preExpirationBufferInMinutes = null,
         DateTime? nowUtc = null)
     {

@@ -6,12 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Orbital7.Extensions.Jwt;
 
-public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
-    ITokenService
+public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant, TTokenInfo, TGetTokenInput> :
+    ITokenService<TTokenInfo, TGetTokenInput>
     where TDbContext : DbContext
     where TKey : IEquatable<TKey> 
     where TUser : IdentityUser<TKey>, IEntity<TKey>
     where TTokenGrant : class, ITokenGrantEntity<TKey, TUser>, new()
+    where TTokenInfo : TokenInfo, new()
+    where TGetTokenInput : GetTokenInput
 {
     protected TDbContext Context { get; init; }
 
@@ -38,8 +40,8 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         TUser user,
         DateTime nowUtc);
 
-    public virtual async Task<TokenInfo> GetTokenAsync(
-        GetTokenInput input)
+    public virtual async Task<TTokenInfo> GetTokenAsync(
+        TGetTokenInput input)
     {
         input.AssertIsComplete();
 
@@ -81,7 +83,7 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         throw new SecurityTokenException(this.InvalidTokenCredentialsMessage);
     }
 
-    public virtual async Task<TokenInfo> RefreshTokenAsync(
+    public virtual async Task<TTokenInfo> RefreshTokenAsync(
         RefreshTokenInput input)
     {
         input.AssertIsComplete();
@@ -238,7 +240,7 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
         return principal;
     }
 
-    protected virtual TokenInfo AssembleTokenInfo(
+    protected virtual TTokenInfo AssembleTokenInfo(
         TUser user,
         TTokenGrant tokenGrant,
         TokenGrantConfig tokenGrantConfig)
@@ -254,7 +256,7 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtAccessToken);
 
-        return new TokenInfo()
+        return new TTokenInfo()
         {
             AccessToken = accessToken,
             AccessTokenExpirationDateTimeUtc = accessTokenExpirationDateTimeUtc,
@@ -265,7 +267,7 @@ public abstract class TokenServiceBase<TDbContext, TKey, TUser, TTokenGrant> :
 
     protected virtual async Task<bool> IsUserAuthenticatedAsync(
         TUser user,
-        GetTokenInput input)
+        TGetTokenInput input)
     {
         input.AssertIsComplete();
 

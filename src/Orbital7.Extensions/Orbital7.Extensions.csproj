@@ -5,11 +5,11 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>10.0.1</Version>
-    <AssemblyVersion>10.0.1.0</AssemblyVersion>
-    <FileVersion>10.0.1.0</FileVersion>
+	<Version>10.0.2</Version>
+    <AssemblyVersion>10.0.2.0</AssemblyVersion>
+    <FileVersion>10.0.2.0</FileVersion>
     <Company>Orbital7</Company>
-    <Copyright>Copyright © 2012-2025 Orbital7</Copyright>
+    <Copyright>Copyright © 2012-2026 Orbital7</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>.NET Extensions/Utilities</Description>
     <Authors>Josh van Eikeren</Authors>
@@ -45,7 +45,7 @@
 	<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
 	<PackageReference Include="NewId" Version="4.0.1" />
 	<PackageReference Include="Polly" Version="8.6.5" />
-	<PackageReference Include="Sqids" Version="3.1.0" />
+	<PackageReference Include="Sqids" Version="3.2.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="TimeZoneConverter" Version="7.2.0" />
   </ItemGroup>

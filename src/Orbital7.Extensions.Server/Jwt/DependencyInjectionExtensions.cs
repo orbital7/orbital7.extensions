@@ -7,9 +7,11 @@ namespace Orbital7.Extensions.Jwt;
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddTokenServiceJwtBearerAuthentication(
+    public static IServiceCollection AddTokenServiceJwtBearerAuthentication<TTokenInfo, TGetTokenInput>(
         this IServiceCollection services,
         TokenGrantConfig tokenGrantConfig)
+        where TTokenInfo : TokenInfo
+        where TGetTokenInput : GetTokenInput
     {
         tokenGrantConfig.AssertIsComplete();
 
@@ -44,7 +46,7 @@ public static class DependencyInjectionExtensions
 
                     var isTokenGrantValid = context.Principal != null ?
                         await context.HttpContext.RequestServices
-                            .GetRequiredService<ITokenService>()
+                            .GetRequiredService<ITokenService<TTokenInfo, TGetTokenInput>>()
                             .IsTokenGrantValidAsync(context.Principal) :
                         false;
 
@@ -58,27 +60,31 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddTokenServiceJwtBearerAuthentication<TTokenService>(
+    public static IServiceCollection AddTokenServiceJwtBearerAuthentication<TTokenInfo, TGetTokenInput, TTokenService>(
         this IServiceCollection services,
         TokenGrantConfig tokenGrantConfig)
-        where TTokenService : class, ITokenService
+        where TTokenInfo : TokenInfo
+        where TGetTokenInput : GetTokenInput
+        where TTokenService : class, ITokenService<TTokenInfo, TGetTokenInput>
     {
-        services.AddTokenServiceJwtBearerAuthentication(tokenGrantConfig);
-        services.AddScoped<ITokenService, TTokenService>();
+        services.AddTokenServiceJwtBearerAuthentication<TTokenInfo, TGetTokenInput>(tokenGrantConfig);
+        services.AddScoped<ITokenService<TTokenInfo, TGetTokenInput>, TTokenService>();
         return services;
     }
 
-    public static void MapTokenServiceJwtBearerAuthenticationEndpoints(
+    public static void MapTokenServiceJwtBearerAuthenticationEndpoints<TTokenInfo, TGetTokenInput>(
         this WebApplication app,
         string getTokenRoute,
         string refreshTokenRoute,
         string revokeTokenRoute)
+        where TTokenInfo : TokenInfo
+        where TGetTokenInput : GetTokenInput
     {
         app.MapPost(
             getTokenRoute,
             async (
-                [FromServices] ITokenService tokenService,
-                [FromBody] GetTokenInput input) =>
+                [FromServices] ITokenService<TTokenInfo, TGetTokenInput> tokenService,
+                [FromBody] TGetTokenInput input) =>
             {
                 return await tokenService.GetTokenAsync(input);
             })
@@ -87,7 +93,7 @@ public static class DependencyInjectionExtensions
         app.MapPost(
             refreshTokenRoute,
             async (
-                [FromServices] ITokenService tokenService,
+                [FromServices] ITokenService<TTokenInfo, TGetTokenInput> tokenService,
                 [FromBody] RefreshTokenInput input) =>
             {
                 return await tokenService.RefreshTokenAsync(input);
@@ -97,7 +103,7 @@ public static class DependencyInjectionExtensions
         app.MapPost(
             revokeTokenRoute,
             async (
-                [FromServices] ITokenService tokenService,
+                [FromServices] ITokenService<TTokenInfo, TGetTokenInput> tokenService,
                 [FromBody] RevokeTokenInput input) =>
             {
                 return await tokenService.RevokeTokenAsync(input);

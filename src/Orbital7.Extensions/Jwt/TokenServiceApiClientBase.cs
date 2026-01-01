@@ -4,13 +4,14 @@ namespace Orbital7.Extensions.Jwt;
 
 public abstract class TokenServiceApiClientBase<TTokenInfo> :
     ApiClient, ITokenServiceApiClient<TTokenInfo>
-    where TTokenInfo : TokenInfo
+    where TTokenInfo : TokenInfo, new()
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly Func<IServiceProvider, CancellationToken, Task<TTokenInfo?>>? _onTokenInfoEmpty;
-    private readonly Func<IServiceProvider, TTokenInfo?, CancellationToken, Task>? _onTokenInfoUpdated;
+    private readonly Func<IServiceProvider, CancellationToken, Task<TTokenInfo>>? _onTokenInfoEmpty;
+    private readonly Func<IServiceProvider, TTokenInfo, CancellationToken, Task>? _onTokenInfoUpdated;
 
-    public TTokenInfo? TokenInfo { get; private set; }
+    public TTokenInfo TokenInfo { get; private set; }
+
+    protected IServiceProvider ServiceProvider { get; init; }
 
     protected virtual int AccessTokenPreExpirationBufferInMinutes => 10;
 
@@ -23,9 +24,9 @@ public abstract class TokenServiceApiClientBase<TTokenInfo> :
     protected TokenServiceApiClientBase(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
-        TTokenInfo? tokenInfo,
-        Func<IServiceProvider, CancellationToken, Task<TTokenInfo?>>? onTokenInfoEmpty = null,
-        Func<IServiceProvider, TTokenInfo?, CancellationToken, Task>? onTokenInfoUpdated = null,
+        TTokenInfo tokenInfo,
+        Func<IServiceProvider, CancellationToken, Task<TTokenInfo>>? onTokenInfoEmpty = null,
+        Func<IServiceProvider, TTokenInfo, CancellationToken, Task>? onTokenInfoUpdated = null,
         string? httpClientName = null) :
         base(
             httpClientFactory,
@@ -33,12 +34,13 @@ public abstract class TokenServiceApiClientBase<TTokenInfo> :
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
         ArgumentNullException.ThrowIfNull(httpClientFactory);
+        ArgumentNullException.ThrowIfNull(tokenInfo);
 
-        _serviceProvider = serviceProvider;
+        this.ServiceProvider = serviceProvider;
+        this.TokenInfo = tokenInfo;
+
         _onTokenInfoEmpty = onTokenInfoEmpty;
         _onTokenInfoUpdated = onTokenInfoUpdated;
-
-        this.TokenInfo = tokenInfo;
     }
 
     public async Task<TTokenInfo> GetTokenAsync(
@@ -67,7 +69,7 @@ public abstract class TokenServiceApiClientBase<TTokenInfo> :
             cancellationToken: cancellationToken);
 
         await UpdateTokenInfoAsync(
-            null,
+            new TTokenInfo(),
             cancellationToken);
 
         return revokedTokenInfo;
@@ -77,24 +79,17 @@ public abstract class TokenServiceApiClientBase<TTokenInfo> :
         CancellationToken cancellationToken = default,
         DateTime? nowUtc = null)
     {
-        // If token info is null, handle it.
-        if ((this.TokenInfo == null ||
-             !this.TokenInfo.AccessToken.HasText()) &&
+        // If token info is empty, handle it.
+        if (!this.TokenInfo.AccessToken.HasText() &&
             _onTokenInfoEmpty != null)
         {
             var updatedTokenInfo = await _onTokenInfoEmpty.Invoke(
-                _serviceProvider,
+                this.ServiceProvider,
                 cancellationToken);
 
             await UpdateTokenInfoAsync(
                 updatedTokenInfo,
                 cancellationToken);
-        }
-
-        // Ensure we have token info.
-        if (this.TokenInfo == null)
-        {
-            throw new Exception("Token info is null");
         }
 
         // Check for an invalid access token.
@@ -228,18 +223,17 @@ public abstract class TokenServiceApiClientBase<TTokenInfo> :
     }
 
     private async Task UpdateTokenInfoAsync(
-        TTokenInfo? tokenInfo,
+        TTokenInfo tokenInfo,
         CancellationToken cancellationToken)
     {
-        this.TokenInfo = tokenInfo;
+        this.TokenInfo.Import(tokenInfo);
 
         if (_onTokenInfoUpdated != null)
         {
             await _onTokenInfoUpdated.Invoke(
-                _serviceProvider, 
+                this.ServiceProvider, 
                 tokenInfo,
                 cancellationToken);
-
         }
     }
 
