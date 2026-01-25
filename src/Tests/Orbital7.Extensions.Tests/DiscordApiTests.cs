@@ -18,11 +18,13 @@ public class DiscordApiTests
         this.HttpClientFactory = new BasicHttpClientFactory();
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task TestChannelsCreateMessageApiValid()
     {
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.DiscordApiBotToken.HasText() && this.DiscordApiTestChannelId.HasValue);
+        Assert.SkipUnless(
+            this.DiscordApiBotToken.HasText() && this.DiscordApiTestChannelId.HasValue,
+            "Missing Discord configuration");
 
         // Create the client and service.
         var client = new DiscordApiClient(
@@ -36,7 +38,8 @@ public class DiscordApiTests
              new CreateMessageRequest()
             {
                 Content = "Sample unit test message post."
-            });
+            },
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Validate.
         Assert.NotNull(result);
@@ -46,11 +49,13 @@ public class DiscordApiTests
         Assert.True(result.Timestamp.HasText());
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task TestChannelsCreateMessageApiInvalid()
     {
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.DiscordApiBotToken.HasText() && this.DiscordApiTestChannelId.HasValue);
+        Assert.SkipUnless(
+            this.DiscordApiBotToken.HasText() && this.DiscordApiTestChannelId.HasValue,
+            "Missing Discord configuration");
 
         // Create the client and service.
         var client = new DiscordApiClient(
@@ -66,7 +71,8 @@ public class DiscordApiTests
                 new CreateMessageRequest()
                 {
                     Content = "Sample unit test message that should never be posted..."
-                });
+                },
+                cancellationToken: TestContext.Current.CancellationToken);
         });
         Assert.True(exception.Message.HasText());
     }

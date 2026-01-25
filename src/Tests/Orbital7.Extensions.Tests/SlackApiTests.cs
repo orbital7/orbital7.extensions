@@ -19,11 +19,13 @@ public class SlackApiTests
         this.HttpClientFactory = new BasicHttpClientFactory();
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task TestChatPostMessageApiValid()
     {
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.SlackApiToken.HasText() && this.SlackApiTestChannel.HasText());
+        Assert.SkipUnless(
+            this.SlackApiToken.HasText() && this.SlackApiTestChannel.HasText(),
+            "Missing Slack configuration");
 
         // Create the client and service.
         var client = new SlackApiClient(
@@ -36,7 +38,8 @@ public class SlackApiTests
         {
             Channel = this.SlackApiTestChannel,
             Text = "Sample unit test message post."
-        });
+        },
+        cancellationToken: TestContext.Current.CancellationToken);
 
         // Validate.
         Assert.NotNull(result);
@@ -47,11 +50,13 @@ public class SlackApiTests
         Assert.True(result.Message.Ts.HasText());
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task TestChatPostMessageApiInvalid()
     {
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.SlackApiToken.HasText() && this.SlackApiTestChannel.HasText());
+        Assert.SkipUnless(
+            this.SlackApiToken.HasText() && this.SlackApiTestChannel.HasText(),
+            "Missing Slack configuration");
 
         // Create the client and service.
         var client = new SlackApiClient(
@@ -60,11 +65,13 @@ public class SlackApiTests
         var chatApi = new ChatApi(client);
 
         // Test.
-        var result = await chatApi.PostMessageAsync(new PostMessageRequest()
-        {
-            Channel = this.SlackApiTestChannel + "_INVALID",
-            Text = "Sample unit test message post."
-        });
+        var result = await chatApi.PostMessageAsync(
+            new PostMessageRequest()
+            {
+                Channel = this.SlackApiTestChannel + "_INVALID",
+                Text = "Sample unit test message post."
+            },
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Validate.
         Assert.NotNull(result);

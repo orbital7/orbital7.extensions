@@ -21,7 +21,7 @@ public class BetterStackApiTests
         this.HttpClientFactory = new BasicHttpClientFactory();
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task UptimeHeartbeatsApi()
     {
         // NOTE: This test is not very clean; we try all CRUD operations, but
@@ -29,7 +29,9 @@ public class BetterStackApiTests
         // internal testing than for regular testing.
 
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.BetterStackUptimeApiToken.HasText());
+        Assert.SkipUnless(
+            this.BetterStackUptimeApiToken.HasText(),
+            "Missing BetterStack configuration");
 
         // Create the client and service.
         var client = new BetterStackApiClient(
@@ -47,7 +49,8 @@ public class BetterStackApiTests
                 Grace = 12,
                 Email = true,
                 Paused = false,
-            });
+            },
+            cancellationToken: TestContext.Current.CancellationToken);
         Assert.True(createHeartbeatResponse != null);
 
         // Validate the heartbeat creation.
@@ -61,17 +64,22 @@ public class BetterStackApiTests
         Assert.False(heartbeat.Attributes.Paused);
 
         // Test listing heartbeats.
-        var heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync();
+        var heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync(
+            cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(heartbeatsResponse);
         Assert.NotNull(heartbeatsResponse.Data);
         Assert.NotNull(heartbeatsResponse.Data.Where(x => x.Id == heartbeat.Id).FirstOrDefault());
 
         // Send the heartbeat.
         Assert.NotNull(heartbeat.Attributes.Url);
-        await uptimeHeartbeatsApi.SendAsync(heartbeat.Attributes.Url);
+        await uptimeHeartbeatsApi.SendAsync(
+            heartbeat.Attributes.Url,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Get the heartbeat.
-        var getHeartbeatResponse = await uptimeHeartbeatsApi.GetAsync(heartbeat.Id);
+        var getHeartbeatResponse = await uptimeHeartbeatsApi.GetAsync(
+            heartbeat.Id,
+            cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(getHeartbeatResponse);
         heartbeat = getHeartbeatResponse.Data;
         Assert.NotNull(heartbeat);
@@ -89,7 +97,8 @@ public class BetterStackApiTests
             {
                 Name = UPDATE_HEARTBEAT_NAME,
                 Paused = true,
-            });
+            },
+            cancellationToken: TestContext.Current.CancellationToken);
         Assert.True(updateHeartbeatResponse != null);
 
         // Validate the heartbeat update.
@@ -102,8 +111,11 @@ public class BetterStackApiTests
         Assert.True(heartbeat.Attributes.Paused);
 
         // Delete the heartbeat.
-        await uptimeHeartbeatsApi.DeleteAsync(heartbeat.Id);
-        heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync();
+        await uptimeHeartbeatsApi.DeleteAsync(
+            heartbeat.Id,
+            cancellationToken: TestContext.Current.CancellationToken);
+        heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync(
+            cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(heartbeatsResponse);
         Assert.NotNull(heartbeatsResponse.Data);
         Assert.NotNull(heartbeatsResponse.Pagination);
@@ -115,11 +127,13 @@ public class BetterStackApiTests
         Assert.Equal(1, pageIndex);
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task TelemetryLoggingApi()
     {
         // Skip this test unless we have the necessary configuration data.
-        Skip.IfNot(this.BetterStackLogsSourceToken.HasText() && this.BetterStackLogsIngestingHost.HasText());
+        Assert.SkipUnless(
+            this.BetterStackLogsSourceToken.HasText() && this.BetterStackLogsIngestingHost.HasText(),
+            "Missing BetterStack configuration");
 
         // Create the client and service.
         var client = new BetterStackApiClient(this.HttpClientFactory);
@@ -151,7 +165,8 @@ public class BetterStackApiTests
         await telemetryLoggingApi.LogEventAsync(
             this.BetterStackLogsSourceToken,
             this.BetterStackLogsIngestingHost,
-            logEvent);
+            logEvent,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Create multiple events.
         var logEvents = new LogEvent[]
@@ -186,7 +201,8 @@ public class BetterStackApiTests
         await telemetryLoggingApi.LogEventsAsync(
             this.BetterStackLogsSourceToken,
             this.BetterStackLogsIngestingHost,
-            logEvents);
+            logEvents,
+            cancellationToken: TestContext.Current.CancellationToken);
     }
 
     private TestEntity1 CreateTestEntity1()

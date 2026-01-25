@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Orbital7.Extensions.AspNetCore;
+using Orbital7.Extensions.Notifications;
 
 namespace Orbital7.Extensions.Apis;
 
@@ -55,7 +58,10 @@ public static class ApiExtensions
     }
 
     public static IApplicationBuilder UseProblemDetailsExceptionHandler(
-        this WebApplication app)
+        this WebApplication app,
+        ILoggingService? loggingService = null,
+        Func<HttpContext, Exception?, ProblemDetails, IDictionary<string, object?>>? createMetadata = null,
+        bool sendExternalNotification = false)
     {
         return app.UseExceptionHandler(errorApp =>
         {
@@ -103,6 +109,25 @@ public static class ApiExtensions
                     problemDetails,
                     options: null,
                     contentType: PROBLEM_JSON_CONTENT_TYPE);
+
+                if (loggingService != null)
+                {
+                    var metadata = 
+                        createMetadata?.Invoke(context, exception, problemDetails) ??
+                        new Dictionary<string, object?>
+                            {
+                                { "RequestPath", context.Request.Path },                                
+                                { "RequestHeaders", context.Request.GetHeadersDictionary() },
+                                { "RequestBody", await context.Request.ReadBodyAsStringAsync() },
+                            };
+
+                    await loggingService.LogAsync(
+                        LogLevel.Error,
+                        $"Unhandled request error: {exception?.Message}",
+                        exception,
+                        metadata,
+                        sendExternalNotification: sendExternalNotification);
+                }
             });
         });
     }

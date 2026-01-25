@@ -14,9 +14,24 @@ public static class GuidFactory
         NewId.SetProcessIdProvider(new CurrentProcessIdProvider());
     }
 
+    public static Guid Next()
+    {
+        return NewId.NextGuid();
+    }
+
+    public static string NextShortString()
+    {
+        return ToShortString(Next());
+    }
+
     public static Guid NextSequential()
     {
         return NewId.NextSequentialGuid();
+    }
+
+    public static string NextSequentialShortString()
+    {
+        return ToShortString(NextSequential());
     }
 
     public static Guid FromString(

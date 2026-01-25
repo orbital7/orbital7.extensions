@@ -37,10 +37,11 @@ public static class StringListExtensions
 
     public static bool ContainsStartsWith(
         this IEnumerable<string> list,
-        string value,
+        string? value,
         StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
     {
         return list != null && 
+            value.HasText() &&
             list.Any(x => x.StartsWith(value, stringComparison));
     }
 }
