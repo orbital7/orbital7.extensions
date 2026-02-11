@@ -35,6 +35,12 @@ public class GuidTests
         Assert.True(entity1.Id < entity2.Id);
         Assert.True(entity2.Id < entity3.Id);
         Assert.True(entity1.Id < entity3.Id);
+
+        var list = new List<TestGuidKeyedEntity> { entity3, entity1, entity2 };
+        var sortedList = list.OrderBy(x => x.Id).ToList();
+        Assert.Equal(entity1.Id, sortedList[0].Id);
+        Assert.Equal(entity2.Id, sortedList[1].Id);
+        Assert.Equal(entity3.Id, sortedList[2].Id);
     }
 
     public class TestGuidKeyedEntity : EntityGuidKeyedBase

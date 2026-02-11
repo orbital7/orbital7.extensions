@@ -1,4 +1,6 @@
-﻿namespace Orbital7.Extensions.Tests;
+﻿using System.Text.Json.Serialization;
+
+namespace Orbital7.Extensions.Tests;
 
 public class JsonSerializationHelperTests
 {
@@ -72,5 +74,50 @@ public class JsonSerializationHelperTests
         Assert.NotNull(deserialized);
         Assert.Equal(namedId.Id, deserialized.Id);
         Assert.Equal(namedId.Name, deserialized.Name);
+    }
+
+    [Fact]
+    public void EnumStringSerialization()
+    {
+        var testClass = new TestClass
+        {
+            PropertyA = "Test A",
+            PropertyB = "Test B",
+            PropertyC = TestEnum.ValueA,
+            PropertyD = TestEnum.ValueB,
+        };
+
+        var serialized = JsonSerializationHelper.SerializeToJson(testClass);
+        Assert.NotNull(serialized);
+        Assert.Contains("\"PropertyC\":\"ValueA\"", serialized);
+        Assert.Contains("\"PropertyD\":\"value_b\"", serialized);
+
+        var deserialized = JsonSerializationHelper.DeserializeFromJson<TestClass>(serialized);
+        Assert.NotNull(deserialized);
+        Assert.Equal(testClass.PropertyA, deserialized.PropertyA);
+        Assert.Equal(testClass.PropertyB, deserialized.PropertyB);
+        Assert.Equal(testClass.PropertyC, deserialized.PropertyC);
+        Assert.Equal(testClass.PropertyD, deserialized.PropertyD);
+    }
+
+    public class TestClass
+    {
+        public required string PropertyA { get; init; }
+
+        public string? PropertyB { get; init; }
+
+        public required TestEnum PropertyC { get; init; }
+
+        public TestEnum? PropertyD { get; init; }
+    }
+
+    public enum TestEnum
+    {
+        ValueA,
+
+        [JsonStringEnumMemberName("value_b")]
+        ValueB,
+
+        ValueC,
     }
 }

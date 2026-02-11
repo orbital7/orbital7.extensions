@@ -380,9 +380,9 @@ public static class JsonSerializationHelper
     private static void AddJsonStringEnumMemberConverter(
         JsonSerializerOptions options)
     {
-        if (!options.Converters.Any(x => x is JsonStringEnumMemberConverter))
+        if (!options.Converters.Any(x => x is JsonStringEnumConverter))
         {
-            options.Converters.Add(new JsonStringEnumMemberConverter());
+            options.Converters.Add(new JsonStringEnumConverter());
         }
     }
 }
