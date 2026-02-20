@@ -2,7 +2,7 @@
 
 public abstract class BetterStackApiBase
 {
-    public IBetterStackApiClient Client { get; set; }
+    public IBetterStackApiClient Client { get; init; }
 
     public abstract string BaseUrl { get; }
 

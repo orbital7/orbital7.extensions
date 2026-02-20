@@ -6,7 +6,8 @@ public class ListEnumeratorController<T>
     private object LockObject { get; set; }
     public bool IsDone { get; set; }
 
-    public ListEnumeratorController(IEnumerable list)
+    public ListEnumeratorController(
+        IEnumerable list)
     {
         // Record.
         this.IsDone = false;

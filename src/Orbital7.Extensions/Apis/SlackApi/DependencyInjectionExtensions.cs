@@ -9,7 +9,7 @@ public static class DependencyInjectionExtensions
     {
         if (apiToken.HasText())
         {
-            services.AddScoped<IChatApi, ChatApi>(
+            services.AddSingleton<IChatApi, ChatApi>(
                 (serviceProvider) => new ChatApi(
                     new SlackApiClient(
                         serviceProvider.GetRequiredService<IHttpClientFactory>(),

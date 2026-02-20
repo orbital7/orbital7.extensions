@@ -5,9 +5,9 @@
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>10.0.4</Version>
-	<AssemblyVersion>10.0.4.0</AssemblyVersion>
-	<FileVersion>10.0.4.0</FileVersion>
+	<Version>10.0.5</Version>
+	<AssemblyVersion>10.0.5.0</AssemblyVersion>
+	<FileVersion>10.0.5.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Copyright © 2012-2026 Orbital7</Copyright>
     <Authors>Josh van Eikeren</Authors>

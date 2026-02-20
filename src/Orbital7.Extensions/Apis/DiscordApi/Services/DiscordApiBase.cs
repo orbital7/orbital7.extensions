@@ -2,7 +2,7 @@
 
 public abstract class DiscordApiBase
 {
-    public IDiscordApiClient Client { get; set; }
+    public IDiscordApiClient Client { get; init; }
 
     protected DiscordApiBase(
         IDiscordApiClient client)

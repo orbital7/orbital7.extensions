@@ -9,7 +9,7 @@ public static class DependencyInjectionExtensions
     {
         if (botToken.HasText())
         {
-            services.AddScoped<IChannelsApi, ChannelsApi>(
+            services.AddSingleton<IChannelsApi, ChannelsApi>(
                 (serviceProvider) => new ChannelsApi(
                     new DiscordApiClient(
                         serviceProvider.GetRequiredService<IHttpClientFactory>(),

@@ -345,4 +345,50 @@ public static class NumericExtensions
         // Returns a DateTime in UTC.
         return DateTime.UnixEpoch.AddSeconds(seconds);
     }
+
+    public static T? MaxOrDefault<T>(
+        this T? value, 
+        T? compareToValue) 
+        where T : struct, IComparable<T>
+    {
+        if (value.HasValue && compareToValue.HasValue)
+        {
+            return value.Value.CompareTo(compareToValue.Value) >= 0 ? 
+                value : 
+                compareToValue;
+        }
+        else if (value.HasValue)
+        {
+            return value;
+        }
+        else if (compareToValue.HasValue)
+        {
+            return compareToValue;
+        }
+
+        return null;
+    }
+
+    public static T? MinOrDefault<T>(
+        this T? value,
+        T? compareToValue)
+        where T : struct, IComparable<T>
+    {
+        if (value.HasValue && compareToValue.HasValue)
+        {
+            return value.Value.CompareTo(compareToValue.Value) <= 0 ? 
+                value : 
+                compareToValue;
+        }
+        else if (value.HasValue)
+        {
+            return value;
+        }
+        else if (compareToValue.HasValue)
+        {
+            return compareToValue;
+        }
+
+        return null;
+    }
 }

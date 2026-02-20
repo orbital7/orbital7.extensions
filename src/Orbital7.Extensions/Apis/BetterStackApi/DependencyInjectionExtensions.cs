@@ -6,7 +6,7 @@ public static class DependencyInjectionExtensions
         this IServiceCollection services,
         string? httpClientName = HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S)
     {
-        services.AddScoped<ITelemetryLoggingApi, TelemetryLoggingApi>(
+        services.AddSingleton<ITelemetryLoggingApi, TelemetryLoggingApi>(
             (serviceProvider) => new TelemetryLoggingApi(
                 new BetterStackApiClient(
                     serviceProvider.GetRequiredService<IHttpClientFactory>(),
@@ -22,7 +22,7 @@ public static class DependencyInjectionExtensions
     {
         if (apiToken.HasText())
         {
-            services.AddScoped<IUptimeHeartbeatsApi, UptimeHeartbeatsApi>(
+            services.AddSingleton<IUptimeHeartbeatsApi, UptimeHeartbeatsApi>(
                 (serviceProvider) => new UptimeHeartbeatsApi(
                     new BetterStackApiClient(
                         serviceProvider.GetRequiredService<IHttpClientFactory>(),

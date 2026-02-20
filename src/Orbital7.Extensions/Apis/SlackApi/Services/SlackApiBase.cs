@@ -2,7 +2,7 @@
 
 public abstract class SlackApiBase
 {
-    public ISlackApiClient Client { get; set; }
+    public ISlackApiClient Client { get; init; }
 
     protected SlackApiBase(
         ISlackApiClient client)

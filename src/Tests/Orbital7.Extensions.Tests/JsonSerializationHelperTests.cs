@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Orbital7.Extensions.Tests;
 
@@ -98,6 +99,44 @@ public class JsonSerializationHelperTests
         Assert.Equal(testClass.PropertyB, deserialized.PropertyB);
         Assert.Equal(testClass.PropertyC, deserialized.PropertyC);
         Assert.Equal(testClass.PropertyD, deserialized.PropertyD);
+    }
+
+    [Theory]
+    // ValueA has no specified JsonStringEnumMemberName -> any case is allowed.
+    [InlineData("ValueA", "ValueA", false)]
+    [InlineData("ValueA", "Valuea", false)]
+    [InlineData("ValueA", "valueA", false)]
+    [InlineData("ValueA", "valuea", false)]
+    [InlineData("ValueA", "VALUEa", false)]
+    [InlineData("ValueA", "VALUEA", false)]
+    [InlineData("ValueA", "value_a", true)]
+
+    // ValueB has a specified JsonStringEnumMemberName -> exact case is required.
+    [InlineData("ValueB", "value_b", false)]
+    [InlineData("ValueB", "Value_B", true)]
+    [InlineData("ValueB", "Value_b", true)]
+    [InlineData("ValueB", "value_B", true)]
+    [InlineData("ValueB", "VALUE_B", true)]
+    [InlineData("ValueB", "ValueB", true)]
+    [InlineData("ValueB", "valueb", true)]
+    public void EnumStringDeserialization_Casesensitivity(
+        string expectedEnum,
+        string serializedEnum,
+        bool throwsJsonException)
+    {
+        var serializedEnumJson = serializedEnum.EncloseInQuotes();
+
+        if (throwsJsonException)
+        {
+            Assert.Throws<JsonException>(() => 
+                JsonSerializationHelper.DeserializeFromJson<TestEnum>(serializedEnumJson));
+        }
+        else
+        {
+            Assert.Equal(
+                Enum.Parse<TestEnum>(expectedEnum, ignoreCase: true),
+                JsonSerializationHelper.DeserializeFromJson<TestEnum>(serializedEnumJson));
+        }
     }
 
     public class TestClass

@@ -2,15 +2,15 @@
 
 public enum HeartbeatStatus
 {
-    [EnumMember(Value = "paused")]
+    [JsonStringEnumMemberName("paused")]
     Paused,
 
-    [EnumMember(Value = "pending")]
+    [JsonStringEnumMemberName("pending")]
     Pending,
 
-    [EnumMember(Value = "up")]
+    [JsonStringEnumMemberName("up")]
     Up,
 
-    [EnumMember(Value = "down")]
+    [JsonStringEnumMemberName("down")]
     Down,
 }

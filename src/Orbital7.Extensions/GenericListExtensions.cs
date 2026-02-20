@@ -59,4 +59,16 @@ public static class GenericListExtensions
             }
         }
     }
+
+    public static T? AddIfNotNull<T>(
+        this IList<T> list, 
+        T? item)
+    {
+        if (item != null)
+        {
+            list.Add(item);
+        }
+
+        return item;
+    }
 }

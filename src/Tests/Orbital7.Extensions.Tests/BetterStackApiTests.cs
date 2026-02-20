@@ -22,6 +22,17 @@ public class BetterStackApiTests
     }
 
     [Fact]
+    public void EnumSerialization()
+    {
+        var heartbeatStatus = HeartbeatStatus.Up;
+        var serialized = JsonSerializationHelper.SerializeToJson(heartbeatStatus);
+        Assert.Equal(serialized.ToLower(), serialized);
+
+        var deserialized = JsonSerializationHelper.DeserializeFromJson<HeartbeatStatus>(serialized);
+        Assert.Equal(heartbeatStatus, deserialized);
+    }
+
+    [Fact]
     public async Task UptimeHeartbeatsApi()
     {
         // NOTE: This test is not very clean; we try all CRUD operations, but
