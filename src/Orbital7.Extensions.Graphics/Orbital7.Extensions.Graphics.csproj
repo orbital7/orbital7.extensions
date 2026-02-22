@@ -1,45 +1,49 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-	<LangVersion>latest</LangVersion>
-	<ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<Version>10.0.5</Version>
-	<AssemblyVersion>10.0.5.0</AssemblyVersion>
-	<FileVersion>10.0.5.0</FileVersion>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright © 2012-2026 Orbital7</Copyright>
-    <Authors>Josh van Eikeren</Authors>
-    <Company>Orbital7</Company>
-    <Product>Orbital7.Extensions</Product>
-    <PackageIcon>Orbital7.png</PackageIcon>
-    <PackageIconUrl />
-    <Description>.NET Graphics Extensions/Utilities</Description>
-    <PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/orbital7/orbital7.extensions</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>10.0.0</Version>
+		<AssemblyVersion>10.0.0.0</AssemblyVersion>
+		<FileVersion>10.0.0.0</FileVersion>
+		<Company>Orbital7</Company>
+		<Copyright>Copyright © 2012-2026 Orbital7</Copyright>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Description>.NET Graphics Extensions/Utilities</Description>
+		<Authors>Josh van Eikeren</Authors>
+		<PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
+		<PackageIconUrl></PackageIconUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageIcon>Orbital7.png</PackageIcon>
+		<PackageReadmeFile>Readme.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/orbital7/orbital7.extensions</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\bin\release\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>..\..\bin\release\</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\bin\debug\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\..\bin\debug\</OutputPath>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+	</ItemGroup>
 	
-  <ItemGroup>
-    <None Include="../../Orbital7.png">
-      <Pack>True</Pack>
-      <PackagePath>/</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="../../Orbital7.png">
+			<Pack>True</Pack>
+			<PackagePath>/</PackagePath>
+		</None>
+		<None Include="Readme.md">
+			<Pack>True</Pack>
+			<PackagePath>/</PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

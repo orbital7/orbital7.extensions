@@ -6,7 +6,7 @@ This project includes third-party libraries licensed under open-source terms. Be
 
 Package: CsvHelper
 Source: https://github.com/JoshClose/CsvHelper
-Version: 33.0.1
+Version: 33.x
 License: Apache License, Version 2.0
 
 Copyright (c) 2009-2024 Josh Close
@@ -24,38 +24,9 @@ limitations under the License.
 
 ---
 
-Package: Macross.Json.Extensions
-Source: https://github.com/Macross-Software/core
-Version: 3.0.0
-License: MIT License
-
-MIT License
-
-Copyright (c) 2020 Macross Software
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
----
-
 Package: CSharpVitamins.ShortGuid
 Source: https://github.com/csharpvitamins/csharpvitamins.shortguid/
-Version: 2.0.0
+Version: 2.x
 License: MIT License
 
 MIT License
@@ -72,7 +43,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 Package: NewId
 Source: https://github.com/phatboyg/NewId
-Version: 4.0.1
+Version: 4.x
 License: Appache License, Version 2.0
 
 Copyright 2007-2019 Chris Patterson

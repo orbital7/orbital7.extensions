@@ -18,10 +18,14 @@ public static class ImageSharpExtensions
             {
                 // Handle if width is larger.
                 if (size.Width > size.Height)
+                {
                     return source.Resize(maxWidth, Convert.ToInt32(size.Height * maxWidth / size.Width));
+                }
                 // Else height is larger.
                 else
+                {
                     return source.Resize(Convert.ToInt32(size.Width * maxHeight / size.Height), maxHeight);
+                }
             }
             else
             {

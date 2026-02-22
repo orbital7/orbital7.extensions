@@ -1,10 +1,12 @@
-﻿using SixLabors.ImageSharp.Formats;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 
 namespace Orbital7.Extensions.Graphics;
 
 public static class ImageSharpHelper
 {
-    public static IImageFormat GetImageFormat(string fileExtension)
+    public static IImageFormat? GetImageFormat(
+        string fileExtension)
     {
         switch (fileExtension.ToLower())
         {
@@ -25,6 +27,35 @@ public static class ImageSharpHelper
                 //case ".tiff":
         }
 
-        throw new Exception("The specified file extension is not supported");
+        return null;
+    }
+
+    public static async Task<List<Image>> LoadImageFilesAsync(
+        IEnumerable<string> filePaths)
+    {
+        var images = new List<Image>();
+
+        foreach (var filePath in filePaths)
+        {
+            if (GetImageFormat(Path.GetExtension(filePath)) != null)
+            {
+                // Load the image.
+                var image = await Image.LoadAsync(filePath);
+
+                // TODO: Is there a way to generally record the 
+                // name of the file as metadata?
+
+                // Add the image to the list.
+                images.Add(image);
+            }
+        }
+
+        return images;
+    }
+
+    public static async Task<List<Image>> LoadImageFilesAsync(
+        string folderPath)
+    {
+        return await LoadImageFilesAsync(Directory.GetFiles(folderPath));
     }
 }
