@@ -44,6 +44,10 @@
 			<Pack>True</Pack>
 			<PackagePath>/</PackagePath>
 		</None>
+		<None Include="Licenses\THIRD-PARTY-NOTICES.md">
+			<Pack>True</Pack>
+			<PackagePath>licenses\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>
