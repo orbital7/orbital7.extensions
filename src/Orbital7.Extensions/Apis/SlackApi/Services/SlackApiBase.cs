@@ -1,18 +1,14 @@
 ﻿namespace Orbital7.Extensions.Apis.SlackApi;
 
-public abstract class SlackApiBase
+public abstract class SlackApiBase :
+    ApiBase<ISlackApiClient>
 {
-    public ISlackApiClient Client { get; init; }
+    protected override string BaseUrl => "https://slack.com/api/";
 
     protected SlackApiBase(
-        ISlackApiClient client)
+        ISlackApiClient client) :
+        base(client)
     {
-        this.Client = client;
-    }
-
-    protected string BuildRequestUrl(
-        string endpointUrl)
-    {
-        return $"https://slack.com/api/{endpointUrl.PruneStart("/")}";
+        
     }
 }

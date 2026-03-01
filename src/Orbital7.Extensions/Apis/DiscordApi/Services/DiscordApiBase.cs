@@ -1,18 +1,14 @@
 ﻿namespace Orbital7.Extensions.Apis.DiscordApi;
 
-public abstract class DiscordApiBase
+public abstract class DiscordApiBase :
+    ApiBase<IDiscordApiClient>
 {
-    public IDiscordApiClient Client { get; init; }
+    protected override string BaseUrl => "https://discord.com/api/v9/";
 
     protected DiscordApiBase(
-        IDiscordApiClient client)
+        IDiscordApiClient client) :
+        base(client)
     {
-        this.Client = client;
-    }
-
-    protected string BuildRequestUrl(
-        string endpointUrl)
-    {
-        return $"https://discord.com/api/v9/{endpointUrl.PruneStart("/")}";
+        
     }
 }

@@ -20,6 +20,12 @@ public enum Month
 
 public static class DateTimeExtensions
 {
+    public static DateOnly ToDateOnly(
+        this DateTime dateTime)
+    {
+        return DateOnly.FromDateTime(dateTime);
+    }
+
     public static DateTime UtcToTimeZone(
         this DateTime dateTimeUtc, 
         TimeZoneInfo timeZone)

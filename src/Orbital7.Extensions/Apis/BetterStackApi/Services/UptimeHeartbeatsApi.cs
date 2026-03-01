@@ -6,7 +6,7 @@
 public class UptimeHeartbeatsApi :
     UptimeApiBase, IUptimeHeartbeatsApi
 {
-    private const string BASE_ROUTE = "heartbeats";
+    private const string ENDPOINT_PATH = "heartbeats";
 
     public UptimeHeartbeatsApi(
         IBetterStackApiClient client) : 
@@ -19,11 +19,13 @@ public class UptimeHeartbeatsApi :
         int? page = null,
         CancellationToken cancellationToken = default)
     {
-        var url = BuildRequestUrl(BASE_ROUTE);
+        var query = CreateQueryStringCollection();
         if (page.HasValue)
         {
-            url += $"?page={page}";
+            query["page"] = page.Value.ToString();
         }
+
+        var url = BuildRequestUrl(ENDPOINT_PATH, query);
 
         return await this.Client.SendGetRequestAsync<HeartbeatsResponse>(
             url,
@@ -35,7 +37,7 @@ public class UptimeHeartbeatsApi :
         CancellationToken cancellationToken = default)
     {
         return await this.Client.SendGetRequestAsync<HeartbeatResponse>(
-            BuildRequestUrl($"{BASE_ROUTE}/{id}"),
+            BuildRequestUrl($"{ENDPOINT_PATH}/{id}"),
             cancellationToken);
     }
 
@@ -44,7 +46,7 @@ public class UptimeHeartbeatsApi :
         CancellationToken cancellationToken = default)
     {
         return await this.Client.SendPostRequestAsync<HeartbeatRequest, HeartbeatResponse>(
-            BuildRequestUrl(BASE_ROUTE),
+            BuildRequestUrl(ENDPOINT_PATH),
             request,
             cancellationToken);
     }
@@ -55,7 +57,7 @@ public class UptimeHeartbeatsApi :
         CancellationToken cancellationToken = default)
     {
         return await this.Client.SendPatchRequestAsync<HeartbeatRequest, HeartbeatResponse>(
-            BuildRequestUrl($"{BASE_ROUTE}/{id}"),
+            BuildRequestUrl($"{ENDPOINT_PATH}/{id}"),
             request,
             cancellationToken);
     }
@@ -65,7 +67,7 @@ public class UptimeHeartbeatsApi :
         CancellationToken cancellationToken = default)
     {
         await this.Client.SendDeleteRequestAsync<string>(
-            BuildRequestUrl($"{BASE_ROUTE}/{id}"),
+            BuildRequestUrl($"{ENDPOINT_PATH}/{id}"),
             cancellationToken);
     }
 

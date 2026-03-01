@@ -2,11 +2,6 @@
 
 namespace Orbital7.Extensions.Encryption;
 
-public enum EncryptionMethod 
-{ 
-    TripleDES,
-}
-
 public static class EncryptionHelper
 {
     public static string CreatePassphrase(
@@ -20,12 +15,33 @@ public static class EncryptionHelper
 
     public static string ComputeHmacSha256Hash(
         string input,
-        string salt)
+        string salt,
+        OutputEncodingFormat outputEncodingFormat)
     {
         using (var hmacsha256 = new HMACSHA256(Encoding.UTF8.GetBytes(salt)))
         {
-            byte[] hashBytes = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-            return Convert.ToBase64String(hashBytes);
+            byte[] hashBytes = hmacsha256.ComputeHash(
+                Encoding.UTF8.GetBytes(input));
+
+            switch (outputEncodingFormat)
+            {
+                case OutputEncodingFormat.Base64:
+                    return Convert.ToBase64String(hashBytes);
+
+                case OutputEncodingFormat.Hex:
+                    return Convert.ToHexString(hashBytes);
+
+                case OutputEncodingFormat.HexLower:
+                    return Convert.ToHexString(hashBytes).ToLower();
+                    // Not supported in .NET 8, but per EncryptionTests.ComputeHmacSha256Hash()
+                    // the above is equivalent.
+                    //
+                    //return Convert.ToHexStringLower(hashBytes);
+
+                default:
+                    throw new Exception(
+                        $"Output encoding format '{outputEncodingFormat}' is not supported.");
+            }
         }
     }
 

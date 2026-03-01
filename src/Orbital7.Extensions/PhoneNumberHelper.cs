@@ -12,6 +12,8 @@ public enum PhoneNumberFormat
 
 public static class PhoneNumberHelper
 {
+    // TODO: Expand to include non-North-American phone numbers.
+
     public static string GetRawPhoneNumber(
         string value,
         bool includePlus1Prefix = false)
@@ -27,9 +29,7 @@ public static class PhoneNumberHelper
         string value,
         PhoneNumberFormat format = PhoneNumberFormat.DashesOnly)
     {
-        // TODO: Expand to include non-NorthAmerican phone numbers.
-
-        // Convert to numbers only 
+        // Convert to numbers only.
         var raw = GetRawPhoneNumber(value);
         if (raw.Length >= 10)
         {

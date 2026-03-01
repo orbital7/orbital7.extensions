@@ -6,6 +6,28 @@ namespace Orbital7.Extensions.Tests;
 public class JsonSerializationHelperTests
 {
     [Fact]
+    public void DynamicSerialization()
+    {
+        var testObject = new
+        {
+            PropertyA = "Test A",
+            PropertyB = 123,
+            PropertyC = true,
+        };
+
+        var serialized = JsonSerializationHelper.SerializeToJson(
+            testObject);
+
+        Assert.NotNull(serialized);
+        Assert.Contains($"{nameof(testObject.PropertyA).EncloseInQuotes()}:", serialized);
+        Assert.Contains(testObject.PropertyA.EncloseInQuotes(), serialized);
+        Assert.Contains($"{nameof(testObject.PropertyB).EncloseInQuotes()}:", serialized);
+        Assert.Contains(testObject.PropertyB.ToString(), serialized);
+        Assert.Contains($"{nameof(testObject.PropertyC).EncloseInQuotes()}:", serialized);
+        Assert.Contains(testObject.PropertyC.ToString().ToLower(), serialized);
+    }
+
+    [Fact]
     public void ValueTupleSerialization()
     {
         var list = new List<(int, string)>()

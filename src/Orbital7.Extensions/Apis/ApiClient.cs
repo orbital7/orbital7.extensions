@@ -45,111 +45,111 @@ public class ApiClient :
     }
 
     public async Task<TResponse> SendGetRequestAsync<TResponse>(
-        string url,
+        string requestUrl,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<object, TResponse>(
             HttpMethod.Get,
-            url,
+            requestUrl,
             null,
             cancellationToken);
     }
 
     public async Task<TResponse> SendDeleteRequestAsync<TResponse>(
-        string url,
+        string requestUrl,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<object, TResponse>(
             HttpMethod.Delete,
-            url,
+            requestUrl,
             null,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPostRequestAsync<TRequest, TResponse>(
-        string url,
+        string requestUrl,
         TRequest? request,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Post,
-            url,
+            requestUrl,
             request,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPostRequestAsync<TResponse>(
-        string url,
+        string requestUrl,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<object, TResponse>(
             HttpMethod.Post,
-            url,
+            requestUrl,
             null,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPatchRequestAsync<TRequest, TResponse>(
-        string url,
+        string requestUrl,
         TRequest? request,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Patch,
-            url,
+            requestUrl,
             request,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPatchRequestAsync<TResponse>(
-        string url,
+        string requestUrl,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<object, TResponse>(
             HttpMethod.Patch,
-            url,
+            requestUrl,
             null,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPutRequestAsync<TRequest, TResponse>(
-        string url,
+        string requestUrl,
         TRequest? request,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<TRequest, TResponse>(
             HttpMethod.Put,
-            url,
+            requestUrl,
             request,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPutRequestAsync<TResponse>(
-        string url,
+        string requestUrl,
         CancellationToken cancellationToken = default)
     {
         return await SendRequestAsync<object, TResponse>(
             HttpMethod.Put,
-            url,
+            requestUrl,
             null,
             cancellationToken);
     }
 
     public async Task<TResponse> SendPostRequestUrlEncodedAsync<TResponse>(
-        string url,
-        List<KeyValuePair<string, string>> request,
+        string requestUrl,
+        IEnumerable<KeyValuePair<string, string>> request,
         CancellationToken cancellationToken = default)
     {
         return await ExecuteSendRequestAsync<TResponse>(
             HttpMethod.Post,
-            url,
+            requestUrl,
             new FormUrlEncodedContent(request),
             cancellationToken);
     }
 
     private async Task<TResponse> SendRequestAsync<TRequest, TResponse>(
         HttpMethod method,
-        string url,
+        string requestUrl,
         TRequest? request,
         CancellationToken cancellationToken)
     {
@@ -170,14 +170,14 @@ public class ApiClient :
 
         return await ExecuteSendRequestAsync<TResponse>(
             method, 
-            url, 
+            requestUrl, 
             content, 
             cancellationToken);
     }
 
     private async Task<TResponse> ExecuteSendRequestAsync<TResponse>(
         HttpMethod method,
-        string url,
+        string requestUrl,
         HttpContent? content,
         CancellationToken cancellationToken)
     {
@@ -189,7 +189,7 @@ public class ApiClient :
             httpResponse = await this.RetryPolicy.ExecuteAsync(
                 async (x) => await CreateAndSendRequestAsync(
                     method,
-                    url, 
+                    requestUrl, 
                     content, 
                     cancellationToken),
                 cancellationToken);
@@ -199,7 +199,7 @@ public class ApiClient :
         {
             httpResponse = await CreateAndSendRequestAsync(
                 method,
-                url,
+                requestUrl,
                 content,
                 cancellationToken);
         }
@@ -222,22 +222,22 @@ public class ApiClient :
 
     private async Task<HttpResponseMessage> CreateAndSendRequestAsync(
          HttpMethod method,
-         string url,
+         string requestUrl,
          HttpContent? content,
          CancellationToken cancellationToken)
     {
-        var uri = new Uri(url);
+        var requestUri = new Uri(requestUrl);
 
         // Perform any pre-request creation logic.
         await BeforeCreateRequestAsync(
-            uri,
+            requestUri,
             cancellationToken);
 
         // Create the request.
         var httpRequest = new HttpRequestMessage()
         {
             Method = method,
-            RequestUri = uri,
+            RequestUri = requestUri,
             Content = content,
         };
 
@@ -252,7 +252,7 @@ public class ApiClient :
     }
 
     protected virtual Task BeforeCreateRequestAsync(
-        Uri uri,
+        Uri requestUri,
         CancellationToken cancellationToken)
     {
         // Nothing to do here in the base implementation.

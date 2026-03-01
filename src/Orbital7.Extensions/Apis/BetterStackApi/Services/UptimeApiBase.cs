@@ -1,9 +1,9 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
 public abstract class UptimeApiBase :
-    BetterStackApiBase
+    ApiBase<IBetterStackApiClient>
 {
-    public override string BaseUrl => "https://uptime.betterstack.com/api/v2/";
+    protected override string BaseUrl => "https://uptime.betterstack.com/api/v2/";
 
     protected UptimeApiBase(
         IBetterStackApiClient client) : 
