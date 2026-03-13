@@ -1,10 +1,10 @@
 ﻿namespace Orbital7.Extensions.Apis.XApi;
 
-public class ErrorResponse
+public record ErrorResponse
 {
-    public string? Error { get; set; }
+    public string? Error { get; init; }
 
-    public string? Message { get; set; }
+    public string? Message { get; init; }
 
     public override string ToString()
     {

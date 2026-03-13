@@ -4,7 +4,7 @@ public class NamedId<TId>
 {
     public TId? Id { get; init; }
 
-    public string? Name { get; set; }
+    public string? Name { get; init; }
 
     public NamedId()
     {

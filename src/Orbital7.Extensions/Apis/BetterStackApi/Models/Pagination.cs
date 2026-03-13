@@ -1,16 +1,16 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
-public class Pagination
+public record Pagination
 {
     [JsonPropertyName("first")]
-    public string? First { get; set; }
+    public string? First { get; init; }
 
     [JsonPropertyName("last")]
-    public string? Last { get; set; }
+    public string? Last { get; init; }
 
     [JsonPropertyName("prev")]
-    public string? Prev { get; set; }
+    public string? Prev { get; init; }
 
     [JsonPropertyName("next")]
-    public string? Next { get; set; }
+    public string? Next { get; init; }
 }

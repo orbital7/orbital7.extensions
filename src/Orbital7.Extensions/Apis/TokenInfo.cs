@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Apis;
 
-public class TokenInfo
+public record TokenInfo
 {
     public string? RefreshToken { get; set; }
 

@@ -1,54 +1,54 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
-public class HeartbeatAttributes
+public record HeartbeatAttributes
 {
     [JsonPropertyName("url")]
-    public string? Url { get; set; }
+    public string? Url { get; init; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string? Name { get; init; }
 
     [JsonPropertyName("period")]
-    public int? Period { get; set; }
+    public int? Period { get; init; }
 
     [JsonPropertyName("grace")]
-    public int? Grace { get; set; }
+    public int? Grace { get; init; }
 
     [JsonPropertyName("call")]
-    public bool? Call { get; set; }
+    public bool? Call { get; init; }
 
     [JsonPropertyName("sms")]
-    public bool? Sms { get; set; }
+    public bool? Sms { get; init; }
 
     [JsonPropertyName("email")]
-    public bool? Email { get; set; }
+    public bool? Email { get; init; }
 
     [JsonPropertyName("push")]
-    public bool? Push { get; set; }
+    public bool? Push { get; init; }
 
     [JsonPropertyName("team_wait")]
-    public int? TeamWait { get; set; }
+    public int? TeamWait { get; init; }
 
     [JsonPropertyName("heartbeat_group_id")]
-    public string? HeartbeatGroupId { get; set; }
+    public string? HeartbeatGroupId { get; init; }
 
     [JsonPropertyName("sort_index")]
-    public int? SortIndex { get; set; }
+    public int? SortIndex { get; init; }
 
     [JsonPropertyName("paused_at")]
-    public DateTime? PausedAt { get; set; }
+    public DateTime? PausedAt { get; init; }
 
     [JsonPropertyName("created_at")]
-    public DateTime? CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; init; }
 
     [JsonPropertyName("updated_at")]
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; init; }
 
     [JsonPropertyName("paused")]
-    public bool? Paused { get; set; }
+    public bool? Paused { get; init; }
 
     [JsonPropertyName("status")]
-    public HeartbeatStatus? Status { get; set; }
+    public HeartbeatStatus? Status { get; init; }
 
     public override string ToString()
     {

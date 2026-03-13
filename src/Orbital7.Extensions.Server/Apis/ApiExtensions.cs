@@ -103,7 +103,7 @@ public static class ApiExtensions
                     Extensions = extensions,
                 };
 
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.StatusCode = problemDetails.Status.Value;
 
                 await context.Response.WriteAsJsonAsync(
                     problemDetails,

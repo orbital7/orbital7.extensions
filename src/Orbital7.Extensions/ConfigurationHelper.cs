@@ -30,20 +30,20 @@ public static class ConfigurationHelper
     public static TConfiguration GetConfiguration<TConfiguration>(
         string? environmentVariableName = null,
         string[]? args = null)
-        where TConfiguration : class, new()
+        where TConfiguration : class
     {
         return GetConfiguration(environmentVariableName, args)?
-            .Get<TConfiguration>() ?? new();
+            .Get<TConfiguration>() ?? Activator.CreateInstance<TConfiguration>();
     }
 
     public static TConfiguration GetConfigurationWithUserSecrets<TConfiguration, TAssemblyClass>(
         string? environmentVariableName = null,
         string[]? args = null)
-        where TConfiguration : class, new()
+        where TConfiguration : class
         where TAssemblyClass : class
     {
         return GetConfigurationWithUserSecrets<TAssemblyClass>(environmentVariableName, args)?
-            .Get<TConfiguration>() ?? new();
+            .Get<TConfiguration>() ?? Activator.CreateInstance<TConfiguration>();
     }
 
     public static IConfigurationBuilder CreateConfigurationBuilder(
@@ -65,7 +65,7 @@ public static class ConfigurationHelper
     }
 
     public static TConfiguration ReadUserSecrets<TConfiguration, TAssemblyClass>()
-        where TConfiguration : class, new()
+        where TConfiguration : class    
         where TAssemblyClass : class
     {
         TConfiguration? configuration = default!;
@@ -78,7 +78,7 @@ public static class ConfigurationHelper
                 secretsFilePath);
         }
         
-        return configuration ?? new();
+        return configuration ?? Activator.CreateInstance<TConfiguration>();
     }
 
     public static TConfiguration WriteUserSecrets<TConfiguration, TAssemblyClass>(

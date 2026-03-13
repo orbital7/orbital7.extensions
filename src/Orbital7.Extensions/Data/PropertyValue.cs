@@ -1,7 +1,7 @@
 ﻿namespace Orbital7.Extensions.Data;
 
-public class PropertyValue :
+public record PropertyValue :
     NamedValue<object>
 {
-    public string? DisplayName { get; set; }
+    public string? DisplayName { get; init; }
 }

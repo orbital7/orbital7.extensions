@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
-public class HeartbeatsResponse :
+public record HeartbeatsResponse :
     PagedDataResponseBase<Heartbeat>
 {
 }

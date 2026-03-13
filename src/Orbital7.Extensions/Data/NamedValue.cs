@@ -1,10 +1,10 @@
 ﻿namespace Orbital7.Extensions.Data;
 
-public class NamedValue<TValue>
+public record NamedValue<TValue>
 {
     public string? Name { get; init; }
 
-    public TValue? Value { get; set; }
+    public TValue? Value { get; init; }
 
     public NamedValue()
     {

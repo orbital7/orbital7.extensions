@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Jwt;
 
-public class RevokeTokenInput
+public record RevokeTokenInput
 {
     [Required]
     public string? RefreshToken { get; set; }

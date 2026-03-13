@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Apis.SlackApi;
 
-public class SectionBlock
+public record SectionBlock
 {
     [JsonInclude]
     [JsonPropertyName("type")]

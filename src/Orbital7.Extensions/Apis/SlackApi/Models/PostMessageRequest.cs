@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Apis.SlackApi;
 
-public class PostMessageRequest
+public record PostMessageRequest
 {
     [Required]
     [JsonPropertyName("channel")]

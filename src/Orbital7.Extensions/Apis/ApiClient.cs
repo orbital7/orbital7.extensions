@@ -270,6 +270,15 @@ public class ApiClient :
         HttpResponseMessage httpResponse,
         string responseBody)
     {
+        return CreateProblemDetailsResponseException(
+            httpResponse,
+            responseBody);
+    }
+
+    protected Exception CreateProblemDetailsResponseException(
+        HttpResponseMessage httpResponse,
+        string responseBody)
+    {
         ProblemDetailsResponse problemDetailsResponse;
 
         if (responseBody.HasText())

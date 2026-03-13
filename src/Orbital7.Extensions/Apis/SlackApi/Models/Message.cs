@@ -1,25 +1,25 @@
 ﻿namespace Orbital7.Extensions.Apis.SlackApi;
 
-public class Message
+public record Message
 {
     [JsonPropertyName("user")]
-    public string? User { get; set; }
+    public string? User { get; init; }
 
     [JsonPropertyName("type")]
-    public string? Type { get; set; }
+    public string? Type { get; init; }
 
     [JsonPropertyName("ts")]
-    public string? Ts { get; set; }
+    public string? Ts { get; init; }
 
     [JsonPropertyName("bot_id")]
-    public string? BotId { get; set; }
+    public string? BotId { get; init; }
 
     [JsonPropertyName("app_id")]
-    public string? AppId { get; set; }
+    public string? AppId { get; init; }
 
     [JsonPropertyName("text")]
-    public string? Text { get; set; }
+    public string? Text { get; init; }
 
     [JsonPropertyName("team")]
-    public string? Team { get; set; }
+    public string? Team { get; init; }
 }

@@ -1,18 +1,18 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
-public class LogEvent
+public record LogEvent
 {
     [JsonPropertyName("message")]
-    public string? Message { get; set; }
+    public string? Message { get; init; }
 
     [JsonPropertyName("level")]
-    public string? Level { get; set; }
+    public string? Level { get; init; }
 
     [JsonPropertyName("metadata")]
-    public IDictionary<string, object>? Metadata { get; set; }
+    public IDictionary<string, object>? Metadata { get; init; }
 
     [JsonPropertyName("dt")]
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTime Timestamp { get; init; } = DateTime.UtcNow;
 
     public override string ToString()
     {

@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Jwt;
 
-public class RefreshTokenInput
+public record RefreshTokenInput
 {
     [Required]
     public string? RefreshToken { get; set; }

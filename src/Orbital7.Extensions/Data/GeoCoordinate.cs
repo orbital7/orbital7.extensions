@@ -1,15 +1,8 @@
 ﻿namespace Orbital7.Extensions.Data;
 
-public class GeoCoordinate
+public record GeoCoordinate
 {
-    public double Latitude { get; private set; }
-    public double Longitude { get; private set; }
+    public required double Latitude { get; init; }
 
-    public GeoCoordinate(
-        double latitude,
-        double longitude)
-    {
-        Latitude = latitude;
-        Longitude = longitude;
-    }
+    public required double Longitude { get; init; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
-public class HeartbeatRequest
+public record HeartbeatRequest
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }

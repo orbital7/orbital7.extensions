@@ -151,66 +151,6 @@ public abstract class TokenServiceApiClientBase<TTokenInfo> :
         }
     }
 
-    protected override Exception CreateUnsuccessfulResponseException(
-        HttpResponseMessage httpResponse,
-        string responseBody)
-    {
-        return CreateProblemDetailsResponseException(
-            httpResponse,
-            responseBody);
-    }
-
-    protected Exception CreateProblemDetailsResponseException(
-        HttpResponseMessage httpResponse,
-        string responseBody)
-    {
-        ProblemDetailsResponse problemDetailsResponse;
-
-        if (responseBody.HasText())
-        {
-            if (responseBody.StartsWith("{"))
-            {
-                try
-                {
-                    problemDetailsResponse = JsonSerializationHelper.DeserializeFromJson<ProblemDetailsResponse>(responseBody);
-                }
-                catch (Exception ex)
-                {
-                    problemDetailsResponse = new ProblemDetailsResponse()
-                    {
-                        Title = "Unable to deserialize error response JSON.",
-                        Detail = ex.Message,
-                        Status = (int)httpResponse.StatusCode,
-                        Extensions = new Dictionary<string, object?>()
-                        {
-                            { "ResponseBody", responseBody },
-                        }
-                    };
-                }
-            }
-            else
-            {
-                problemDetailsResponse = new ProblemDetailsResponse()
-                {
-                    Title = "Error response is not JSON.",
-                    Detail = responseBody,
-                    Status = (int)httpResponse.StatusCode,
-                };
-            }
-        }
-        else
-        {
-            problemDetailsResponse = new ProblemDetailsResponse()
-            {
-                Title = "Error response is empty.",
-                Detail = httpResponse.ReasonPhrase,
-                Status = (int)httpResponse.StatusCode,
-            };
-        }
-
-        return new ProblemDetailsException(problemDetailsResponse);
-    }
-
     protected override async Task BeforeCreateRequestAsync(
         Uri uri,
         CancellationToken cancellationToken)

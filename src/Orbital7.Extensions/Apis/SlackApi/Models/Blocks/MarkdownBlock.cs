@@ -1,6 +1,6 @@
 ﻿namespace Orbital7.Extensions.Apis.SlackApi;
 
-public class MarkdownBlock
+public record MarkdownBlock
 {
     [JsonInclude]
     [JsonPropertyName("type")]

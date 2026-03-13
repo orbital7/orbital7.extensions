@@ -1,12 +1,12 @@
 ﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
 
-public abstract class PagedDataResponseBase<TData>
+public abstract record PagedDataResponseBase<TData>
 {
     [JsonPropertyName("data")]
-    public TData[]? Data { get; set; }
+    public TData[]? Data { get; init; }
 
     [JsonPropertyName("pagination")]
-    public Pagination? Pagination { get; set; }
+    public Pagination? Pagination { get; init; }
 
     public int ParsePageIndex(
         string url)
