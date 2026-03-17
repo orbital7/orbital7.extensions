@@ -20,6 +20,9 @@ public sealed class ValueList<T> :
         _items = items is null ? Array.Empty<T>() : items.ToArray();
     }
 
+    public ValueList() : 
+        this(null) { }
+
     public int Count => _items.Length;
 
     public T this[int index] => _items[index];
