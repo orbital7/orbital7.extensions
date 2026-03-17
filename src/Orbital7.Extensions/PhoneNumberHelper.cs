@@ -14,41 +14,68 @@ public static class PhoneNumberHelper
 {
     // TODO: Expand to include non-North-American phone numbers.
 
-    public static string GetRawPhoneNumber(
-        string value,
+    public static string? ToRaw(
+        string? phoneNumber,
         bool includePlus1Prefix = false)
     {
-        string phoneNumber = value.NumbersOnly().PruneStart("+").PruneStart("1");
-        if (includePlus1Prefix && !phoneNumber.StartsWith("+1"))
-            phoneNumber = "+1" + phoneNumber;
+        if (phoneNumber.HasText())
+        {
+            var rawPhoneNumber = phoneNumber.NumbersOnly()?.PruneStart("1");
+            if (rawPhoneNumber.HasText())
+            {
+                if (includePlus1Prefix && !rawPhoneNumber.StartsWith("+1"))
+                {
+                    rawPhoneNumber = "+1" + rawPhoneNumber;
+                }
 
-        return phoneNumber;
+                return rawPhoneNumber;
+            }
+        }
+
+        return null;
     }
 
-    public static string GetFormattedPhoneNumber(
-        string value,
+    public static string? Format(
+        string? phoneNumber,
+        bool includePlus1Prefix = false,
         PhoneNumberFormat format = PhoneNumberFormat.DashesOnly)
     {
-        // Convert to numbers only.
-        var raw = GetRawPhoneNumber(value);
-        if (raw.Length >= 10)
+        const int US_PHONE_NUMBER_LENGTH = 10;
+
+        var raw = ToRaw(
+            phoneNumber,
+            includePlus1Prefix: includePlus1Prefix);
+
+        if (raw.HasText() && raw.Length >= US_PHONE_NUMBER_LENGTH)
         {
             var template = "({0}) {1}-{2}";
             if (format == PhoneNumberFormat.DashesOnly)
+            {
                 template = "{0}-{1}-{2}";
+            }
             else if (format == PhoneNumberFormat.PeriodsOnly)
+            {
                 template = "{0}.{1}.{2}";
+            }
 
-            var phoneNumber = string.Format(template,
+            var formattedPhoneNumber = string.Format(template,
                 raw.Substring(0, 3),
                 raw.Substring(3, 3),
                 raw.Substring(6, 4));
 
             // Treat the remainder as the extension.
-            if (raw.Length > 10)
-                return string.Format("{0} x{1}", phoneNumber, raw.Substring(10, raw.Length - 10));
+            if (raw.Length > US_PHONE_NUMBER_LENGTH)
+            {
+                var extension = raw.Substring(
+                    US_PHONE_NUMBER_LENGTH, 
+                    raw.Length - US_PHONE_NUMBER_LENGTH);
+
+                return $"{formattedPhoneNumber} x{extension}";
+            }
             else
-                return phoneNumber;
+            {
+                return formattedPhoneNumber;
+            }
         }
         else
         {

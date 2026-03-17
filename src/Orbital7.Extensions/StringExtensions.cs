@@ -416,25 +416,26 @@ public static class StringExtensions
         return (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(value.Trim()));
     }
 
-    public static string NumbersOnly(
-        this string value)
+    public static string? NumbersOnly(
+        this string? value)
     {
-        if (!string.IsNullOrEmpty(value))
+        StringBuilder sb = new StringBuilder();
+
+        if (value.HasText())
         {
-            StringBuilder sb = new StringBuilder();
+            
+            var numberChars = NumberChars.ToCharArray();
 
             foreach (char c in value.ToCharArray())
             {
-                string s = c.ToString();
-                if (NumberChars.Contains(s)) sb.Append(s);
+                if (numberChars.Contains(c))
+                {
+                    sb.Append(c);
+                }
             }
+        }
 
-            return sb.ToString();
-        }
-        else
-        {
-            return value;
-        }
+        return sb.ToString().Trim().EnsureNullIfEmpty();
     }
 
     public static bool IsNumbers(

@@ -150,7 +150,7 @@ public class JsonSerializationHelperTests
 
         if (throwsJsonException)
         {
-            Assert.Throws<JsonException>(() => 
+            Assert.Throws<JsonException>(() =>
                 JsonSerializationHelper.DeserializeFromJson<TestEnum>(serializedEnumJson));
         }
         else
@@ -159,6 +159,31 @@ public class JsonSerializationHelperTests
                 Enum.Parse<TestEnum>(expectedEnum, ignoreCase: true),
                 JsonSerializationHelper.DeserializeFromJson<TestEnum>(serializedEnumJson));
         }
+    }
+
+    [Fact]
+    public void ValueListDeserialization()
+    {
+        var testRecord = new TestRecord2
+        {
+            PropertyA = "Test A",
+            PropertyB = new ValueList<string>(new[] { "Value1", "Value2" }),
+            PropertyC = new ValueList<TestRecord3>(new[]
+            {
+                new TestRecord3 { PropertyA = "Nested A1", PropertyB = "Nested B1" },
+                new TestRecord3 { PropertyA = "Nested A2", PropertyB = null },
+            })
+        };
+
+        var serialized = JsonSerializationHelper.SerializeToJson(testRecord);
+        var deserialized = JsonSerializationHelper.DeserializeFromJson<TestRecord2>(serialized);
+
+        Assert.NotNull(serialized);
+        Assert.NotNull(deserialized);
+        Assert.Equal(testRecord.PropertyA, deserialized.PropertyA);
+        Assert.Equal(testRecord.PropertyB, deserialized.PropertyB);
+        Assert.Equal(testRecord.PropertyC, deserialized.PropertyC);
+        Assert.Equal(testRecord, deserialized);
     }
 
     public class TestClass
@@ -180,5 +205,25 @@ public class JsonSerializationHelperTests
         ValueB,
 
         ValueC,
+    }
+
+    public record TestRecord1
+    {
+        public required string PropertyA { get; init; }
+
+        public required ValueList<string> PropertyB { get; init; }
+    }
+
+    public record TestRecord2 :
+        TestRecord1
+    {
+        public required ValueList<TestRecord3> PropertyC { get; init; }
+    }
+
+    public record TestRecord3
+    {
+        public required string PropertyA { get; init; }
+
+        public string? PropertyB { get; init; }
     }
 }

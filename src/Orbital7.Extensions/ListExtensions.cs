@@ -2,6 +2,12 @@
 
 public static class ListExtensions
 {
+    public static ValueList<T> ToValueList<T>(
+        this IEnumerable<T>? list)
+    {
+        return new ValueList<T>(list);
+    }
+
     public static DateTime Average(
         this IList<DateTime> dates)
     {
