@@ -14,7 +14,8 @@ public abstract class CompositeLoggingServiceBase :
         IDictionary<string, object?>? metadata = null, 
         [CallerMemberName] string? callerMemberName = null, 
         bool sendExternalNotification = false,
-        bool includeExternalNotificationDetails = true)
+        bool includeExternalNotificationDetails = true,
+        CancellationToken cancellationToken = default)
     {
         foreach (var loggingService in _loggingServices)
         {
@@ -35,7 +36,8 @@ public abstract class CompositeLoggingServiceBase :
                     exception,
                     metadata,
                     callerMemberName,
-                    sendExternalNotification);
+                    sendExternalNotification,
+                    cancellationToken: cancellationToken);
             }
         }
     }

@@ -29,7 +29,8 @@ public abstract class DiscordExternalNotificationServiceBase :
 
     public virtual async Task<bool> SendAsync(
         LogLevel logLevel,
-        string message)
+        string message,
+        CancellationToken cancellationToken = default)
     {
         if (logLevel == LogLevel.None)
         {
@@ -38,7 +39,10 @@ public abstract class DiscordExternalNotificationServiceBase :
         else
         {
             var channelId = GetChannelId(logLevel);
-            return await ExecuteSendAsync(channelId, message);
+            return await ExecuteSendAsync(
+                channelId, 
+                message,
+                cancellationToken);
         }
     }
 
@@ -59,7 +63,8 @@ public abstract class DiscordExternalNotificationServiceBase :
 
     protected virtual async Task<bool> ExecuteSendAsync(
         ulong channelId,
-        string message)
+        string message,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -75,7 +80,8 @@ public abstract class DiscordExternalNotificationServiceBase :
 
                 var result = await _channelsApi.CreateMessageAsync(
                     channelId,
-                    request);
+                    request,
+                    cancellationToken: cancellationToken);
 
                 return result.Id.HasText();
             }

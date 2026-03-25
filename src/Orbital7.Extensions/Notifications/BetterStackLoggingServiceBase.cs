@@ -33,7 +33,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         IDictionary<string, object?>? metadata = null,
         [CallerMemberName] string? callerMemberName = null,
         bool sendExternalNotification = false,
-        bool includeExternalNotificationDetails = true)
+        bool includeExternalNotificationDetails = true,
+        CancellationToken cancellationToken = default)
     {
         // Validate token configuration and log level.
         if (logLevel != LogLevel.None &&
@@ -87,7 +88,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                 await _telementryLoggingApi.LogEventAsync(
                     this.BetterStackLogsSourceToken,
                     this.BetterStackLogsIngestingHost,
-                    logEvent);
+                    logEvent,
+                    cancellationToken: cancellationToken);
             }
             catch (Exception ex)
             {
@@ -96,7 +98,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                     await _externalNotificationService.SendAsync(
                         LogLevel.Error,
                         $"BetterStack Logging Error: {ex.Message.PruneEnd(".")}. " +
-                            $"[{logLevel.ToString().ToUpper()}] {logger} {message}");
+                            $"[{logLevel.ToString().ToUpper()}] {logger} {message}",
+                        cancellationToken: cancellationToken);
                 }
             }
 
@@ -106,7 +109,8 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
             {
                 await _externalNotificationService.SendAsync(
                     logLevel,
-                    externalNotificationMessage);
+                    externalNotificationMessage,
+                    cancellationToken: cancellationToken);
             }
         }
     }

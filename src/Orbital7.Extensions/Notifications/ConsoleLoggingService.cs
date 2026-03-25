@@ -12,10 +12,16 @@ public class ConsoleLoggingService<TCategoryName> :
         IDictionary<string, object?>? metadata = null,
         [CallerMemberName] string? callerMemberName = null,
         bool sendExternalNotification = false,
-        bool includeExternalNotificationDetails = true)
+        bool includeExternalNotificationDetails = true,
+        CancellationToken cancellationToken = default)
     {
         var logger = typeof(TCategoryName).FullName;
-        Console.WriteLine($"{DateTime.Now.ToDefaultDateTimeString()} [{logLevel.ToString().ToUpper()}] {logger}: {message}");
+
+        Console.WriteLine(
+            $"{DateTime.Now.ToDefaultDateTimeString()} " +
+            $"[{logLevel.ToString().ToUpper()}] " +
+            $"{logger}: " +
+            $"{message}");
 
         return Task.CompletedTask;
     }

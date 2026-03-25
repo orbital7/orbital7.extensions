@@ -11,5 +11,6 @@ public interface ILoggingService
         IDictionary<string, object?>? metadata = null,
         [CallerMemberName] string? callerMemberName = null,
         bool sendExternalNotification = false,
-        bool includeExternalNotificationDetails = true);
+        bool includeExternalNotificationDetails = true,
+        CancellationToken cancellationToken = default);
 }

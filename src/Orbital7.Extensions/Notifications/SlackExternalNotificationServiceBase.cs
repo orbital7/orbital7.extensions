@@ -29,7 +29,8 @@ public abstract class SlackExternalNotificationServiceBase :
 
     public virtual async Task<bool> SendAsync(
         LogLevel logLevel,
-        string message)
+        string message,
+        CancellationToken cancellationToken = default)
     {
         if (logLevel == LogLevel.None)
         {
@@ -38,7 +39,11 @@ public abstract class SlackExternalNotificationServiceBase :
         else
         {
             var channel = GetChannel(logLevel);
-            return await ExecuteSendAsync(channel, message);
+
+            return await ExecuteSendAsync(
+                channel, 
+                message,
+                cancellationToken);
         }
     }
 
@@ -59,7 +64,8 @@ public abstract class SlackExternalNotificationServiceBase :
 
     protected virtual async Task<bool> ExecuteSendAsync(
         string channel, 
-        string message)
+        string message,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -74,8 +80,12 @@ public abstract class SlackExternalNotificationServiceBase :
                     Text = cleanedMessage,
                 };
 
-                var response = await _chatApi.PostMessageAsync(request);
+                var response = await _chatApi.PostMessageAsync(
+                    request,
+                    cancellationToken: cancellationToken);
+
                 response.AssertOk();
+
                 return true;
             }
         }

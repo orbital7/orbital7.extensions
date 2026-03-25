@@ -7,7 +7,8 @@ public abstract class CompositeExternalNotificationServiceBase :
 
     public virtual async Task<bool> SendAsync(
         LogLevel logLevel, 
-        string message)
+        string message,
+        CancellationToken cancellationToken = default)
     {
         bool notificationsSent = false;
 
@@ -22,7 +23,8 @@ public abstract class CompositeExternalNotificationServiceBase :
             {
                 var notificationSent = await externalNotificationService.SendAsync(
                     logLevel,
-                    message);
+                    message,
+                    cancellationToken: cancellationToken);
 
                 notificationsSent = notificationsSent || notificationSent;
             }
