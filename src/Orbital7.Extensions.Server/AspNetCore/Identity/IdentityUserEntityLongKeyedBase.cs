@@ -11,8 +11,8 @@ public class IdentityUserEntityLongKeyedBase :
 
     protected IdentityUserEntityLongKeyedBase()
     {
-        CreatedDateTimeUtc = DateTime.UtcNow;
-        LastModifiedDateTimeUtc = CreatedDateTimeUtc;
+        this.CreatedDateTimeUtc = DateTime.UtcNow;
+        this.LastModifiedDateTimeUtc = CreatedDateTimeUtc;
     }
 }
 

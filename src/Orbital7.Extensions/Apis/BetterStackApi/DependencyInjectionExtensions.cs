@@ -1,4 +1,7 @@
-﻿namespace Orbital7.Extensions.Apis.BetterStackApi;
+﻿using Orbital7.Extensions.Apis.BetterStackApi.Telemetry;
+using Orbital7.Extensions.Apis.BetterStackApi.Uptime.Heartbeats;
+
+namespace Orbital7.Extensions.Apis.BetterStackApi;
 
 public static class DependencyInjectionExtensions
 {
@@ -6,8 +9,8 @@ public static class DependencyInjectionExtensions
         this IServiceCollection services,
         string? httpClientName = HttpClientFactoryHelper.HTTP_CLIENT_NAME_TIMEOUT_20S)
     {
-        services.AddSingleton<ITelemetryLoggingApi, TelemetryLoggingApi>(
-            (serviceProvider) => new TelemetryLoggingApi(
+        services.AddSingleton<ILoggingApi, LoggingApi>(
+            (serviceProvider) => new LoggingApi(
                 new BetterStackApiClient(
                     serviceProvider.GetRequiredService<IHttpClientFactory>(),
                     httpClientName: httpClientName)));
@@ -22,8 +25,8 @@ public static class DependencyInjectionExtensions
     {
         if (apiToken.HasText())
         {
-            services.AddSingleton<IUptimeHeartbeatsApi, UptimeHeartbeatsApi>(
-                (serviceProvider) => new UptimeHeartbeatsApi(
+            services.AddSingleton<IHeartbeatsApi, HeartbeatsApi>(
+                (serviceProvider) => new HeartbeatsApi(
                     new BetterStackApiClient(
                         serviceProvider.GetRequiredService<IHttpClientFactory>(),
                         bearerToken: apiToken,

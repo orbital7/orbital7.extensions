@@ -1,4 +1,6 @@
 ﻿using Orbital7.Extensions.Apis.BetterStackApi;
+using Orbital7.Extensions.Apis.BetterStackApi.Telemetry;
+using Orbital7.Extensions.Apis.BetterStackApi.Uptime.Heartbeats;
 
 namespace Orbital7.Extensions.Tests;
 
@@ -48,12 +50,12 @@ public class BetterStackApiTests
         var client = new BetterStackApiClient(
             this.HttpClientFactory, 
             this.BetterStackUptimeApiToken);
-        var uptimeHeartbeatsApi = new UptimeHeartbeatsApi(client);
+        var uptimeHeartbeatsApi = new HeartbeatsApi(client);
 
         // Create a heartbeat.
         const string CREATE_HEARTBEAT_NAME = "Test Heartbeat";
         var createHeartbeatResponse = await uptimeHeartbeatsApi.CreateAsync(
-            new HeartbeatRequest()
+            new GetHeartbeatRequest()
             {
                 Name = CREATE_HEARTBEAT_NAME,
                 Period = 60,
@@ -75,7 +77,7 @@ public class BetterStackApiTests
         Assert.False(heartbeat.Attributes.Paused);
 
         // Test listing heartbeats.
-        var heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync(
+        var heartbeatsResponse = await uptimeHeartbeatsApi.ListAsync(
             cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(heartbeatsResponse);
         Assert.NotNull(heartbeatsResponse.Data);
@@ -104,7 +106,7 @@ public class BetterStackApiTests
         const string UPDATE_HEARTBEAT_NAME = "Test Heartbeat (updated)";
         var updateHeartbeatResponse = await uptimeHeartbeatsApi.UpdateAsync(
             heartbeat.Id,
-            new HeartbeatRequest()
+            new GetHeartbeatRequest()
             {
                 Name = UPDATE_HEARTBEAT_NAME,
                 Paused = true,
@@ -125,7 +127,7 @@ public class BetterStackApiTests
         await uptimeHeartbeatsApi.DeleteAsync(
             heartbeat.Id,
             cancellationToken: TestContext.Current.CancellationToken);
-        heartbeatsResponse = await uptimeHeartbeatsApi.ListAllExistingAsync(
+        heartbeatsResponse = await uptimeHeartbeatsApi.ListAsync(
             cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(heartbeatsResponse);
         Assert.NotNull(heartbeatsResponse.Data);
@@ -148,7 +150,7 @@ public class BetterStackApiTests
 
         // Create the client and service.
         var client = new BetterStackApiClient(this.HttpClientFactory);
-        var telemetryLoggingApi = new TelemetryLoggingApi(client);
+        var telemetryLoggingApi = new LoggingApi(client);
 
         // Create an event.
         var logEvent = new LogEvent()

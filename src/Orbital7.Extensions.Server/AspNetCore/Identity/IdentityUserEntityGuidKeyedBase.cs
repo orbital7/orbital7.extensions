@@ -11,8 +11,8 @@ public abstract class IdentityUserEntityGuidKeyedBase :
 
     protected IdentityUserEntityGuidKeyedBase()
     {
-        Id = GuidFactory.NextSequential();
-        CreatedDateTimeUtc = DateTime.UtcNow;
-        LastModifiedDateTimeUtc = CreatedDateTimeUtc;
+        this.Id = GuidFactory.NextSequential();
+        this.CreatedDateTimeUtc = DateTime.UtcNow;
+        this.LastModifiedDateTimeUtc = CreatedDateTimeUtc;
     }
 }

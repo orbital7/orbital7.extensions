@@ -1,4 +1,6 @@
-﻿namespace Orbital7.Extensions.Apis.DiscordApi;
+﻿using Orbital7.Extensions.Apis.DiscordApi.Channels;
+
+namespace Orbital7.Extensions.Apis.DiscordApi;
 
 public static class DependencyInjectionExtensions
 {

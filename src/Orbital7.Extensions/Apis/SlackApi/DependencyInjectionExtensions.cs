@@ -1,4 +1,6 @@
-﻿namespace Orbital7.Extensions.Apis.SlackApi;
+﻿using Orbital7.Extensions.Apis.SlackApi.Chat;
+
+namespace Orbital7.Extensions.Apis.SlackApi;
 
 public static class DependencyInjectionExtensions
 {

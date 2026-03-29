@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using Orbital7.Extensions.Apis.BetterStackApi;
+using Orbital7.Extensions.Apis.BetterStackApi.Telemetry;
 
 namespace Orbital7.Extensions.Notifications;
 
@@ -11,7 +11,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     private const string METADATA_CALLERMEMBERNAME = "CallerMemberName";
     public const string PLATFORM = "BetterStack";
 
-    private readonly ITelemetryLoggingApi _telementryLoggingApi;
+    private readonly ILoggingApi _telementryLoggingApi;
     private readonly IExternalNotificationService? _externalNotificationService;
 
     protected abstract string BetterStackLogsSourceToken { get; }
@@ -19,7 +19,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     protected abstract string BetterStackLogsIngestingHost { get; }
 
     protected BetterStackLoggingServiceBase(
-        ITelemetryLoggingApi telementryLoggingApi,
+        ILoggingApi telementryLoggingApi,
         IExternalNotificationService? externalNotificationService = null)
     {
         _telementryLoggingApi = telementryLoggingApi;

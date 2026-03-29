@@ -5,7 +5,8 @@ public class ConsoleExternalNotificationService :
 {
     public Task<bool> SendAsync(
         LogLevel logLevel,
-        string message)
+        string message,
+        CancellationToken cancellationToken = default)
     {
         if (logLevel != LogLevel.None)
         {

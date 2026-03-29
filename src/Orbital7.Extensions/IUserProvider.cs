@@ -2,5 +2,6 @@
 
 public interface IUserProvider
 {
-    Task<string?> GetCurrentUserIdAsync();
+    Task<string?> GetCurrentUserIdAsync(
+        CancellationToken cancellationToken = default);
 }

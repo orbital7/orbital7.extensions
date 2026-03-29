@@ -2,22 +2,18 @@
 
 namespace Orbital7.Extensions.AspNetCore;
 
-public class HttpContextAccessorUserProvider :
+public class HttpContextAccessorUserProvider(
+    IHttpContextAccessor httpContextAccessor) :
     IUserProvider
 {
-    private IHttpContextAccessor HttpContextAccessor { get; set; }
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public HttpContextAccessorUserProvider(
-        IHttpContextAccessor httpContextAccessor)
+    public virtual Task<string?> GetCurrentUserIdAsync(
+        CancellationToken cancellationToken = default)
     {
-        this.HttpContextAccessor = httpContextAccessor;
-    }
-
-    public virtual Task<string?> GetCurrentUserIdAsync()
-    {
-        if (this.HttpContextAccessor?.HttpContext?.User != null)
+        if (_httpContextAccessor?.HttpContext?.User != null)
         {
-            var principal = this.HttpContextAccessor.HttpContext.User;
+            var principal = _httpContextAccessor.HttpContext.User;
             return Task.FromResult(principal.GetUserId<string?>());
         }
 
