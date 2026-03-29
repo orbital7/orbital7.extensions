@@ -55,7 +55,7 @@ public class BetterStackApiTests
         // Create a heartbeat.
         const string CREATE_HEARTBEAT_NAME = "Test Heartbeat";
         var createHeartbeatResponse = await uptimeHeartbeatsApi.CreateAsync(
-            new GetHeartbeatRequest()
+            new HeartbeatRequest()
             {
                 Name = CREATE_HEARTBEAT_NAME,
                 Period = 60,
@@ -106,7 +106,7 @@ public class BetterStackApiTests
         const string UPDATE_HEARTBEAT_NAME = "Test Heartbeat (updated)";
         var updateHeartbeatResponse = await uptimeHeartbeatsApi.UpdateAsync(
             heartbeat.Id,
-            new GetHeartbeatRequest()
+            new HeartbeatRequest()
             {
                 Name = UPDATE_HEARTBEAT_NAME,
                 Paused = true,

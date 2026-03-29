@@ -6,17 +6,17 @@ public interface IHeartbeatsApi
         int? page = null,
         CancellationToken cancellationToken = default);
 
-    Task<GetHeartbeatResponse> GetAsync(
+    Task<HeartbeatResponse> GetAsync(
         string id,
         CancellationToken cancellationToken = default);
 
-    Task<GetHeartbeatResponse> CreateAsync(
-        GetHeartbeatRequest request,
+    Task<HeartbeatResponse> CreateAsync(
+        HeartbeatRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<GetHeartbeatResponse> UpdateAsync(
+    Task<HeartbeatResponse> UpdateAsync(
         string id,
-        GetHeartbeatRequest request,
+        HeartbeatRequest request,
         CancellationToken cancellationToken = default);
 
     Task DeleteAsync(

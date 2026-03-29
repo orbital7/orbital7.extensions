@@ -3,7 +3,6 @@ using Orbital7.Extensions.Apis.SlackApi.Chat;
 
 namespace Orbital7.Extensions.Tests;
 
-
 public class SlackApiTests
 {
     private string? SlackApiToken { get; set; }

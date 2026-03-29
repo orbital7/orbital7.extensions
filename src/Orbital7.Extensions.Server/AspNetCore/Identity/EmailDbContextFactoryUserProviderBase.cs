@@ -2,7 +2,7 @@
 
 namespace Orbital7.Extensions.Server.AspNetCore.Identity;
 
-public abstract class SpecifiedEmailDbContextFactoryUserProviderBase<TKey, TUser, TDbContext> :
+public abstract class EmailDbContextFactoryUserProviderBase<TKey, TUser, TDbContext> :
     IUserProvider
     where TKey : IEquatable<TKey>
     where TUser : IdentityUser<TKey>, IEntity<TKey>
@@ -10,9 +10,7 @@ public abstract class SpecifiedEmailDbContextFactoryUserProviderBase<TKey, TUser
 {
     private readonly IDbContextFactory<TDbContext> _contextFactory;
 
-    protected abstract string UserEmail { get; }
-
-    protected SpecifiedEmailDbContextFactoryUserProviderBase(
+    protected EmailDbContextFactoryUserProviderBase(
         IDbContextFactory<TDbContext> contextFactory)
     {
         _contextFactory = contextFactory;
@@ -24,10 +22,13 @@ public abstract class SpecifiedEmailDbContextFactoryUserProviderBase<TKey, TUser
         await using var context = await _contextFactory.CreateDbContextAsync(
             cancellationToken);
 
-        return await SpecifiedEmailDbContextUserProviderBase<TKey, TUser, TDbContext>
+        return await EmailDbContextUserProviderBase<TKey, TUser, TDbContext>
             .GetCurrentUserIdFromEmailAsync(
                 context,
-                this.UserEmail,
+                await GetUserEmailAsync(cancellationToken),
                 cancellationToken);
     }
+
+    protected abstract Task<string?> GetUserEmailAsync(
+        CancellationToken cancellationToken = default);
 }

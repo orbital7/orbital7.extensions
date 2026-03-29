@@ -63,5 +63,9 @@
 	  <PackagePath>licenses\</PackagePath>
 	</None>
   </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Testing\" />
+  </ItemGroup>
 
 </Project>

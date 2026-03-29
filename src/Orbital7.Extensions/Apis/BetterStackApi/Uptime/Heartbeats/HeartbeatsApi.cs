@@ -32,31 +32,31 @@ public class HeartbeatsApi :
             cancellationToken);
     }
 
-    public async Task<GetHeartbeatResponse> GetAsync(
+    public async Task<HeartbeatResponse> GetAsync(
         string id,
         CancellationToken cancellationToken = default)
     {
-        return await this.Client.SendGetRequestAsync<GetHeartbeatResponse>(
+        return await this.Client.SendGetRequestAsync<HeartbeatResponse>(
             BuildRequestUrl($"{ENDPOINT_PATH}/{id}"),
             cancellationToken);
     }
 
-    public async Task<GetHeartbeatResponse> CreateAsync(
-        GetHeartbeatRequest request,
+    public async Task<HeartbeatResponse> CreateAsync(
+        HeartbeatRequest request,
         CancellationToken cancellationToken = default)
     {
-        return await this.Client.SendPostRequestAsync<GetHeartbeatRequest, GetHeartbeatResponse>(
+        return await this.Client.SendPostRequestAsync<HeartbeatRequest, HeartbeatResponse>(
             BuildRequestUrl(ENDPOINT_PATH),
             request,
             cancellationToken);
     }
 
-    public async Task<GetHeartbeatResponse> UpdateAsync(
+    public async Task<HeartbeatResponse> UpdateAsync(
         string id,
-        GetHeartbeatRequest request,
+        HeartbeatRequest request,
         CancellationToken cancellationToken = default)
     {
-        return await this.Client.SendPatchRequestAsync<GetHeartbeatRequest, GetHeartbeatResponse>(
+        return await this.Client.SendPatchRequestAsync<HeartbeatRequest, HeartbeatResponse>(
             BuildRequestUrl($"{ENDPOINT_PATH}/{id}"),
             request,
             cancellationToken);
