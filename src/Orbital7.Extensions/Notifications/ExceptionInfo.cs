@@ -12,7 +12,7 @@ public class ExceptionInfo
 
     public ExceptionInfo? InnerException { get; set; }
 
-    public IDictionary<string, object>? Metadata { get; set; }
+    public IDictionary<string, object?>? Metadata { get; set; }
 
     public ExceptionInfo()
     {

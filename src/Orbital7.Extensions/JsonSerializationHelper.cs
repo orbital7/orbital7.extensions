@@ -10,11 +10,16 @@ public static class JsonSerializationHelper
     private const bool DEFAULT_PROPERTY_NAME_CASE_INSENSITIVE = false;
 
     public static async Task<T> CloneObjectAsync<T>(
-        object objectToClone)
+        object objectToClone,
+        CancellationToken cancellationToken = default)
     {
-        // TODO: Figure out why BOTH of these methods require the ignore null operator.
-        string json = (await SerializeToJsonAsync(objectToClone))!;
-        return (await DeserializeFromJsonAsync<T>(json))!;
+        string json = (await SerializeToJsonAsync(
+            objectToClone, 
+            cancellationToken: cancellationToken))!;
+
+        return (await DeserializeFromJsonAsync<T>(
+            json, 
+            cancellationToken: cancellationToken))!;
     }
 
     public static T CloneObject<T>(
@@ -84,13 +89,18 @@ public static class JsonSerializationHelper
     public static async Task<T?> DeserializeFromJsonAsync<T>(
         string? json,
         bool propertyNameCaseInsensitive = false,
-        bool convertEnumsToStrings = true)
+        bool convertEnumsToStrings = true,
+        CancellationToken cancellationToken = default)
     {
         if (json.HasText())
         {
             using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
             {
-                return await DeserializeAsync<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+                return await DeserializeAsync<T>(
+                    stream, 
+                    propertyNameCaseInsensitive, 
+                    convertEnumsToStrings,
+                    cancellationToken);
             }
         }
         else
@@ -109,8 +119,13 @@ public static class JsonSerializationHelper
         {
             using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
             {
-                // TODO: Figure out why this requires the ignore null operator.
-                return Deserialize<T>(stream, propertyNameCaseInsensitive, convertEnumsToStrings)!;
+                // We assume here that we will either get an object
+                // back or an error assuming we pass in a json 
+                // string with content.
+                return Deserialize<T>(
+                    stream, 
+                    propertyNameCaseInsensitive, 
+                    convertEnumsToStrings)!;
             }
         }
         else
@@ -123,13 +138,19 @@ public static class JsonSerializationHelper
         Type type,
         string? json,
         bool propertyNameCaseInsensitive = DEFAULT_PROPERTY_NAME_CASE_INSENSITIVE,
-        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS)
+        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS,
+        CancellationToken cancellationToken = default)
     {
         if (json.HasText())
         {
             using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
             {
-                return await DeserializeAsync(type, stream, propertyNameCaseInsensitive, convertEnumsToStrings);
+                return await DeserializeAsync(
+                    type, 
+                    stream, 
+                    propertyNameCaseInsensitive, 
+                    convertEnumsToStrings,
+                    cancellationToken);
             }
         }
         else
@@ -160,11 +181,16 @@ public static class JsonSerializationHelper
     public static async Task<T?> DeserializeFromJsonFileAsync<T>(
         string filePath,
         bool propertyNameCaseInsensitive = DEFAULT_PROPERTY_NAME_CASE_INSENSITIVE,
-        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS)
+        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS,
+        CancellationToken cancellationToken = default)
     {
         using (var openStream = File.OpenRead(filePath))
         {
-            return await DeserializeAsync<T>(openStream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            return await DeserializeAsync<T>(
+                openStream, 
+                propertyNameCaseInsensitive, 
+                convertEnumsToStrings,
+                cancellationToken);
         }
     }
 
@@ -183,11 +209,17 @@ public static class JsonSerializationHelper
         Type type,
         string filePath,
         bool propertyNameCaseInsensitive = DEFAULT_PROPERTY_NAME_CASE_INSENSITIVE,
-        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS)
+        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS,
+        CancellationToken cancellationToken = default)
     {
         using (var openStream = File.OpenRead(filePath))
         {
-            return await DeserializeAsync(type, openStream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            return await DeserializeAsync(
+                type, 
+                openStream, 
+                propertyNameCaseInsensitive, 
+                convertEnumsToStrings,
+                cancellationToken);
         }
     }
 
@@ -199,7 +231,11 @@ public static class JsonSerializationHelper
     {
         using (var openStream = File.OpenRead(filePath))
         {
-            return Deserialize(type, openStream, propertyNameCaseInsensitive, convertEnumsToStrings);
+            return Deserialize(
+                type, 
+                openStream, 
+                propertyNameCaseInsensitive, 
+                convertEnumsToStrings);
         }
     }
 
@@ -208,11 +244,19 @@ public static class JsonSerializationHelper
         object? objectToSerialize,
         bool ignoreNullValues = DEFAULT_IGNORE_NULL_VALUES,
         bool indentFormatting = DEFAULT_INDENT_FORMATTING,
-        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS)
+        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS,
+        CancellationToken cancellationToken = default)
     {
         using (var ms = new MemoryStream())
         {
-            await SerializeAsync(objectToSerialize, ms, ignoreNullValues, indentFormatting, convertEnumsToStrings);
+            await SerializeAsync(
+                objectToSerialize, 
+                ms, 
+                ignoreNullValues, 
+                indentFormatting, 
+                convertEnumsToStrings,
+                cancellationToken);
+
             if (ms.Length > 0)
             {
                 return ms.ToArray().DecodeToString();
@@ -233,7 +277,13 @@ public static class JsonSerializationHelper
     {
         using (var ms = new MemoryStream())
         {
-            Serialize(objectToSerialize, ms, ignoreNullValues, indentFormatting, convertEnumsToStrings);
+            Serialize(
+                objectToSerialize, 
+                ms, 
+                ignoreNullValues, 
+                indentFormatting, 
+                convertEnumsToStrings);
+
             if (ms.Length > 0)
             {
                 return ms.ToArray().DecodeToString();
@@ -250,11 +300,18 @@ public static class JsonSerializationHelper
         string filePath,
         bool ignoreNullValues = DEFAULT_IGNORE_NULL_VALUES,
         bool indentFormatting = DEFAULT_INDENT_FORMATTING,
-        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS)
+        bool convertEnumsToStrings = DEFAULT_CONVERT_ENUMS_TO_STRINGS,
+        CancellationToken cancellationToken = default)
     {
         using (var fileStream = File.Create(filePath))
         {
-            await SerializeAsync(objectToSerialize, fileStream, ignoreNullValues, indentFormatting, convertEnumsToStrings);
+            await SerializeAsync(
+                objectToSerialize, 
+                fileStream, 
+                ignoreNullValues, 
+                indentFormatting, 
+                convertEnumsToStrings,
+                cancellationToken);
         }
     }
 
@@ -267,7 +324,12 @@ public static class JsonSerializationHelper
     {
         using (var fileStream = File.Create(filePath))
         {
-            Serialize(objectToSerialize, fileStream, ignoreNullValues, indentFormatting, convertEnumsToStrings);
+            Serialize(
+                objectToSerialize, 
+                fileStream, 
+                ignoreNullValues, 
+                indentFormatting, 
+                convertEnumsToStrings);
         }
     }
 
@@ -276,7 +338,8 @@ public static class JsonSerializationHelper
         Stream stream,
         bool ignoreNullValues,
         bool indentFormatting,
-        bool convertEnumsToStrings)
+        bool convertEnumsToStrings,
+        CancellationToken cancellationToken)
     {
         if (objectToSerialize != null)
         {
@@ -287,7 +350,8 @@ public static class JsonSerializationHelper
                 CreateSerializationOptions(
                     ignoreNullValues,
                     indentFormatting,
-                    convertEnumsToStrings));
+                    convertEnumsToStrings),
+                cancellationToken: cancellationToken);
         }
     }
 
@@ -314,13 +378,15 @@ public static class JsonSerializationHelper
     private static async Task<T?> DeserializeAsync<T>(
         Stream stream,
         bool propertyNameCaseInsensitive,
-        bool convertEnumsToStrings)
+        bool convertEnumsToStrings,
+        CancellationToken cancellationToken)
     {
         return await JsonSerializer.DeserializeAsync<T>(
             stream,
             CreateDeserializationOptions(
                 propertyNameCaseInsensitive, 
-                convertEnumsToStrings));
+                convertEnumsToStrings),
+            cancellationToken: cancellationToken);
     }
 
     private static T? Deserialize<T>(
@@ -339,7 +405,8 @@ public static class JsonSerializationHelper
         Type type,
         Stream stream,
         bool propertyNameCaseInsensitive,
-        bool convertEnumsToStrings)
+        bool convertEnumsToStrings,
+        CancellationToken cancellationToken)
     {
         if (stream.Length > 0)
         {
@@ -348,7 +415,8 @@ public static class JsonSerializationHelper
                 type,
                 CreateDeserializationOptions(
                     propertyNameCaseInsensitive,
-                    convertEnumsToStrings));
+                    convertEnumsToStrings),
+                cancellationToken: cancellationToken);
         }
         else
         {

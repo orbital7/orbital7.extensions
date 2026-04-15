@@ -2,5 +2,5 @@
 
 public interface IExceptionWithMetadata
 {
-    IDictionary<string, object> GetMetadata();
+    IDictionary<string, object?> GetMetadata();
 }

@@ -140,7 +140,7 @@ public static class StringExtensions
 
     public static string? Replace(
         this string? text, 
-        IDictionary<string, string>? textReplacementKeys)
+        IDictionary<string, string?>? textReplacementKeys)
     {
         if (text != null)
         {
@@ -158,7 +158,7 @@ public static class StringExtensions
 
     public static string? Replace(
         this string? text, 
-        List<(string, string)>? textReplacementKeys)
+        List<(string, string?)>? textReplacementKeys)
     {
         if (text != null)
         {
@@ -287,24 +287,28 @@ public static class StringExtensions
     }
 
     public static string? DecodeToString(
-        this byte[]? bytes)
+        this byte[]? bytes,
+        Encoding? encoding = null)
     {
         if (bytes != null && bytes.Length > 0)
         {
-            UTF8Encoding encoding = new UTF8Encoding();
-            return encoding.GetString(bytes, 0, bytes.Length);
+            return (encoding ?? Encoding.UTF8)
+                .GetString(
+                    bytes, 
+                    0, 
+                    bytes.Length);
         }
 
         return null;
     }
 
     public static byte[]? EncodeToByteArray(
-        this string? value)
+        this string? value,
+        Encoding? encoding = null)
     {
         if (value != null && value.Length > 0)
         {
-            UTF8Encoding encoding = new UTF8Encoding();
-            return encoding.GetBytes(value);
+            return (encoding ?? Encoding.UTF8).GetBytes(value);
         }
 
         return null;

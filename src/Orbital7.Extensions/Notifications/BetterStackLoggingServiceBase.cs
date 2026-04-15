@@ -81,7 +81,11 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
                 {
                     Message = message,
                     Level = GetLogLevelString(logLevel),
-                    Metadata = logMetadata,
+                    Metadata = logMetadata
+                        .Where(x => x.Value != null)
+                        .ToDictionary(
+                            x => x.Key, 
+                            x => x.Value!),
                 };
 
                 // Log the event.
@@ -133,7 +137,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         }
     }
 
-    protected virtual IDictionary<string, object> GetLogMetadata(
+    protected virtual IDictionary<string, object?> GetLogMetadata(
         LogLevel logLevel,
         string message,
         Exception? exception,
@@ -141,7 +145,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         string logger,
         string? callerMemberName)
     {
-        var logMetadata = new Dictionary<string, object>
+        var logMetadata = new Dictionary<string, object?>
         {
             { METADATA_LOGGER, logger }
         };
@@ -177,7 +181,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
     }
 
     protected virtual void AddAdditionalLogMetadata(
-        IDictionary<string, object> metadata)
+        IDictionary<string, object?> metadata)
     {
 
     }
@@ -186,7 +190,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         LogLevel logLevel,
         string message,
         Exception? exception,
-        IDictionary<string, object> metadata,
+        IDictionary<string, object?> metadata,
         string logger,
         string? callerMemberName,
         bool includeDetails)
@@ -233,7 +237,7 @@ public abstract class BetterStackLoggingServiceBase<TCategoryName> :
         LogLevel logLevel,
         string message,
         Exception? exception,
-        IDictionary<string, object> metadata,
+        IDictionary<string, object?> metadata,
         string logger,
         string? callerMemberName)
     {

@@ -4,13 +4,14 @@ namespace Orbital7.Extensions.AspNetCore;
 
 public static class HttpExtensions
 {
-    public static async Task<string> ReadBodyAsStringAsync(
-        this HttpRequest request)
+    public static async Task<string> ReadBodyTextAsync(
+        this HttpRequest request,
+        Encoding? encoding = null,
+        CancellationToken cancellationToken = default)
     {
-        using (var reader = new StreamReader(request.Body, Encoding.UTF8))
-        {
-            return await reader.ReadToEndAsync();
-        }
+        return await request.Body.ReadAllTextAsync(
+            encoding: encoding,
+            cancellationToken: cancellationToken);
     }
 
     public static IDictionary<string, string> GetHeadersDictionary(

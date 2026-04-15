@@ -118,7 +118,7 @@ public static class ApiExtensions
                             {
                                 { "RequestPath", context.Request.Path },                                
                                 { "RequestHeaders", context.Request.GetHeadersDictionary() },
-                                { "RequestBody", await context.Request.ReadBodyAsStringAsync() },
+                                { "RequestBody", await context.Request.ReadBodyTextAsync() },
                             };
 
                     await loggingService.LogAsync(

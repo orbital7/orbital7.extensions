@@ -2,83 +2,30 @@
 
 public static class IOExtensions
 {
-    // TODO: These methods are fairly old. Are these still needed or should they be removed 
-    // and/or updated?
-
-    public static byte[] ReadAll(
-        this Stream stream, 
-        int initialLength)
+    public static async Task<string> ReadAllTextAsync(
+        this Stream stream,
+        Encoding? encoding = null,
+        CancellationToken cancellationToken = default)
     {
-        // If we've been passed an unhelpful initial length, just
-        // use 32K.
-        if (initialLength < 1)
-        {
-            initialLength = 32768;
-        }
+        using var reader = new StreamReader(
+            stream, 
+            encoding ?? Encoding.UTF8);
 
-        byte[] buffer = new byte[initialLength];
-        int read = 0;
-
-        int chunk;
-        while ((chunk = stream.Read(buffer, read, buffer.Length - read)) > 0)
-        {
-            read += chunk;
-
-            // If we've reached the end of our buffer, check to see if there's
-            // any more information
-            if (read == buffer.Length)
-            {
-                int nextByte = stream.ReadByte();
-
-                // End of stream? If so, we're done
-                if (nextByte == -1)
-                {
-                    return buffer;
-                }
-
-                // Nope. Resize the buffer, put in the byte we've just
-                // read, and continue
-                byte[] newBuffer = new byte[buffer.Length * 2];
-                Array.Copy(buffer, newBuffer, buffer.Length);
-                newBuffer[read] = (byte)nextByte;
-                buffer = newBuffer;
-                read++;
-            }
-        }
-
-        // Buffer is now too big. Shrink it.
-        byte[] ret = new byte[read];
-        Array.Copy(buffer, ret, read);
-        return ret;
+        return await reader.ReadToEndAsync(
+            cancellationToken);
     }
 
-    public static byte[] ReadAll(
-        this Stream stream)
+    public static async Task<byte[]> ReadAllBytesAsync(
+        this Stream stream,
+        CancellationToken cancellationToken = default)
     {
-        return stream.ReadAll(-1);
-    }
-
-    public static string? ReadText(
-        this Stream stream)
-    {
-        return stream.ReadAll().DecodeToString();
-    }
-
-    public static string? ReadXML
-        (this Stream stream)
-    {
-        var text = stream.ReadAll().DecodeToString();
-        int? index = text?.IndexOf("<");
-
-        if (text != null && 
-            index.HasValue && 
-            index.Value >= 0)
+        if (stream is MemoryStream memoryStream)
         {
-            return text.Substring(
-                index.Value, 
-                text.Length - index.Value);
+            return memoryStream.ToArray();
         }
 
-        return null;
+        await using var buffer = new MemoryStream();
+        await stream.CopyToAsync(buffer, cancellationToken);
+        return buffer.ToArray();
     }
 }
