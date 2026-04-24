@@ -1,14 +1,28 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Linq.Expressions;
 
 namespace Orbital7.Extensions.EntityFrameworkCore;
 
 public static class EntityFrameworkCoreExtensions
 {
+    public static void SetDefaults(
+        this DatabaseFacade database,
+        int commandTimeoutInMs = 3600)
+    {
+        if (database.IsRelational())
+        {
+            database.SetCommandTimeout(commandTimeoutInMs);
+        }
+    }
+
     public static ModelBuilder SetDefaults(
         this ModelBuilder modelBuilder)
     {
         // Set default decimal precision.
-        var decimalProperties = modelBuilder.GetPropertiesForType(typeof(decimal), typeof(decimal?));
+        var decimalProperties = modelBuilder.GetPropertiesForType(
+            typeof(decimal), 
+            typeof(decimal?));
+
         foreach (var property in decimalProperties)
         {
             property.SetPrecision(18);

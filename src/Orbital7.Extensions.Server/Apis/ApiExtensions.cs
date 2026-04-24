@@ -82,12 +82,7 @@ public static class ApiExtensions
 
                         extensions.Add(
                             "exception",
-                            new Dictionary<string, object?>
-                            {
-                                { "Type", exception.GetType().FullName },
-                                { "Source", exception.Source },
-                                { "StackTrace", exception.StackTrace },
-                            });
+                            new ExceptionInfo(exception));
                     }
 
                     extensions.Add("headers", context.Request.Headers);
@@ -110,7 +105,10 @@ public static class ApiExtensions
                     options: null,
                     contentType: PROBLEM_JSON_CONTENT_TYPE);
 
-                if (loggingService != null)
+                // Log the exception if we have a logging service and this is not a cancellation exception.
+                if (loggingService != null &&
+                    exception is not OperationCanceledException &&
+                    exception?.InnerException is not OperationCanceledException)
                 {
                     var metadata = 
                         createMetadata?.Invoke(context, exception, problemDetails) ??

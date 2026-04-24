@@ -16,10 +16,7 @@ public abstract class AtomicDbContextBase :
         DbContextOptions options) :
         base(options)
     {
-        if (Database.IsRelational())
-        {
-            Database.SetCommandTimeout(3600);
-        }
+        this.Database.SetDefaults();
     }
 
     public override int SaveChanges()
@@ -63,7 +60,7 @@ public abstract class AtomicDbContextBase :
     private int HandlePostSave(
         int result)
     {
-        if (ClearChangeTrackerOnSave)
+        if (this.ClearChangeTrackerOnSave)
         {
             base.ChangeTracker.Clear();
         }
@@ -73,7 +70,7 @@ public abstract class AtomicDbContextBase :
 
     private void ValidateSave()
     {
-        if (IsReadOnly)
+        if (this.IsReadOnly)
         {
             throw new Exception("Saving is not permitted on a read-only context");
         }

@@ -17,10 +17,7 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
         DbContextOptions options) : 
         base(options)
     {
-        if (Database.IsRelational())
-        {
-            Database.SetCommandTimeout(3600);
-        }
+        this.Database.SetDefaults();
     }
 
     public override int SaveChanges()
@@ -64,7 +61,7 @@ public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
     private int HandlePostSave(
         int result)
     {
-        if (ClearChangeTrackerOnSave)
+        if (this.ClearChangeTrackerOnSave)
         {
             base.ChangeTracker.Clear();
         }
