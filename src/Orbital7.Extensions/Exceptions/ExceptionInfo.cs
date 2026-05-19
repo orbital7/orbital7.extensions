@@ -1,4 +1,4 @@
-﻿namespace Orbital7.Extensions.Notifications;
+﻿namespace Orbital7.Extensions.Exceptions;
 
 public class ExceptionInfo
 {

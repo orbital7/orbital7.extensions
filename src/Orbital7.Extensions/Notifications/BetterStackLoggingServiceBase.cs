@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Orbital7.Extensions.Apis.BetterStackApi.Telemetry;
+using Orbital7.Extensions.Exceptions;
 
 namespace Orbital7.Extensions.Notifications;
 

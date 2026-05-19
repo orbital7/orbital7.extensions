@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Orbital7.Extensions.AspNetCore;
+using Orbital7.Extensions.Exceptions;
 using Orbital7.Extensions.Notifications;
 
 namespace Orbital7.Extensions.Apis;

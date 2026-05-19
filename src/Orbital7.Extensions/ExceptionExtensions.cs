@@ -2,7 +2,9 @@
 
 public static class ExceptionExtensions
 {
-    public static string FlattenMessages(this Exception ex, string delim = "; ")
+    public static string FlattenMessages(
+        this Exception ex, 
+        string delim = "; ")
     {
         StringBuilder sb = new StringBuilder();
         sb.Append(ex.Message);

@@ -35,13 +35,33 @@ public static class StringListExtensions
         return typedList;
     }
 
-    public static bool ContainsStartsWith(
-        this IEnumerable<string> list,
+    public static bool HasItemThatContains(
+        this IEnumerable<string>? list,
+        string? value,
+        StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
+    {
+        return list != null &&
+            value.HasText() &&
+            list.Any(x => x.Contains(value, stringComparison));
+    }
+
+    public static bool HasItemThatStartsWith(
+        this IEnumerable<string>? list,
         string? value,
         StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
     {
         return list != null && 
             value.HasText() &&
             list.Any(x => x.StartsWith(value, stringComparison));
+    }
+
+    public static bool HasItemThatEndsWith(
+        this IEnumerable<string>? list,
+        string? value,
+        StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
+    {
+        return list != null &&
+            value.HasText() &&
+            list.Any(x => x.EndsWith(value, stringComparison));
     }
 }
