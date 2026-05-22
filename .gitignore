@@ -247,3 +247,6 @@ ModelManifest.xml
 
 # MacOS
 .DS_Store
+
+# Licenses
+*.lic
