@@ -2,6 +2,7 @@
   <Folder Name="/Tests/">
     <Project Path="Tests/Orbital7.Extensions.Tests/Orbital7.Extensions.Tests.csproj" />
   </Folder>
+  <Project Path="Orbital7.Extensions.Server.AspNetCore/Orbital7.Extensions.Server.AspNetCore.csproj" Id="1add4dcc-d924-47cb-903f-268b44aa3cd9" />
   <Project Path="Orbital7.Extensions.Server/Orbital7.Extensions.Server.csproj" />
   <Project Path="Orbital7.Extensions/Orbital7.Extensions.csproj" />
 </Solution>

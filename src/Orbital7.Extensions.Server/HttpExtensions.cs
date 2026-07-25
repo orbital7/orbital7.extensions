@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Orbital7.Extensions.AspNetCore;
+namespace Orbital7.Extensions;
 
 public static class HttpExtensions
 {

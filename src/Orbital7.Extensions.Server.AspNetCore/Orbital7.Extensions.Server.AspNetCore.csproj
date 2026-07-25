@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
@@ -11,7 +11,7 @@
 		<Company>Orbital7</Company>
 		<Copyright>Copyright © 2012-2026 Orbital7</Copyright>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>.NET 10 Server Extensions/Utilities</Description>
+		<Description>.NET 10 Server ASP.NET Core Extensions/Utilities</Description>
 		<Authors>Josh van Eikeren</Authors>
 		<PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
 		<PackageIconUrl></PackageIconUrl>
@@ -44,14 +44,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.11" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Orbital7.Extensions\Orbital7.Extensions.csproj" />
+		<ProjectReference Include="..\Orbital7.Extensions.Server\Orbital7.Extensions.Server.csproj" />
 	</ItemGroup>
 
 </Project>

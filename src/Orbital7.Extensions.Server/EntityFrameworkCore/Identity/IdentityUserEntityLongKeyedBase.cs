@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Orbital7.Extensions.AspNetCore.Identity;
+namespace Orbital7.Extensions.EntityFrameworkCore.Identity;
 
 public class IdentityUserEntityLongKeyedBase :
     IdentityUser<long>, IEntity<long>

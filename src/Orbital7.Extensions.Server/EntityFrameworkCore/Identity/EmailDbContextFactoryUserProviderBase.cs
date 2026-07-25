@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Orbital7.Extensions.Server.AspNetCore.Identity;
+namespace Orbital7.Extensions.EntityFrameworkCore.Identity;
 
 public abstract class EmailDbContextFactoryUserProviderBase<TKey, TUser, TDbContext> :
     IUserProvider

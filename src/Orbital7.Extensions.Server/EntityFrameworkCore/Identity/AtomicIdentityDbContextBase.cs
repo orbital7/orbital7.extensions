@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Orbital7.Extensions.AspNetCore.Identity;
+namespace Orbital7.Extensions.EntityFrameworkCore.Identity;
 
 public abstract class AtomicIdentityDbContextBase<TUser, TRole, TKey> :
     IdentityDbContext<TUser, TRole, TKey>
