@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>10.0.16</Version>
-		<AssemblyVersion>10.0.16.0</AssemblyVersion>
-		<FileVersion>10.0.16.0</FileVersion>
+		<Version>11.0.0</Version>
+		<AssemblyVersion>11.0.0.0</AssemblyVersion>
+		<FileVersion>11.0.0.0</FileVersion>
 		<Company>Orbital7</Company>
 		<Copyright>Copyright © 2012-2026 Orbital7</Copyright>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>.NET 10 Server Extensions/Utilities</Description>
+		<Description>.NET 11 Server Extensions/Utilities</Description>
 		<Authors>Josh van Eikeren</Authors>
 		<PackageProjectUrl>https://github.com/orbital7/orbital7.extensions</PackageProjectUrl>
 		<PackageIconUrl></PackageIconUrl>
@@ -44,10 +44,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.12" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.14" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="11.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

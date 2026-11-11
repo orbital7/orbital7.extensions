@@ -1,5 +1,4 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration;
 
 namespace Orbital7.Extensions;
 
@@ -64,12 +63,13 @@ public static class ParsingHelper
         StreamReader reader,
         bool hasColumnHeadersRow)
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        var options = new CsvReaderOptions()
         {
-            HasHeaderRecord = hasColumnHeadersRow,
+            
+            HasHeader = hasColumnHeadersRow,
         };
 
-        using (var csv = new CsvReader(reader, config))
+        using (var csv = CsvReader.Create(reader, options: options))
         {
             return csv.GetRecords<TModel>().ToList();
         }

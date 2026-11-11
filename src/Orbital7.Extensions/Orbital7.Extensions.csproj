@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+	<TargetFrameworks>net10.0;net11.0</TargetFrameworks>
 	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>10.0.16</Version>
-    <AssemblyVersion>10.0.16.0</AssemblyVersion>
-    <FileVersion>10.0.16.0</FileVersion>
+	<Version>11.0.0</Version>
+    <AssemblyVersion>11.0.0.0</AssemblyVersion>
+    <FileVersion>11.0.0.0</FileVersion>
     <Company>Orbital7</Company>
     <Copyright>Copyright © 2012-2026 Orbital7</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -33,20 +33,20 @@
 
   <ItemGroup>
 	<PackageReference Include="CSharpVitamins.ShortGuid" Version="2.0.0" />
-	<PackageReference Include="CsvHelper" Version="33.1.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
-	<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
+	<PackageReference Include="CsvHelper" Version="34.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0" />
 	<PackageReference Include="NewId" Version="4.0.1" />
-	<PackageReference Include="Polly" Version="8.7.0" />
+	<PackageReference Include="Polly" Version="8.9.1" />
 	<PackageReference Include="Sqids" Version="3.2.1" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="TimeZoneConverter" Version="7.2.0" />
+    <PackageReference Include="TimeZoneConverter" Version="8.0.1" />
   </ItemGroup>
 	
   <ItemGroup>
